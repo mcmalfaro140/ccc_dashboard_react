@@ -6,7 +6,7 @@ import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle } from
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
-import profilePic from '../assets/images/users/user-1.jpg';
+import profilePic from '../assets/images/users/defaultUser.png';
 
 
 const SideNavContent = () => {
@@ -24,6 +24,20 @@ const SideNavContent = () => {
                 </li>
 
                 <li>
+                    <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                        <i class="mdi mdi-chart-bar"></i>
+                        <span> Add New Graph </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                        <i class="mdi mdi-table-large"></i>
+                        <span> Add New Table </span>
+                    </Link>
+                </li>
+
+                {/* <li>
                     <Link to="/" className="waves-effect" aria-expanded="false">
                         <i className="mdi mdi-share-variant"></i>
                         <span> Multi Level </span>
@@ -48,7 +62,7 @@ const SideNavContent = () => {
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> */}
             </ul>
         </div>
         <div className="clearfix"></div>
@@ -58,10 +72,10 @@ const SideNavContent = () => {
 const UserProfile = () => {
     return <React.Fragment>
         <div className="user-box text-center">
-            <img src={profilePic} alt="user-img" title="Nik Patel" className="rounded-circle img-thumbnail avatar-lg" />
+            <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
             <UncontrolledDropdown>
                 <DropdownToggle caret tag="a" className="text-dark dropdown-toggle h5 mt-2 mb-1 d-block">
-                    Nik Patel
+                    mcmalfaro@hotmail.com
                 </DropdownToggle>
                 <DropdownMenu className="user-pro-dropdown">
                     <DropdownItem>
@@ -83,7 +97,6 @@ const UserProfile = () => {
                 </DropdownMenu>
             </UncontrolledDropdown>
 
-            <p className="text-muted">Admin Head</p>
             <ul className="list-inline">
                 <li className="list-inline-item">
                     <Link to="/" className="text-muted">

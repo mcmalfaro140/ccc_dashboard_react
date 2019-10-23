@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './ProfileDropdown';
-import logoSm from '../assets/images/logo-sm.png';
-import logo from '../assets/images/logo-dark.png';
+import logoSm from '../assets/images/ccc_Logo_1.png';
+import logo from '../assets/images/logo_ccc.png';
 import profilePic from '../assets/images/users/user-1.jpg';
 
 
@@ -136,7 +136,7 @@ class Topbar extends Component {
           <div className="logo-box">
             <Link to="/" className="logo text-center">
               <span className="logo-lg">
-                <img src={logo} alt="" height="16" />
+                <img src={logo} alt="" height="30" />
               </span>
               <span className="logo-sm">
                 <img src={logoSm} alt="" height="24" />
