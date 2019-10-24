@@ -65,7 +65,7 @@ class AuthLayout extends Component {
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} />
-                        <Sidebar isCondensed={this.state.isCondensed} {...this.props} />
+                        <Sidebar rightSidebarToggle={this.toggleRightSidebar} isCondensed={this.state.isCondensed} {...this.props} />
                     </Suspense>
                     <div className="content-page">
                         <div className="content">

@@ -117,20 +117,20 @@ class Topbar extends Component {
               </form>
             </li>
 
-            <li>
+            {/* <li>
               <NotificationDropdown notifications={Notifications} />
-            </li>
+            </li> */}
 
-            <li>
+            {/* <li>
               <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
-            </li>
+            </li> */}
 
 
-            <li className="dropdown notification-list">
+            {/* <li className="dropdown notification-list">
               <button className="btn btn-link nav-link right-bar-toggle waves-effect waves-light" onClick={this.props.rightSidebarToggle}>
                 <i className="fe-settings noti-icon"></i>
               </button>
-            </li>
+            </li> */}
           </ul>
 
           <div className="logo-box">
@@ -152,7 +152,7 @@ class Topbar extends Component {
             </li>
 
             <li>
-              <h4 className="page-title-main">{this.props.title}</h4>
+              <h3 className="page-title-main">{this.props.title}</h3>
             </li>
           </ul>
             

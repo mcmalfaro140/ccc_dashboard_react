@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle} from 'reactstrap';
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -9,9 +9,13 @@ import MetisMenu from 'metismenujs/dist/metismenujs';
 import profilePic from '../assets/images/users/defaultUser.png';
 
 
-const SideNavContent = () => {
+class SideNavContent extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render(){
     return <React.Fragment>
-
+        
         <div id="sidebar-menu">
             <ul className="metismenu" id="side-menu">
                 <li className="menu-title">Navigation</li>
@@ -22,51 +26,52 @@ const SideNavContent = () => {
                         <span> Dashboard </span>
                     </Link>
                 </li>
-
-                <li>
-                    <Link to="/dashboard" className="waves-effect side-nav-link-ref">
-                        <i class="mdi mdi-chart-bar"></i>
-                        <span> Add New Graph </span>
-                    </Link>
-                </li>
-
                 <li>
                     <Link to="/dashboard" className="waves-effect side-nav-link-ref">
                         <i class="mdi mdi-table-large"></i>
                         <span> Add New Table </span>
                     </Link>
                 </li>
-
-                {/* <li>
-                    <Link to="/" className="waves-effect" aria-expanded="false">
-                        <i className="mdi mdi-share-variant"></i>
-                        <span> Multi Level </span>
+                <li>
+                    <a className="waves-effect" aria-expanded="false">
+                        <i class="mdi mdi-elevation-rise"></i>
+                        <span> Add New Graph </span>
                         <span className="menu-arrow"></span>
-                    </Link>
-
-                    <ul className="nav-second-level nav" aria-expanded="false">
+                    </a>
+                     <ul className="nav-second-level nav" aria-expanded="false">
                         <li>
-                            <Link to="/" className="side-nav-link-ref">Level 1.1</Link>
-                        </li>
-                        <li>
-                            <Link to="/" className="has-dropdown">Level 1.2
-                                <span className="menu-arrow"></span>
+                            <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Bar Chart </span>
                             </Link>
-                            <ul className="nav-third-level nav" aria-expanded="false">
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.1</Link>
-                                </li>
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.2</Link>
-                                </li>
-                            </ul>
                         </li>
+                        <li>
+                            <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-chart-line"></i>
+                                <span> Line Chart </span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-chart-arc"></i>
+                                <span> Pie Chart </span>
+                            </Link>
+                        </li>
+                        
                     </ul>
-                </li> */}
+                </li>
+                <li>
+                    <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
+                        <i class="mdi mdi-settings"></i>
+                        <span> Settings </span>
+                    </a>
+                </li>
+
             </ul>
         </div>
         <div className="clearfix"></div>
     </React.Fragment>
+    }
 }
 
 const UserProfile = () => {
@@ -226,7 +231,7 @@ class Sidebar extends Component {
         return (
             <React.Fragment>
                 <div className='left-side-menu' ref={node => this.menuNodeRef = node}>
-                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent /></PerfectScrollbar>}
+                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent {...this.props}/></PerfectScrollbar>}
                     {isCondensed && <UserProfile /> && <SideNavContent />}
                 </div>
             </React.Fragment>
