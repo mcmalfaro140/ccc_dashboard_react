@@ -27,17 +27,18 @@ class DefaultDashboard extends Component {
                         <Col lg={12}>
                             <Card>
                                 <CardBody>
+
                                     This card will have the default dashboard health.
                                 </CardBody>
+                                
                             </Card>
-                        </Col>
-                        <Col lg={12}>
                             <Card>
                                 <CardBody>
-                                    Test... Here you have to add your new graph or table inside this card body.
+                                Test... Here you have to add your new graph or table inside this card body.
                                 </CardBody>
                             </Card>
                         </Col>
+                       
                     </Row>
                 </div>
             </React.Fragment>

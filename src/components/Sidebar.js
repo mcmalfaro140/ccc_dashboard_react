@@ -6,7 +6,10 @@ import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle} from 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
+
 import profilePic from '../assets/images/users/defaultUser.png';
+
+
 
 
 class SideNavContent extends React.Component {
@@ -27,11 +30,18 @@ class SideNavContent extends React.Component {
                     </Link>
                 </li>
                 <li>
+
                     <Link to="/dashboard" className="waves-effect side-nav-link-ref">
                         <i class="mdi mdi-table-large"></i>
                         <span> Add New Table </span>
-                    </Link>
+
+                </Link>
+                    
                 </li>
+
+                
+
+    
                 <li>
                     <a className="waves-effect" aria-expanded="false">
                         <i class="mdi mdi-elevation-rise"></i>
@@ -46,7 +56,7 @@ class SideNavContent extends React.Component {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                            <Link to="/form" className="waves-effect side-nav-link-ref">
                                 <i class="mdi mdi-chart-line"></i>
                                 <span> Line Chart </span>
                             </Link>
@@ -59,6 +69,7 @@ class SideNavContent extends React.Component {
                         </li>
                         
                     </ul>
+
                 </li>
                 <li>
                     <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
@@ -66,6 +77,9 @@ class SideNavContent extends React.Component {
                         <span> Settings </span>
                     </a>
                 </li>
+
+
+
 
             </ul>
         </div>
