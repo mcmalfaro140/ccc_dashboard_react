@@ -64,7 +64,7 @@ class LineGraph extends Component {
             Namespace: this.props.location.state.nameSpace, /* required */
             Period: '120', /* required */
            // StartTime: new Date('2019','09','24','10','30','00','0'), /* required **********************************Always change it to a new start time */ 
-           startTime: this.props.location.state.startTime, 
+           StartTime: this.props.location.state.startTime, 
            Dimensions: [
               {
                 Name: 'InstanceId', /* required */
@@ -133,7 +133,7 @@ class LineGraph extends Component {
           }
         ]
       }
-     console.log(this.state.data.length + " and " + this.state.data[0])
+     //console.log(this.state.data.length + " and " + this.state.data[0])
       
         return (
             

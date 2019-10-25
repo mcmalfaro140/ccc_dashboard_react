@@ -26,8 +26,8 @@ class graphForm extends Component {
             secretAccessKey : "",
             instanceId : "",
             region : "",
-            startTime: Date(),
-            endTime: Date(),
+            startTime: new Date(),
+            endTime: new Date(),
         
 
         }
@@ -81,11 +81,13 @@ class graphForm extends Component {
         this.setState({
           startTime: date
         });
+        console.log(this.state.startTime)
       };
       handleChangeForEnd = date => {
         this.setState({
           endTime: date
         });
+        console.log(this.state.endTime)
       };
 
 
@@ -184,6 +186,7 @@ class graphForm extends Component {
                 <Form.Label>Start Time:  </Form.Label>
                 <DateTimePicker
           onChange = {this.handleChangeForStart}
+          value = {this.state.startTime}
         />
         </Form.Group>
 
@@ -191,6 +194,7 @@ class graphForm extends Component {
                 <Form.Label>End Time:  </Form.Label>
                 <DateTimePicker
           onChange = {this.handleChangeForEnd}
+          value = {this.state.endTime}
         />
         </Form.Group>        
           
