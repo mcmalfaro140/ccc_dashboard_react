@@ -71,6 +71,7 @@ class AuthLayout extends Component {
                         <div className="content">
 
                             <Container fluid>
+                                
                                 <Suspense fallback={loading()}>
                                     {children}
                                 </Suspense>

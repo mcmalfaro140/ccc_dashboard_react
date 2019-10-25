@@ -7,6 +7,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
 import profilePic from '../assets/images/users/user-1.jpg';
+import Popup from "reactjs-popup";
 
 
 const SideNavContent = () => {
@@ -24,6 +25,21 @@ const SideNavContent = () => {
                 </li>
 
                 <li>
+               
+                    <Link to="/form" className="waves-effect side-nav-link-ref">
+                        <i class="mdi mdi-chart-bar"></i>
+                        <span> Add New Graph </span>
+                    </Link>
+                </li>
+
+                <li>
+                    <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                        <i class="mdi mdi-table-large"></i>
+                        <span> Add New Table </span>
+                    </Link>
+                </li>
+
+                {/* <li>
                     <Link to="/" className="waves-effect" aria-expanded="false">
                         <i className="mdi mdi-share-variant"></i>
                         <span> Multi Level </span>
@@ -48,7 +64,7 @@ const SideNavContent = () => {
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> */}
             </ul>
         </div>
         <div className="clearfix"></div>
