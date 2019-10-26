@@ -16,7 +16,7 @@ const Register = React.lazy(() => import('./pages/account/Register'));
 const ConfirmAccount = React.lazy(() => import('./pages/account/Confirm'));
 const form = React.lazy(() => import('./components/graphForm.js'));
 const lineGraph = React.lazy(() => import('./components/LineGraph.js'));
-//const barGraph = React.lazy(() => import('./components/BarGraph.js'));
+const barGraph = React.lazy(() => import('./components/BarGraph.js'));
 
 // handle auth and authorization
 
@@ -49,7 +49,7 @@ const routes = [
   { path: '/confirm', name: 'Confirm', component: ConfirmAccount, route: Route },
   { path: '/form', name: 'Form', component: form, route: Route },
   { path: '/lineGraph', name: 'LineGraph', component: lineGraph, route: Route },
-  // { path: '/barGraph', name: 'BarGraph', component: barGraph, route: Route },
+   { path: '/barGraph', name: 'BarGraph', component: barGraph, route: Route },
 
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },

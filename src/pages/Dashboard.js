@@ -11,7 +11,17 @@ class DefaultDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: getLoggedInUser()
+            user: getLoggedInUser(),
+            graph :[
+                {
+                    type:"",
+
+                },
+                {
+                    type:""
+                }
+            ]
+          
         };
     }
 

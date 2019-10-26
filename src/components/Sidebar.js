@@ -15,6 +15,24 @@ import profilePic from '../assets/images/users/defaultUser.png';
 class SideNavContent extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            showMenu: false,
+          }
+        this.showMenu = this.showMenu.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
+    }
+    showMenu(e){
+        e.preventDefault();
+        this.setState({ showMenu: true }, () => {
+            document.addEventListener('click', this.closeMenu);
+          });
+    }
+    closeMenu(event){
+        
+        this.setState({ showMenu: false }, () => {
+            document.removeEventListener('click', this.closeMenu);
+          });
+        
     }
     render(){
     return <React.Fragment>
@@ -43,20 +61,30 @@ class SideNavContent extends React.Component {
 
     
                 <li>
-                    <a className="waves-effect" aria-expanded="false">
+                    <a className="waves-effect" aria-expanded="false" onClick = {this.showMenu}>
                         <i class="mdi mdi-elevation-rise"></i>
                         <span> Add New Graph </span>
                         <span className="menu-arrow"></span>
                     </a>
-                     <ul className="nav-second-level nav" aria-expanded="false">
+                    {
+                 this.state.showMenu
+            ? (
+               
+                     <ul className="nav-second-level nav" aria-expanded="false" >
                         <li>
-                            <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                            <Link to={{
+                                pathname:'/form',
+                                typeOfGraph : 'Bar' }}
+                                className="waves-effect side-nav-link-ref">
                                 <i className="mdi mdi-chart-bar"></i>
                                 <span> Bar Chart </span>
                             </Link>
                         </li>
                         <li>
-                            <Link to="/form" className="waves-effect side-nav-link-ref">
+                            <Link to={{
+                            pathname:'/form',
+                            typeOfGraph : 'Line' }}
+                            className="waves-effect side-nav-link-ref">
                                 <i class="mdi mdi-chart-line"></i>
                                 <span> Line Chart </span>
                             </Link>
@@ -69,6 +97,11 @@ class SideNavContent extends React.Component {
                         </li>
                         
                     </ul>
+                     )
+                     : (
+                       null
+                     )
+                 }
 
                 </li>
                 <li>
