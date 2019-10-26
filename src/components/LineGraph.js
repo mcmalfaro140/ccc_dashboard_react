@@ -78,9 +78,7 @@ class LineGraph extends Component {
               /* more items */
             ],
           }
-        // AWS.config.update({"accessKeyId": "AKIAJQMWSS22MPHT5D2A", "secretAccessKey": "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", "region": "us-east-1" });
-        // AWS.config.logger = console; 
-        // let cloudwatch = new AWS.CloudWatch();
+        
         AWS.config.update({"accessKeyId": this.props.location.state.accessKeyId, "secretAccessKey": this.props.location.state.secretAccessKey, "region": this.props.location.state.region });
         AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
