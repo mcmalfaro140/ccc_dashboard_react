@@ -42,7 +42,8 @@ class graphForm extends Component {
         e.preventDefault();
        
         this.props.history.push({
-            pathname: str,
+           // pathname: str,
+            pathname: "/lineGraph",
             state: {metricName: this.state.metricName,
                 nameSpace : this.state.nameSpace,
                 chartName : this.state.chartName,
@@ -99,12 +100,12 @@ class graphForm extends Component {
     
 
     render() {
-      if(this.props.location.typeOfGraph === 'Line'){
-        str = "/lineGraph"
-      }
-      else if(this.props.location.typeOfGraph === 'Bar'){
-        str = "/barGraph"
-      }
+      // if(this.props.location.typeOfGraph === 'Line'){
+      //   str = "/lineGraph"
+      // }
+      // else if(this.props.location.typeOfGraph === 'Bar'){
+      //   str = "/barGraph"
+      // }
 
       console.log("the str is " + str);
       

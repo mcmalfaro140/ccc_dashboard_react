@@ -25,11 +25,11 @@ var optionToSkip =  {
   
              var xLabels = data.ticks;
   
-              xLabels.forEach(function (labels, i) {
-                  if (i % 2 === 1){
-                      xLabels[i] = '';
-                  }
-              });
+              // xLabels.forEach(function (labels, i) {
+              //     if (i % 2 === 1){
+              //         xLabels[i] = '';
+              //     }
+              // });
           } ,
          
       }] , 
@@ -63,8 +63,8 @@ class BarGraph extends Component {
             EndTime: currentDate, /* required */
             MetricName: this.props.location.state.metricName, /* required */
             Namespace: this.props.location.state.nameSpace, /* required */
-            Period: '120', /* required */
-            StartTime: new Date('2019','09','24','10','30','00','0'), /* required **********************************Always change it to a new start time */ 
+            Period: '600', /* required */
+            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7), /* required **********************************Always change it to a new start time */ 
           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
            Dimensions: [
               {
