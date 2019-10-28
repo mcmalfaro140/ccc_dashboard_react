@@ -7,7 +7,7 @@ import myKeys from '../keys.json';
 /**
  * Renders the preloader
  */
-
+//hello
 var currentDate = new Date();
 var optionToSkip =  {  
     scales: {
