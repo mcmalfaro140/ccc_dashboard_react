@@ -37,32 +37,6 @@ const SideNavContent = () => {
                     </Link>
                 </li>
 
-                {/* <li>
-                    <Link to="/" className="waves-effect" aria-expanded="false">
-                        <i className="mdi mdi-share-variant"></i>
-                        <span> Multi Level </span>
-                        <span className="menu-arrow"></span>
-                    </Link>
-
-                    <ul className="nav-second-level nav" aria-expanded="false">
-                        <li>
-                            <Link to="/" className="side-nav-link-ref">Level 1.1</Link>
-                        </li>
-                        <li>
-                            <Link to="/" className="has-dropdown">Level 1.2
-                                <span className="menu-arrow"></span>
-                            </Link>
-                            <ul className="nav-third-level nav" aria-expanded="false">
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.1</Link>
-                                </li>
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.2</Link>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li> */}
             </ul>
         </div>
         <div className="clearfix"></div>
@@ -131,7 +105,7 @@ class Sidebar extends Component {
 
 
     /**
-     * 
+     *
      */
     componentDidMount = () => {
         this.initMenu();
@@ -194,7 +168,7 @@ class Sidebar extends Component {
             var parent = matchingMenuItem.parentElement;
 
             /**
-             * TODO: This is hard coded way of expading/activating parent menu dropdown and working till level 3. 
+             * TODO: This is hard coded way of expading/activating parent menu dropdown and working till level 3.
              * We should come up with non hard coded approach
              */
             if (parent) {
