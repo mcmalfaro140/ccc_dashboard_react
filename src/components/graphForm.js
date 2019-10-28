@@ -23,12 +23,12 @@ class graphForm extends Component {
             metricName : "",
             nameSpace : "",
             chartName : "",
-            accessKeyId : "",
-            secretAccessKey : "",
+            // accessKeyId : "",
+            // secretAccessKey : "",
             instanceId : "",
-            region : "",
-            startTime: new Date(),
-            endTime: new Date(),
+           // region : "",
+            // startTime: new Date(),
+            // endTime: new Date(),
         
 
         }
@@ -42,16 +42,17 @@ class graphForm extends Component {
         e.preventDefault();
        
         this.props.history.push({
-            pathname: str,
+           // pathname: str,
+            pathname: "/lineGraph",
             state: {metricName: this.state.metricName,
                 nameSpace : this.state.nameSpace,
                 chartName : this.state.chartName,
-                accessKeyId : this.state.accessKeyId,
-                secretAccessKey : this.state.secretAccessKey,
+                // accessKeyId : this.state.accessKeyId,
+                // secretAccessKey : this.state.secretAccessKey,
                 instanceId : this.state.instanceId,
-                region : this.state.region,
-                startTime : this.state.startTime,
-                endTime : this.state.endTime
+                //region : this.state.region,
+                // startTime : this.state.startTime,
+                // endTime : this.state.endTime
 
 
             
@@ -66,16 +67,16 @@ class graphForm extends Component {
        // console.log(e.target.value);
        
         value[i] = e.target.value;
-        if(value.length > 7){
+        if(value.length > 4){
             value = [];
         }
         this.setState({metricName : value[0]});
         this.setState({nameSpace : value[1]});
         this.setState({chartName : value[2]});
-        this.setState({accessKeyId : value[3]});
-        this.setState({secretAccessKey : value[4]});
-        this.setState({instanceId : value[5]});
-        this.setState({region : value[6]});
+        // this.setState({accessKeyId : value[3]});
+        // this.setState({secretAccessKey : value[4]});
+        this.setState({instanceId : value[3]});
+        //this.setState({region : value[6]});
         // this.setState({startTime : value[7]});
         // this.setState({endTime : value[8]});
 
@@ -99,12 +100,12 @@ class graphForm extends Component {
     
 
     render() {
-      if(this.props.location.typeOfGraph === 'Line'){
-        str = "/lineGraph"
-      }
-      else if(this.props.location.typeOfGraph === 'Bar'){
-        str = "/barGraph"
-      }
+      // if(this.props.location.typeOfGraph === 'Line'){
+      //   str = "/lineGraph"
+      // }
+      // else if(this.props.location.typeOfGraph === 'Bar'){
+      //   str = "/barGraph"
+      // }
 
       console.log("the str is " + str);
       
@@ -156,29 +157,29 @@ class graphForm extends Component {
                 /> */}
           
                
-         <Form.Group controlId="accessKeyId">
+         {/* <Form.Group controlId="accessKeyId">
                 <Form.Label>Access Key ID: </Form.Label>
                  <Form.Control type="text" placeholder="Enter access key id" onChange = {(e) => this.update(e,3)}/>
                 <Form.Text className="text-muted">
                   Enter your access key id
              </Form.Text>
-        </Form.Group>
+        </Form.Group> */}
         {/* <LineGraph aId = {this.state.accessKeyId}/> */}
           
                
-        <Form.Group controlId="secretAccessKey">
+        {/* <Form.Group controlId="secretAccessKey">
                 <Form.Label>Secret Access Key: </Form.Label>
                  <Form.Control type="text" placeholder="Enter secret access key" onChange = {(e) => this.update(e,4)}/>
                 <Form.Text className="text-muted">
                   Enter your secret access key 
              </Form.Text>
-        </Form.Group>
+        </Form.Group> */}
         {/* <LineGraph sKey = {this.state.secretAccessKey}/> */}
           
                
         <Form.Group controlId="instanceId">
                 <Form.Label>Instance ID: </Form.Label>
-                 <Form.Control type="text" placeholder="Enter instance id" onChange = {(e) => this.update(e,5)} />
+                 <Form.Control type="text" placeholder="Enter instance id" onChange = {(e) => this.update(e,3)} />
                 <Form.Text className="text-muted">
                   Enter your instance id
              </Form.Text>
@@ -187,16 +188,16 @@ class graphForm extends Component {
           
                
 
-        <Form.Group controlId="region">
+        {/* <Form.Group controlId="region">
                 <Form.Label>Region </Form.Label>
                  <Form.Control type="text" placeholder="Enter region" onChange = {(e) => this.update(e,6)}/>
                 <Form.Text className="text-muted">
                   Enter the region of your instance
              </Form.Text>
-        </Form.Group>
+        </Form.Group> */}
         {/* <LineGraph region = {this.state.region}/> */}
 
-        <Form.Group controlId="startTime">
+        {/* <Form.Group controlId="startTime">
                 <Form.Label>Start Time:  </Form.Label>
                 <DateTimePicker
           onChange = {this.handleChangeForStart}
@@ -210,7 +211,7 @@ class graphForm extends Component {
           onChange = {this.handleChangeForEnd}
           value = {this.state.endTime}
         />
-        </Form.Group>        
+        </Form.Group>         */}
           
                   <Button variant = "primary" type="submit"  
                 
