@@ -28,95 +28,69 @@ class SideNavContent extends React.Component {
           });
     }
     closeMenu(event){
-        
+
         this.setState({ showMenu: false }, () => {
             document.removeEventListener('click', this.closeMenu);
           });
-        
+
     }
     render(){
     return <React.Fragment>
-        
-        <div id="sidebar-menu">
-            <ul className="metismenu" id="side-menu">
-                <li className="menu-title">Navigation</li>
 
-                <li>
-                    <Link to="/dashboard" className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-view-dashboard"></i>
-                        <span> Dashboard </span>
-                    </Link>
-                </li>
-                <li>
+    <div id="sidebar-menu">
+          <ul className="metismenu" id="side-menu">
+              <li className="menu-title">Navigation</li>
 
-                    <Link to="/dashboard" className="waves-effect side-nav-link-ref">
-                        <i class="mdi mdi-table-large"></i>
-                        <span> Add New Table </span>
+              <li>
+                  <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                      <i className="mdi mdi-view-dashboard"></i>
+                      <span> Dashboard </span>
+                  </Link>
+              </li>
+              <li>
+                  <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                      <i class="mdi mdi-table-large"></i>
+                      <span> Add New Table </span>
+                  </Link>
+              </li>
+              <li>
+                  <a className="waves-effect" aria-expanded="false">
+                      <i class="mdi mdi-elevation-rise"></i>
+                      <span> Add New Graph </span>
+                      <span className="menu-arrow"></span>
+                  </a>
+                   <ul className="nav-second-level nav" aria-expanded="false">
+                      <li>
+                          <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                              <i className="mdi mdi-chart-bar"></i>
+                              <span> Bar Chart </span>
+                          </Link>
+                      </li>
+                      <li>
+                          <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-chart-line"></i>
+                              <span> Line Chart </span>
+                          </Link>
+                      </li>
+                      <li>
+                          <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-chart-arc"></i>
+                              <span> Pie Chart </span>
+                          </Link>
+                      </li>
 
-                </Link>
-                    
-                </li>
+                  </ul>
+              </li>
+              <li>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
+                      <i class="mdi mdi-settings"></i>
+                      <span> Settings </span>
+                  </a>
+              </li>
 
-                
-
-    
-                <li>
-                    <a className="waves-effect" aria-expanded="false" onClick = {this.showMenu}>
-                        <i class="mdi mdi-elevation-rise"></i>
-                        <span> Add New Graph </span>
-                        <span className="menu-arrow"></span>
-                    </a>
-                    {
-                 this.state.showMenu
-            ? (
-               
-                     <ul className="nav-second-level nav" aria-expanded="false" >
-                        <li>
-                            <Link to={{
-                                pathname:'/form',
-                                typeOfGraph : 'Bar' }}
-                                className="waves-effect side-nav-link-ref">
-                                <i className="mdi mdi-chart-bar"></i>
-                                <span> Bar Chart </span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to={{
-                            pathname:'/form',
-                            typeOfGraph : 'Line' }}
-                            className="waves-effect side-nav-link-ref">
-                                <i class="mdi mdi-chart-line"></i>
-                                <span> Line Chart </span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/dashboard" className="waves-effect side-nav-link-ref">
-                                <i class="mdi mdi-chart-arc"></i>
-                                <span> Pie Chart </span>
-                            </Link>
-                        </li>
-                        
-                    </ul>
-                     )
-                     : (
-                       null
-                     )
-                 }
-
-                </li>
-                <li>
-                    <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
-                        <i class="mdi mdi-settings"></i>
-                        <span> Settings </span>
-                    </a>
-                </li>
-
-
-
-
-            </ul>
-        </div>
-        <div className="clearfix"></div>
+          </ul>
+      </div>
+      <div className="clearfix"></div>
     </React.Fragment>
     }
 }
@@ -183,7 +157,7 @@ class Sidebar extends Component {
 
 
     /**
-     * 
+     *
      */
     componentDidMount = () => {
         this.initMenu();
@@ -246,7 +220,7 @@ class Sidebar extends Component {
             var parent = matchingMenuItem.parentElement;
 
             /**
-             * TODO: This is hard coded way of expading/activating parent menu dropdown and working till level 3. 
+             * TODO: This is hard coded way of expading/activating parent menu dropdown and working till level 3.
              * We should come up with non hard coded approach
              */
             if (parent) {

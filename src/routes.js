@@ -7,6 +7,9 @@ import { isUserAuthenticated, getLoggedInUser } from './helpers/authUtils';
 
 // lazy load all the views
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Table = React.lazy(() => import('./components/Table.js'));
+const Tables = React.lazy(() => import('./pages/Tables.js'));
+
 
 // auth
 const Login = React.lazy(() => import('./pages/auth/Login'));
@@ -17,6 +20,8 @@ const ConfirmAccount = React.lazy(() => import('./pages/account/Confirm'));
 const form = React.lazy(() => import('./components/graphForm.js'));
 const lineGraph = React.lazy(() => import('./components/LineGraph.js'));
 const barGraph = React.lazy(() => import('./components/BarGraph.js'));
+const TableForm = React.lazy(() => import('./components/TableForm.js'));
+
 
 // handle auth and authorization
 
@@ -50,6 +55,8 @@ const routes = [
   { path: '/form', name: 'Form', component: form, route: Route },
   { path: '/lineGraph', name: 'LineGraph', component: lineGraph, route: Route },
    { path: '/barGraph', name: 'BarGraph', component: barGraph, route: Route },
+   { path: '/TableForm', name: 'TableForm', component: TableForm, route: Route },
+   { path: '/Tables', name: 'Tables', component: Tables, route: Route },
 
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },
@@ -59,7 +66,7 @@ const routes = [
     component: () => <Redirect to="/dashboard" />,
     route: PrivateRoute
   },
-  
+
 ]
 
 export { routes, PrivateRoute };
