@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import {Bar,Line,Pie} from 'react-chartjs-2';
+import myKeys from '../keys.json';
+import {Bar} from 'react-chartjs-2';
 
 /**
  * Renders the preloader
  */
 
-
+var currentDate = new Date();
 var optionToSkip =  {  
     scales: {
       xAxes: [{
@@ -59,12 +60,12 @@ class BarGraph extends Component {
 
       getgraph = () =>{
         var params = {
-            EndTime: this.props.location.state.endTime, /* required */
+            EndTime: currentDate, /* required */
             MetricName: this.props.location.state.metricName, /* required */
             Namespace: this.props.location.state.nameSpace, /* required */
             Period: '120', /* required */
-           // StartTime: new Date('2019','09','24','10','30','00','0'), /* required **********************************Always change it to a new start time */ 
-           StartTime: this.props.location.state.startTime, 
+            StartTime: new Date('2019','09','24','10','30','00','0'), /* required **********************************Always change it to a new start time */ 
+          //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
            Dimensions: [
               {
                 Name: 'InstanceId', /* required */
@@ -79,7 +80,7 @@ class BarGraph extends Component {
             ],
           }
        
-        AWS.config.update({"accessKeyId": this.props.location.state.accessKeyId, "secretAccessKey": this.props.location.state.secretAccessKey, "region": this.props.location.state.region });
+        AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
         AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
         cloudwatch3.getMetricStatistics(params, function(err, data) {

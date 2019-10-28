@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import {Bar,Line,Pie} from 'react-chartjs-2';
+import {Line} from 'react-chartjs-2';
 
 /**
  * Renders the preloader
  */
 
-
+var currentDate = new Date();
 var optionToSkip =  {  
     scales: {
       xAxes: [{
@@ -59,12 +59,12 @@ class LineGraph extends Component {
 
       getgraph3 = () =>{
         var params = {
-            EndTime: this.props.location.state.endTime, /* required */
+            EndTime: currentDate, /* required */
             MetricName: this.props.location.state.metricName, /* required */
             Namespace: this.props.location.state.nameSpace, /* required */
             Period: '120', /* required */
-           // StartTime: new Date('2019','09','24','10','30','00','0'), /* required **********************************Always change it to a new start time */ 
-           StartTime: this.props.location.state.startTime, 
+            StartTime: new Date('2019','09','28','10','30','00','0'), /* required **********************************Always change it to a new start time */ 
+         
            Dimensions: [
               {
                 Name: 'InstanceId', /* required */
@@ -79,7 +79,7 @@ class LineGraph extends Component {
             ],
           }
         
-        AWS.config.update({"accessKeyId": this.props.location.state.accessKeyId, "secretAccessKey": this.props.location.state.secretAccessKey, "region": this.props.location.state.region });
+        AWS.config.update('keys.json');
         AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
         cloudwatch3.getMetricStatistics(params, function(err, data) {
