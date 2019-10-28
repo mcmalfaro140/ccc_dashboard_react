@@ -18,6 +18,11 @@
     }
 }
 
+.menuTrans{
+    transition: all 0.4s ease-out;
+    color: red;
+}
+
 .nav-second-level,
 .nav-thrid-level {
     li {
