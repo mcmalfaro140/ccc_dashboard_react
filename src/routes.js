@@ -60,6 +60,7 @@ const routes = [
 
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },
+  
   {
     path: "/",
     exact: true,
