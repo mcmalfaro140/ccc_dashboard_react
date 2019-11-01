@@ -12,7 +12,7 @@ var optionToSkip =  {
     scales: {
       xAxes: [{
         ticks: {
-            maxRotation: 0,
+            maxRotation: 30,
             minRotation: 0,
            fontSize: 10
       },
@@ -25,11 +25,11 @@ var optionToSkip =  {
   
              var xLabels = data.ticks;
   
-              // xLabels.forEach(function (labels, i) {
-              //     if (i % 2 === 1){
-              //         xLabels[i] = '';
-              //     }
-              // });
+              xLabels.forEach(function (labels, i) {
+                  if (i % 2 === 1){
+                      xLabels[i] = '';
+                  }
+              });
           } ,
          
       }] , 
@@ -63,8 +63,8 @@ class BarGraph extends Component {
             EndTime: currentDate, /* required */
             MetricName: this.props.location.state.metricName, /* required */
             Namespace: this.props.location.state.nameSpace, /* required */
-            Period: '600', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7), /* required **********************************Always change it to a new start time */ 
+            Period: '120', /* required */
+            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 2), /* required **********************************Always change it to a new start time */ 
           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
            Dimensions: [
               {
@@ -90,10 +90,10 @@ class BarGraph extends Component {
            console.log(data)
            this.setState({holder:data.Datapoints})
             
-             for (var i = 0; i < this.state.holder.length; i+=2) {
-                this.setState(prevState => ({
-                    label : [...prevState.label, this.state.holder[i].Timestamp.getHours()+":"+this.state.holder[i].Timestamp.getMinutes()]
-                  }));
+             for (var i = 0; i < this.state.holder.length; i++) {
+              this.setState(prevState => ({
+                label : [...prevState.label,  (this.state.holder[i].Timestamp.getMonth()+1) + '-'+this.state.holder[i].Timestamp.getDate() + '-' +this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() ]
+              }));
                   this.setState(prevState => ({
                     data : [...prevState.data, this.state.holder[i].Average]
                   }));

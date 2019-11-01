@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import {Form} from 'react-bootstrap';
-import DateTimePicker from 'react-datetime-picker';
+// import DateTimePicker from 'react-datetime-picker';
 
 
 /**
@@ -11,6 +10,7 @@ import DateTimePicker from 'react-datetime-picker';
 
  var value = [];
  var str= "";
+ var currentDate = new Date();
 class graphForm extends Component {
 
     constructor() {
@@ -18,13 +18,23 @@ class graphForm extends Component {
         this.update = this.update.bind(this);
         this.submit = this.submit.bind(this);
         this.state = { 
-
+            newGraph:{
+              objectType:"graph", // options: graph or table
+              graphSettings: {
+              type:"line", //options: line, pie, or bar
+              realTime:"false", //options: true or false
+              metricName:"CPUUtilization",
+              nameSpace:"AWS/EC2",
+              chartName:"Test",
+              instanceId:"i-0e84c5d781008a00e",
+              refreshRate:"",
+              startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+              endTime:new Date() //if needed
+              },
        
             metricName : "",
             nameSpace : "",
             chartName : "",
-            // accessKeyId : "",
-            // secretAccessKey : "",
             instanceId : "",
            // region : "",
             // startTime: new Date(),
@@ -34,7 +44,7 @@ class graphForm extends Component {
         }
     
     
-    }
+    }}
 
     submit(e){
   
@@ -43,16 +53,18 @@ class graphForm extends Component {
        
         this.props.history.push({
            // pathname: str,
-            pathname: "/lineGraph",
-            state: {metricName: this.state.metricName,
-                nameSpace : this.state.nameSpace,
-                chartName : this.state.chartName,
-                // accessKeyId : this.state.accessKeyId,
-                // secretAccessKey : this.state.secretAccessKey,
-                instanceId : this.state.instanceId,
-                //region : this.state.region,
-                // startTime : this.state.startTime,
-                // endTime : this.state.endTime
+            pathname: "/Dashboard",
+            state: {
+                newGraph : this.state.newGraph,
+                // metricName: this.state.metricName,
+                // nameSpace : this.state.nameSpace,
+                // chartName : this.state.chartName,
+                // // accessKeyId : this.state.accessKeyId,
+                // // secretAccessKey : this.state.secretAccessKey,
+                // instanceId : this.state.instanceId,
+                // //region : this.state.region,
+                // // startTime : this.state.startTime,
+                // // endTime : this.state.endTime
 
 
             
@@ -70,12 +82,17 @@ class graphForm extends Component {
         if(value.length > 4){
             value = [];
         }
-        this.setState({metricName : value[0]});
-        this.setState({nameSpace : value[1]});
-        this.setState({chartName : value[2]});
+        var newGraph = {...this.state.newGraph};
+        newGraph["metricName"] = value[0];
+        newGraph["nameSpace"] = value[1];
+        newGraph["chartName"] = value[2];
+        newGraph["instanceId"] = value[3];
+        this.setState({newGraph : newGraph});
+        // this.setState({nameSpace : value[1]});
+        // this.setState({chartName : value[2]});
         // this.setState({accessKeyId : value[3]});
         // this.setState({secretAccessKey : value[4]});
-        this.setState({instanceId : value[3]});
+        // this.setState({instanceId : value[3]});
         //this.setState({region : value[6]});
         // this.setState({startTime : value[7]});
         // this.setState({endTime : value[8]});
@@ -212,6 +229,18 @@ class graphForm extends Component {
           value = {this.state.endTime}
         />
         </Form.Group>         */}
+
+              <Form.Group controlId="exampleForm.ControlSelect1">
+                    <Form.Label>Time Range</Form.Label>
+                    <Form.Control as="select" 
+                     placeholder="select" 
+                     onChange={this.readSelection}>
+                    <option value = "6 hour">Last Hour</option>
+                    <option value = "Last Day">Last Day</option>
+                    <option value = "Last Week">Last Week</option>
+                    <option value = "Last Month">Last Month</option>
+                    </Form.Control>
+                </Form.Group>
           
                   <Button variant = "primary" type="submit"  
                 

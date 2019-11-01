@@ -4,16 +4,14 @@ import {Line} from 'react-chartjs-2';
 import myKeys from '../keys.json';
 
 
-/**
- * Renders the preloader
- */
-//hello
 var currentDate = new Date();
+var startT = "";
+var period = "";
 var optionToSkip =  {  
     scales: {
       xAxes: [{
         ticks: {
-            maxRotation: 30,
+            maxRotation: 0,
             minRotation: 0,
            fontSize: 10
       },
@@ -33,7 +31,7 @@ var optionToSkip =  {
               });
           } ,
          
-     }] , 
+      }] , 
       yAxes: [{
         ticks: {
             beginAtZero:true,
@@ -45,7 +43,7 @@ var optionToSkip =  {
         },
     }], 
 }}
-class LineGraph extends Component {
+class HistoricLineGraph extends Component {
     constructor(){
         super();
         this.state = {
@@ -62,16 +60,16 @@ class LineGraph extends Component {
       getgraph3 = () =>{
         var params = {
             EndTime: currentDate, /* required */
-            MetricName: this.props.graphSettings.metricName, /* required */
-            Namespace: this.props.graphSettings.nameSpace, /* required */
-            Period: '180', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1), /* required **********************************Always change it to a new start time */ 
+            MetricName: this.props.location.state.metricName, /* required */
+            Namespace: this.props.location.state.nameSpace, /* required */
+            Period: period, /* required */
+            StartTime: startT, /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
                 Name: 'InstanceId', /* required */
                 // Value: 'i-031339fed44b9fac8' /* required */
-                Value: this.props.graphSettings.instanceId
+                Value: this.props.location.state.instanceId
               },
               /* more items */
             ],
@@ -85,29 +83,21 @@ class LineGraph extends Component {
           AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
         cloudwatch3.getMetricStatistics(params, function(err, data) {
-         // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
           else {
            console.log(data)
            this.setState({holder:data.Datapoints})
             
              for (var i = 0; i < this.state.holder.length; i++) {
-              this.setState(prevState => ({
-                label : [...prevState.label,  (this.state.holder[i].Timestamp.getMonth()+1) + '-'+this.state.holder[i].Timestamp.getDate() + '-' +this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() ]
-              }));
+                this.setState(prevState => ({
+                    label : [...prevState.label,  (this.state.holder[i].Timestamp.getMonth()+1) + '/'+this.state.holder[i].Timestamp.getDate() + '-' +this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() ]
+                  }));
                   this.setState(prevState => ({
                     data : [...prevState.data, this.state.holder[i].Average]
                   }));
               }
            
-            
-            //  uniqueData =  Array.from(new Set(data));
-            //  uniqueLabel =  Array.from(new Set(label));
-    
-              //this.intervalID3 = setTimeout(this.getgraph3.bind(this), this.state.refreshRate3);
-    
-           //   console.log("Graph4's data size is now " + this.state.dataTemp3.length);
-             
+         
           };          
          
         }.bind(this));
@@ -117,14 +107,29 @@ class LineGraph extends Component {
       }
 
     render() {
-       
+       if(this.props.location.state.timeRange === "Last Hour"){
+           startT = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes());
+           period = 60;
+       }
+       else if(this.props.location.state.timeRange === "Last Day"){
+        startT = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes());
+        period = 120;
+       }
+       else if(this.props.location.state.timeRange === "Last Week"){
+        startT = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes());
+        period = 2400;
+       }
+       else if(this.props.location.state.timeRange === "Last Month"){
+        startT = new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes());
+        period = 4800;
+       }
 
 
        const lineGraphData = {
         labels: this.state.label,
         datasets: [
           {
-            label: this.props.graphSettings.metricName,
+            label: this.props.location.state.metricName,
             data: this.state.data,
             fill: true,         
             borderColor: 'lightblue', // Line color
@@ -137,16 +142,18 @@ class LineGraph extends Component {
       
         return (
             
-            <div>
-            <Line data={lineGraphData}
+            
+              <div>
+                <div>
+                  <h3>{this.props.location.state.chartName}</h3>
+                </div>
+         
+
+             <Line data={lineGraphData}
              options = {optionToSkip}
-             width = {40}
-             height = {20}>
+           />
 
-             </Line>
             </div>
-
-             
              
             
             
@@ -154,4 +161,4 @@ class LineGraph extends Component {
     }
 }
 
-export default LineGraph;
+export default HistoricLineGraph;
