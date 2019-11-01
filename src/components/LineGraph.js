@@ -62,16 +62,16 @@ class LineGraph extends Component {
       getgraph3 = () =>{
         var params = {
             EndTime: currentDate, /* required */
-            MetricName: this.props.location.state.metricName, /* required */
-            Namespace: this.props.location.state.nameSpace, /* required */
-            Period: '600', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7), /* required **********************************Always change it to a new start time */ 
+            MetricName: this.props.graphSettings.metricName, /* required */
+            Namespace: this.props.graphSettings.nameSpace, /* required */
+            Period: '180', /* required */
+            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1), /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
                 Name: 'InstanceId', /* required */
                 // Value: 'i-031339fed44b9fac8' /* required */
-                Value: this.props.location.state.instanceId
+                Value: this.props.graphSettings.instanceId
               },
               /* more items */
             ],
@@ -124,7 +124,7 @@ class LineGraph extends Component {
         labels: this.state.label,
         datasets: [
           {
-            label: this.props.location.state.metricName,
+            label: this.props.graphSettings.metricName,
             data: this.state.data,
             fill: true,         
             borderColor: 'lightblue', // Line color
@@ -137,14 +137,16 @@ class LineGraph extends Component {
       
         return (
             
-            
-
-             <Line data={lineGraphData}
+            <div>
+            <Line data={lineGraphData}
              options = {optionToSkip}
              width = {40}
              height = {20}>
 
              </Line>
+            </div>
+
+             
              
             
             

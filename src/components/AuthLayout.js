@@ -1,8 +1,11 @@
 import React, { Component, Suspense } from "react";
-import { Container } from 'reactstrap';
+import { Container, Row, Col, Card, CardBody } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import profilePic from '../assets/images/users/user-1.jpg';
+import LineGraph from "./LineGraph";
+
+
 
 // code splitting and lazy loading
 // https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52
@@ -33,7 +36,7 @@ class AuthLayout extends Component {
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
         this.state = {
-            isCondensed: false
+            isCondensed: false,
         }
     }
 
@@ -69,13 +72,13 @@ class AuthLayout extends Component {
                     </Suspense>
                     <div className="content-page">
                         <div className="content">
-
+                            <div>
                             <Container fluid>
-                                
-                                <Suspense fallback={loading()}>
-                                    {children}
-                                </Suspense>
+                                        <Suspense fallback={loading()}>
+                                            {children}
+                                        </Suspense>
                             </Container>
+                            </div>
                         </div>
 
                         <Footer />

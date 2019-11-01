@@ -61,6 +61,7 @@ const routes = [
    { path: '/historicLineGraph', name: 'HistoricLineGraph', component: historicLineGraph, route: Route },
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },
+  
   {
     path: "/",
     exact: true,

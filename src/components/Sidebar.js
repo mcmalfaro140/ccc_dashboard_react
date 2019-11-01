@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle} from 'reactstrap';
@@ -10,30 +10,36 @@ import MetisMenu from 'metismenujs/dist/metismenujs';
 import profilePic from '../assets/images/users/defaultUser.png';
 
 
-
-
+//Side menu navigation
+//TODO modify alert route
 class SideNavContent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showMenu: false,
+            showGrapOptions: false,
+            showRealtimeOptions: false,
+            showLogTableOptions: false,
+            graphActive: false,
+            realTimeActive: false,
+            logTableActive: false
           }
-        this.showMenu = this.showMenu.bind(this);
-        this.closeMenu = this.closeMenu.bind(this);
+        this.showGrapOptions = this.showGrapOptions.bind(this);
+        this.showRealtimeOptions = this.showRealtimeOptions.bind(this);
+        this.showLogTableOptions = this.showLogTableOptions.bind(this);
     }
-    showMenu(e){
+    showRealtimeOptions(e){
         e.preventDefault();
-        this.setState({ showMenu: true }, () => {
-            document.addEventListener('click', this.closeMenu);
-          });
+        this.setState({ showRealtimeOptions: !this.state.showRealtimeOptions, realTimeActive: !this.state.realTimeActive});
     }
-    closeMenu(event){
-
-        this.setState({ showMenu: false }, () => {
-            document.removeEventListener('click', this.closeMenu);
-          });
-
+    showLogTableOptions(e){
+        e.preventDefault();
+        this.setState({ showLogTableOptions: !this.state.showLogTableOptions, logTableActive: !this.state.logTableActive});
     }
+    showGrapOptions(e){
+        e.preventDefault();
+        this.setState({ showGrapOptions: !this.state.showGrapOptions, graphActive: !this.state.graphActive});
+    }
+    
     render(){
     return <React.Fragment>
 
@@ -47,39 +53,87 @@ class SideNavContent extends React.Component {
                       <span> Dashboard </span>
                   </Link>
               </li>
-              <li>
-                  <Link to="/dashboard" className="waves-effect side-nav-link-ref">
-                      <i class="mdi mdi-table-large"></i>
-                      <span> Add New Table </span>
-                  </Link>
-              </li>
-              <li>
-                  <a className="waves-effect" aria-expanded="false">
-                      <i class="mdi mdi-elevation-rise"></i>
-                      <span> Add New Graph </span>
+              <li className={this.state.realTimeActive ? ("active"):null}>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.showRealtimeOptions}>
+                      <i class="mdi mdi-clock"></i>
+                      <span> Realtime </span>
                       <span className="menu-arrow"></span>
                   </a>
+                  { this.state.showRealtimeOptions ? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                       <li>
-                          <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                          <Link to="/form" className="waves-effect side-nav-link-ref">
                               <i className="mdi mdi-chart-bar"></i>
                               <span> Bar Chart </span>
                           </Link>
                       </li>
                       <li>
-                          <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                          <Link to="/form" className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-chart-line"></i>
+                              <span> Line Chart </span>
+                          </Link>
+                      </li>
+                  </ul>
+                  ): null }
+              </li>
+              <li className={this.state.logTableActive? ("active"):null}>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.showLogTableOptions}>
+                      <i class="mdi mdi-table-large"></i>
+                      <span> New Log Table </span>
+                      <span className="menu-arrow"></span>
+                  </a>
+                  { this.state.showLogTableOptions? (
+                   <ul className="nav-second-level nav" aria-expanded="false">
+                      <li>
+                          <Link to="/Tables" className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-folder-multiple-outline"></i>
+                              <span> Master Log Table </span>
+                          </Link>
+                      </li>
+                      <li>
+                          <Link to="/TableForm" className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-table-edit"></i>
+                              <span> Custom Log Table </span>
+                          </Link>
+                      </li>
+                  </ul>
+                  ): null }
+              </li>
+              <li className={this.state.graphActive ? ("active"):null}>
+                  <a className="waves-effect" aria-expanded="false" onClick={this.showGrapOptions}>
+                      <i class="mdi mdi-elevation-rise"></i>
+                      <span> New Graph </span>
+                      <span className="menu-arrow"></span>
+                  </a>
+                  { this.state.showGrapOptions ? (
+                   <ul className="nav-second-level nav" aria-expanded="false">
+                      <li>
+                          <Link to="/form" className="waves-effect side-nav-link-ref">
+                              <i className="mdi mdi-chart-bar"></i>
+                              <span> Bar Chart </span>
+                          </Link>
+                      </li>
+                      <li>
+                          <Link to="/form" className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-chart-line"></i>
                               <span> Line Chart </span>
                           </Link>
                       </li>
                       <li>
-                          <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                          <Link to="/form" className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-chart-arc"></i>
                               <span> Pie Chart </span>
                           </Link>
                       </li>
 
                   </ul>
+                  ): null }
+              </li>
+              <li>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
+                      <i class="mdi mdi-bell-ring-outline"></i>
+                      <span> Alerts </span>
+                  </a>
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
@@ -95,44 +149,19 @@ class SideNavContent extends React.Component {
     }
 }
 
+//Side menu User fragment
+//TODO: Update user email dynamically with back end and add logout link.
 const UserProfile = () => {
     return <React.Fragment>
-        <div className="user-box text-center">
+        <div className="user-box text-center ">
             <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
-            <UncontrolledDropdown>
-                <DropdownToggle caret tag="a" className="text-dark dropdown-toggle h5 mt-2 mb-1 d-block">
-                    mcmalfaro@hotmail.com
-                </DropdownToggle>
-                <DropdownMenu className="user-pro-dropdown">
-                    <DropdownItem>
-                        <i className="fe-user mr-1"></i>
-                        <span>My Account</span>
-                    </DropdownItem>
-                    <DropdownItem>
-                        <i className="fe-settings mr-1"></i>
-                        <span>Settings</span>
-                    </DropdownItem>
-                    <DropdownItem>
-                        <i className="fe-lock mr-1"></i>
-                        <span>Lock Screen</span>
-                    </DropdownItem>
-                    <DropdownItem>
-                        <i className="fe-log-out mr-1"></i>
-                        <span>Logout</span>
-                    </DropdownItem>
-                </DropdownMenu>
-            </UncontrolledDropdown>
+            <h5>mcmalfaro@hotmail.com</h5>
 
             <ul className="list-inline">
                 <li className="list-inline-item">
-                    <Link to="/" className="text-muted">
-                        <i className="mdi mdi-settings"></i>
-                    </Link>
-                </li>
-
-                <li className="list-inline-item">
                     <Link to="/" className="text-custom">
                         <i className="mdi mdi-power"></i>
+                        <span> Logout </span>
                     </Link>
                 </li>
             </ul>
@@ -157,7 +186,7 @@ class Sidebar extends Component {
 
 
     /**
-     *
+     * 
      */
     componentDidMount = () => {
         this.initMenu();
@@ -220,7 +249,7 @@ class Sidebar extends Component {
             var parent = matchingMenuItem.parentElement;
 
             /**
-             * TODO: This is hard coded way of expading/activating parent menu dropdown and working till level 3.
+             * TODO: This is hard coded way of expading/activating parent menu dropdown and working till level 3. 
              * We should come up with non hard coded approach
              */
             if (parent) {
@@ -245,6 +274,8 @@ class Sidebar extends Component {
             }
         }
     }
+
+
 
     render() {
         const isCondensed = this.props.isCondensed || false;
