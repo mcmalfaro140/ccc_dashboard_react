@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import {Form} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 // import DateTimePicker from 'react-datetime-picker';
 
 
@@ -23,10 +24,10 @@ class graphForm extends Component {
               graphSettings: {
               type:"line", //options: line, pie, or bar
               realTime:"false", //options: true or false
-              metricName:"CPUUtilization",
-              nameSpace:"AWS/EC2",
-              chartName:"Test",
-              instanceId:"i-0e84c5d781008a00e",
+              metricName:"",
+              nameSpace:"",
+              chartName:"",
+              instanceId:"",
               refreshRate:"",
               startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
               endTime:new Date() //if needed
@@ -130,8 +131,8 @@ class graphForm extends Component {
 
        <div>
            
-    <form onSubmit = {this.submit} > 
-               
+    {/* <form onSubmit = {this.submit} >  */}
+    <form>
  
         <Form.Group controlId="metricName">
             <Form.Label>Metric Name: </Form.Label>
@@ -242,9 +243,11 @@ class graphForm extends Component {
                     </Form.Control>
                 </Form.Group>
           
-                  <Button variant = "primary" type="submit"  
+                  {/* <Button variant = "primary" type="submit"  
                 
-                 >Done</Button>
+                 ></Button> */}
+                 <Button variant = "primary"><Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}>Done..</Link></Button>
+                
 
                  
                       
@@ -259,10 +262,12 @@ class graphForm extends Component {
                 // instanceId = {this.state.instanceId}
                 // region = {this.state.region}/> 
 /> */}
+                
                 </div>
     
         )
     }
 }
+
 
 export default graphForm;

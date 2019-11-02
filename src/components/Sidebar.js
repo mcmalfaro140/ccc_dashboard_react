@@ -85,7 +85,14 @@ class SideNavContent extends React.Component {
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                       <li>
-                          <Link to="/Tables" className="waves-effect side-nav-link-ref">
+                          <Link to={{pathname:'/dashboard', state:{ 
+                              newMasterTable: {
+                                    objectType:"table", // options: graph or table
+                                    tableSettings:{
+                                        master:"true"
+                                    }
+                                }
+                            }}} className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-folder-multiple-outline"></i>
                               <span> Master Log Table </span>
                           </Link>
