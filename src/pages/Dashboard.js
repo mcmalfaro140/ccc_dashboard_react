@@ -97,13 +97,33 @@ class DefaultDashboard extends Component {
     //     // }
     //   }
 
+    // componentDidUpdate(){
+    //     console.log("Hello new props receive")
+    // }
+
+    // static getDerivedStateFromProps(props, state){
+    //     console.log("Hello new props receive")
+    // }
+
+    componentWillReceiveProps(nextProps){
+        console.log("the prop function was activated")
+       
+        if(nextProps.location.state.newGraph){
+            console.log("This is a new prop graph")
+        }else if(nextProps.location.state.newMasterTable){
+            console.log("This is a new prop table")
+            
+        }
+    }
+
     test2(){
           console.log(this.state.userDashboard)
     }
     test(){
        
+        console.log(this.props)
         let temp = this.state.userDashboard;
-       
+
         temp.push(this.props.location.state.newGraph);
         console.log(this.props.location.state.newGraph)
     //   // assign a name of list to item list
@@ -113,13 +133,7 @@ class DefaultDashboard extends Component {
       })
       
       console.log(this.state.userDashboard);
-    //     this.setState({ userDashboard: [...this.state.userDashboard, this.props.location.state.newGraph]})
-        // console.log(temp)
-        // console.log(this.props.location.state)
-        // for(let i = 0; i < this.state.userDashboard.length; i++){
-        //     console.log(this.state.userDashboard[i].objectType)
-        //     console.log("Misael")
-        // }
+
         
     }
     
@@ -183,7 +197,10 @@ class DefaultDashboard extends Component {
                                     </Card>
 
                                     {items}
+
+                                    <Button onClick={this.test}>Test</Button>
                                 </Col>
+
                             
                             </Row>
                 </div>
