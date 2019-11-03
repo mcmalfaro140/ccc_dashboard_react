@@ -107,12 +107,18 @@ class DefaultDashboard extends Component {
 
     componentWillReceiveProps(nextProps){
         console.log("the prop function was activated")
-       
-        if(nextProps.location.state.newGraph){
-            console.log("This is a new prop graph")
-        }else if(nextProps.location.state.newMasterTable){
-            console.log("This is a new prop table")
-            
+        let temp = this.state.userDashboard
+        if(nextProps.location.state){
+            if(nextProps.location.state.newGraph){
+                console.log("This is a new prop graph")
+            }else if(nextProps.location.state.newMasterTable){
+                temp.push(this.props.location.state.newMasterTable);
+                this.setState({
+                    userDashboard: temp
+                })
+                //console.log("This is a new prop table")
+                
+            }
         }
     }
 
@@ -120,19 +126,13 @@ class DefaultDashboard extends Component {
           console.log(this.state.userDashboard)
     }
     test(){
-       
-        console.log(this.props)
         let temp = this.state.userDashboard;
-
         temp.push(this.props.location.state.newGraph);
-        console.log(this.props.location.state.newGraph)
-    //   // assign a name of list to item list
-    //   let name = list;
-      this.setState({
-          userDashboard: temp
-      })
-      
-      console.log(this.state.userDashboard);
+        // console.log(this.props.location.state.newGraph)
+
+        this.setState({
+            userDashboard: temp
+        })
 
         
     }
@@ -191,7 +191,7 @@ class DefaultDashboard extends Component {
                                         <CardBody>
 
                                             This card will have the default dashboard health.
-                                            <Button onClick = {this.test}>Click</Button>       
+                                             
                                         </CardBody>
                                         
                                     </Card>
