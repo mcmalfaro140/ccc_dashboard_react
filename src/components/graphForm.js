@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import {Form} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 // import DateTimePicker from 'react-datetime-picker';
 
 
@@ -23,22 +24,16 @@ class graphForm extends Component {
               graphSettings: {
               type:"line", //options: line, pie, or bar
               realTime:"false", //options: true or false
-              metricName:"CPUUtilization",
-              nameSpace:"AWS/EC2",
-              chartName:"Test",
-              instanceId:"i-0e84c5d781008a00e",
+              metricName:"",
+              nameSpace:"",
+              chartName:"",
+              instanceId:"",
               refreshRate:"",
               startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
               endTime:new Date() //if needed
               },
        
-            metricName : "",
-            nameSpace : "",
-            chartName : "",
-            instanceId : "",
-           // region : "",
-            // startTime: new Date(),
-            // endTime: new Date(),
+           
         
 
         }
@@ -82,12 +77,24 @@ class graphForm extends Component {
         if(value.length > 4){
             value = [];
         }
-        var newGraph = {...this.state.newGraph};
-        newGraph["metricName"] = value[0];
-        newGraph["nameSpace"] = value[1];
-        newGraph["chartName"] = value[2];
-        newGraph["instanceId"] = value[3];
-        this.setState({newGraph : newGraph});
+        // var newGraph = {...this.state.newGraph};
+        // newGraph["metricName"] = value[0];
+        // newGraph["nameSpace"] = value[1];
+        // newGraph["chartName"] = value[2];
+        // newGraph["instanceId"] = value[3];
+        // this.setState({newGraph : newGraph});
+        this.setState(prevState => ({
+          newGraph: {
+            ...prevState.newGraph,           
+            graphSettings: {                     
+              ...prevState.newGraph.pizza,   
+              metricName : value[0],
+              nameSpace : value[1],
+              chartName : value[2],
+              instanceId : value[3]         
+            }
+          }
+        }))
         // this.setState({nameSpace : value[1]});
         // this.setState({chartName : value[2]});
         // this.setState({accessKeyId : value[3]});
@@ -100,18 +107,18 @@ class graphForm extends Component {
       
 
     }
-    handleChangeForStart = date => {
-        this.setState({
-          startTime: date
-        });
-        console.log(this.state.startTime)
-      };
-      handleChangeForEnd = date => {
-        this.setState({
-          endTime: date
-        });
-        console.log(this.state.endTime)
-      };
+    // handleChangeForStart = date => {
+    //     this.setState({
+    //       startTime: date
+    //     });
+    //     console.log(this.state.startTime)
+    //   };
+      // handleChangeForEnd = date => {
+      //   this.setState({
+      //     endTime: date
+      //   });
+      //   console.log(this.state.endTime)
+      // };
 
 
     
@@ -130,8 +137,8 @@ class graphForm extends Component {
 
        <div>
            
-    <form onSubmit = {this.submit} > 
-               
+    {/* <form onSubmit = {this.submit} >  */}
+    <form>
  
         <Form.Group controlId="metricName">
             <Form.Label>Metric Name: </Form.Label>
@@ -242,9 +249,11 @@ class graphForm extends Component {
                     </Form.Control>
                 </Form.Group>
           
-                  <Button variant = "primary" type="submit"  
+                  {/* <Button variant = "primary" type="submit"  
                 
-                 >Done</Button>
+                 ></Button> */}
+                 <Button variant = "primary"><Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}>Done..</Link></Button>
+                
 
                  
                       
@@ -259,10 +268,12 @@ class graphForm extends Component {
                 // instanceId = {this.state.instanceId}
                 // region = {this.state.region}/> 
 /> */}
+                
                 </div>
     
         )
     }
 }
+
 
 export default graphForm;

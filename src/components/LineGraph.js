@@ -140,8 +140,7 @@ class LineGraph extends Component {
             <div>
             <Line data={lineGraphData}
              options = {optionToSkip}
-             width = {40}
-             height = {20}>
+             >
 
              </Line>
             </div>
