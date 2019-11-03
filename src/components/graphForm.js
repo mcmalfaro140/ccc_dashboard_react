@@ -33,13 +33,7 @@ class graphForm extends Component {
               endTime:new Date() //if needed
               },
        
-            metricName : "",
-            nameSpace : "",
-            chartName : "",
-            instanceId : "",
-           // region : "",
-            // startTime: new Date(),
-            // endTime: new Date(),
+           
         
 
         }
@@ -83,12 +77,24 @@ class graphForm extends Component {
         if(value.length > 4){
             value = [];
         }
-        var newGraph = {...this.state.newGraph};
-        newGraph["metricName"] = value[0];
-        newGraph["nameSpace"] = value[1];
-        newGraph["chartName"] = value[2];
-        newGraph["instanceId"] = value[3];
-        this.setState({newGraph : newGraph});
+        // var newGraph = {...this.state.newGraph};
+        // newGraph["metricName"] = value[0];
+        // newGraph["nameSpace"] = value[1];
+        // newGraph["chartName"] = value[2];
+        // newGraph["instanceId"] = value[3];
+        // this.setState({newGraph : newGraph});
+        this.setState(prevState => ({
+          newGraph: {
+            ...prevState.newGraph,           
+            graphSettings: {                     
+              ...prevState.newGraph.pizza,   
+              metricName : value[0],
+              nameSpace : value[1],
+              chartName : value[2],
+              instanceId : value[3]         
+            }
+          }
+        }))
         // this.setState({nameSpace : value[1]});
         // this.setState({chartName : value[2]});
         // this.setState({accessKeyId : value[3]});
@@ -101,18 +107,18 @@ class graphForm extends Component {
       
 
     }
-    handleChangeForStart = date => {
-        this.setState({
-          startTime: date
-        });
-        console.log(this.state.startTime)
-      };
-      handleChangeForEnd = date => {
-        this.setState({
-          endTime: date
-        });
-        console.log(this.state.endTime)
-      };
+    // handleChangeForStart = date => {
+    //     this.setState({
+    //       startTime: date
+    //     });
+    //     console.log(this.state.startTime)
+    //   };
+      // handleChangeForEnd = date => {
+      //   this.setState({
+      //     endTime: date
+      //   });
+      //   console.log(this.state.endTime)
+      // };
 
 
     

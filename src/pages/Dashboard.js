@@ -107,25 +107,23 @@ class DefaultDashboard extends Component {
        
         console.log(this.props)
        
-        // temp.push(this.props.location.state.newGraph);
+
+        temp.push(this.props.location.state.newGraph);
+        console.log(this.props.location.state.newGraph)
     //   // assign a name of list to item list
     //   let name = list;
-    //   this.setState({
-    //       userDashboard: temp
-    //   })
-    //     this.setState({ userDashboard: [...this.state.userDashboard, this.props.location.state.newGraph]})
-        // console.log(temp)
-        // console.log(this.props.location.state)
-        // for(let i = 0; i < this.state.userDashboard.length; i++){
-        //     console.log(this.state.userDashboard[i].objectType)
-        //     console.log("Misael")
-        // }
+      this.setState({
+          userDashboard: temp
+      })
+      
+      console.log(this.state.userDashboard);
+
         
     }
     
 
     render() {
-
+    
         const items = this.state.userDashboard.map((item, i) => {
             //This part will render the table
             if(item.objectType == "table"){
@@ -178,6 +176,7 @@ class DefaultDashboard extends Component {
                                         <CardBody>
 
                                             This card will have the default dashboard health.
+                                            <Button onClick = {this.test}>Click</Button>       
                                         </CardBody>
                                         
                                     </Card>
