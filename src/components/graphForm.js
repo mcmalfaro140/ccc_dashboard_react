@@ -22,7 +22,7 @@ class graphForm extends Component {
             newGraph:{
               objectType:"graph", // options: graph or table
               graphSettings: {
-              type:"line", //options: line, pie, or bar
+              type:"bar", //options: line, pie, or bar
               realTime:"false", //options: true or false
               metricName:"",
               nameSpace:"",

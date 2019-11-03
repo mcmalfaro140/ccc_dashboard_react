@@ -65,7 +65,7 @@ class LineGraph extends Component {
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: '180', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 1), /* required **********************************Always change it to a new start time */ 
+            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-6,currentDate.getMinutes()), /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {

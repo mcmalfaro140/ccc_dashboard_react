@@ -2,6 +2,7 @@ import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 import LineGraph from '../components/LineGraph'
+import BarGraph from '../components/BarGraph'
 import Table from './Tables'
 
 import { getLoggedInUser } from '../helpers/authUtils';
@@ -51,6 +52,20 @@ class DefaultDashboard extends Component {
                 {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
+                            type:"bar", //options: line, pie, or bar
+                            realTime:"false", //options: true or false
+                            metricName:"CPUCreditUsage", 
+                            nameSpace:"AWS/EC2",
+                            chartName:"TestBar",
+                            instanceId:"i-0e84c5d781008a00e",
+                            refreshRate:"",
+                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                            endTime:new Date() //if needed
+                        }
+                },
+                {
+                    objectType:"graph", // options: graph or table
+                    graphSettings: {
                             type:"pie", //options: line, pie, or bar
                             realTime:"false", //options: true or false
                             metricName:"CPUUtilization", 
@@ -62,6 +77,7 @@ class DefaultDashboard extends Component {
                             endTime:new Date() //if needed
                         }
                 },
+                
             ]
         };
     }
@@ -134,8 +150,7 @@ class DefaultDashboard extends Component {
                     return (
                         <Card>
                             <CardBody>
-        
-                                This is gonna be a BAR graph
+                                <BarGraph {...item}></BarGraph>
                             </CardBody>
                                                 
                         </Card>);
