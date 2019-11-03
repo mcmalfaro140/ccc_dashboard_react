@@ -252,7 +252,7 @@ class graphForm extends Component {
                   {/* <Button variant = "primary" type="submit"  
                 
                  ></Button> */}
-                 <Button variant = "primary"><Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}>Done..</Link></Button>
+                 <Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}><Button variant = "primary">Done..</Button></Link>
                 
 
                  
