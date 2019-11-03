@@ -61,16 +61,16 @@ class BarGraph extends Component {
       getgraph = () =>{
         var params = {
             EndTime: currentDate, /* required */
-            MetricName: this.props.location.state.metricName, /* required */
-            Namespace: this.props.location.state.nameSpace, /* required */
-            Period: '120', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 2), /* required **********************************Always change it to a new start time */ 
+            MetricName: this.props.graphSettings.metricName, /* required */
+            Namespace: this.props.graphSettings.nameSpace, /* required */
+            Period: '180', /* required */
+            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-6,currentDate.getMinutes()), /* required **********************************Always change it to a new start time */ 
           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
            Dimensions: [
               {
                 Name: 'InstanceId', /* required */
                 // Value: 'i-031339fed44b9fac8' /* required */
-                Value: this.props.location.state.instanceId
+                Value: this.props.graphSettings.instanceId
               },
               /* more items */
             ],
@@ -123,7 +123,7 @@ class BarGraph extends Component {
         labels: this.state.label,
         datasets: [
           {
-            label: this.props.location.state.metricName,
+            label: this.props.graphSettings.metricName,
             data: this.state.data,
             fill: true,         
            // borderColor: 'lightblue', // Line color
