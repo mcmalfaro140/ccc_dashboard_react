@@ -9,6 +9,7 @@ import {Form} from 'react-bootstrap';
 import profilePic from '../assets/images/users/user-1.jpg';
 
 var currentDate = new Date();
+var value = [];
 // code splitting and lazy loading
 // https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52
 const Topbar = React.lazy(() => import("./Topbar"));
@@ -42,6 +43,14 @@ class AuthLayout extends Component {
         this.state = {
             isCondensed: false,
             modal0pem: false,
+            realTime:"false", //options: true or false
+            metricName:"CPUCreditUsage", 
+            nameSpace:"AWS/EC2",
+            chartName:"TestBar",
+            instanceId:"i-0e84c5d781008a00e",
+            refreshRate:"",
+            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+            endTime:new Date() //if needed
         }
     }
 
@@ -66,7 +75,44 @@ class AuthLayout extends Component {
     toggleRightSidebar = () => {
         document.body.classList.toggle("right-bar-enabled");
     }
-    
+    update(e,i){
+        e.preventDefault();
+       // console.log(e.target.value);
+       
+        value[i] = e.target.value;
+        if(value.length > 4){
+            value = [];
+        }
+        // var newGraph = {...this.state.newGraph};
+        // newGraph["metricName"] = value[0];
+        // newGraph["nameSpace"] = value[1];
+        // newGraph["chartName"] = value[2];
+        // newGraph["instanceId"] = value[3];
+        // this.setState({newGraph : newGraph});
+        this.setState(prevState => ({
+          newGraph: {
+            ...prevState.newGraph,           
+            graphSettings: {                     
+              ...prevState.newGraph.pizza,   
+              metricName : value[0],
+              nameSpace : value[1],
+              chartName : value[2],
+              instanceId : value[3]         
+            }
+          }
+        }))
+        // this.setState({nameSpace : value[1]});
+        // this.setState({chartName : value[2]});
+        // this.setState({accessKeyId : value[3]});
+        // this.setState({secretAccessKey : value[4]});
+        // this.setState({instanceId : value[3]});
+        //this.setState({region : value[6]});
+        // this.setState({startTime : value[7]});
+        // this.setState({endTime : value[8]});
+
+      
+
+    }
 
     render() {
         // get the child view which we would like to render
@@ -222,7 +268,7 @@ class AuthLayout extends Component {
                                                 newGraph:{
                                                     objectType:"graph", // options: graph or table
                                                     graphSettings: {
-                                                            type:"bar", //options: line, pie, or bar
+                                                            type:this.props.location.typeOfGraph, //options: line, pie, or bar
                                                             realTime:"false", //options: true or false
                                                             metricName:"CPUCreditUsage", 
                                                             nameSpace:"AWS/EC2",
