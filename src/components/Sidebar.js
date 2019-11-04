@@ -62,13 +62,17 @@ class SideNavContent extends React.Component {
                   { this.state.showRealtimeOptions ? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                       <li>
-                          <Link to="/form" className="waves-effect side-nav-link-ref">
+                          <Link to={{
+                                pathname:'/form',
+                                typeOfGraph : 'bar' }} className="waves-effect side-nav-link-ref">
                               <i className="mdi mdi-chart-bar"></i>
                               <span> Bar Chart </span>
                           </Link>
                       </li>
                       <li>
-                          <Link to="/form" className="waves-effect side-nav-link-ref">
+                          <Link to={{
+                                pathname:'/form',
+                                typeOfGraph : 'line' }} className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-chart-line"></i>
                               <span> Line Chart </span>
                           </Link>

@@ -31,6 +31,7 @@ class DefaultDashboard extends Component {
                             chartName:"Test",
                             instanceId:"i-0e84c5d781008a00e",
                             refreshRate:"",
+                            period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
                         }
@@ -59,6 +60,7 @@ class DefaultDashboard extends Component {
                             chartName:"TestBar",
                             instanceId:"i-0e84c5d781008a00e",
                             refreshRate:"",
+                            period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
                         }
@@ -73,6 +75,7 @@ class DefaultDashboard extends Component {
                             chartName:"Test",
                             instanceId:"i-0e84c5d781008a00e",
                             refreshRate:"",
+                            period:"",
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
                         }
