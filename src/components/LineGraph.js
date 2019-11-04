@@ -88,7 +88,7 @@ class LineGraph extends Component {
          // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
           else {
-           console.log(data)
+          //  console.log(data)
            this.setState({holder:data.Datapoints})
             
              for (var i = 0; i < this.state.holder.length; i++) {
