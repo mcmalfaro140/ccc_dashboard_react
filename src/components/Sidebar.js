@@ -9,6 +9,8 @@ import MetisMenu from 'metismenujs/dist/metismenujs';
 
 import profilePic from '../assets/images/users/defaultUser.png';
 
+var currentDate = new Date();
+
 
 //Side menu navigation
 //TODO modify alert route
@@ -26,6 +28,7 @@ class SideNavContent extends React.Component {
         this.showGrapOptions = this.showGrapOptions.bind(this);
         this.showRealtimeOptions = this.showRealtimeOptions.bind(this);
         this.showLogTableOptions = this.showLogTableOptions.bind(this);
+        this.myTest = this.myTest.bind(this);
     }
     showRealtimeOptions(e){
         e.preventDefault();
@@ -38,6 +41,14 @@ class SideNavContent extends React.Component {
     showGrapOptions(e){
         e.preventDefault();
         this.setState({ showGrapOptions: !this.state.showGrapOptions, graphActive: !this.state.graphActive});
+    }
+    myTest(){
+        console.log("clicked")
+        return(
+            <div>
+                <h1>hello Misael</h1>
+            </div>
+        )
     }
     
     render(){
@@ -62,20 +73,16 @@ class SideNavContent extends React.Component {
                   { this.state.showRealtimeOptions ? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                       <li>
-                          <Link to={{
-                                pathname:'/form',
-                                typeOfGraph : 'bar' }} className="waves-effect side-nav-link-ref">
+                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
                               <i className="mdi mdi-chart-bar"></i>
                               <span> Bar Chart </span>
-                          </Link>
+                          </a>
                       </li>
                       <li>
-                          <Link to={{
-                                pathname:'/form',
-                                typeOfGraph : 'line' }} className="waves-effect side-nav-link-ref">
+                          <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-chart-line"></i>
                               <span> Line Chart </span>
-                          </Link>
+                          </a>
                       </li>
                   </ul>
                   ): null }
@@ -88,23 +95,16 @@ class SideNavContent extends React.Component {
                   </a>
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
-                      <li>
-                          <Link to={{pathname:'/dashboard', state:{ 
-                              newMasterTable: {
-                                    objectType:"table", // options: graph or table
-                                    tableSettings:{
-                                        master:"true"
-                                    }
-                                }
-                            }}} className="waves-effect side-nav-link-ref">
+                       <li>
+                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-folder-multiple-outline"></i>
                               <span> Master Log Table </span>
-                          </Link>
+                            </a>
                       </li>
                       <li>
                           <Link to="/TableForm" className="waves-effect side-nav-link-ref">
-                              <i class="mdi mdi-table-edit"></i>
-                              <span> Custom Log Table </span>
+                              <i class="fe-search"></i>
+                              <span> Search Logs </span>
                           </Link>
                       </li>
                   </ul>
@@ -119,22 +119,36 @@ class SideNavContent extends React.Component {
                   { this.state.showGrapOptions ? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                       <li>
-                          <Link to="/form" className="waves-effect side-nav-link-ref">
+                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">    
                               <i className="mdi mdi-chart-bar"></i>
                               <span> Bar Chart </span>
-                          </Link>
+                          </a> */}
+                         <Link to={{
+                                typeOfGraph : 'bar' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Bar Chart </span>
+                            </Link>
                       </li>
                       <li>
-                          <Link to="/form" className="waves-effect side-nav-link-ref">
+                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-chart-line"></i>
                               <span> Line Chart </span>
-                          </Link>
+                            </a> */}
+                             <Link to={{
+                                typeOfGraph : 'line' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Line Chart </span>
+                            </Link>
                       </li>
                       <li>
-                          <Link to="/form" className="waves-effect side-nav-link-ref">
+                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
                               <i class="mdi mdi-chart-arc"></i>
                               <span> Pie Chart </span>
-                          </Link>
+                            </a>
                       </li>
 
                   </ul>

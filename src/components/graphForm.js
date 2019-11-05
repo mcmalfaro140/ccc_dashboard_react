@@ -15,8 +15,8 @@ import { connect } from 'react-redux';
  var currentDate = new Date();
 class graphForm extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.update = this.update.bind(this);
         this.submit = this.submit.bind(this);
         this.state = { 
@@ -164,11 +164,11 @@ class graphForm extends Component {
         str = "/barGraph"
       }
 
-      console.log("the str is " + str);
+      // console.log("the str is " + str);
       
         return (
 
-       <div>
+          <React.Fragment>
            
     {/* <form onSubmit = {this.submit} >  */}
     <form>
@@ -302,11 +302,17 @@ class graphForm extends Component {
                 // region = {this.state.region}/> 
 /> */}
                 
-                </div>
+                </React.Fragment>
     
         )
     }
 }
 
+const mapStateToProps = (state) => {
+  console.log(state)
+  return {
+    user: state.Auth.user
+  }
+}
 
 export default connect()(graphForm);

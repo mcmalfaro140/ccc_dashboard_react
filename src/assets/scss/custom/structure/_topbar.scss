@@ -272,11 +272,27 @@
     padding: 0 20px;
 }
 
+@media (max-width:874px) and (min-width:769px) {
+
+    .page-title-main{
+        display: none;
+    }
+    
+}
+
 
 @media (max-width: 768px) {
     .button-menu-mobile.disable-btn {
         display: block !important;
     }
+    .page-title-main{
+        display: none;
+    }
+    
+}
+
+@media (max-width: 570px) {
+
     .page-title-main{
         display: block;
     }

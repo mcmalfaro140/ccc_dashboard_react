@@ -16,8 +16,6 @@ class DefaultDashboard extends Component {
 
     constructor(props) {
         super(props);
-        this.test = this.test.bind(this);
-        this.test2 = this.test2.bind(this);
         this.state = {
             user: getLoggedInUser(),
             userDashboard: [
@@ -35,13 +33,6 @@ class DefaultDashboard extends Component {
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
                         }
-                },
-                {
-                    objectType:"table", // options: graph or table
-                    tableSettings:{
-                        master:"true",
-
-                    }
                 },
                 {
                     objectType:"table", // options: graph or table
@@ -85,58 +76,22 @@ class DefaultDashboard extends Component {
         };
     }
 
-    // componentWillMount(){
-    //     this.setState({ userDashboard: [...this.state.userDashboard, this.props.location.state.newGraph]})
-    //     console.log(this.state.userDashboard)
-    // }
-
-    // componentWillMount(){
-    //     this.test();
-    //     console.log("Misael hello")
-    //     // if(nextProps.someValue!==this.props.someValue){
-    //     //   //Perform some operation
-    //     //   this.setState({someState: someValue });
-    //     //   this.classMethod();
-    //     // }
-    //   }
-
-    // componentDidUpdate(){
-    //     console.log("Hello new props receive")
-    // }
-
-    // static getDerivedStateFromProps(props, state){
-    //     console.log("Hello new props receive")
-    // }
-
     componentWillReceiveProps(nextProps){
-        console.log("the prop function was activated")
         let temp = this.state.userDashboard
         if(nextProps.location.state){
-            if(nextProps.location.state.newGraph){
-                console.log("This is a new prop graph")
-            }else if(nextProps.location.state.newMasterTable){
-                temp.push(this.props.location.state.newMasterTable);
+            //only activate adds to the array if the props are the specify ones
+            if(nextProps.location.state.newMasterTable){
+                temp.push(nextProps.location.state.newMasterTable);
                 this.setState({
                     userDashboard: temp
                 })
-                //console.log("This is a new prop table")
-                
+            }else if(nextProps.location.state.newGraph){
+                temp.push(nextProps.location.state.newGraph);
+                this.setState({
+                    userDashboard: temp
+                })
             }
         }
-    }
-
-    test2(){
-          console.log(this.state.userDashboard)
-    }
-    test(){
-        let temp = this.state.userDashboard;
-        temp.push(this.props.location.state.newGraph);
-        // console.log(this.props.location.state.newGraph)
-
-        this.setState({
-            userDashboard: temp
-        })
-
         
     }
     
@@ -154,8 +109,8 @@ class DefaultDashboard extends Component {
                                         
                 </Card>);
             //This part will render the Graph
-            }else if(item.objectType == "graph"){
-                if(item.graphSettings.type == "line"){
+            }else if(item.objectType === "graph"){
+                if(item.graphSettings.type === "line"){
                     return (
                         <Card>
                             <CardBody>
@@ -163,7 +118,7 @@ class DefaultDashboard extends Component {
                             </CardBody>
                                                 
                         </Card>);
-                }else if(item.graphSettings.type == "bar"){
+                }else if(item.graphSettings.type === "bar"){
                     return (
                         <Card>
                             <CardBody>
@@ -171,7 +126,7 @@ class DefaultDashboard extends Component {
                             </CardBody>
                                                 
                         </Card>);
-                }else if(item.graphSettings.type == "pie"){
+                }else if(item.graphSettings.type === "pie"){
                     return (
                         <Card>
                             <CardBody>
@@ -200,8 +155,6 @@ class DefaultDashboard extends Component {
                                     </Card>
 
                                     {items}
-
-                                    <Button onClick={this.test}>Test</Button>
                                 </Col>
 
                             

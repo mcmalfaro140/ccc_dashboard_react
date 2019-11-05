@@ -11,6 +11,8 @@ const Table = React.lazy(() => import('./components/Table.js'));
 const Tables = React.lazy(() => import('./pages/Tables.js'));
 
 
+
+
 // auth
 const Login = React.lazy(() => import('./pages/auth/Login'));
 const Logout = React.lazy(() => import('./pages/auth/Logout'));
@@ -52,7 +54,7 @@ const routes = [
   { path: '/forget-password', name: 'Forget Password', component: ForgetPassword, route: Route },
   { path: '/register', name: 'Register', component: Register, route: Route },
   { path: '/confirm', name: 'Confirm', component: ConfirmAccount, route: Route },
-  { path: '/form', name: 'Form', component: form, route: Route },
+  { path: '/form', name: 'Form', component: form, route: PrivateRoute, roles: ['Admin'], title: "New Graph Form" },
   { path: '/lineGraph', name: 'LineGraph', component: lineGraph, route: Route },
    { path: '/barGraph', name: 'BarGraph', component: barGraph, route: Route },
    { path: '/TableForm', name: 'TableForm', component: TableForm, route: Route },

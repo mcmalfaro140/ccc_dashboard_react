@@ -48,9 +48,9 @@ componentWillMount(){
       cloudwatchlogs.getLogEvents(this.state.params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else  {
-          console.log(data);
+          // console.log(data);
           this.setState({temp : data.events});
-          console.log(this.state.temp);
+          // console.log(this.state.temp);
 
 
       for (var i = 0; i < this.state.temp.length; i++) {
