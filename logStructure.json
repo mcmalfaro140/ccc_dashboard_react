@@ -1,0 +1,21 @@
+{
+    "packageType":"RENEWAL_PACKAGE",
+    "time_stamp": "unix date",
+    "thread": "",
+    "level": "",
+    "logger": "",
+    "SLF4J_logs": [
+        "message",
+        "message2"
+        ],
+    "total_policies_process": "if needed", 
+    "policies":[
+        {
+            "policy_number": "",
+            "iteration_id": "",
+            "soring_method":""
+        }
+    ],    
+    "message": ""
+
+}
