@@ -23,13 +23,14 @@ class graphForm extends Component {
             newGraph:{
               objectType:"graph", // options: graph or table
               graphSettings: {
-              type:"bar", //options: line, pie, or bar
+              type: str, //options: line, pie, or bar
               realTime:"false", //options: true or false
               metricName:"",
               nameSpace:"",
               chartName:"",
               instanceId:"",
               refreshRate:"",
+              period:"",
               startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
               endTime:new Date() //if needed
               },
@@ -42,6 +43,37 @@ class graphForm extends Component {
     
     }}
 
+    readSelection(e){
+      let newStartTime;
+      let newPeriod;
+      if(e.target.value==="6 hour"){
+        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-6,currentDate.getMinutes());
+        newPeriod = 120;
+      }
+      else if(e.target.value === "Last Day"){
+        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes());
+        newPeriod = 180;
+      }
+      else if(e.target.value === "Last Week"){
+        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes());
+        newPeriod = 600;
+      }
+      else if(e.target.value === "Last Month"){
+        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes());
+        newPeriod = 2400;
+      }
+
+      this.setState(prevState => ({
+        newGraph: {
+          ...prevState.newGraph,           
+          graphSettings: {                     
+            ...prevState.newGraph.graphSettings,   
+            startTime :  newStartTime,
+            period : newPeriod      
+          }
+        }
+      }))
+  }
     submit(e){
   
       
@@ -88,7 +120,7 @@ class graphForm extends Component {
           newGraph: {
             ...prevState.newGraph,           
             graphSettings: {                     
-              ...prevState.newGraph.pizza,   
+              ...prevState.newGraph.graphSettings,   
               metricName : value[0],
               nameSpace : value[1],
               chartName : value[2],
@@ -125,12 +157,12 @@ class graphForm extends Component {
     
 
     render() {
-      // if(this.props.location.typeOfGraph === 'Line'){
-      //   str = "/lineGraph"
-      // }
-      // else if(this.props.location.typeOfGraph === 'Bar'){
-      //   str = "/barGraph"
-      // }
+      if(this.props.location.typeOfGraph === 'line'){
+        str = "/lineGraph"
+      }
+      else if(this.props.location.typeOfGraph === 'bar'){
+        str = "/barGraph"
+      }
 
       // console.log("the str is " + str);
       
@@ -243,7 +275,7 @@ class graphForm extends Component {
                     <Form.Control as="select" 
                      placeholder="select" 
                      onChange={this.readSelection}>
-                    <option value = "6 hour">Last Hour</option>
+                    <option value = "6 hour">Last 6 Hour</option>
                     <option value = "Last Day">Last Day</option>
                     <option value = "Last Week">Last Week</option>
                     <option value = "Last Month">Last Month</option>
@@ -253,7 +285,7 @@ class graphForm extends Component {
                   {/* <Button variant = "primary" type="submit"  
                 
                  ></Button> */}
-                 <Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}><Button variant = "primary">Done..</Button></Link>
+                 <Button variant = "primary"><Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}>Done..</Link></Button>
                 
 
                  
@@ -283,5 +315,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-// export default connect(mapStateToProps)(graphForm);
-export default graphForm;
+export default connect()(graphForm);

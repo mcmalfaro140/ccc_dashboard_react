@@ -8,6 +8,7 @@ import myKeys from '../keys.json';
  * Renders the preloader
  */
 //hello
+
 var currentDate = new Date();
 var optionToSkip =  {  
     scales: {
@@ -23,19 +24,9 @@ var optionToSkip =  {
         display: false ,
        // color: "black  "
       },
-          // afterTickToLabelConversion: function(data){
-  
-  
-          //    var xLabels = data.ticks;
-  
-          //     xLabels.forEach(function (labels, i) {
-          //         if (i % 2 === 1){
-          //             xLabels[i] = '';
-          //         }
-          //     });
-          // } ,
          
      }] , 
+     
       yAxes: [{
        //stacked: true,
         ticks: {
@@ -53,6 +44,9 @@ var optionToSkip =  {
         },
     }], 
 }}
+
+
+
 class LineGraph extends Component {
     constructor(){
         super();
@@ -64,16 +58,20 @@ class LineGraph extends Component {
             uniqueLabel:[]
 
         }
+        
 
     }
+    
 
       getgraph3 = () =>{
+      
+         
         var params = {
             EndTime: currentDate, /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
-            Period: '180', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-6,currentDate.getMinutes()), /* required **********************************Always change it to a new start time */ 
+            Period: this.props.graphSettings.period, /* required */
+            StartTime:  this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
@@ -87,7 +85,7 @@ class LineGraph extends Component {
               'Average',
               /* more items */
             ],
-            Unit:"Percent",
+         
            
           }
         
@@ -133,9 +131,7 @@ class LineGraph extends Component {
                     data : [...prevState.data, this.state.holder[i].Average]
                   }));
               }
-              for(var i = 0;i<this.state.label.length;i++){
-
-              }
+              
            
             
             //  uniqueData =  Array.from(new Set(data));
@@ -154,8 +150,37 @@ class LineGraph extends Component {
       }
 
     render() {
+    
        
-
+      if(this.props.graphSettings.metricName!=="CPUUtilization"){
+        optionToSkip =  {  
+          scales: {
+            xAxes: [{
+              ticks: {
+                maxRotation: 0,
+                minRotation: 0,
+            fontSize: 10,
+            //autoSkip: true,
+            maxTicksLimit: 10
+          },
+            gridLines: {
+              display: false ,
+             // color: "black  "
+            },
+            }] , 
+            yAxes: [{
+              ticks: {
+                  beginAtZero:true,
+                //  fontColor: 'black   '
+              },
+              gridLines: {
+                display: true ,
+               // color: "black  "
+              },
+          }], 
+      }}
+      
+      }
 
        const lineGraphData = {
         labels: this.state.label,
