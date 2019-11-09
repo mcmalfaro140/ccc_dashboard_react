@@ -22,18 +22,6 @@ var optionToSkip =  {
         display: false ,
        // color: "black  "
       },
-          // afterTickToLabelConversion: function(data){
-  
-  
-          //    var xLabels = data.ticks;
-  
-          //     xLabels.forEach(function (labels, i) {
-          //         if (i % 2 === 1){
-          //             xLabels[i] = '';
-          //         }
-          //     });
-          // } ,
-         
       }] , 
       yAxes: [{
         ticks: {
@@ -46,6 +34,7 @@ var optionToSkip =  {
         },
     }], 
 }}
+  
 class BarGraph extends Component {
     constructor(){
         super();
@@ -65,8 +54,8 @@ class BarGraph extends Component {
             EndTime: currentDate, /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
-            Period: '180', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-6,currentDate.getMinutes()), /* required **********************************Always change it to a new start time */ 
+            Period: this.props.graphSettings.period, /* required */
+            StartTime: this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
            Dimensions: [
               {
@@ -142,7 +131,42 @@ class BarGraph extends Component {
       }
 
     render() {
-       
+      if(this.props.graphSettings.metricName==="CPUUtilization"){
+       optionToSkip={
+        scales: {
+          xAxes: [{
+            ticks: {
+                maxRotation: 0,
+                minRotation: 0,
+            fontSize: 10,
+            //autoSkip: true,
+            maxTicksLimit: 10
+          },
+          gridLines: {
+            display: false ,
+           // color: "black  "
+          },
+             
+         }] , 
+         
+          yAxes: [{
+           //stacked: true,
+            ticks: {
+              fontSize: 10,
+              min: 0,
+              max: 1,// Your absolute max value
+              callback: function (value) {
+                return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+              },
+              //  fontColor: 'black   '
+            },
+            gridLines: {
+              display: true ,
+             // color: "black  "
+            },
+        }], 
+      }}
+      }
 
 
        const lineGraphData = {

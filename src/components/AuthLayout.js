@@ -40,17 +40,18 @@ class AuthLayout extends Component {
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
+        this.readSelection = this.readSelection.bind(this);
         this.state = {
             isCondensed: false,
             modal0pem: false,
-            realTime:"false", //options: true or false
-            metricName:"CPUCreditUsage", 
-            nameSpace:"AWS/EC2",
-            chartName:"TestBar",
+            metricName:"", 
+            nameSpace:"",
+            chartName:"",
             instanceId:"i-0e84c5d781008a00e",
-            refreshRate:"",
             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+            period:120,
             endTime:new Date() //if needed
+           // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
         }
     }
 
@@ -83,35 +84,29 @@ class AuthLayout extends Component {
         if(value.length > 4){
             value = [];
         }
-        // var newGraph = {...this.state.newGraph};
-        // newGraph["metricName"] = value[0];
-        // newGraph["nameSpace"] = value[1];
-        // newGraph["chartName"] = value[2];
-        // newGraph["instanceId"] = value[3];
-        // this.setState({newGraph : newGraph});
-        this.setState(prevState => ({
-          newGraph: {
-            ...prevState.newGraph,           
-            graphSettings: {                     
-              ...prevState.newGraph.pizza,   
-              metricName : value[0],
-              nameSpace : value[1],
-              chartName : value[2],
-              instanceId : value[3]         
-            }
-          }
-        }))
-        // this.setState({nameSpace : value[1]});
-        // this.setState({chartName : value[2]});
-        // this.setState({accessKeyId : value[3]});
-        // this.setState({secretAccessKey : value[4]});
-        // this.setState({instanceId : value[3]});
-        //this.setState({region : value[6]});
-        // this.setState({startTime : value[7]});
-        // this.setState({endTime : value[8]});
-
       
-
+        this.setState({metricName : value[0]})
+        this.setState({nameSpace : value[1]});
+        this.setState({chartName : value[2]});
+        this.setState({instanceId : value[3]});
+    }
+    readSelection(e){
+        if(e.target.value === "Last Hour"){
+            this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())})
+            this.setState({period : 60})
+        }
+        if(e.target.value === "Last Day"){
+            this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
+            this.setState({period : 120})
+        }
+        if(e.target.value === "Last Week"){
+            this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes())})
+            this.setState({period : 600})
+        }
+        if(e.target.value === "Last Month"){
+            this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes())})
+            this.setState({period : 2400})
+        }
     }
 
     render() {
@@ -240,17 +235,17 @@ class AuthLayout extends Component {
  />
  </Form.Group>         */}
 
-       <Form.Group controlId="exampleForm.ControlSelect1">
-             <Form.Label>Time Range</Form.Label>
-             <Form.Control as="select" 
-              placeholder="select" 
-              onChange={this.readSelection}>
-             <option value = "6 hour">Last Hour</option>
-             <option value = "Last Day">Last Day</option>
-             <option value = "Last Week">Last Week</option>
-             <option value = "Last Month">Last Month</option>
-             </Form.Control>
-         </Form.Group>
+                <Form.Group controlId="exampleForm.ControlSelect1">
+                    <Form.Label>Time Range</Form.Label>
+                    <Form.Control as="select"  
+                     onChange={(e) => this.readSelection(e)}>
+                    <option disabled selected>Make Selection</option>
+                    <option value = "Last Hour">Last Hour</option>
+                    <option value = "Last Day">Last Day</option>
+                    <option value = "Last Week">Last Week</option>
+                    <option value = "Last Month">Last Month</option>
+                    </Form.Control>
+                </Form.Group>
    
            {/* <Button variant = "primary" type="submit"  
          
@@ -270,12 +265,13 @@ class AuthLayout extends Component {
                                                     graphSettings: {
                                                             type:this.props.location.typeOfGraph, //options: line, pie, or bar
                                                             realTime:"false", //options: true or false
-                                                            metricName:"CPUCreditUsage", 
-                                                            nameSpace:"AWS/EC2",
-                                                            chartName:"TestBar",
-                                                            instanceId:"i-0e84c5d781008a00e",
+                                                            metricName:this.state.metricName, 
+                                                            nameSpace:this.state.nameSpace,
+                                                            chartName:this.state.chartName,
+                                                            instanceId:this.state.instanceId,
                                                             refreshRate:"",
-                                                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                                                            period:this.state.period,
+                                                            startTime:this.state.startTime, //if needed
                                                             endTime:new Date() //if needed
                                                     }
                                                 }
