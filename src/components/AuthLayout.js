@@ -133,9 +133,9 @@ class AuthLayout extends Component {
                         </div>
                         
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
-                            <ModalHeader toggle={this.toggleForm}>Modal title</ModalHeader>
+                            <ModalHeader toggle={this.toggleForm}>Add Form</ModalHeader>
                             <ModalBody>
-                            If you click done it will add a new graph. This is gonna be the form.
+                            Please provide all the inputs to create a chart.
 
                             <form>
  

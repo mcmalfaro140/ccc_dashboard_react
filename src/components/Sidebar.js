@@ -8,6 +8,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
 
 import profilePic from '../assets/images/users/defaultUser.png';
+import Logout from '../pages/auth/Logout';
 
 var currentDate = new Date();
 
@@ -89,20 +90,20 @@ class SideNavContent extends React.Component {
               </li>
               <li className={this.state.logTableActive? ("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showLogTableOptions}>
-                      <i class="mdi mdi-table-large"></i>
-                      <span> New Log Table </span>
+                      <i class="mdi mdi-folder-multiple-outline"></i>
+                      <span> Logs </span>
                       <span className="menu-arrow"></span>
                   </a>
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                        <li>
                             <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
-                              <i class="mdi mdi-folder-multiple-outline"></i>
-                              <span> Master Log Table </span>
+                              <i class="mdi mdi-table-large"></i>
+                              <span> New Log Table </span>
                             </a>
                       </li>
                       <li>
-                          <Link to="/TableForm" className="waves-effect side-nav-link-ref">
+                          <Link to="/" className="waves-effect side-nav-link-ref">
                               <i class="fe-search"></i>
                               <span> Search Logs </span>
                           </Link>
@@ -132,15 +133,11 @@ class SideNavContent extends React.Component {
                             </Link>
                       </li>
                       <li>
-                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
-                              <i class="mdi mdi-chart-line"></i>
-                              <span> Line Chart </span>
-                            </a> */}
-                             <Link to={{
+                            <Link to={{
                                 typeOfGraph : 'line' }}
                                 onClick = {this.props.toggleForm}
                                 className="waves-effect side-nav-link-ref">
-                                <i className="mdi mdi-chart-bar"></i>
+                                <i class="mdi mdi-elevation-rise"></i>
                                 <span> Line Chart </span>
                             </Link>
                       </li>
@@ -184,7 +181,7 @@ const UserProfile = () => {
 
             <ul className="list-inline">
                 <li className="list-inline-item">
-                    <Link to="/" className="text-custom">
+                    <Link to="/Logout" className="text-custom">
                         <i className="mdi mdi-power"></i>
                         <span> Logout </span>
                     </Link>
