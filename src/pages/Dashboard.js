@@ -8,6 +8,12 @@ import Table from './Tables'
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
+import GridLayout from 'react-grid-layout';
+
+//import css needed for reac-grid-layout
+import '../assets/react-grid/styles.css'
+import '../assets/react-grid/styles1.css'
+
 
 var currentDate = new Date()
 
@@ -18,6 +24,7 @@ class DefaultDashboard extends Component {
         super(props);
         this.state = {
             user: getLoggedInUser(),
+            screenWidth: (window.innerWidth - 280), //TODO: MAKE RESIZE CHANGE WHEN IN FULL SCREEN
             userDashboard: [
                 {
                     objectType:"graph", // options: graph or table
@@ -27,7 +34,7 @@ class DefaultDashboard extends Component {
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
-                            instanceId:"i-0e84c5d781008a00e",
+                            instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
@@ -38,7 +45,6 @@ class DefaultDashboard extends Component {
                     objectType:"table", // options: graph or table
                     tableSettings:{
                         master:"true",
-
                     }
                 },
                 {
@@ -49,7 +55,7 @@ class DefaultDashboard extends Component {
                             metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar",
-                            instanceId:"i-0e84c5d781008a00e",
+                            instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
@@ -64,7 +70,7 @@ class DefaultDashboard extends Component {
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
-                            instanceId:"i-0e84c5d781008a00e",
+                            instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"",
                             period:"",
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
@@ -99,10 +105,11 @@ class DefaultDashboard extends Component {
     render() {
     
         const items = this.state.userDashboard.map((item, i) => {
-            //This part will render the table
+           //This part will render the table
             if(item.objectType == "table"){
                 return (
-                <Card>
+                    //min for table w:4 h:9
+                <Card key={i} data-grid={{x: 0, y: i, w: 12, h: 9, minW: 4, minH:9}}> 
                     <CardBody>
                         <Table/>
                     </CardBody>
@@ -112,7 +119,8 @@ class DefaultDashboard extends Component {
             }else if(item.objectType === "graph"){
                 if(item.graphSettings.type === "line"){
                     return (
-                        <Card>
+                        //min for chart w:4 h:7
+                        <Card key={i} data-grid={{x: 0, y: i, w: 4, h: 7, minW: 4, minH:7}}>
                             <CardBody>
                                 <LineGraph {...item}></LineGraph>
                             </CardBody>
@@ -120,7 +128,7 @@ class DefaultDashboard extends Component {
                         </Card>);
                 }else if(item.graphSettings.type === "bar"){
                     return (
-                        <Card>
+                        <Card key={i} data-grid={{x: 0, y: i, w: 4, h: 7, minW: 4, minH:7}}>
                             <CardBody>
                                 <BarGraph {...item}></BarGraph>
                             </CardBody>
@@ -128,7 +136,7 @@ class DefaultDashboard extends Component {
                         </Card>);
                 }else if(item.graphSettings.type === "pie"){
                     return (
-                        <Card>
+                        <Card key={i} data-grid={{x: 0, y: i, w: 4, h: 7, minW: 4, minH:7}}>
                             <CardBody>
         
                                 This is gonna be a Pie graph
@@ -143,22 +151,15 @@ class DefaultDashboard extends Component {
                 <div className="">
                     { /* preloader */}
                     {this.props.loading && <Loader />}
-                    <Row>
-                                <Col lg={12}>
-                                    <Card>
-                                        <CardBody>
+                    <Card>
+                        <CardBody>
+                            This card will have the default dashboard health.
+                        </CardBody>
+                    </Card>
 
-                                            This card will have the default dashboard health.
-                                             
-                                        </CardBody>
-                                        
-                                    </Card>
-
-                                    {items}
-                                </Col>
-
-                            
-                            </Row>
+                    <GridLayout className="layout" cols={12} rowHeight={30} width={this.state.screenWidth}>
+                        {items}
+                    </GridLayout>
                 </div>
             </React.Fragment>
         )
