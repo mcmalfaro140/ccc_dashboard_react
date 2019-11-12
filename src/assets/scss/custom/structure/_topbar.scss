@@ -67,7 +67,7 @@
         overflow: hidden;
         height: $topbar-height;
         display: table;
-        max-width: 180px;
+        width: 380px;
         margin-right: 20px;
         
         .app-search-box {
@@ -85,7 +85,7 @@
             padding-left: 20px;
             padding-right: 0;
             color: $dark;
-            background-color: rgba($gray-700,0.07);
+            background-color: white;
             box-shadow: none;
             border-radius: 30px 0 0 30px;
         }
@@ -95,7 +95,7 @@
         }
 
         .btn {
-            background-color: rgba($gray-700,0.07);
+            background-color: white;
             border-color: transparent;
             color: $gray-600;
             border-radius: 0 30px 30px 0;
@@ -118,6 +118,7 @@
     .button-menu-mobile.disable-btn {
         display: none;
     }
+
 }
 
 
@@ -271,6 +272,14 @@
     padding: 0 20px;
 }
 
+@media (max-width:874px) and (min-width:769px) {
+
+    .page-title-main{
+        display: none;
+    }
+    
+}
+
 
 @media (max-width: 768px) {
     .button-menu-mobile.disable-btn {
@@ -279,4 +288,13 @@
     .page-title-main{
         display: none;
     }
+    
+}
+
+@media (max-width: 570px) {
+
+    .page-title-main{
+        display: block;
+    }
+    
 }

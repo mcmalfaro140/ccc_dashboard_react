@@ -8,7 +8,7 @@ import { AvForm, AvField, AvGroup, AvInput, AvFeedback } from 'availity-reactstr
 import { loginUser } from '../../redux/actions';
 import { isUserAuthenticated } from '../../helpers/authUtils';
 import Loader from '../../components/Loader';
-import logo from '../../assets/images/logo-dark.png';
+import logo from '../../assets/images/logo_ccc.png';
 
 class Login extends Component {
     _isMounted = false;
@@ -69,10 +69,9 @@ class Login extends Component {
                             <Row className="justify-content-center">
                                 <Col md={8} lg={6} xl={5} >
                                     <div className="text-center">
-                                        <Link to="/">
-                                            <span><img src={logo} alt="" height="22" /></span>
-                                        </Link>
-                                        <p className="text-muted mt-2 mb-4">Responsive Admin Dashboard</p>
+                                        <span><img src={logo} alt="" height="60" style={{marginBottom : '10%'}} /></span>
+                                
+                                        {/* <p className="text-muted mt-2 mb-4">Responsive Admin Dashboard</p> */}
                                     </div>
                                     <Card>
                                         <CardBody className="p-4 position-relative">
@@ -108,9 +107,9 @@ class Login extends Component {
                             </Row>
 
                             <Row className="mt-1">
-                                <Col className="col-12 text-center">
-                                    <p><Link to="/forget-password" className="text-muted ml-1"><i className="fa fa-lock mr-1"></i>Forgot your password?</Link></p>
-                                    <p className="text-muted">Don't have an account? <Link to="/register" className="text-dark ml-1"><b>Register</b></Link></p>
+                                <Col className="col-12 text-center" >
+                                    <p ><Link to="/forget-password" className="ml-1" style={{color: 'black',  fontSize:'130%'}}><i className="fa fa-lock mr-1" ></i>Forgot your password?</Link></p>
+                                    <p style={{color: 'black', fontSize:'130%'}}>Don't have an account? <Link to="/register" className="text ml-1" ><b>Register</b></Link></p>
                                 </Col>
                             </Row>
 

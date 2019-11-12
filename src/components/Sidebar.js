@@ -1,99 +1,205 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle} from 'reactstrap';
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
-import profilePic from '../assets/images/users/user-1.jpg';
+
+import profilePic from '../assets/images/users/defaultUser.png';
+import Logout from '../pages/auth/Logout';
+
+var currentDate = new Date();
 
 
-const SideNavContent = () => {
+//Side menu navigation
+//TODO modify alert route
+class SideNavContent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showGrapOptions: false,
+            showRealtimeOptions: false,
+            showLogTableOptions: false,
+            graphActive: false,
+            realTimeActive: false,
+            logTableActive: false
+          }
+        this.showGrapOptions = this.showGrapOptions.bind(this);
+        this.showRealtimeOptions = this.showRealtimeOptions.bind(this);
+        this.showLogTableOptions = this.showLogTableOptions.bind(this);
+        this.myTest = this.myTest.bind(this);
+    }
+    showRealtimeOptions(e){
+        e.preventDefault();
+        this.setState({ showRealtimeOptions: !this.state.showRealtimeOptions, realTimeActive: !this.state.realTimeActive});
+    }
+    showLogTableOptions(e){
+        e.preventDefault();
+        this.setState({ showLogTableOptions: !this.state.showLogTableOptions, logTableActive: !this.state.logTableActive});
+    }
+    showGrapOptions(e){
+        e.preventDefault();
+        this.setState({ showGrapOptions: !this.state.showGrapOptions, graphActive: !this.state.graphActive});
+    }
+    myTest(){
+        console.log("clicked")
+        return(
+            <div>
+                <h1>hello Misael</h1>
+            </div>
+        )
+    }
+    
+    render(){
     return <React.Fragment>
 
-        <div id="sidebar-menu">
-            <ul className="metismenu" id="side-menu">
-                <li className="menu-title">Navigation</li>
+    <div id="sidebar-menu">
+          <ul className="metismenu" id="side-menu">
+              <li className="menu-title">Navigation</li>
 
-                <li>
-                    <Link to="/dashboard" className="waves-effect side-nav-link-ref">
-                        <i className="mdi mdi-view-dashboard"></i>
-                        <span> Dashboard </span>
-                    </Link>
-                </li>
-
-                <li>
-                    <Link to="/" className="waves-effect" aria-expanded="false">
-                        <i className="mdi mdi-share-variant"></i>
-                        <span> Multi Level </span>
-                        <span className="menu-arrow"></span>
-                    </Link>
-
-                    <ul className="nav-second-level nav" aria-expanded="false">
-                        <li>
-                            <Link to="/" className="side-nav-link-ref">Level 1.1</Link>
-                        </li>
-                        <li>
-                            <Link to="/" className="has-dropdown">Level 1.2
-                                <span className="menu-arrow"></span>
+              <li>
+                  <Link to="/dashboard" className="waves-effect side-nav-link-ref">
+                      <i className="mdi mdi-view-dashboard"></i>
+                      <span> Dashboard </span>
+                  </Link>
+              </li>
+              <li className={this.state.realTimeActive ? ("active"):null}>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.showRealtimeOptions}>
+                      <i class="mdi mdi-clock"></i>
+                      <span> Realtime </span>
+                      <span className="menu-arrow"></span>
+                  </a>
+                  { this.state.showRealtimeOptions ? (
+                   <ul className="nav-second-level nav" aria-expanded="false">
+                      <li>
+                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
+                              <i className="mdi mdi-chart-bar"></i>
+                              <span> Bar Chart </span>
+                          </a>
+                      </li>
+                      <li>
+                          <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-chart-line"></i>
+                              <span> Line Chart </span>
+                          </a>
+                      </li>
+                  </ul>
+                  ): null }
+              </li>
+              <li className={this.state.logTableActive? ("active"):null}>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.showLogTableOptions}>
+                      <i class="mdi mdi-folder-multiple-outline"></i>
+                      <span> Logs </span>
+                      <span className="menu-arrow"></span>
+                  </a>
+                  { this.state.showLogTableOptions? (
+                   <ul className="nav-second-level nav" aria-expanded="false">
+                       <li>
+                       <Link to={{pathname:'/dashboard', 
+                                    state:{ 
+                                        newMasterTable:{
+                                            objectType:"table", // options: graph or table
+                                            tableSettings:{
+                                                master:"true",
+                                            }
+                                        }
+                                    }
+                                }} className="waves-effect side-nav-link-ref">
+                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref"> */}
+                              <i class="mdi mdi-table-large"></i>
+                              <span> New Log Table </span>
                             </Link>
-                            <ul className="nav-third-level nav" aria-expanded="false">
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.1</Link>
-                                </li>
-                                <li>
-                                    <Link to="/" className="side-nav-link-ref">Level 2.2</Link>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <div className="clearfix"></div>
+                      </li>
+                      <li>
+                          <Link to="/" className="waves-effect side-nav-link-ref">
+                              <i class="fe-search"></i>
+                              <span> Search Logs </span>
+                          </Link>
+                      </li>
+                  </ul>
+                  ): null }
+              </li>
+              <li className={this.state.graphActive ? ("active"):null}>
+                  <a className="waves-effect" aria-expanded="false" onClick={this.showGrapOptions}>
+                      <i class="mdi mdi-elevation-rise"></i>
+                      <span> New Graph </span>
+                      <span className="menu-arrow"></span>
+                  </a>
+                  { this.state.showGrapOptions ? (
+                   <ul className="nav-second-level nav" aria-expanded="false">
+                      <li>
+                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">    
+                              <i className="mdi mdi-chart-bar"></i>
+                              <span> Bar Chart </span>
+                          </a> */}
+                         <Link to={{
+                                typeOfGraph : 'bar' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Bar Chart </span>
+                            </Link>
+                      </li>
+                      <li>
+                            <Link to={{
+                                typeOfGraph : 'line' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-elevation-rise"></i>
+                                <span> Line Chart </span>
+                            </Link>
+                      </li>
+                      <li>
+                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-chart-arc"></i>
+                              <span> Pie Chart </span>
+                            </a>
+                      </li>
+
+                  </ul>
+                  ): null }
+              </li>
+              <li>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
+                      <i class="mdi mdi-bell-ring-outline"></i>
+                      <span> Alerts </span>
+                  </a>
+              </li>
+              <li>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.props.goFullScreen}>
+                      <i class="mdi mdi-fullscreen"></i>
+                      <span> FullScreen Mode </span>
+                  </a>
+              </li>
+              <li>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
+                      <i class="mdi mdi-settings"></i>
+                      <span> Settings </span>
+                  </a>
+              </li>
+
+          </ul>
+      </div>
+      <div className="clearfix"></div>
     </React.Fragment>
+    }
 }
 
+//Side menu User fragment
+//TODO: Update user email dynamically with back end and add logout link.
 const UserProfile = () => {
     return <React.Fragment>
-        <div className="user-box text-center">
-            <img src={profilePic} alt="user-img" title="Nik Patel" className="rounded-circle img-thumbnail avatar-lg" />
-            <UncontrolledDropdown>
-                <DropdownToggle caret tag="a" className="text-dark dropdown-toggle h5 mt-2 mb-1 d-block">
-                    Nik Patel
-                </DropdownToggle>
-                <DropdownMenu className="user-pro-dropdown">
-                    <DropdownItem>
-                        <i className="fe-user mr-1"></i>
-                        <span>My Account</span>
-                    </DropdownItem>
-                    <DropdownItem>
-                        <i className="fe-settings mr-1"></i>
-                        <span>Settings</span>
-                    </DropdownItem>
-                    <DropdownItem>
-                        <i className="fe-lock mr-1"></i>
-                        <span>Lock Screen</span>
-                    </DropdownItem>
-                    <DropdownItem>
-                        <i className="fe-log-out mr-1"></i>
-                        <span>Logout</span>
-                    </DropdownItem>
-                </DropdownMenu>
-            </UncontrolledDropdown>
+        <div className="user-box text-center ">
+            <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
+            <h5>mcmalfaro@hotmail.com</h5>
 
-            <p className="text-muted">Admin Head</p>
             <ul className="list-inline">
                 <li className="list-inline-item">
-                    <Link to="/" className="text-muted">
-                        <i className="mdi mdi-settings"></i>
-                    </Link>
-                </li>
-
-                <li className="list-inline-item">
-                    <Link to="/" className="text-custom">
+                    <Link to="/Logout" className="text-custom">
                         <i className="mdi mdi-power"></i>
+                        <span> Logout </span>
                     </Link>
                 </li>
             </ul>
@@ -207,13 +313,15 @@ class Sidebar extends Component {
         }
     }
 
+
+
     render() {
         const isCondensed = this.props.isCondensed || false;
 
         return (
             <React.Fragment>
                 <div className='left-side-menu' ref={node => this.menuNodeRef = node}>
-                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent /></PerfectScrollbar>}
+                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent {...this.props}/></PerfectScrollbar>}
                     {isCondensed && <UserProfile /> && <SideNavContent />}
                 </div>
             </React.Fragment>

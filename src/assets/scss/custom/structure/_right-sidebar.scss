@@ -8,10 +8,10 @@
     display: block;
     position: fixed;
     transition: all 200ms ease-out;
-    width: $rightbar-width;
+    width: $leftbar-width;
     z-index: 9999;
     float: right !important;
-    right: -($rightbar-width + 10px);
+    right: -($rightbar-width - 10px);
     top: 0;
     bottom: 0;
 

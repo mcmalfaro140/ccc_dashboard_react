@@ -18,6 +18,11 @@
     }
 }
 
+.menuTrans{
+    transition: all 0.4s ease-out;
+    color: red;
+}
+
 .nav-second-level,
 .nav-thrid-level {
     li {
@@ -83,7 +88,7 @@
                 padding: 13px 20px;
                 position: relative;
                 transition: all 0.4s;
-                font-size: 0.925rem;
+                font-size: 1rem;
 
                 &:hover,
                 &:focus,
@@ -154,9 +159,9 @@
         letter-spacing: .05em;
         pointer-events: none;
         cursor: default;
-        font-size: 0.6875rem;
+        font-size: 0.8rem;
         text-transform: uppercase;
-        color: $gray-500;
+        color: black;
         font-weight: $font-weight-medium;
     }
 }
