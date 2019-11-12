@@ -5,8 +5,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import {Form} from 'react-bootstrap';
 
-
 import profilePic from '../assets/images/users/user-1.jpg';
+
+//TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
 var currentDate = new Date();
 var value = [];
@@ -132,9 +133,9 @@ class AuthLayout extends Component {
                         </div>
                         
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
-                            <ModalHeader toggle={this.toggleForm}>Modal title</ModalHeader>
+                            <ModalHeader toggle={this.toggleForm}>Add Form</ModalHeader>
                             <ModalBody>
-                            If you click done it will add a new graph. This is gonna be the form.
+                            Please provide all the inputs to create a chart.
 
                             <form>
  
