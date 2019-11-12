@@ -97,10 +97,20 @@ class SideNavContent extends React.Component {
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                        <li>
-                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
+                       <Link to={{pathname:'/dashboard', 
+                                    state:{ 
+                                        newMasterTable:{
+                                            objectType:"table", // options: graph or table
+                                            tableSettings:{
+                                                master:"true",
+                                            }
+                                        }
+                                    }
+                                }} className="waves-effect side-nav-link-ref">
+                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref"> */}
                               <i class="mdi mdi-table-large"></i>
                               <span> New Log Table </span>
-                            </a>
+                            </Link>
                       </li>
                       <li>
                           <Link to="/" className="waves-effect side-nav-link-ref">
@@ -155,6 +165,12 @@ class SideNavContent extends React.Component {
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
                       <i class="mdi mdi-bell-ring-outline"></i>
                       <span> Alerts </span>
+                  </a>
+              </li>
+              <li>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.props.goFullScreen}>
+                      <i class="mdi mdi-fullscreen"></i>
+                      <span> FullScreen Mode </span>
                   </a>
               </li>
               <li>

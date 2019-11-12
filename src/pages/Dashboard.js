@@ -27,7 +27,7 @@ class DefaultDashboard extends Component {
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
-                            instanceId:"i-0e84c5d781008a00e",
+                            instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
@@ -49,7 +49,7 @@ class DefaultDashboard extends Component {
                             metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar",
-                            instanceId:"i-0e84c5d781008a00e",
+                            instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
@@ -64,7 +64,7 @@ class DefaultDashboard extends Component {
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
-                            instanceId:"i-0e84c5d781008a00e",
+                            instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"",
                             period:"",
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
