@@ -7,7 +7,6 @@ import { isUserAuthenticated, getLoggedInUser } from './helpers/authUtils';
 
 // lazy load all the views
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
-const Table = React.lazy(() => import('./components/Table.js'));
 const Tables = React.lazy(() => import('./pages/Tables.js'));
 
 
