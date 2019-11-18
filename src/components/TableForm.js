@@ -102,7 +102,7 @@ test = () =>{
     
     console.log(this.state.arr)
    
-  },timeToWait * 300);
+  },timeToWait * 700);
 
  
 }
