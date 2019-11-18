@@ -5,11 +5,11 @@ import "react-table/react-table.css";
 
 
 
-function Table (props) {
+function NewTable (props) {
 
 //Object to hold the data for a single log event
 const tabledata = {
-  loggroupnames: "",
+  loggroupnames: props.loggroupnames,
   level:"",
   logger:"",
   message:""
@@ -21,7 +21,7 @@ var dataFromtable = [];
 function newTableData () {
   var new_data = Object.create(tabledata);
 
-  for (var i = 0; i < props.loggroupnames.length; i++) {
+  for (var i = 0; i < tabledata.loggroupnames.length; i++) {
 
     new_data.loggroupnames= props.loggroupnames[i];
     // new_data.level = props.level[i].toLowerCase();
@@ -96,4 +96,4 @@ return(
       )
 }
 
-export default Table;
+export default NewTable;
