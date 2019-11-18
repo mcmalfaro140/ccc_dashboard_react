@@ -113,14 +113,13 @@ helper = () => {
     this.state.dataTemp.forEach(element => {
         setTimeout(async() => {
           let temp = await this.state.getID(element)
-             
-           let res = await this.getResults(temp.queryId);
-                     await this.state.setQueryResults(res)
+          
+          await this.state.setIds(temp.queryId)
+          this.state.stopQuery(temp.queryId)
+          
 
-            
-
-          let stop = this.state.stopQuery(temp.queryId)
-          this.state.setIds(temp.queryId)
+          let res = await this.getResults(temp.queryId);
+          await this.state.setQueryResults(res)
          
         },count * 250);
 
