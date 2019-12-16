@@ -8,6 +8,7 @@ import myKeys from '../keys.json';
  * Renders the preloader
  */
 //hello
+
 var currentDate = new Date();
 var optionToSkip =  {  
     scales: {
@@ -15,28 +16,26 @@ var optionToSkip =  {
         ticks: {
             maxRotation: 0,
             minRotation: 0,
-           fontSize: 10
+        fontSize: 10,
+        //autoSkip: true,
+        maxTicksLimit: 10
       },
       gridLines: {
         display: false ,
        // color: "black  "
       },
-          afterTickToLabelConversion: function(data){
-  
-  
-             var xLabels = data.ticks;
-  
-              xLabels.forEach(function (labels, i) {
-                  if (i % 2 === 1){
-                      xLabels[i] = '';
-                  }
-              });
-          } ,
          
-      }] , 
+     }] , 
+     
       yAxes: [{
+       //stacked: true,
         ticks: {
-            beginAtZero:true,
+          fontSize: 10,
+          min: 0,
+          max: 1,// Your absolute max value
+          callback: function (value) {
+            return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+          },
           //  fontColor: 'black   '
         },
         gridLines: {
@@ -45,6 +44,9 @@ var optionToSkip =  {
         },
     }], 
 }}
+
+
+
 class LineGraph extends Component {
     constructor(){
         super();
@@ -56,22 +58,26 @@ class LineGraph extends Component {
             uniqueLabel:[]
 
         }
+        
 
     }
+    
 
       getgraph3 = () =>{
+      
+         
         var params = {
             EndTime: currentDate, /* required */
-            MetricName: this.props.location.state.metricName, /* required */
-            Namespace: this.props.location.state.nameSpace, /* required */
-            Period: '600', /* required */
-            StartTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7), /* required **********************************Always change it to a new start time */ 
+            MetricName: this.props.graphSettings.metricName, /* required */
+            Namespace: this.props.graphSettings.nameSpace, /* required */
+            Period: this.props.graphSettings.period, /* required */
+            StartTime:  this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
                 Name: 'InstanceId', /* required */
                 // Value: 'i-031339fed44b9fac8' /* required */
-                Value: this.props.location.state.instanceId
+                Value: this.props.graphSettings.instanceId
               },
               /* more items */
             ],
@@ -79,6 +85,8 @@ class LineGraph extends Component {
               'Average',
               /* more items */
             ],
+         
+           
           }
         
           AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
@@ -88,17 +96,42 @@ class LineGraph extends Component {
          // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
           else {
-           console.log(data)
-           this.setState({holder:data.Datapoints})
-            
-             for (var i = 0; i < this.state.holder.length; i+=2) {
-                this.setState(prevState => ({
-                    label : [...prevState.label, this.state.holder[i].Timestamp.getHours()+":"+this.state.holder[i].Timestamp.getMinutes()]
+          
+           let sortedData =  data.Datapoints.sort(function(a, b) {
+              var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
+              return dateA - dateB;
+          });
+           this.setState({holder:sortedData})
+           console.log(this.state.holder);
+             for (var i = 0; i < this.state.holder.length; i++) {
+              if(this.state.holder[i].Timestamp.getHours()<12){
+                if(this.state.holder[i].Timestamp.getMinutes()<10){
+                  this.setState(prevState => ({
+                    label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
                   }));
+                }
+                else{
+              this.setState(prevState => ({
+                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+              }));
+            }
+          }
+            else{
+              if(this.state.holder[i].Timestamp.getMinutes()<10){
+                this.setState(prevState => ({
+                  label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+                }));
+              }else{
+              this.setState(prevState => ({
+                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+              }));
+            }
+          }
                   this.setState(prevState => ({
                     data : [...prevState.data, this.state.holder[i].Average]
                   }));
               }
+              
            
             
             //  uniqueData =  Array.from(new Set(data));
@@ -117,14 +150,43 @@ class LineGraph extends Component {
       }
 
     render() {
+    
        
-
+      if(this.props.graphSettings.metricName!=="CPUUtilization"){
+        optionToSkip =  {  
+          scales: {
+            xAxes: [{
+              ticks: {
+                maxRotation: 0,
+                minRotation: 0,
+            fontSize: 10,
+            //autoSkip: true,
+            maxTicksLimit: 10
+          },
+            gridLines: {
+              display: false ,
+             // color: "black  "
+            },
+            }] , 
+            yAxes: [{
+              ticks: {
+                  beginAtZero:true,
+                //  fontColor: 'black   '
+              },
+              gridLines: {
+                display: true ,
+               // color: "black  "
+              },
+          }], 
+      }}
+      
+      }
 
        const lineGraphData = {
         labels: this.state.label,
         datasets: [
           {
-            label: this.props.location.state.metricName,
+            label: this.props.graphSettings.metricName,
             data: this.state.data,
             fill: true,         
             borderColor: 'lightblue', // Line color
@@ -137,14 +199,18 @@ class LineGraph extends Component {
       
         return (
             
-            
-
-             <Line data={lineGraphData}
+            <div>
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+             <h3>{this.props.graphSettings.chartName}</h3>
+            </div>
+            <Line data={lineGraphData}
              options = {optionToSkip}
-             width = {40}
-             height = {20}>
+             >
 
              </Line>
+            </div>
+
+             
              
             
             

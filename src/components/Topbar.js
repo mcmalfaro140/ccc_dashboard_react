@@ -117,9 +117,9 @@ class Topbar extends Component {
               </form>
             </li>
 
-            {/* <li>
+            <li>
               <NotificationDropdown notifications={Notifications} />
-            </li> */}
+            </li>
 
             {/* <li>
               <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
