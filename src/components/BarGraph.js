@@ -177,7 +177,7 @@ class BarGraph extends Component {
             data: this.state.data,
             fill: true,         
            // borderColor: 'lightblue', // Line color
-            backgroundColor: "lightblue",
+            backgroundColor: "red",
            responsive: true,
           }
         ]

@@ -189,7 +189,7 @@ class LineGraph extends Component {
             label: this.props.graphSettings.metricName,
             data: this.state.data,
             fill: true,         
-            borderColor: 'lightblue', // Line color
+            borderColor: 'blue', // Line color
            // backgroundColor: "black"
            responsive: true,
           }
