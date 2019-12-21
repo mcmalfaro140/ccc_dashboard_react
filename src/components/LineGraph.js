@@ -55,9 +55,11 @@ class LineGraph extends Component {
             label:[],
             holder:[],
             uniqueData:[],
-            uniqueLabel:[]
+            uniqueLabel:[],
+            showOptions: false,
 
-        }
+        };
+        this.showOptions = this.showOptions.bind(this);
         
 
     }
@@ -149,6 +151,11 @@ class LineGraph extends Component {
         this.getgraph3();
       }
 
+      showOptions(e){
+        e.preventDefault();
+        this.setState({ showOptions: !this.state.showOptions});
+      }
+
     render() {
     
        
@@ -200,20 +207,22 @@ class LineGraph extends Component {
         return (
             
             <div>
-            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
-             <h3>{this.props.graphSettings.chartName}</h3>
+              <div >
+                <h2 className="float-left" >{this.props.graphSettings.chartName}</h2>
+                <div style={{paddingTop:'23px'}} className="dropdown float-right show" onClick={this.showOptions}>
+                  <a className="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="true">
+                    <i style={{fontSize:'130%'}}className="mdi mdi-dots-vertical"></i>
+                  </a>
+                  { this.state.showOptions? (
+                    <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
+                      <a href="" class="dropdown-item">Modify</a>
+                      <a href="" class="dropdown-item">Delete</a>
+                    </div>
+                  ): null }
+                </div>
+              </div>
+              <Line data={lineGraphData} options = {optionToSkip}></Line>
             </div>
-            <Line data={lineGraphData}
-             options = {optionToSkip}
-             >
-
-             </Line>
-            </div>
-
-             
-             
-            
-            
         );
     }
 }
