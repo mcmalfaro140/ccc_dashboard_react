@@ -8,7 +8,6 @@ import myKeys from '../keys.json';
  * Renders the preloader
  */
 //hello
-
 var currentDate = new Date();
 var optionToSkip =  {  
     scales: {
@@ -51,6 +50,7 @@ class LineGraph extends Component {
     constructor(){
         super();
         this.state = {
+            graphColor:"blue",
             data:[],
             label:[],
             holder:[],
@@ -64,7 +64,12 @@ class LineGraph extends Component {
     
 
       getgraph3 = () =>{
-      
+       console.log("id is "+this.props.graphSettings.idValue);
+       var typeOfD = this.props.graphSettings.typeOfDimension;
+       var idVal = this.props.graphSettings.idValue;
+       if(typeOfD == null){typeOfD = "InstanceId"}
+       if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
+
          
         var params = {
             EndTime: currentDate, /* required */
@@ -75,9 +80,9 @@ class LineGraph extends Component {
          
            Dimensions: [
               {
-                Name: 'InstanceId', /* required */
+                Name: typeOfD, /* required */
                 // Value: 'i-031339fed44b9fac8' /* required */
-                Value: this.props.graphSettings.instanceId
+                Value: idVal
               },
               /* more items */
             ],
@@ -147,11 +152,15 @@ class LineGraph extends Component {
       }
       componentDidMount() {
         this.getgraph3();
+        if(this.props.graphSettings.colorSelected != null){
+         this.setState({graphColor:this.props.graphSettings.colorSelected})
+        }
+        
       }
+
 
     render() {
     
-       
       if(this.props.graphSettings.metricName!=="CPUUtilization"){
         optionToSkip =  {  
           scales: {
@@ -181,7 +190,10 @@ class LineGraph extends Component {
       }}
       
       }
-
+      
+      
+     
+      var Color = require('color');
        const lineGraphData = {
         labels: this.state.label,
         datasets: [
@@ -189,12 +201,13 @@ class LineGraph extends Component {
             label: this.props.graphSettings.metricName,
             data: this.state.data,
             fill: true,         
-            borderColor: 'lightblue', // Line color
-           // backgroundColor: "black"
-           responsive: true,
+            borderColor: this.state.graphColor, // Line color
+            backgroundColor:Color(this.state.graphColor).alpha(0.5),
+            responsive: true,
           }
         ]
       }
+      console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
       
         return (

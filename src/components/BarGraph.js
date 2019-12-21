@@ -39,6 +39,7 @@ class BarGraph extends Component {
     constructor(){
         super();
         this.state = {
+            graphColor:"red",
             data:[],
             label:[],
             holder:[],
@@ -50,6 +51,12 @@ class BarGraph extends Component {
     }
 
       getgraph = () =>{
+
+        console.log("id is "+this.props.graphSettings.idValue);
+       var typeOfD = this.props.graphSettings.typeOfDimension;
+       var idVal = this.props.graphSettings.idValue;
+       if(typeOfD == null){typeOfD = "InstanceId"}
+       if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
         var params = {
             EndTime: currentDate, /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
@@ -59,9 +66,9 @@ class BarGraph extends Component {
           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
            Dimensions: [
               {
-                Name: 'InstanceId', /* required */
+                Name: typeOfD, /* required */
                 // Value: 'i-031339fed44b9fac8' /* required */
-                Value: this.props.graphSettings.instanceId
+                Value: idVal
               },
               /* more items */
             ],
@@ -128,6 +135,9 @@ class BarGraph extends Component {
       }
       componentDidMount() {
         this.getgraph();
+        if(this.props.graphSettings.colorSelected != null){
+          this.setState({ graphColor : this.props.graphSettings.colorSelected })
+        }
       }
 
     render() {
@@ -167,8 +177,10 @@ class BarGraph extends Component {
         }], 
       }}
       }
-
-
+     
+      
+       console.log(this.props.graphSettings.colorSelected + "hey")
+       
        const lineGraphData = {
         labels: this.state.label,
         datasets: [
@@ -177,7 +189,7 @@ class BarGraph extends Component {
             data: this.state.data,
             fill: true,         
            // borderColor: 'lightblue', // Line color
-            backgroundColor: "lightblue",
+            backgroundColor: this.state.graphColor,
            responsive: true,
           }
         ]
