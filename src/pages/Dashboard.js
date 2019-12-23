@@ -26,7 +26,6 @@ class DefaultDashboard extends Component {
         super(props);
         this.state = {
             user: getLoggedInUser(),
-            screenWidth: (window.innerWidth - 280), //TODO: MAKE RESIZE CHANGE WHEN IN FULL SCREEN
             userDashboard: [
                 {
                     objectType:"graph", // options: graph or table
@@ -41,13 +40,30 @@ class DefaultDashboard extends Component {
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
-                        }
+                        },
+                    coordinates: {
+                        x: 0,
+                        y: 1,
+                        w: 12,
+                        h: 16,
+                        minW: 6,
+                        minH: 9
+                    }
                 },
                 {
                     objectType:"table", // options: graph or table
                     tableSettings:{
                         master:"true",
+                    },
+                    coordinates: {
+                        x: 0,
+                        y: 2,
+                        w: 12,
+                        h: 11,
+                        minW: 4,
+                        minH: 11
                     }
+                    
                 },
                 {
                     objectType:"graph", // options: graph or table
@@ -62,7 +78,15 @@ class DefaultDashboard extends Component {
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
-                        }
+                        },
+                    coordinates: {
+                        x: 0,
+                        y: 3,
+                        w: 6,
+                        h: 9,
+                        minW: 6,
+                        minH: 9
+                    }
                 },
                 {
                     objectType:"graph", // options: graph or table
@@ -77,7 +101,15 @@ class DefaultDashboard extends Component {
                             period:"",
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
-                        }
+                        },
+                    coordinates: {
+                        x: 6,
+                        y: 3,
+                        w: 6,
+                        h: 9,
+                        minW: 6,
+                        minH: 9
+                    }
                 },
                 
             ],
@@ -87,6 +119,7 @@ class DefaultDashboard extends Component {
         };
         this.showOptions = this.showOptions.bind(this);
         this.systemHealth = this.systemHealth.bind(this);
+        this.recordCoordinateChange = this.recordCoordinateChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -107,6 +140,7 @@ class DefaultDashboard extends Component {
         }
         
     }
+
     showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});
@@ -115,16 +149,40 @@ class DefaultDashboard extends Component {
         e.preventDefault();
         this.setState({ systemHealth: !this.state.systemHealth});
     }
+
+    //Gets call when the user resize the dashboard. Saves the new coordinates
+    recordCoordinateChange(newLayout){
+        let temp = this.state.userDashboard
+        newLayout.forEach(element => {
+            let chart = temp[parseInt(element.i)]
+            chart.coordinates.x = element.x
+            chart.coordinates.y = element.y
+            chart.coordinates.w = element.w
+            chart.coordinates.h = element.h
+        });
+        this.setState({
+            userDashboard: temp
+        })
+        
+    }
+    
+ 
     
 
     render() {
-    
         const items = this.state.userDashboard.map((item, i) => {
+            let actualHeight = item.coordinates.h 
+            if(this.props.isCondensed){
+                actualHeight = actualHeight + 10
+            }
+            //this.props.isCondensed ? actualHeight = actualHeight : actualHeight = actualHeight + 10;
+            // console.log(actualHeight)
+            // console.log(this.props.isCondensed)
            //This part will render the table
             if(item.objectType == "table"){
                 return (
                     //min for table w:4 h:11
-                <Card className="card-box" key={i} data-grid={{x: 0, y: i, w: 12, h: 11, minW: 4, minH:11}}> 
+                <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
                     <div style={{width:'100%'}}>
                         <h2 className="float-left" >Logs Table</h2>
                         <div style={{paddingTop:'23px'}} className="dropdown float-right show" onClick={this.showOptions}>
@@ -150,22 +208,22 @@ class DefaultDashboard extends Component {
                     return (
                         //min for chart w:4 h:7
                         //Perfect size for line chart w = 12 and H = 16
-                        <Card key={i} data-grid={{x: 0, y: i, w: 12, h: 16, minW: 6, minH:9}}>
-                            <CardBody>
+                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                            <CardBody style={{overflow:'hidden'}}>
                                 <LineGraph {...item}></LineGraph>
                             </CardBody>
                         </Card>);
                 }else if(item.graphSettings.type === "bar"){
                     return (
-                        <Card key={i} data-grid={{x: 0, y: i, w: 6, h: 9, minW: 6, minH:9}}>
-                            <CardBody>
+                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                            <CardBody style={{overflow:'hidden'}}>
                                 <BarGraph {...item}></BarGraph>
                             </CardBody>
                                                 
                         </Card>);
                 }else if(item.graphSettings.type === "pie"){
                     return (
-                        <Card key={i} data-grid={{x: 6, y: i-1, w: 6, h: 9, minW: 6, minH:9}}>
+                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
                             <CardBody>
                                 
                             </CardBody>
@@ -181,7 +239,7 @@ class DefaultDashboard extends Component {
                     {this.props.loading && <Loader />}
                     <Card>
                         <div style={{paddingBottom:'1%'}}className="card-body">
-                        <h3 className="float-left" >System Health</h3>
+                        <h3 className="float-left" >System Health Bar</h3>
                             <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
                             <div style={{paddingTop:'-10px'}} className="float-left">Last 24 Hours</div>
                             { this.state.systemHealth? (
@@ -202,7 +260,7 @@ class DefaultDashboard extends Component {
                         </CardBody>
                     </Card>
 
-                    <GridLayout className="layout" cols={12} rowHeight={30} width={this.state.screenWidth}>
+                    <GridLayout className="layout" cols={12} rowHeight={30} width={this.props.screenSize} onLayoutChange={(layout) => this.recordCoordinateChange(layout)} style={{margin:0}}>
                         {items}
                     </GridLayout>
                 </div>

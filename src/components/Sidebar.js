@@ -29,7 +29,6 @@ class SideNavContent extends React.Component {
         this.showGrapOptions = this.showGrapOptions.bind(this);
         this.showRealtimeOptions = this.showRealtimeOptions.bind(this);
         this.showLogTableOptions = this.showLogTableOptions.bind(this);
-        this.myTest = this.myTest.bind(this);
     }
     showRealtimeOptions(e){
         e.preventDefault();
@@ -42,14 +41,8 @@ class SideNavContent extends React.Component {
     showGrapOptions(e){
         e.preventDefault();
         this.setState({ showGrapOptions: !this.state.showGrapOptions, graphActive: !this.state.graphActive});
-    }
-    myTest(){
-        console.log("clicked")
-        return(
-            <div>
-                <h1>hello Misael</h1>
-            </div>
-        )
+      
+        
     }
     
     render(){
@@ -103,6 +96,14 @@ class SideNavContent extends React.Component {
                                             objectType:"table", // options: graph or table
                                             tableSettings:{
                                                 master:"true",
+                                            },
+                                            coordinates: {
+                                                x: 0,
+                                                y: 0,
+                                                w: 12,
+                                                h: 11,
+                                                minW: 4,
+                                                minH: 11
                                             }
                                         }
                                     }
@@ -228,6 +229,7 @@ class Sidebar extends Component {
      */
     componentDidMount = () => {
         this.initMenu();
+
     }
 
     /**
@@ -317,10 +319,14 @@ class Sidebar extends Component {
 
     render() {
         const isCondensed = this.props.isCondensed || false;
-
+        let visibleForSmallScr = true
+        //TODO: change this to scss using media queries
+        if( !isCondensed && window.innerWidth < 770){
+            visibleForSmallScr = false
+        }
         return (
             <React.Fragment>
-                <div className='left-side-menu' ref={node => this.menuNodeRef = node}>
+                <div className='left-side-menu' style={!visibleForSmallScr ? {visibility: 'hidden'} : { visibility: "visible"}} ref={node => this.menuNodeRef = node}>
                     {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent {...this.props}/></PerfectScrollbar>}
                     {isCondensed && <UserProfile /> && <SideNavContent />}
                 </div>
