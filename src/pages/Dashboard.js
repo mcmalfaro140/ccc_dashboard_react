@@ -140,7 +140,6 @@ class DefaultDashboard extends Component {
         }
         
     }
-
     showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});

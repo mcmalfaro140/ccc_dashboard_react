@@ -147,6 +147,11 @@ class BarGraph extends Component {
         this.setState({ showOptions: !this.state.showOptions});
       }
 
+      showOptions(e){
+        e.preventDefault();
+        this.setState({ showOptions: !this.state.showOptions});
+      }
+
     render() {
       if(this.props.graphSettings.metricName==="CPUUtilization"){
        optionToSkip={
