@@ -6,7 +6,6 @@ import NewTable from './NewTable.js';
 
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
-//AWS.config.logger = console;
 var cloudwatchlogs = new AWS.CloudWatchLogs();
 var currentDate = new Date();
 
@@ -20,9 +19,9 @@ class TableForm extends React.Component {
 
       },
       queryparams : {
-        endTime: Math.round((currentDate.getTime() / 1000)),
-        queryString: "fields @message | filter @message like /(?i)info/",
-        startTime: Math.round((currentDate.getTime() / 40000)) - 1  ,
+        endTime: 1574985600,
+        queryString: "fields @timestamp, @message | filter @message like /(?i)error/",
+        startTime: 1574812800 ,
         limit:1000,
       logGroupNames:props.logGroupNames
       },
@@ -31,6 +30,7 @@ class TableForm extends React.Component {
       },
       //Misael's new variables
       test: this.test.bind(this),
+      filterLog:this.filterLog.bind(this),
       helper: this.helper.bind(this),
       setIds: this.setIds.bind(this),
       getID: this.getID.bind(this),
@@ -97,32 +97,46 @@ getLogGroupName =  () => {
 test = () =>{
 
   let count = 0
-  let res = []
-  let temp = []
 
 //Get four group names and four query setIds
 //store them in a varibale to get the results innerWidth
 //Getquery results
 
-  setTimeout(async() => {
+this.state.dataTemp.forEach(element => {
 
- for (var i =0 ; i < 4 ; i++) {
+setTimeout(async() => {
 
-        temp = await this.state.getID(this.state.dataTemp[i])
+//Filter log groups with filter pattern api
+  let filterd = await this.state.filterLog(element)
+  console.log(filterd)
 
-        await this.state.setIds(temp.queryId)
-        await console.log(this.state.idArray)
+},count * 700);
 
 
-        console.log("Log group name used for this result is " + this.state.dataTemp[i])
-        console.log("id used for this result is " + this.state.idArray[i])
+    count++
+}
+);
 
-        res = await this.getResults(this.state.idArray[i]);
-        console.log(res)
-        await this.state.setQueryResults(res)
-      }
+}
 
-},count * 600);//End of setTimeout
+//Filter log Events function searches for a specific pattern in a log logStream
+//That belongs to a required and specific log group name
+
+filterLog = (name) => {
+
+  return new Promise((resolve, reject) => {
+
+  var params = {
+   logGroupName: name, /* required */
+   filterPattern: 'error',
+   limit: 1000
+  };
+  cloudwatchlogs.filterLogEvents(params, function(err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else     console.log(data);           // successful response
+  });
+
+})
 
 }
 
@@ -199,9 +213,9 @@ setIds(id){
 getID = (name) => {
   return new Promise((resolve, reject) => {
     var params = {
-      endTime: Math.round((currentDate.getTime() / 1000)), /* required */
-      queryString: "fields @message | filter @message like /(?i)error/", /* required */
-      startTime: Math.round((currentDate.getTime() / 10000)) - 1, /* required */
+      endTime: Math.round((new Date()).getTime() / 1000), /* required */
+      queryString: "fields @timeStamp, @message | filter @message like /(?i)error/", /* required /*/
+      startTime: Math.round((new Date('2019-10-20')).getTime() / 1000), /* required */
       limit: 1000,
       logGroupName: name
     };
@@ -251,3 +265,33 @@ render () {
 }
 
 export default TableForm;
+
+
+// this.state.dataTemp.forEach(element => {
+//   if (count === 4){
+//     return count;
+//   }
+//   else{
+//     setTimeout(async() => {
+//       let temp = await this.state.getID(element)
+//
+//       await this.state.setIds(temp.queryId)
+//
+//               console.log("Log group name used for this result is " + element)
+//               console.log("id used for this result is " + temp.queryId)
+//
+//       let res = await this.state.getResults(temp.queryId);
+//       console.log(res)
+//       await this.state.setQueryResults(res)
+//
+// //Filter log groups with filter pattern api
+//   let filterd = await this.state.filterLog(element)
+//   console.log(filterd.message)
+//
+// },count * 700);
+//
+//
+//     count++
+//   }//end of else
+//
+// }//end of for each
