@@ -88,15 +88,16 @@ componentWillMount(){
 
   }
 
+  
+
 render() {
 
   return (
-
-      <Table timeStamp = {this.state.tableData[0].timeStamp}
-             level = {this.state.tableData[0].level}
-             logger = {this.state.tableData[0].logger}
-             message = {this.state.tableData[0].message}/>
-
+        <Table  timeStamp = {this.state.tableData[0].timeStamp}
+          level = {this.state.tableData[0].level}
+          logger = {this.state.tableData[0].logger}
+          message = {this.state.tableData[0].message}/>
+      
   );
   }
 }
