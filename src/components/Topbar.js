@@ -97,6 +97,7 @@ class Topbar extends Component {
 
 
   render() {
+    const isCondensed = this.props.isCondensed || false;
     return (
       <React.Fragment>
         <div className="navbar-custom">
@@ -133,7 +134,7 @@ class Topbar extends Component {
             </li> */}
           </ul>
 
-          <div className="logo-box">
+          <div className="logo-box" style={isCondensed ? {visibility:'hidden'} : {visibility: 'visible'}}>
             <Link to="/" className="logo text-center">
               <span className="logo-lg">
                 <img src={logo} alt="" height="30" />
@@ -146,7 +147,7 @@ class Topbar extends Component {
 
           <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
             <li>
-              <button className="button-menu-mobile disable-btn waves-effect" onClick={this.props.menuToggle}>
+              <button className="button-menu-mobile waves-effect" onClick={this.props.menuToggle}>
                 <i className="fe-menu"></i>
               </button>
             </li>
