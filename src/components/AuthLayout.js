@@ -71,10 +71,6 @@ class AuthLayout extends Component {
         this.setState({modalOpen : !this.state.modalOpen})
         this.setState({whichNamespace : ""})
         this.setState({namespaceNotSelected : true})
-        if(this.state.colorSelected === undefined){
-            var randomColor = require('randomcolor');
-            this.setState({colorSelected : randomColor()})
-        }
 };
 
     signOut(e) {
@@ -232,7 +228,6 @@ class AuthLayout extends Component {
                                        color = {this.state.colorSelected}
                                        onChange = {this.handleChangeComplete}
                                        />
-                                    
                                     </Form.Group>
 
 
