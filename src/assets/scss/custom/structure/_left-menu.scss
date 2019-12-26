@@ -183,7 +183,7 @@
     }
     // Side menu
     .left-side-menu {
-        position: absolute;
+        position: fixed;
         padding-top: 0;
         width: $leftbar-width-collapsed !important;
         z-index: 9;
@@ -211,10 +211,11 @@
             }
             
             > ul {
+                display: none;
                 > li {
                     position: relative;
                     white-space: nowrap;
-
+                    //make it disapear add display none
                     > a {
                         padding: 15px 20px;
                         min-height: 54px;

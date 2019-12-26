@@ -15,7 +15,7 @@ import './assets/scss/DefaultTheme.scss';
 
 // Lazy loading and code splitting - 
 // Derieved idea from https://blog.logrocket.com/lazy-loading-components-in-react-16-6-6cea535c0b52
-const loading = () => <div></div>
+const loading = () => <div>Loading...</div>
 
 // All layouts/containers
 const NonAuthLayout = Loadable({

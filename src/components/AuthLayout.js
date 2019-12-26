@@ -44,7 +44,9 @@ class AuthLayout extends Component {
         this.readSelection = this.readSelection.bind(this);
         this.goFullScreen = this.goFullScreen.bind(this);
         this.handleChangeComplete = this.handleChangeComplete.bind(this);
+        this.changeScreenSize = this.changeScreenSize.bind(this);
         this.state = {
+            screenWidth: 0,
             whichNamespace: "",
             colorSelected:"",
             namespaceNotSelected : true,
@@ -85,12 +87,14 @@ class AuthLayout extends Component {
     //toggleMenu
     toggleMenu = (e) => {
         e.preventDefault();
-        this.setState({ isCondensed: !this.state.isCondensed });
+        this.setState({ isCondensed: !this.state.isCondensed});
+        this.changeScreenSize(this.state.isCondensed)
     }
 
     //toggle right side bar
     toggleRightSidebar = () => {
         document.body.classList.toggle("right-bar-enabled");
+
     }
 
     //Form update
@@ -134,19 +138,56 @@ class AuthLayout extends Component {
             this.setState({period : 2400})
         }
     }
+
+    //add event listener for screen resize. It is need it to set the right size for react grid
+    componentDidMount() {
+        window.addEventListener("resize", this.changeScreenSize.bind(this));
+        if(window.innerWidth > 770){
+            this.setState({screenWidth: (window.innerWidth - 280)})
+        }else{
+            this.setState({screenWidth: (window.innerWidth - 40)})
+        }
+    }
+
+    changeScreenSize(condense){
+        if(window.innerWidth > 770){
+            if(typeof(condense) == "boolean"){
+                if(condense){
+                    this.setState({screenWidth: (window.innerWidth - 280)})
+                }else{
+                    this.setState({screenWidth: (window.innerWidth - 40)})
+                }
+            }else{
+                if(!this.state.isCondensed){
+                    this.setState({screenWidth: (window.innerWidth - 280)})
+                }else{
+                    this.setState({screenWidth: (window.innerWidth - 40)})
+                }
+            }
+        }else{
+            this.setState({screenWidth: (window.innerWidth - 40)})
+        }
+        
+    }
   
     
 
     render() {
         // gets the child view which we would like to render
-        const children = this.props.children || null;
+        // const children = this.props.children || null;
+        const children = React.Children.map(this.props.children, child => {
+            return React.cloneElement(child, {
+              screenSize: this.state.screenWidth,
+              isCondensed: this.state.isCondensed
+            });
+          }) || null;
   
         return (
             <div className="app">
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
-                        <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} />
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} toggleForm={this.toggleForm} isCondensed={this.state.isCondensed} {...this.props} />
+                        <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} isCondensed={this.state.isCondensed} {...this.props} />
                     </Suspense>
                     
                     <div className="content-page">
@@ -154,7 +195,7 @@ class AuthLayout extends Component {
                             <div className="content">
                                 <div>
                                     <Container fluid>
-                                        <Suspense fallback={loading()}>
+                                        <Suspense fallback={loading()} >
                                             {children}
                                         </Suspense>
                                     </Container>
