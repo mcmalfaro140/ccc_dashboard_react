@@ -218,7 +218,7 @@ class LineGraph extends Component {
           }
         ]
       }
-      console.log(this.state.graphColor+"the color");
+      //console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
       
         return (
