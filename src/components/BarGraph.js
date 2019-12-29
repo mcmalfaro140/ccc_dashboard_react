@@ -192,7 +192,7 @@ class BarGraph extends Component {
       }
      
       
-      console.log(this.myRef + " my ref");
+       //console.log(this.props.graphSettings.colorSelected + "hey")
        
        const lineGraphData = {
         labels: this.state.label,
@@ -230,10 +230,10 @@ class BarGraph extends Component {
                   ): null }
                 </div>
               </div>
-             <div ref = {myRef}>
+             
               <Bar data={lineGraphData} options = {optionToSkip}
               />
-             </div>
+           
             </div>
             
         );

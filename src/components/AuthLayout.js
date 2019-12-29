@@ -5,7 +5,6 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import {Form} from 'react-bootstrap';
 import profilePic from '../assets/images/users/user-1.jpg';
-import Fullscreen from "react-full-screen";
 import { SketchPicker } from 'react-color'
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
@@ -16,7 +15,6 @@ var value = [];
 const Topbar = React.lazy(() => import("./Topbar"));
 const Sidebar = React.lazy(() => import("./Sidebar"));
 const RightSidebar = React.lazy(() => import("./RightSidebar"));
-const Footer = React.lazy(() => import("./Footer"));
 const loading = () => <div className="text-center"></div>;
 
 const RightSidebarContent = (props) => {
@@ -45,13 +43,14 @@ class AuthLayout extends Component {
         this.goFullScreen = this.goFullScreen.bind(this);
         this.handleChangeComplete = this.handleChangeComplete.bind(this);
         this.changeScreenSize = this.changeScreenSize.bind(this);
+        this.handleExitFull = this.handleExitFull.bind(this);
         this.state = {
             screenWidth: 0,
             whichNamespace: "",
             colorSelected:"",
             namespaceNotSelected : true,
             isCondensed: false,
-            isFull: false,
+            isFullScreen: false,
             modal0pem: false,
             metricName:"", 
             nameSpace:"",
@@ -64,9 +63,6 @@ class AuthLayout extends Component {
            // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
         }
     }
-
-    //toggle fullscreen
-    goFullScreen = () => this.setState({isFull : !this.state.isFull})
 
     //toggle form
     toggleForm = () => {
@@ -137,6 +133,7 @@ class AuthLayout extends Component {
 
     //add event listener for screen resize. It is need it to set the right size for react grid
     componentDidMount() {
+        window.addEventListener('fullscreenchange', this.handleExitFull.bind(this));
         window.addEventListener("resize", this.changeScreenSize.bind(this));
         if(window.innerWidth > 770){
             this.setState({screenWidth: (window.innerWidth - 280)})
@@ -145,28 +142,49 @@ class AuthLayout extends Component {
         }
     }
 
+    handleExitFull(){
+        this.setState({isFullScreen: false})
+    }
     changeScreenSize(condense){
         if(window.innerWidth > 770){
             if(typeof(condense) == "boolean"){
                 if(condense){
                     this.setState({screenWidth: (window.innerWidth - 280)})
                 }else{
-                    this.setState({screenWidth: (window.innerWidth - 40)})
+                    if(this.state.isFullScreen){
+                        this.setState({screenWidth: (window.innerWidth)})
+                    }else{
+                        this.setState({screenWidth: (window.innerWidth - 40)})
+                    }
                 }
             }else{
                 if(!this.state.isCondensed){
                     this.setState({screenWidth: (window.innerWidth - 280)})
                 }else{
-                    this.setState({screenWidth: (window.innerWidth - 40)})
+                    if(this.state.isFullScreen){
+                        this.setState({screenWidth: (window.innerWidth)})
+                    }else{
+                        this.setState({screenWidth: (window.innerWidth - 40)})
+                    }
                 }
             }
         }else{
-            this.setState({screenWidth: (window.innerWidth - 40)})
+            if(this.state.isFullScreen){
+                this.setState({screenWidth: (window.innerWidth)})
+            }else{
+                this.setState({screenWidth: (window.innerWidth - 40)})
+            }
         }
         
     }
+
+    //toggle fullscreen
+    goFullScreen(){
+        let div = document.getElementById("dashboard")
+        this.setState({isCondensed : true, isFullScreen: !this.state.isFullScreen})
+        div.requestFullscreen()
+    }
   
-    
 
     render() {
         // gets the child view which we would like to render
@@ -187,7 +205,6 @@ class AuthLayout extends Component {
                     </Suspense>
                     
                     <div className="content-page">
-                        <Fullscreen enabled={this.state.isFull}>
                             <div className="content">
                                 <div>
                                     <Container fluid>
@@ -197,7 +214,6 @@ class AuthLayout extends Component {
                                     </Container>
                                 </div>
                             </div>
-                        </Fullscreen>
                         
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <ModalHeader toggle={this.toggleForm}>New Chart Form</ModalHeader>
