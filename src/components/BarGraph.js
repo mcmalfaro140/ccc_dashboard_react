@@ -38,6 +38,7 @@ var optionToSkip =  {
 class BarGraph extends Component {
     constructor(){
         super();
+      //  this.myRef = React.createRef();
         this.state = {
             graphColor:"red",
             data:[],
@@ -49,9 +50,9 @@ class BarGraph extends Component {
 
           };
         this.showOptions = this.showOptions.bind(this);
-
+      
     }
-
+      
       getgraph = () =>{
 
         console.log("id is "+this.props.graphSettings.idValue);
@@ -191,7 +192,7 @@ class BarGraph extends Component {
       }
      
       
-       console.log(this.props.graphSettings.colorSelected + "hey")
+      console.log(this.myRef + " my ref");
        
        const lineGraphData = {
         labels: this.state.label,
@@ -206,6 +207,10 @@ class BarGraph extends Component {
           }
         ]
       }
+      const myRef = (c) =>{
+        console.log(c.getBoundingClientRect());
+      }
+
      //console.log(this.state.data.length + " and " + this.state.data[0])
       
         return (
@@ -225,7 +230,10 @@ class BarGraph extends Component {
                   ): null }
                 </div>
               </div>
-              <Bar data={lineGraphData} options = {optionToSkip}/>
+             <div ref = {myRef}>
+              <Bar data={lineGraphData} options = {optionToSkip}
+              />
+             </div>
             </div>
             
         );
