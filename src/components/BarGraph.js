@@ -191,7 +191,7 @@ class BarGraph extends Component {
       }
      
       
-       console.log(this.props.graphSettings.colorSelected + "hey")
+       //console.log(this.props.graphSettings.colorSelected + "hey")
        
        const lineGraphData = {
         labels: this.state.label,

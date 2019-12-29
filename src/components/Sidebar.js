@@ -100,7 +100,7 @@ class SideNavContent extends React.Component {
                                             coordinates: {
                                                 x: 0,
                                                 y: 0,
-                                                w: 12,
+                                                w: 20,
                                                 h: 11,
                                                 minW: 4,
                                                 minH: 11

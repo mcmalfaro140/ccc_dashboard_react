@@ -44,7 +44,7 @@ class DefaultDashboard extends Component {
                     coordinates: {
                         x: 0,
                         y: 1,
-                        w: 12,
+                        w: 20,
                         h: 16,
                         minW: 6,
                         minH: 9
@@ -58,7 +58,7 @@ class DefaultDashboard extends Component {
                     coordinates: {
                         x: 0,
                         y: 2,
-                        w: 12,
+                        w: 20,
                         h: 11,
                         minW: 4,
                         minH: 11
@@ -82,7 +82,7 @@ class DefaultDashboard extends Component {
                     coordinates: {
                         x: 0,
                         y: 3,
-                        w: 6,
+                        w: 10,
                         h: 9,
                         minW: 6,
                         minH: 9
@@ -105,7 +105,7 @@ class DefaultDashboard extends Component {
                     coordinates: {
                         x: 6,
                         y: 3,
-                        w: 6,
+                        w: 10,
                         h: 9,
                         minW: 6,
                         minH: 9
@@ -233,7 +233,7 @@ class DefaultDashboard extends Component {
         });
         return (
             <React.Fragment>
-                <div className="">
+                <div id="dashboard">
                     { /* preloader */}
                     {this.props.loading && <Loader />}
                     <Card>
@@ -259,7 +259,7 @@ class DefaultDashboard extends Component {
                         </CardBody>
                     </Card>
 
-                    <GridLayout className="layout" cols={12} rowHeight={30} width={this.props.screenSize} onLayoutChange={(layout) => this.recordCoordinateChange(layout)} style={{margin:0}}>
+                    <GridLayout className="layout" cols={20} rowHeight={30} width={this.props.screenSize} onLayoutChange={(layout) => this.recordCoordinateChange(layout)} style={{margin:0}}>
                         {items}
                     </GridLayout>
                 </div>
