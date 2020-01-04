@@ -91,7 +91,9 @@
     top: 0;
     left: 0;
     overflow-x: hidden;
+    overflow-y: visible;
     margin-top: $topbar-height;
+    padding-bottom: $topbar-height;
     >ul {
         >li {
             >a {
