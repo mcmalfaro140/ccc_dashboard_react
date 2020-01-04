@@ -45,6 +45,7 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.state = {
+            showMenu: false,
             screenWidth: 0,
             whichNamespace: "",
             colorSelected:"",
@@ -83,8 +84,11 @@ class AuthLayout extends Component {
     //toggleMenu
     toggleMenu = (e) => {
         e.preventDefault();
+        this.setState({ showMenu: !this.state.showMenu});
         this.setState({ isCondensed: !this.state.isCondensed});
-        this.changeScreenSize(this.state.isCondensed)
+        // this.changeScreenSize(this.state.isCondensed)
+
+        
     }
 
     //toggle right side bar
@@ -139,47 +143,19 @@ class AuthLayout extends Component {
     componentDidMount() {
         window.addEventListener('fullscreenchange', this.handleExitFull.bind(this));
         window.addEventListener("resize", this.changeScreenSize.bind(this));
-        if(window.innerWidth > 770){
-            this.setState({screenWidth: (window.innerWidth - 280)})
-        }else{
-            this.setState({screenWidth: (window.innerWidth - 40)})
-        }
+        this.setState({screenWidth: (window.innerWidth - 40)});
     }
 
     handleExitFull(){
         this.setState({isFullScreen: false})
     }
-    changeScreenSize(condense){
-        if(window.innerWidth > 770){
-            if(typeof(condense) == "boolean"){
-                if(condense){
-                    this.setState({screenWidth: (window.innerWidth - 280)})
-                }else{
-                    if(this.state.isFullScreen){
-                        this.setState({screenWidth: (window.innerWidth)})
-                    }else{
-                        this.setState({screenWidth: (window.innerWidth - 40)})
-                    }
-                }
-            }else{
-                if(!this.state.isCondensed){
-                    this.setState({screenWidth: (window.innerWidth - 280)})
-                }else{
-                    if(this.state.isFullScreen){
-                        this.setState({screenWidth: (window.innerWidth)})
-                    }else{
-                        this.setState({screenWidth: (window.innerWidth - 40)})
-                    }
-                }
-            }
+    //updates react-grid size when resize
+    changeScreenSize(){
+        if(this.state.isFullScreen){
+            this.setState({screenWidth: (window.innerWidth)})
         }else{
-            if(this.state.isFullScreen){
-                this.setState({screenWidth: (window.innerWidth)})
-            }else{
-                this.setState({screenWidth: (window.innerWidth - 40)})
-            }
-        }
-        
+            this.setState({screenWidth: (window.innerWidth - 40)})
+        }       
     }
 
     //toggle fullscreen
@@ -205,7 +181,7 @@ class AuthLayout extends Component {
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} isCondensed={this.state.isCondensed} {...this.props} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                     </Suspense>
                     
                     <div className="content-page">
