@@ -5,6 +5,7 @@ import LineGraph from '../components/LineGraph'
 import BarGraph from '../components/BarGraph'
 import Table from './Tables'
 import LogReport from '../components/logRepotComp'
+import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
 import { getLoggedInUser } from '../helpers/authUtils';
@@ -233,14 +234,14 @@ class DefaultDashboard extends Component {
         });
         return (
             <React.Fragment>
-                <div id="dashboard">
+                <div id="dashboard" style={{paddingTop:'1%'}}>
                     { /* preloader */}
                     {this.props.loading && <Loader />}
-                    <Card>
+                    <Card style={{boxShadow: '0 0 15px 0 rgba(30,144,255, 0.486)'}}>
                         <div style={{paddingBottom:'1%'}}className="card-body">
                         <h3 className="float-left" >System Health Bar</h3>
                             <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
-                            <div style={{paddingTop:'-10px'}} className="float-left">Last 24 Hours</div>
+                            <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
                             { this.state.systemHealth? (
                             <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
                             <a href="" class="dropdown-item">Last 24 Hours</a>
@@ -250,9 +251,10 @@ class DefaultDashboard extends Component {
                             ): null }
                         </div>
                         </div>
-                        <CardBody style={{paddingTop:'0%'}}>
+                        <CardBody style={{paddingTop:'0%', margin: '0%'}}>
                             <Row>
                                 <LogReport/>
+                                <LogWarn/>
                                 <NightlyTasks/>
                                 <ServerStatus/>
                             </Row>
