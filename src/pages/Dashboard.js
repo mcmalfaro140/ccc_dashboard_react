@@ -45,7 +45,7 @@ class DefaultDashboard extends Component {
                         x: 0,
                         y: 1,
                         w: 20,
-                        h: 16,
+                        h: 19,
                         minW: 6,
                         minH: 9,
                         maxH: 18
@@ -85,7 +85,7 @@ class DefaultDashboard extends Component {
                         x: 0,
                         y: 3,
                         w: 10,
-                        h: 9,
+                        h: 10,
                         minW: 6,
                         minH: 9
                     }
@@ -105,10 +105,10 @@ class DefaultDashboard extends Component {
                             endTime:new Date() //if needed
                         },
                     coordinates: {
-                        x: 6,
+                        x: 10,
                         y: 3,
                         w: 10,
-                        h: 9,
+                        h: 10,
                         minW: 6,
                         minH: 9
                     }

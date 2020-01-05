@@ -9,6 +9,7 @@ import MetisMenu from 'metismenujs/dist/metismenujs';
 
 import profilePic from '../assets/images/users/defaultUser.png';
 import Logout from '../pages/auth/Logout';
+import logo from '../assets/images/logo_ccc.png';
 
 var currentDate = new Date();
 
@@ -49,6 +50,30 @@ class SideNavContent extends React.Component {
     return <React.Fragment>
 
     <div id="sidebar-menu">
+
+        <div className="logo-box">
+            <Link to="/" className="logo text-center">
+              <span className="logo-lg">
+                <img src={logo} alt="" height="30" />
+              </span>
+            </Link>
+        </div>
+        {/* Side menu User fragment
+        TODO: Update user email dynamically with back end and add logout link. */}
+        <div className="user-box text-center ">
+            <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
+            <h5>mcmalfaro@hotmail.com</h5>
+
+            <ul className="list-inline">
+                <li className="list-inline-item">
+                    <Link to="/Logout" className="text-custom">
+                        <i className="mdi mdi-power"></i>
+                        <span> Logout </span>
+                    </Link>
+                </li>
+            </ul>
+        </div>
+        {/* Options */}
           <ul className="metismenu" id="side-menu">
               <li className="menu-title">Navigation</li>
 
@@ -188,26 +213,6 @@ class SideNavContent extends React.Component {
     }
 }
 
-//Side menu User fragment
-//TODO: Update user email dynamically with back end and add logout link.
-const UserProfile = () => {
-    return <React.Fragment>
-        <div className="user-box text-center ">
-            <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
-            <h5>mcmalfaro@hotmail.com</h5>
-
-            <ul className="list-inline">
-                <li className="list-inline-item">
-                    <Link to="/Logout" className="text-custom">
-                        <i className="mdi mdi-power"></i>
-                        <span> Logout </span>
-                    </Link>
-                </li>
-            </ul>
-        </div>
-    </React.Fragment>
-}
-
 
 class Sidebar extends Component {
     constructor(props) {
@@ -318,17 +323,13 @@ class Sidebar extends Component {
 
 
     render() {
-        const isCondensed = this.props.isCondensed || false;
-        let visibleForSmallScr = true
-        //TODO: change this to scss using media queries
-        if( !isCondensed && window.innerWidth < 770){
-            visibleForSmallScr = false
-        }
+        const showMenu = this.props.showMenu;
         return (
             <React.Fragment>
-                <div className='left-side-menu' style={!visibleForSmallScr ? {visibility: 'hidden'} : { visibility: "visible"}} ref={node => this.menuNodeRef = node}>
-                    {!isCondensed && <PerfectScrollbar><UserProfile /><SideNavContent {...this.props}/></PerfectScrollbar>}
-                    {isCondensed && <UserProfile /> && <SideNavContent />}
+                <div style={showMenu ? {visibility:'visible'} : {visibility:'hidden'}}ref={node => this.menuNodeRef = node}>
+                    <PerfectScrollbar>
+                        <SideNavContent {...this.props}/>
+                    </PerfectScrollbar>
                 </div>
             </React.Fragment>
         );

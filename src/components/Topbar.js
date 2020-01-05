@@ -134,17 +134,6 @@ class Topbar extends Component {
             </li> */}
           </ul>
 
-          <div className="logo-box" style={isCondensed ? {visibility:'hidden'} : {visibility: 'visible'}}>
-            <Link to="/" className="logo text-center">
-              <span className="logo-lg">
-                <img src={logo} alt="" height="30" />
-              </span>
-              <span className="logo-sm">
-                <img src={logoSm} alt="" height="24" />
-              </span>
-            </Link>
-          </div>
-
           <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
             <li>
               <button className="button-menu-mobile waves-effect" onClick={this.props.menuToggle}>
