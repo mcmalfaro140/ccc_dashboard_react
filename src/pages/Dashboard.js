@@ -47,7 +47,9 @@ class DefaultDashboard extends Component {
                         w: 20,
                         h: 16,
                         minW: 6,
-                        minH: 9
+                        minH: 9,
+                        maxH: 18
+                        
                     }
                 },
                 {
@@ -178,7 +180,7 @@ class DefaultDashboard extends Component {
             // console.log(actualHeight)
             // console.log(this.props.isCondensed)
            //This part will render the table
-            if(item.objectType == "table"){
+            if(item.objectType === "table"){
                 return (
                     //min for table w:4 h:11
                 <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
@@ -207,7 +209,7 @@ class DefaultDashboard extends Component {
                     return (
                         //min for chart w:4 h:7
                         //Perfect size for line chart w = 12 and H = 16
-                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH + 3.5, maxH: item.coordinates.maxH + 5}}>
                             <CardBody style={{overflow:'hidden'}}>
                                 <LineGraph {...item}></LineGraph>
                             </CardBody>

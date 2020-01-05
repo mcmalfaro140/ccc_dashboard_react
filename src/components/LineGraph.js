@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AWS from 'aws-sdk';
 import {Line} from 'react-chartjs-2';
 import myKeys from '../keys.json';
+import '../assets/react-grid/styles.css'
 
 
 /**
@@ -42,7 +43,10 @@ var optionToSkip =  {
          // color: "black  "
         },
     }], 
-}}
+},
+
+
+}
 
 
 
@@ -198,7 +202,9 @@ class LineGraph extends Component {
                // color: "black  "
               },
           }], 
-      }}
+      },
+
+    }
       
       }
       
@@ -214,7 +220,8 @@ class LineGraph extends Component {
             fill: true,         
             borderColor: this.state.graphColor, // Line color
             backgroundColor:Color(this.state.graphColor).alpha(0.5),
-            responsive: true,
+            responsive: true
+           
           }
         ]
       }
@@ -238,7 +245,9 @@ class LineGraph extends Component {
                   ): null }
                 </div>
               </div>
-              <Line data={lineGraphData} options = {optionToSkip}></Line>
+              <div className = "chart-container">
+               <Line data={lineGraphData} options = {optionToSkip}></Line>
+              </div>
             </div>
         );
     }

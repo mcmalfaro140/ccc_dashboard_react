@@ -203,14 +203,12 @@ class BarGraph extends Component {
             fill: true,         
            // borderColor: 'lightblue', // Line color
             backgroundColor: this.state.graphColor,
-           responsive: true,
+            maintainAspectRatio : false,
+            responsive:true
           }
         ]
       }
-      const myRef = (c) =>{
-        console.log(c.getBoundingClientRect());
-      }
-
+    
      //console.log(this.state.data.length + " and " + this.state.data[0])
       
         return (

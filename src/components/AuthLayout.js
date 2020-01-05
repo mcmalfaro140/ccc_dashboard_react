@@ -310,7 +310,15 @@ class AuthLayout extends Component {
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
                                                 endTime:new Date() //if needed
-                                            }
+                                            },
+                                            coordinates: {
+                                                x: 0,
+                                                y: 0,
+                                                w: 10,
+                                                h: 9,
+                                                minW: 6,
+                                                minH: 9
+                                            } 
                                         }
                                     }
                                 }}>
