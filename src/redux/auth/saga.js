@@ -22,9 +22,10 @@ import {
 
 /**
  * Fetch data from given url
- * @param {*} url 
+ * @param {*} url
  * @param {*} options 
  */
+
 const fetchJSON = (url, options = {}) => {
     return fetch(url, options)
         .then(response => {
@@ -46,24 +47,52 @@ const fetchJSON = (url, options = {}) => {
  */
 const setSession = (user) => {
     let cookies = new Cookies();
-    if (user)
+    if (user){
         cookies.set("user", JSON.stringify(user), { path: "/" });
-    else
+    }else{
         cookies.remove("user");
+    }
 };
 /**
  * Login the user
  * @param {*} payload - username and password 
  */
+
 function* login({ payload: { username, password } }) {
+    //TODO: Delete this part. Only use once to convert string.
+    // let userDashboard = [
+    //     {
+    //         objectType:"graph", // options: graph or table
+    //         graphSettings: {
+    //                 type:"line", //options: line, pie, or bar
+    //                 realTime:"false", //options: true or false
+    //                 metricName:"CPUUtilization", 
+    //                 nameSpace:"AWS/EC2",
+    //                 chartName:"Test",
+    //                 instanceId:"i-01e27ec0da2c4d296",
+    //                 refreshRate:"",
+    //                 period:180
+    //             },
+    //         coordinates: {
+    //             x: 0,
+    //             y: 1,
+    //             w: 20,
+    //             h: 19,
+    //             minW: 6,
+    //             minH: 9
+    //         }
+    //     }]
+    // console.log(JSON.stringify(userDashboard))
+
     const options = {
         body: JSON.stringify({ username, password }),
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     };
-
+    //TODO: fix error for not authorize users
     try {
-        const response = yield call(fetchJSON, '/users/authenticate', options);
+        const response = yield call(fetchJSON, 'http://localhost:5050/authenticate', options);
+        console.log(response)
         setSession(response);
         yield put(loginUserSuccess(response));
     } catch (error) {
