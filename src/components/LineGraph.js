@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 import {Line} from 'react-chartjs-2';
 import myKeys from '../keys.json';
 import '../assets/react-grid/styles.css'
+import 'chartjs-plugin-zoom';
 
 
 /**
@@ -44,6 +45,27 @@ var optionToSkip =  {
         },
     }], 
 },
+
+
+  
+pan: {
+  // Boolean to enable panning
+  enabled: true,
+
+  // Panning directions. Remove the appropriate direction to disable 
+  // Eg. 'y' would only allow panning in the y direction
+  mode: 'x'
+},
+
+// Container for zoom options
+zoom: {
+  // Boolean to enable zooming
+  enabled: true,
+
+  // Zooming directions. Remove the appropriate direction to disable 
+  // Eg. 'y' would only allow zooming in the y direction
+  mode: 'x',
+}
 
 
 }
@@ -203,6 +225,24 @@ class LineGraph extends Component {
               },
           }], 
       },
+      pan: {
+        // Boolean to enable panning
+        enabled: true,
+      
+        // Panning directions. Remove the appropriate direction to disable 
+        // Eg. 'y' would only allow panning in the y direction
+        mode: 'x'
+      },
+      
+      // Container for zoom options
+      zoom: {
+        // Boolean to enable zooming
+        enabled: true,
+      
+        // Zooming directions. Remove the appropriate direction to disable 
+        // Eg. 'y' would only allow zooming in the y direction
+        mode: 'x',
+      }
 
     }
       

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AWS from 'aws-sdk';
 import myKeys from '../keys.json';
 import {Bar} from 'react-chartjs-2';
+import 'chartjs-plugin-zoom';
 
 /**
  * Renders the preloader
@@ -33,7 +34,29 @@ var optionToSkip =  {
          // color: "black  "
         },
     }], 
-}}
+
+
+},
+pan: {
+  // Boolean to enable panning
+  enabled: true,
+
+  // Panning directions. Remove the appropriate direction to disable 
+  // Eg. 'y' would only allow panning in the y direction
+  mode: 'x'
+},
+
+// Container for zoom options
+zoom: {
+  // Boolean to enable zooming
+  enabled: true,
+
+  // Zooming directions. Remove the appropriate direction to disable 
+  // Eg. 'y' would only allow zooming in the y direction
+  mode: 'x',
+}
+
+}
   
 class BarGraph extends Component {
     constructor(){
@@ -188,7 +211,27 @@ class BarGraph extends Component {
              // color: "black  "
             },
         }], 
-      }}
+       
+      },
+      pan: {
+        // Boolean to enable panning
+        enabled: true,
+      
+        // Panning directions. Remove the appropriate direction to disable 
+        // Eg. 'y' would only allow panning in the y direction
+        mode: 'x'
+      },
+      
+      // Container for zoom options
+      zoom: {
+        // Boolean to enable zooming
+        enabled: true,
+      
+        // Zooming directions. Remove the appropriate direction to disable 
+        // Eg. 'y' would only allow zooming in the y direction
+        mode: 'x',
+      }
+    }
       }
      
       
