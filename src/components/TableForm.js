@@ -46,7 +46,10 @@ class TableForm extends React.Component {
       timer:"",
       temp: [],
       dataTemp: [],
+<<<<<<< HEAD
       recordTempArray:[],
+=======
+>>>>>>> 96a4019bbf20c826c8d9d8707f6ba09657eb1047
       tableData:[{
               loggroupname: [],
               recordsMatched:[],
@@ -99,6 +102,9 @@ test = () =>{
 
   let count = 0
 
+//Get four group names and four query setIds
+//store them in a varibale to get the results innerWidth
+//Getquery results
 
 this.state.dataTemp.forEach(element => {
 
@@ -142,7 +148,7 @@ filterLog = (name) => {
       return resolve(data) 
     
     }    
-    
+              // successful response
   });
 
 })
@@ -187,6 +193,31 @@ resultHelper = (num) => {
   });
 
   return count;
+}
+
+getResults = (queryIdNum) => {
+  return new Promise((resolve, reject) => {
+    var queryid = {
+       queryId:queryIdNum
+    };
+
+    cloudwatchlogs.getQueryResults(queryid, function(err, data) {
+      if (err){
+        console.log(err, err.stack); // an error occurred
+        return reject(err)
+      }else{
+        return resolve(data)       // successful response
+        }
+    });
+
+  })
+
+}
+
+setQueryResults (queryRes){
+  this.setState(prevState => ({
+    arr: [...prevState.arr, queryRes]
+  }))
 }
 
 getResults = (queryIdNum) => {
@@ -304,4 +335,7 @@ export default TableForm;
 //   }//end of else
 //
 // }//end of for each
+<<<<<<< HEAD
 
+=======
+>>>>>>> 96a4019bbf20c826c8d9d8707f6ba09657eb1047

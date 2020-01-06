@@ -19,7 +19,7 @@ class graphForm extends Component {
         super(props);
         this.update = this.update.bind(this);
         this.submit = this.submit.bind(this);
-        this.state = { 
+        this.state = {
             newGraph:{
               objectType:"graph", // options: graph or table
               graphSettings: {
@@ -34,13 +34,13 @@ class graphForm extends Component {
               startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
               endTime:new Date() //if needed
               },
-       
-           
-        
+
+
+
 
         }
-    
-    
+
+
     }}
 
     readSelection(e){
@@ -65,20 +65,20 @@ class graphForm extends Component {
 
       this.setState(prevState => ({
         newGraph: {
-          ...prevState.newGraph,           
-          graphSettings: {                     
-            ...prevState.newGraph.graphSettings,   
+          ...prevState.newGraph,
+          graphSettings: {
+            ...prevState.newGraph.graphSettings,
             startTime :  newStartTime,
-            period : newPeriod      
+            period : newPeriod
           }
         }
       }))
   }
     submit(e){
-  
-      
+
+
         e.preventDefault();
-       
+
         this.props.history.push({
            // pathname: str,
             pathname: "/Dashboard",
@@ -95,17 +95,17 @@ class graphForm extends Component {
                 // // endTime : this.state.endTime
 
 
-            
-            }  
+
+            }
         })
-        
-       
+
+
     }
 
     update(e,i){
         e.preventDefault();
        // console.log(e.target.value);
-       
+
         value[i] = e.target.value;
         if(value.length > 4){
             value = [];
@@ -118,13 +118,13 @@ class graphForm extends Component {
         // this.setState({newGraph : newGraph});
         this.setState(prevState => ({
           newGraph: {
-            ...prevState.newGraph,           
-            graphSettings: {                     
-              ...prevState.newGraph.graphSettings,   
+            ...prevState.newGraph,
+            graphSettings: {
+              ...prevState.newGraph.graphSettings,
               metricName : value[0],
               nameSpace : value[1],
               chartName : value[2],
-              instanceId : value[3]         
+              instanceId : value[3]
             }
           }
         }))
@@ -137,7 +137,7 @@ class graphForm extends Component {
         // this.setState({startTime : value[7]});
         // this.setState({endTime : value[8]});
 
-      
+
 
     }
     // handleChangeForStart = date => {
@@ -154,7 +154,7 @@ class graphForm extends Component {
       // };
 
 
-    
+
 
     render() {
       if(this.props.location.typeOfGraph === 'line'){
@@ -165,14 +165,14 @@ class graphForm extends Component {
       }
 
       // console.log("the str is " + str);
-      
+
         return (
 
           <React.Fragment>
-           
+
     {/* <form onSubmit = {this.submit} >  */}
     <form>
- 
+
         <Form.Group controlId="metricName">
             <Form.Label>Metric Name: </Form.Label>
             <Form.Control type="text" placeholder="Enter metric name" onChange = {(e) => this.update(e,0)}/>
@@ -181,8 +181,8 @@ class graphForm extends Component {
             </Form.Text>
         </Form.Group>
         {/* <LineGraph mName = {this.state.metricName}/> */}
-               
-               
+
+
             <Form.Group controlId="nameSpace">
                 <Form.Label>Name Space: </Form.Label>
                 <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,1)}/>
@@ -191,8 +191,8 @@ class graphForm extends Component {
                 </Form.Text>
             </Form.Group>
             {/* <LineGraph nSpace = {this.state.nameSpace}/> */}
-              
-             
+
+
 
         <Form.Group controlId="chartName">
             <Form.Label>Chart Name: </Form.Label>
@@ -202,7 +202,7 @@ class graphForm extends Component {
             </Form.Text>
         </Form.Group>
         {/* <LineGraph cName = {this.state.chartName}/> */}
-          
+
                 {/* <p>Refresh Rate: </p>
                 <input
                   type='text'
@@ -212,8 +212,8 @@ class graphForm extends Component {
                   // onChange = {(e) => this.update(e,3)}
                   // id = {this.state.ElementId}
                 /> */}
-          
-               
+
+
          {/* <Form.Group controlId="accessKeyId">
                 <Form.Label>Access Key ID: </Form.Label>
                  <Form.Control type="text" placeholder="Enter access key id" onChange = {(e) => this.update(e,3)}/>
@@ -222,18 +222,18 @@ class graphForm extends Component {
              </Form.Text>
         </Form.Group> */}
         {/* <LineGraph aId = {this.state.accessKeyId}/> */}
-          
-               
+
+
         {/* <Form.Group controlId="secretAccessKey">
                 <Form.Label>Secret Access Key: </Form.Label>
                  <Form.Control type="text" placeholder="Enter secret access key" onChange = {(e) => this.update(e,4)}/>
                 <Form.Text className="text-muted">
-                  Enter your secret access key 
+                  Enter your secret access key
              </Form.Text>
         </Form.Group> */}
         {/* <LineGraph sKey = {this.state.secretAccessKey}/> */}
-          
-               
+
+
         <Form.Group controlId="instanceId">
                 <Form.Label>Instance ID: </Form.Label>
                  <Form.Control type="text" placeholder="Enter instance id" onChange = {(e) => this.update(e,3)} />
@@ -242,8 +242,8 @@ class graphForm extends Component {
              </Form.Text>
         </Form.Group>
         {/* <LineGraph iId = {this.state.instanceId}/> */}
-          
-               
+
+
 
         {/* <Form.Group controlId="region">
                 <Form.Label>Region </Form.Label>
@@ -272,8 +272,8 @@ class graphForm extends Component {
 
               <Form.Group controlId="exampleForm.ControlSelect1">
                     <Form.Label>Time Range</Form.Label>
-                    <Form.Control as="select" 
-                     placeholder="select" 
+                    <Form.Control as="select"
+                     placeholder="select"
                      onChange={this.readSelection}>
                     <option value = "6 hour">Last 6 Hour</option>
                     <option value = "Last Day">Last Day</option>
@@ -281,29 +281,29 @@ class graphForm extends Component {
                     <option value = "Last Month">Last Month</option>
                     </Form.Control>
                 </Form.Group>
-          
-                  {/* <Button variant = "primary" type="submit"  
-                
+
+                  {/* <Button variant = "primary" type="submit"
+
                  ></Button> */}
                  <Button variant = "primary"><Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}>Done..</Link></Button>
-                
 
-                 
-                      
-                </form> 
 
-                {/* <LineGraph 
+
+
+                </form>
+
+                {/* <LineGraph
                 metricName = {"max"}
                 // nameSpace = {this.state.nameSpace}
                 // chartName = {this.state.chartName}
                 // accessKeyId = {this.state.accessKeyId}
                 // secretAccessKey = {this.state.secretAccessKey}
                 // instanceId = {this.state.instanceId}
-                // region = {this.state.region}/> 
+                // region = {this.state.region}/>
 /> */}
-                
+
                 </React.Fragment>
-    
+
         )
     }
 }
