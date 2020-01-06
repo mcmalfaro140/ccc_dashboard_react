@@ -46,10 +46,7 @@ class TableForm extends React.Component {
       timer:"",
       temp: [],
       dataTemp: [],
-<<<<<<< HEAD
       recordTempArray:[],
-=======
->>>>>>> 96a4019bbf20c826c8d9d8707f6ba09657eb1047
       tableData:[{
               loggroupname: [],
               recordsMatched:[],
@@ -335,7 +332,3 @@ export default TableForm;
 //   }//end of else
 //
 // }//end of for each
-<<<<<<< HEAD
-
-=======
->>>>>>> 96a4019bbf20c826c8d9d8707f6ba09657eb1047
