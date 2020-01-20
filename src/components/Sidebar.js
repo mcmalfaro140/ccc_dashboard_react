@@ -183,6 +183,15 @@ class SideNavContent extends React.Component {
                               <span> Pie Chart </span>
                             </a>
                       </li>
+                      <li>
+                            <Link to={{
+                                typeOfGraph : 'mix' }}
+                                onClick = {this.props.toggleMixForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-elevation-rise"></i>
+                                <span> Mix Chart </span>
+                            </Link>
+                      </li>
 
                   </ul>
                   ): null }

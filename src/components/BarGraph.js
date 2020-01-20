@@ -272,7 +272,7 @@ class BarGraph extends Component {
                 </div>
               </div>
              
-              <Bar data={lineGraphData} options = {optionToSkip}
+              <Bar height = "100px" data={lineGraphData} options = {optionToSkip}
               />
            
             </div>
