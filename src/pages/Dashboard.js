@@ -54,6 +54,7 @@ class DefaultDashboard extends Component {
                 },
                 {
                     objectType:"table", // options: graph or table
+                    chartName: "Log Table Misael",
                     tableSettings:{
                         master:"true",
                     },
@@ -115,7 +116,8 @@ class DefaultDashboard extends Component {
                 },               
             ],
             showOptions: false,
-            systemHealth: false
+            systemHealth: false,
+            newUpcomingPropsName: "",
 
         };
         this.showOptions = this.showOptions.bind(this);
@@ -128,15 +130,26 @@ class DefaultDashboard extends Component {
         if(nextProps.location.state){
             //only activate adds to the array if the props are the specify ones
             if(nextProps.location.state.newMasterTable){
-                temp.push(nextProps.location.state.newMasterTable);
-                this.setState({
-                    userDashboard: temp
-                })
+                let newName = nextProps.location.state.newMasterTable.chartName;
+                let preName = this.state.newUpcomingPropsName;
+                if(newName !== preName){
+                    temp.push(nextProps.location.state.newMasterTable);
+                    this.setState({
+                        userDashboard: temp,
+                        newUpcomingPropsName: newName
+                    })
+                }
             }else if(nextProps.location.state.newGraph){
-                temp.push(nextProps.location.state.newGraph);
-                this.setState({
-                    userDashboard: temp
-                })
+                let newName = nextProps.location.state.newGraph.graphSettings.chartName;
+                let preName = this.state.newUpcomingPropsName;
+                if(newName !== preName){
+                    temp.push(nextProps.location.state.newGraph);
+                    this.setState({
+                        userDashboard: temp,
+                        newUpcomingPropsName: newName
+                    })
+                }
+                
             }
         }
         

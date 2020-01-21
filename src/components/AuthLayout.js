@@ -295,6 +295,7 @@ class AuthLayout extends Component {
         // const children = this.props.children || null;
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
+                test: "this is my test",
               screenSize: this.state.screenWidth,
               isCondensed: this.state.isCondensed
             });

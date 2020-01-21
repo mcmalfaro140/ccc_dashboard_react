@@ -119,6 +119,7 @@ class SideNavContent extends React.Component {
                                     state:{ 
                                         newMasterTable:{
                                             objectType:"table", // options: graph or table
+                                            chartName: "My Log Table",
                                             tableSettings:{
                                                 master:"true",
                                             },
