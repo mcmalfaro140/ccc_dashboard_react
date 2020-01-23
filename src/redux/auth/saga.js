@@ -58,41 +58,42 @@ const setSession = (user) => {
  * @param {*} payload - username and password 
  */
 
-function* login({ payload: { username, password } }) {
-    //TODO: Delete this part. Only use once to convert string.
-    // let userDashboard = [
-    //     {
-    //         objectType:"graph", // options: graph or table
-    //         graphSettings: {
-    //                 type:"line", //options: line, pie, or bar
-    //                 realTime:"false", //options: true or false
-    //                 metricName:"CPUUtilization", 
-    //                 nameSpace:"AWS/EC2",
-    //                 chartName:"Test",
-    //                 instanceId:"i-01e27ec0da2c4d296",
-    //                 refreshRate:"",
-    //                 period:180
-    //             },
-    //         coordinates: {
-    //             x: 0,
-    //             y: 1,
-    //             w: 20,
-    //             h: 19,
-    //             minW: 6,
-    //             minH: 9
-    //         }
-    //     }]
-    // console.log(JSON.stringify(userDashboard))
+ //Backend connection
 
+// function* login({ payload: { username, password } }) {
+//     const options = {
+//         body: JSON.stringify({ username, password }),
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' }
+//     };
+//     //TODO: fix error for not authorize users
+//     try {
+//         const response = yield call(fetchJSON, 'http://localhost:5050/authenticate', options);
+//         console.log(response)
+//         setSession(response);
+//         yield put(loginUserSuccess(response));
+//     } catch (error) {
+//         let message;
+//         switch (error.status) {
+//             case 500: message = 'Internal Server Error'; break;
+//             case 401: message = 'Invalid credentials'; break;
+//             default: message = error;
+//         }
+//         yield put(loginUserFailed(message));
+//         setSession(null);
+//     }
+// }
+
+
+function* login({ payload: { username, password } }) {
     const options = {
         body: JSON.stringify({ username, password }),
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     };
-    //TODO: fix error for not authorize users
+
     try {
-        const response = yield call(fetchJSON, 'http://localhost:5050/authenticate', options);
-        console.log(response)
+        const response = yield call(fetchJSON, '/users/authenticate', options);
         setSession(response);
         yield put(loginUserSuccess(response));
     } catch (error) {
@@ -106,6 +107,7 @@ function* login({ payload: { username, password } }) {
         setSession(null);
     }
 }
+
 
 
 /**
