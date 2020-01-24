@@ -23,7 +23,6 @@ class SideNavContent extends React.Component {
             showGrapOptions: false,
             showRealtimeOptions: false,
             showLogTableOptions: false,
-            graphActive: false,
             realTimeActive: false,
             logTableActive: false
           }
@@ -41,7 +40,7 @@ class SideNavContent extends React.Component {
     }
     showGrapOptions(e){
         e.preventDefault();
-        this.setState({ showGrapOptions: !this.state.showGrapOptions, graphActive: !this.state.graphActive});
+        this.setState({ showGrapOptions: !this.state.showGrapOptions});
       
         
     }
@@ -85,23 +84,38 @@ class SideNavContent extends React.Component {
               </li>
               <li className={this.state.realTimeActive ? ("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showRealtimeOptions}>
-                      <i class="mdi mdi-clock"></i>
-                      <span> Realtime </span>
+                        <i class="mdi mdi-elevation-rise"></i>
+                      <span> Charts </span>
                       <span className="menu-arrow"></span>
                   </a>
                   { this.state.showRealtimeOptions ? (
                    <ul className="nav-second-level nav" aria-expanded="false">
                       <li>
-                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
-                              <i className="mdi mdi-chart-bar"></i>
-                              <span> Bar Chart </span>
-                          </a>
+                         <Link to={{
+                                typeOfGraph : 'bar' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Bar Chart </span>
+                            </Link>
                       </li>
                       <li>
-                          <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
-                              <i class="mdi mdi-chart-line"></i>
-                              <span> Line Chart </span>
-                          </a>
+                            <Link to={{
+                                typeOfGraph : 'line' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-chart-line"></i>
+                                <span> Line Chart </span>
+                            </Link>
+                      </li>
+                      <li>
+                            <Link to={{
+                                typeOfGraph : 'mix' }}
+                                onClick = {this.props.toggleMixForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-chart-histogram"></i>
+                                <span> Mix Chart </span>
+                            </Link>
                       </li>
                   </ul>
                   ): null }
@@ -148,6 +162,7 @@ class SideNavContent extends React.Component {
                   </ul>
                   ): null }
               </li>
+
               <li className={this.state.graphActive ? ("active"):null}>
                   <a className="waves-effect" aria-expanded="false" onClick={this.showGrapOptions}>
                       <i class="mdi mdi-elevation-rise"></i>
@@ -197,6 +212,7 @@ class SideNavContent extends React.Component {
                   </ul>
                   ): null }
               </li>
+
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
                       <i class="mdi mdi-bell-ring-outline"></i>

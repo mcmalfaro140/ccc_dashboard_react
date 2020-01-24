@@ -23,10 +23,13 @@ type AuthAction = { type: string, payload: {} | string };
 type State = { user?: {} | null, loading?: boolean, +value?: boolean };
 
 const Auth = (state:State = INIT_STATE, action: AuthAction) => {
+    console.log("enter")
+    console.log(action.type)
     switch (action.type) {
         case LOGIN_USER:
             return { ...state, loading: true };
         case LOGIN_USER_SUCCESS:
+            console.log("login reducer")
             return { ...state, user: action.payload, loading: false, error: null };
         case LOGIN_USER_FAILED:
             return { ...state, error: action.payload, loading: false };
