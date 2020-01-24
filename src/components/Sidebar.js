@@ -133,6 +133,7 @@ class SideNavContent extends React.Component {
                                     state:{ 
                                         newMasterTable:{
                                             objectType:"table", // options: graph or table
+                                            chartName: "My Log Table",
                                             tableSettings:{
                                                 master:"true",
                                             },
@@ -161,6 +162,57 @@ class SideNavContent extends React.Component {
                   </ul>
                   ): null }
               </li>
+
+              <li className={this.state.graphActive ? ("active"):null}>
+                  <a className="waves-effect" aria-expanded="false" onClick={this.showGrapOptions}>
+                      <i class="mdi mdi-elevation-rise"></i>
+                      <span> New Graph </span>
+                      <span className="menu-arrow"></span>
+                  </a>
+                  { this.state.showGrapOptions ? (
+                   <ul className="nav-second-level nav" aria-expanded="false">
+                      <li>
+                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">    
+                              <i className="mdi mdi-chart-bar"></i>
+                              <span> Bar Chart </span>
+                          </a> */}
+                         <Link to={{
+                                typeOfGraph : 'bar' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Bar Chart </span>
+                            </Link>
+                      </li>
+                      <li>
+                            <Link to={{
+                                typeOfGraph : 'line' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-elevation-rise"></i>
+                                <span> Line Chart </span>
+                            </Link>
+                      </li>
+                      <li>
+                            <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref">
+                              <i class="mdi mdi-chart-arc"></i>
+                              <span> Pie Chart </span>
+                            </a>
+                      </li>
+                      <li>
+                            <Link to={{
+                                typeOfGraph : 'mix' }}
+                                onClick = {this.props.toggleMixForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i class="mdi mdi-elevation-rise"></i>
+                                <span> Mix Chart </span>
+                            </Link>
+                      </li>
+
+                  </ul>
+                  ): null }
+              </li>
+
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
                       <i class="mdi mdi-bell-ring-outline"></i>
