@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import {Form} from 'react-bootstrap';
 import profilePic from '../assets/images/users/user-1.jpg';
 import { SketchPicker } from 'react-color'
+import DateTimePicker from 'react-datetime-picker';
+import GraphForm from '../components/graphForm';
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
@@ -51,6 +53,8 @@ class AuthLayout extends Component {
         this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
         this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
         this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeStartDate = this.changeStartDate.bind(this);
+        this.changeEndDate = this.changeEndDate.bind(this);
 
         this.state = {
             mixGraph:{
@@ -68,11 +72,9 @@ class AuthLayout extends Component {
                 typeOfGraph1:"",
                 metricName1:"", 
                 nameSpace1:"",
-                chartName1:"",
                 typeOfDimension1 : "InstanceId",
                 idValue1:"",
                 startTime1:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                period1:120,
                 endTime1:new Date(),
                 colorSelected1:"" 
             },
@@ -90,11 +92,19 @@ class AuthLayout extends Component {
             chartName:"",
             typeOfDimension : "InstanceId",
             idValue:"",
-            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-            period:120,
+          //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+          startTime:new Date(), 
+          period:120,
             endTime:new Date() //if needed
            // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
         }
+    }
+
+    changeStartDate = startTime =>{
+        this.setState({startTime})
+    }
+    changeEndDate = endTime =>{
+        this.setState({endTime})
     }
 
     //toggle form
@@ -295,7 +305,6 @@ class AuthLayout extends Component {
         // const children = this.props.children || null;
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
-                test: "this is my test",
               screenSize: this.state.screenWidth,
               isCondensed: this.state.isCondensed
             });
@@ -319,9 +328,9 @@ class AuthLayout extends Component {
                                     </Container>
                                 </div>
                             </div>
-                        
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
-                            <ModalHeader toggle={this.toggleForm}>New Chart Form</ModalHeader>
+                            <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>
+                            {/* <ModalHeader toggle={this.toggleForm}>New Chart Form</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
                                 <form>
@@ -370,6 +379,26 @@ class AuthLayout extends Component {
                                             </Col>
                                         </Row>
                                     </Form>
+                                    <Form>
+                                    
+                                    <Row>
+                                        <Col>
+                                             <Form.Label>Start Time</Form.Label>
+                                                <DateTimePicker 
+                                                    value={this.state.startTime}
+                                                    onChange = {this.changeStartDate} />
+                                        </Col>
+                                        <Col>
+                                                <Form.Label>End Time</Form.Label>
+                                                        <DateTimePicker 
+                                                            value={this.state.endTime}
+                                                            onChange = {this.changeEndDate} />
+                                        </Col>
+                                    </Row>
+
+                                    
+
+                                    </Form>
                                     <Form.Group controlId="exampleForm.ControlSelect2">
                                         <Form.Label>Time Range</Form.Label>
                                         <Form.Control as="select"  
@@ -391,6 +420,8 @@ class AuthLayout extends Component {
                                        onChange = {this.handleChangeComplete}
                                        />
                                     </Form.Group>
+
+                                    
 
 
 
@@ -431,7 +462,8 @@ class AuthLayout extends Component {
                                     <Button color="primary" onClick={this.toggleForm}>Create graph</Button>
                                 </Link>
                                 <Button color="secondary" onClick={this.toggleForm}>Cancel</Button>
-                            </ModalFooter>
+                            </ModalFooter> */}
+                            
                         </Modal>
 
                         <Modal isOpen={this.state.mixModalOpen} toggle={this.toggleMixForm} >

@@ -64,7 +64,15 @@
   transform: rotate(45deg);
 }
 
-.chart-container {
-  position: relative;
+.chartAreaWrapper {
 
+  width: 600;
+  overflow-x: auto;
 }
+
+.react-switch {
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+

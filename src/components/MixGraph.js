@@ -5,6 +5,15 @@ import {Bar} from 'react-chartjs-2';
 import 'chartjs-plugin-zoom';
 
 var currentDate = new Date();
+var options = {
+  elements: {
+    point:{
+        radius: 0,
+       
+    },
+   
+}, 
+}
 
 class MixGraph extends Component {
     constructor(){
@@ -203,22 +212,23 @@ class MixGraph extends Component {
             type: this.props.graphSettings.typeOfGraph,
             data: this.state.data,
             fill: false,
-            borderColor: '#EC932F',
-            backgroundColor: '#EC932F',
-            pointBorderColor: '#EC932F',
-            pointBackgroundColor: '#EC932F',
+            borderColor: this.props.graphSettings.colorSelected,
+            backgroundColor: this.props.graphSettings.colorSelected,
+            pointBackgroundColor: this.props.graphSettings.colorSelected,
             pointHoverBackgroundColor: '#EC932F',
             pointHoverBorderColor: '#EC932F',
+            borderWidth:1
            
           },{
             type: this.props.graphSettings.typeOfGraph1,
             label: this.props.graphSettings.metricName1,
             data: this.state.data1,
             fill: false,
-            backgroundColor: '#71B37C',
-            borderColor: '#71B37C',
+            backgroundColor: this.props.graphSettings.colorSelected1,
+            borderColor: this.props.graphSettings.colorSelected1,
             hoverBackgroundColor: '#71B37C',
             hoverBorderColor: '#71B37C',
+            borderWidth:1
            
           }]
       };
@@ -260,7 +270,7 @@ class MixGraph extends Component {
                 </div>
               </div>
              
-              <Bar height = "100px" data={data} 
+              <Bar height = "100px" data={data} options = {options}
               />
            
             </div>

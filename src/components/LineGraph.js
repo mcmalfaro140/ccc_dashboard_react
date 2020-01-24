@@ -11,7 +11,14 @@ import 'chartjs-plugin-zoom';
  */
 //hello
 var currentDate = new Date();
-var optionToSkip =  {  
+var optionToSkip =  { 
+  elements: {
+    point:{
+        radius: 0,
+       
+    },
+   
+}, 
     scales: {
       xAxes: [{
         ticks: {
@@ -44,7 +51,8 @@ var optionToSkip =  {
           display: true ,
          // color: "black  "
         },
-    }], 
+    }],
+ 
 },
 
 
@@ -137,7 +145,7 @@ class LineGraph extends Component {
           });
            this.setState({holder:sortedData})
            console.log(this.state.holder);
-             for (var i = 0; i < this.state.holder.length; i++) {
+             for (var i = 0; i < this.state.holder.length/2; i++) {
               if(this.state.holder[i].Timestamp.getHours()<12){
                 if(this.state.holder[i].Timestamp.getMinutes()<10){
                   this.setState(prevState => ({
@@ -228,18 +236,20 @@ class LineGraph extends Component {
       
         // Panning directions. Remove the appropriate direction to disable 
         // Eg. 'y' would only allow panning in the y direction
-        mode: 'x'
+        mode: 'x',
+       
       },
       
-      // Container for zoom options
-      zoom: {
-        // Boolean to enable zooming
-        enabled: true,
+      // // Container for zoom options
+      // zoom: {
+      //   // Boolean to enable zooming
+      //   enabled: true,
       
-        // Zooming directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow zooming in the y direction
-        mode: 'x',
-      }
+      //   // Zooming directions. Remove the appropriate direction to disable 
+      //   // Eg. 'y' would only allow zooming in the y direction
+      //   mode: 'x',
+      
+      // }
 
     }
       
@@ -257,14 +267,15 @@ class LineGraph extends Component {
             fill: true,         
             borderColor: this.state.graphColor, // Line color
             backgroundColor:Color(this.state.graphColor).alpha(0.5),
-            responsive: true
+            responsive: true,
+            borderWidth:1
            
           }
         ]
       }
       //console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
-      
+   
         return (
             
             <div>
@@ -282,9 +293,11 @@ class LineGraph extends Component {
                   ): null }
                 </div>
               </div>
-              <div className = "chart-container">
+           
+              <div className = "chartAreaWrapper">
                <Line height = "100px" data={lineGraphData} options = {optionToSkip}></Line>
-              </div>
+               </div>
+              
             </div>
         );
     }

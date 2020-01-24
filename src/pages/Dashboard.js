@@ -54,7 +54,6 @@ class DefaultDashboard extends Component {
                 },
                 {
                     objectType:"table", // options: graph or table
-                    chartName: "Log Table Misael",
                     tableSettings:{
                         master:"true",
                     },
@@ -116,8 +115,7 @@ class DefaultDashboard extends Component {
                 },               
             ],
             showOptions: false,
-            systemHealth: false,
-            newUpcomingPropsName: "",
+            systemHealth: false
 
         };
         this.showOptions = this.showOptions.bind(this);
