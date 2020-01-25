@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import AWS from 'aws-sdk';
 import {Line} from 'react-chartjs-2';
 import myKeys from '../keys.json';
+import '../assets/react-grid/styles.css'
+import 'chartjs-plugin-zoom';
 
 
 /**
@@ -9,7 +11,14 @@ import myKeys from '../keys.json';
  */
 //hello
 var currentDate = new Date();
-var optionToSkip =  {  
+var optionToSkip =  { 
+  elements: {
+    point:{
+        radius: 0,
+       
+    },
+   
+}, 
     scales: {
       xAxes: [{
         ticks: {
@@ -29,6 +38,7 @@ var optionToSkip =  {
       yAxes: [{
        //stacked: true,
         ticks: {
+          stepSize: 0.2,
           fontSize: 10,
           min: 0,
           max: 1,// Your absolute max value
@@ -41,8 +51,33 @@ var optionToSkip =  {
           display: true ,
          // color: "black  "
         },
-    }], 
-}}
+    }],
+ 
+},
+
+
+  
+pan: {
+  // Boolean to enable panning
+  enabled: true,
+
+  // Panning directions. Remove the appropriate direction to disable 
+  // Eg. 'y' would only allow panning in the y direction
+  mode: 'x'
+},
+
+// Container for zoom options
+zoom: {
+  // Boolean to enable zooming
+  enabled: true,
+
+  // Zooming directions. Remove the appropriate direction to disable 
+  // Eg. 'y' would only allow zooming in the y direction
+  mode: 'x',
+}
+
+
+}
 
 
 
@@ -110,7 +145,7 @@ class LineGraph extends Component {
           });
            this.setState({holder:sortedData})
            console.log(this.state.holder);
-             for (var i = 0; i < this.state.holder.length; i++) {
+             for (var i = 0; i < this.state.holder.length/2; i++) {
               if(this.state.holder[i].Timestamp.getHours()<12){
                 if(this.state.holder[i].Timestamp.getMinutes()<10){
                   this.setState(prevState => ({
@@ -165,11 +200,7 @@ class LineGraph extends Component {
         this.setState({ showOptions: !this.state.showOptions});
       }
 
-      showOptions(e){
-        e.preventDefault();
-        this.setState({ showOptions: !this.state.showOptions});
-      }
-
+    
     render() {
     
       if(this.props.graphSettings.metricName!=="CPUUtilization"){
@@ -198,7 +229,29 @@ class LineGraph extends Component {
                // color: "black  "
               },
           }], 
-      }}
+      },
+      pan: {
+        // Boolean to enable panning
+        enabled: true,
+      
+        // Panning directions. Remove the appropriate direction to disable 
+        // Eg. 'y' would only allow panning in the y direction
+        mode: 'x',
+       
+      },
+      
+      // // Container for zoom options
+      // zoom: {
+      //   // Boolean to enable zooming
+      //   enabled: true,
+      
+      //   // Zooming directions. Remove the appropriate direction to disable 
+      //   // Eg. 'y' would only allow zooming in the y direction
+      //   mode: 'x',
+      
+      // }
+
+    }
       
       }
       
@@ -215,12 +268,14 @@ class LineGraph extends Component {
             borderColor: this.state.graphColor, // Line color
             backgroundColor:Color(this.state.graphColor).alpha(0.5),
             responsive: true,
+            borderWidth:1
+           
           }
         ]
       }
       //console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
-      
+   
         return (
             
             <div>
@@ -238,7 +293,11 @@ class LineGraph extends Component {
                   ): null }
                 </div>
               </div>
-              <Line data={lineGraphData} options = {optionToSkip}></Line>
+           
+              <div className = "chartAreaWrapper">
+               <Line height = "100px" data={lineGraphData} options = {optionToSkip}></Line>
+               </div>
+              
             </div>
         );
     }

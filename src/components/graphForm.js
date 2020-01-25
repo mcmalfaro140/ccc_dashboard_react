@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
 import {Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Row, Col, CardBody } from 'reactstrap';
+import { SketchPicker } from 'react-color'
+import DateTimePicker from 'react-datetime-picker';
+import Switch from "react-switch";
+import '../assets/react-grid/styles.css'
+
 // import DateTimePicker from 'react-datetime-picker';
 
 
@@ -18,22 +24,55 @@ class graphForm extends Component {
     constructor(props) {
         super(props);
         this.update = this.update.bind(this);
+        this.toggleForm = this.toggleForm.bind(this);
         this.submit = this.submit.bind(this);
+        this.readSelection = this.readSelection.bind(this);
+        this.handleChangeComplete = this.handleChangeComplete.bind(this);
+        this.toggleSwitch = this.toggleSwitch.bind(this);
+      
         this.state = { 
             newGraph:{
-              objectType:"graph", // options: graph or table
-              graphSettings: {
-              type: str, //options: line, pie, or bar
-              realTime:"false", //options: true or false
-              metricName:"",
-              nameSpace:"",
-              chartName:"",
-              instanceId:"",
-              refreshRate:"",
-              period:"",
-              startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-              endTime:new Date() //if needed
-              },
+              mixGraph:{
+                typeOfGraph:"",
+                metricName:"", 
+                nameSpace:"",
+                chartName:"",
+                typeOfDimension : "InstanceId",
+                idValue:"",
+                startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                period:120,
+                endTime:new Date(),
+                colorSelected:"",
+    
+                typeOfGraph1:"",
+                metricName1:"", 
+                nameSpace1:"",
+                typeOfDimension1 : "InstanceId",
+                idValue1:"",
+                startTime1:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                endTime1:new Date(),
+                colorSelected1:"" 
+            },
+            showMenu: false,
+            isRealTime: false,
+            screenWidth: 0,
+            whichNamespace: "",
+            colorSelected:"",
+            namespaceNotSelected : true,
+            isCondensed: false,
+            isFullScreen: false,
+            modalOpen: false,
+            mixModalOpen: false,
+            metricName:"", 
+            nameSpace:"",
+            chartName:"",
+            typeOfDimension : "InstanceId",
+            idValue:"",
+          //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+          startTime:new Date(), 
+          period:120,
+            endTime:new Date() //if needed
+              ,
        
            
         
@@ -42,38 +81,58 @@ class graphForm extends Component {
     
     
     }}
+    toggleSwitch = () =>{
+        this.setState({isRealTime: !this.state.isRealTime})
+    }
+    toggleForm = () => {
+        this.setState({modalOpen : !this.state.modalOpen})
+        // this.setState({whichNamespace : ""})
+        this.setState({namespaceNotSelected : true})
 
+};
+    //Dropdown helper
     readSelection(e){
-      let newStartTime;
-      let newPeriod;
-      if(e.target.value==="6 hour"){
-        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-6,currentDate.getMinutes());
-        newPeriod = 120;
+      if(e.target.value === "Last Hour"){
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())})
+          this.setState({period : 60})
       }
-      else if(e.target.value === "Last Day"){
-        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes());
-        newPeriod = 180;
+      if(e.target.value === "Last Day"){
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
+          this.setState({period : 120})
       }
-      else if(e.target.value === "Last Week"){
-        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes());
-        newPeriod = 600;
+      if(e.target.value === "Last Week"){
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes())})
+          this.setState({period : 600})
       }
-      else if(e.target.value === "Last Month"){
-        newStartTime = new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes());
-        newPeriod = 2400;
+      if(e.target.value === "Last Month"){
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes())})
+          this.setState({period : 2400})
       }
-
-      this.setState(prevState => ({
-        newGraph: {
-          ...prevState.newGraph,           
-          graphSettings: {                     
-            ...prevState.newGraph.graphSettings,   
-            startTime :  newStartTime,
-            period : newPeriod      
-          }
-        }
-      }))
   }
+
+  handleChangeComplete = (color) =>{
+    this.setState({colorSelected : color.hex})
+}
+
+    update(e,i){
+      e.preventDefault();
+      this.setState({namespaceNotSelected:false})
+      value[i] = e.target.value;
+      if(value.length > 5){
+          value = [];
+      }
+    
+      // this.setState({metricName : value[0]})
+      // this.setState({nameSpace : value[1]});
+      this.setState({nameSpace : value[0]});
+      this.setState({chartName : value[1]});
+      this.setState({metricName : value[2]});
+      this.setState({typeOfDimension : value[3]});
+      this.setState({idValue : value[4]});
+  }
+
+
+   
     submit(e){
   
       
@@ -102,44 +161,7 @@ class graphForm extends Component {
        
     }
 
-    update(e,i){
-        e.preventDefault();
-       // console.log(e.target.value);
-       
-        value[i] = e.target.value;
-        if(value.length > 4){
-            value = [];
-        }
-        // var newGraph = {...this.state.newGraph};
-        // newGraph["metricName"] = value[0];
-        // newGraph["nameSpace"] = value[1];
-        // newGraph["chartName"] = value[2];
-        // newGraph["instanceId"] = value[3];
-        // this.setState({newGraph : newGraph});
-        this.setState(prevState => ({
-          newGraph: {
-            ...prevState.newGraph,           
-            graphSettings: {                     
-              ...prevState.newGraph.graphSettings,   
-              metricName : value[0],
-              nameSpace : value[1],
-              chartName : value[2],
-              instanceId : value[3]         
-            }
-          }
-        }))
-        // this.setState({nameSpace : value[1]});
-        // this.setState({chartName : value[2]});
-        // this.setState({accessKeyId : value[3]});
-        // this.setState({secretAccessKey : value[4]});
-        // this.setState({instanceId : value[3]});
-        //this.setState({region : value[6]});
-        // this.setState({startTime : value[7]});
-        // this.setState({endTime : value[8]});
-
-      
-
-    }
+ 
     // handleChangeForStart = date => {
     //     this.setState({
     //       startTime: date
@@ -157,162 +179,176 @@ class graphForm extends Component {
     
 
     render() {
-      if(this.props.location.typeOfGraph === 'line'){
-        str = "/lineGraph"
-      }
-      else if(this.props.location.typeOfGraph === 'bar'){
-        str = "/barGraph"
-      }
+  
 
       // console.log("the str is " + str);
       
         return (
 
-          <React.Fragment>
-           
-    {/* <form onSubmit = {this.submit} >  */}
-    <form>
- 
-        <Form.Group controlId="metricName">
-            <Form.Label>Metric Name: </Form.Label>
-            <Form.Control type="text" placeholder="Enter metric name" onChange = {(e) => this.update(e,0)}/>
-            <Form.Text className="text-muted">
-              specify the metric name that you want...
-            </Form.Text>
-        </Form.Group>
-        {/* <LineGraph mName = {this.state.metricName}/> */}
+         
+                        <div>
+                        <ModalHeader toggle={this.props.toggleForm}>New Chart Form</ModalHeader>
+                            <ModalBody>
+                                Please provide all the inputs to create a chart.
+                                <form>
+                                <Form.Group controlId="exampleForm.ControlSelect1">
+                                        <Form.Label>Name Space: </Form.Label>
+                                         <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,0)}/>
+                                        <Form.Text className="text-muted">
+                                        specify the name space ...
+                                        </Form.Text>
+                                    </Form.Group>
+
+                                <Form.Group>
+                                    <label>
+                                        <span>Real Time</span>
+                                    <Switch
+                                        checked={this.state.isRealTime}
+                                        onChange={this.toggleSwitch}
+                                        onColor="#86d3ff"
+                                        onHandleColor="#2693e6"
+                                        handleDiameter={20}
+                                        uncheckedIcon={false}
+                                        checkedIcon={false}
+                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                        height={15}
+                                        width={60}
+                                        className="react-switch"
+                                        id="material-switch"
+                                    />
+                                         <span>Historic</span>
+
+                                    </label>
+                                </Form.Group>
+
+                                    <fieldset disabled={this.state.namespaceNotSelected}>
+                                    <Form.Group controlId="chartName">
+                                        <Form.Label>Chart Name: </Form.Label>
+                                        <Form.Control type="text" placeholder="Enter chart name" onChange = {(e) => this.update(e,1)}/>
+                                        <Form.Text className="text-muted">
+                                        specify the chart name that you want...
+                                        </Form.Text>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="metricName">
+                                        <Form.Label>Metric Name: </Form.Label> 
+                                         <Form.Control type="text" placeholder="Enter metric name" onChange = {(e) => this.update(e,2)}/>
+                                        <Form.Text className="text-muted">
+                                        specify the metric name that you want...
+                                        </Form.Text> 
+                                     </Form.Group> 
+                                    
+                                    <Form>
+                                        <Row>
+                                            <Col>
+                                            <Form.Label>Dimension: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.update(e,3)} />
+                                            <Form.Text className="text-muted">
+                                            Enter the dimension 
+                                            Ex.InstanceId
+                                            </Form.Text>
+                                            </Col>
+                                            <Col>
+                                            <Form.Label>Value: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.update(e,4)} />
+                                            <Form.Text className="text-muted">
+                                            Enter the value
+                                            </Form.Text>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                    <Form>
+                                    
+                                    <Row>
+                                        <Col>
+                                             <Form.Label>Start Time</Form.Label>
+                                                <DateTimePicker 
+                                                    value={this.state.startTime}
+                                                    onChange = {this.changeStartDate} />
+                                        </Col>
+                                        <Col>
+                                                <Form.Label>End Time</Form.Label>
+                                                        <DateTimePicker 
+                                                            value={this.state.endTime}
+                                                            onChange = {this.changeEndDate} />
+                                        </Col>
+                                    </Row>
+
+                                    
+
+                                    </Form>
+                                    <Form.Group controlId="exampleForm.ControlSelect2">
+                                        <Form.Label>Time Range</Form.Label>
+                                        <Form.Control as="select"  
+                                        onChange={(e) => this.readSelection(e)}>
+                                        <option disabled selected>Make Selection</option>
+                                        <option value = "Last Hour">Last Hour</option>
+                                        <option value = "Last Day">Last Day</option>
+                                        <option value = "Last Week">Last Week</option>
+                                        <option value = "Last Month">Last Month</option>
+                                        </Form.Control>
+                                        <Form.Text className="text-muted">
+                                            Select the time
+                                            </Form.Text>
+                                    </Form.Group>
+                                    <Form.Group controlId="exampleForm.ControlSelect3">
+                                    <Form.Label>Graph Color</Form.Label>
+                                       <SketchPicker
+                                       color = {this.state.colorSelected}
+                                       onChange = {this.handleChangeComplete}
+                                       />
+                                    </Form.Group>
+
+                                    
+
+
+
+                                    </fieldset>
+                                </form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Link to={{pathname:'/dashboard', 
+                                    state:{ 
+                                        newGraph:{
+                                            objectType:"graph", // options: graph or table
+                                            graphSettings: {
+                                                type:this.props.whatever, //options: line, pie, or bar
+                                                realTime:this.state.isRealTime, //options: true or false
+                                                metricName:this.state.metricName, 
+                                                nameSpace:this.state.nameSpace,
+                                                chartName:this.state.chartName,
+                                                typeOfDimension : this.state.typeOfDimension,
+                                                idValue:this.state.idValue,
+                                                refreshRate:"",
+                                                colorSelected:this.state.colorSelected,
+                                                period:this.state.period,
+                                                startTime:this.state.startTime, //if needed
+                                                endTime:new Date() //if needed
+                                            },
+                                            coordinates: {
+                                                x: 0,
+                                                y: 0,
+                                                w: 10,
+                                                h: 9,
+                                                minW: 6,
+                                                minH: 9
+                                            },
+                                          
+                                        }
+                                    }
+                                }}>
+                                    <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
+                                </Link>
+                                <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
+                            </ModalFooter>
+                           
+                            </div>
                
-               
-            <Form.Group controlId="nameSpace">
-                <Form.Label>Name Space: </Form.Label>
-                <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,1)}/>
-                 <Form.Text className="text-muted">
-                specify the name space ...
-                </Form.Text>
-            </Form.Group>
-            {/* <LineGraph nSpace = {this.state.nameSpace}/> */}
-              
-             
-
-        <Form.Group controlId="chartName">
-            <Form.Label>Chart Name: </Form.Label>
-            <Form.Control type="text" placeholder="Enter chart name" onChange = {(e) => this.update(e,2)}/>
-            <Form.Text className="text-muted">
-              specify the chart name that you want...
-            </Form.Text>
-        </Form.Group>
-        {/* <LineGraph cName = {this.state.chartName}/> */}
-          
-                {/* <p>Refresh Rate: </p>
-                <input
-                  type='text'
-                  // onMouseDown={this.stopPropagation}
-                  // onTouchStart={this.stopPropagation}
-                  name = "refreshRate"
-                  // onChange = {(e) => this.update(e,3)}
-                  // id = {this.state.ElementId}
-                /> */}
-          
-               
-         {/* <Form.Group controlId="accessKeyId">
-                <Form.Label>Access Key ID: </Form.Label>
-                 <Form.Control type="text" placeholder="Enter access key id" onChange = {(e) => this.update(e,3)}/>
-                <Form.Text className="text-muted">
-                  Enter your access key id
-             </Form.Text>
-        </Form.Group> */}
-        {/* <LineGraph aId = {this.state.accessKeyId}/> */}
-          
-               
-        {/* <Form.Group controlId="secretAccessKey">
-                <Form.Label>Secret Access Key: </Form.Label>
-                 <Form.Control type="text" placeholder="Enter secret access key" onChange = {(e) => this.update(e,4)}/>
-                <Form.Text className="text-muted">
-                  Enter your secret access key 
-             </Form.Text>
-        </Form.Group> */}
-        {/* <LineGraph sKey = {this.state.secretAccessKey}/> */}
-          
-               
-        <Form.Group controlId="instanceId">
-                <Form.Label>Instance ID: </Form.Label>
-                 <Form.Control type="text" placeholder="Enter instance id" onChange = {(e) => this.update(e,3)} />
-                <Form.Text className="text-muted">
-                  Enter your instance id
-             </Form.Text>
-        </Form.Group>
-        {/* <LineGraph iId = {this.state.instanceId}/> */}
-          
-               
-
-        {/* <Form.Group controlId="region">
-                <Form.Label>Region </Form.Label>
-                 <Form.Control type="text" placeholder="Enter region" onChange = {(e) => this.update(e,6)}/>
-                <Form.Text className="text-muted">
-                  Enter the region of your instance
-             </Form.Text>
-        </Form.Group> */}
-        {/* <LineGraph region = {this.state.region}/> */}
-
-        {/* <Form.Group controlId="startTime">
-                <Form.Label>Start Time:  </Form.Label>
-                <DateTimePicker
-          onChange = {this.handleChangeForStart}
-          value = {this.state.startTime}
-        />
-        </Form.Group>
-
-        <Form.Group controlId="endTime">
-                <Form.Label>End Time:  </Form.Label>
-                <DateTimePicker
-          onChange = {this.handleChangeForEnd}
-          value = {this.state.endTime}
-        />
-        </Form.Group>         */}
-
-              <Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Time Range</Form.Label>
-                    <Form.Control as="select" 
-                     placeholder="select" 
-                     onChange={this.readSelection}>
-                    <option value = "6 hour">Last 6 Hour</option>
-                    <option value = "Last Day">Last Day</option>
-                    <option value = "Last Week">Last Week</option>
-                    <option value = "Last Month">Last Month</option>
-                    </Form.Control>
-                </Form.Group>
-          
-                  {/* <Button variant = "primary" type="submit"  
-                
-                 ></Button> */}
-                 <Button variant = "primary"><Link to={{pathname:'/dashboard', state:{ newGraph: this.state.newGraph}}}>Done..</Link></Button>
-                
-
-                 
-                      
-                </form> 
-
-                {/* <LineGraph 
-                metricName = {"max"}
-                // nameSpace = {this.state.nameSpace}
-                // chartName = {this.state.chartName}
-                // accessKeyId = {this.state.accessKeyId}
-                // secretAccessKey = {this.state.secretAccessKey}
-                // instanceId = {this.state.instanceId}
-                // region = {this.state.region}/> 
-/> */}
-                
-                </React.Fragment>
     
         )
     }
 }
 
-const mapStateToProps = (state) => {
-  console.log(state)
-  return {
-    user: state.Auth.user
-  }
-}
 
 export default connect()(graphForm);

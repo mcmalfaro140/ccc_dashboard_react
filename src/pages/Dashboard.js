@@ -1,6 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody } from 'reactstrap';
+
 import LineGraph from '../components/LineGraph'
 import BarGraph from '../components/BarGraph'
 import Table from './Tables'
@@ -8,14 +9,23 @@ import LogReport from '../components/logRepotComp'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
+
+import LineGraph from '../components/LineGraph';
+import BarGraph from '../components/BarGraph';
+import MixGraph from '../components/MixGraph';
+import Table from './Tables';
+import LogReport from '../components/logRepotComp';
+import NightlyTasks from '../components/NightlyTask';
+import ServerStatus from '../components/ServerStatus';
+
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
 import GridLayout from 'react-grid-layout';
 
 //import css needed for reac-grid-layout
-import '../assets/react-grid/styles.css'
-import '../assets/react-grid/styles1.css'
+import '../assets/react-grid/styles.css';
+import '../assets/react-grid/styles1.css';
 
 
 var currentDate = new Date()
@@ -48,7 +58,8 @@ class DefaultDashboard extends Component {
                         w: 20,
                         h: 19,
                         minW: 6,
-                        minH: 9
+                        minH: 9,
+                        maxH: 18
                     }
                 },
                 {
@@ -111,8 +122,7 @@ class DefaultDashboard extends Component {
                         minW: 6,
                         minH: 9
                     }
-                },
-                
+                },               
             ],
             showOptions: false,
             systemHealth: false
@@ -128,15 +138,26 @@ class DefaultDashboard extends Component {
         if(nextProps.location.state){
             //only activate adds to the array if the props are the specify ones
             if(nextProps.location.state.newMasterTable){
-                temp.push(nextProps.location.state.newMasterTable);
-                this.setState({
-                    userDashboard: temp
-                })
+                let newName = nextProps.location.state.newMasterTable.chartName;
+                let preName = this.state.newUpcomingPropsName;
+                if(newName !== preName){
+                    temp.push(nextProps.location.state.newMasterTable);
+                    this.setState({
+                        userDashboard: temp,
+                        newUpcomingPropsName: newName
+                    })
+                }
             }else if(nextProps.location.state.newGraph){
-                temp.push(nextProps.location.state.newGraph);
-                this.setState({
-                    userDashboard: temp
-                })
+                let newName = nextProps.location.state.newGraph.graphSettings.chartName;
+                let preName = this.state.newUpcomingPropsName;
+                if(newName !== preName){
+                    temp.push(nextProps.location.state.newGraph);
+                    this.setState({
+                        userDashboard: temp,
+                        newUpcomingPropsName: newName
+                    })
+                }
+                
             }
         }
         
@@ -179,7 +200,7 @@ class DefaultDashboard extends Component {
             // console.log(actualHeight)
             // console.log(this.props.isCondensed)
            //This part will render the table
-            if(item.objectType == "table"){
+            if(item.objectType === "table"){
                 return (
                     //min for table w:4 h:11
                 <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
@@ -226,6 +247,15 @@ class DefaultDashboard extends Component {
                         <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
                             <CardBody>
                                 
+                            </CardBody>
+                                                
+                        </Card>);
+                }
+                else if(item.graphSettings.type === "mix"){
+                    return (
+                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                            <CardBody style={{overflow:'hidden'}}>
+                                <MixGraph {...item}></MixGraph>
                             </CardBody>
                                                 
                         </Card>);
