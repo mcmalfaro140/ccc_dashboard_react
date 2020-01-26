@@ -4,7 +4,7 @@ import mykey from '../keys.json';
 import Loader from 'react-loader-spinner'
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody } from 'reactstrap';
-import Table from './Tables'
+import SearchTable from '../components/SearchTable'
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
@@ -20,12 +20,14 @@ class SearchResult extends React.Component {
             logGroupName : [],
             params : {
                 limit : '50'
-            }
+            },
+            results: [],
         }
 
         this.getSearchResult = this.getSearchResult.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.getLogGroupName = this.getLogGroupName.bind(this);
+        this.searchByLogGroupName = this.searchByLogGroupName.bind(this);
     }
 
     componentDidMount() {
@@ -50,12 +52,48 @@ class SearchResult extends React.Component {
                 let temp = data.logGroups;
                 for (var i = 0; i < temp.length; i++) {
                     this.setState(prevState => ({
-                        logGroupName : [...prevState.logGroupName, temp[i].logGroupName]
+                        logGroupName : [...prevState.logGroupName, temp[i].logGroupName],
+                        loading : true
                     }));
                 }
+                for (var i = 0; i < temp.length; i++) {
+                    this.searchByLogGroupName(this.state.logGroupName[i]);
+                }
             }
+            this.setState({
+                loading : false
+            });
         }.bind(this))
+    }
 
+    searchByLogGroupName(logName){
+        var params = {
+            logGroupName: logName, /* required */
+            filterPattern: this.props.location.state.search_keyword /*keyword pass by the user */
+            // limit: 1000, 
+        };
+        
+        cloudwatchlogs.filterLogEvents(params, function(err, data) {
+            if(err){
+                console.log(err, err.stack); // an error occurred
+            }else{ 
+                if(data.events.length > 0){
+
+                    let resultData = {
+                        logGroupName: "",
+                        events: []
+                    }
+
+                    var new_data = Object.create(resultData);  
+                    new_data.logGroupName = logName;
+                    new_data.events = data.events
+
+                    this.setState(prevState => ({
+                        results : [...prevState.results, new_data]
+                    }));
+                }
+            }  
+        }.bind(this));
     }
 
     render() {
@@ -64,6 +102,19 @@ class SearchResult extends React.Component {
         if(value.length > 0){
             empty_str = false
         }
+
+        const tables = this.state.results.map((item, i) => {
+            return(
+                <Card className="card-box"> 
+                    <div style={{width:'100%'}}>
+                        <h2 className="float-left" >{item.logGroupName}</h2>
+                    </div>
+                    <CardBody>
+                        <SearchTable events={item.events}></SearchTable>
+                    </CardBody>
+                </Card>
+            )
+        })
         return (
             <div>
                 { this.state.loading ? (
@@ -99,14 +150,9 @@ class SearchResult extends React.Component {
                                 </form>
                             </div>
                         ):(
-                            <Card className="card-box"> 
-                                <div style={{width:'100%'}}>
-                                    <h2 className="float-left" >Results for "{this.props.location.state.search_keyword}"</h2>
-                                </div>
-                                <CardBody>
-                                    <Table/>
-                                </CardBody>
-                            </Card>
+                            <div>
+                                {tables}
+                            </div>
                         )}
                     </div>
                 )}
