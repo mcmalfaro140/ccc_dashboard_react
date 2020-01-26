@@ -9,15 +9,7 @@ import LogReport from '../components/logRepotComp'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
-
-import LineGraph from '../components/LineGraph';
-import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
-import Table from './Tables';
-import LogReport from '../components/logRepotComp';
-import NightlyTasks from '../components/NightlyTask';
-import ServerStatus from '../components/ServerStatus';
-
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';

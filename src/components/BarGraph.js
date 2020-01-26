@@ -59,6 +59,7 @@ zoom: {
 }
   
 class BarGraph extends Component {
+  intervalID3;
     constructor(){
         super();
       //  this.myRef = React.createRef();
@@ -77,7 +78,7 @@ class BarGraph extends Component {
     }
       
       getgraph = () =>{
-
+        console.log(this.props.graphSettings.realTime)
         console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
@@ -117,7 +118,7 @@ class BarGraph extends Component {
           });
            this.setState({holder:sortedData})
            console.log(this.state.holder);
-             for (var i = 0; i < this.state.holder.length; i++) {
+             for (var i = 0; i < this.state.holder.length/3; i++) {
               if(this.state.holder[i].Timestamp.getHours()<12){
                 if(this.state.holder[i].Timestamp.getMinutes()<10){
                   this.setState(prevState => ({
@@ -150,8 +151,9 @@ class BarGraph extends Component {
             
             //  uniqueData =  Array.from(new Set(data));
             //  uniqueLabel =  Array.from(new Set(label));
-    
-              //this.intervalID3 = setTimeout(this.getgraph3.bind(this), this.state.refreshRate3);
+            if(this.props.graphSettings.realTime === true){
+              this.intervalID3 = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
+            }
     
            //   console.log("Graph4's data size is now " + this.state.dataTemp3.length);
              
@@ -171,10 +173,7 @@ class BarGraph extends Component {
         this.setState({ showOptions: !this.state.showOptions});
       }
 
-      showOptions(e){
-        e.preventDefault();
-        this.setState({ showOptions: !this.state.showOptions});
-      }
+      
 
     render() {
       if(this.props.graphSettings.metricName==="CPUUtilization"){

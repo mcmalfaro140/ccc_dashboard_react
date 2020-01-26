@@ -4,23 +4,45 @@ import {Line} from 'react-chartjs-2';
 import myKeys from '../keys.json';
 import '../assets/react-grid/styles.css'
 import 'chartjs-plugin-zoom';
+import 'chartjs-plugin-streaming';
 
 
 /**
  * Renders the preloader
  */
 //hello
-var currentDate = new Date();
-var optionToSkip =  { 
-  elements: {
-    point:{
-        radius: 0,
-       
-    },
-   
-}, 
-    scales: {
+
+
+
+
+class LineGraph extends Component {
+    intervalID;
+    constructor(){
+      
+        super();
+        this.state = {
+            graphColor:"blue",
+            data:[],
+            label:[],
+            holder:[],
+            uniqueData:[],
+            uniqueLabel:[],
+            showOptions: false,
+            options : ""
+        };
+        this.showOptions = this.showOptions.bind(this);
+        this.componentWillMount = this.componentWillMount.bind(this);
+    
+    this.optionToSkip =  { 
+      elements: {
+        point:{
+            radius: 0,  
+        },
+      
+    }, 
+        scales: {
       xAxes: [{
+        
         ticks: {
             maxRotation: 0,
             minRotation: 0,
@@ -54,53 +76,22 @@ var optionToSkip =  {
     }],
  
 },
-
-
-  
-pan: {
-  // Boolean to enable panning
-  enabled: true,
-
-  // Panning directions. Remove the appropriate direction to disable 
-  // Eg. 'y' would only allow panning in the y direction
-  mode: 'x'
-},
-
-// Container for zoom options
-zoom: {
-  // Boolean to enable zooming
-  enabled: true,
-
-  // Zooming directions. Remove the appropriate direction to disable 
-  // Eg. 'y' would only allow zooming in the y direction
-  mode: 'x',
-}
-
-
-}
-
-
-
-class LineGraph extends Component {
-    constructor(){
-        super();
-        this.state = {
-            graphColor:"blue",
-            data:[],
-            label:[],
-            holder:[],
-            uniqueData:[],
-            uniqueLabel:[],
-            showOptions: false,
-
-        };
-        this.showOptions = this.showOptions.bind(this);
-        
-
-    }
+      pan: {
+        enabled: true,
+        mode: 'x'
+      },
+      zoom: {
+        enabled: true,
+        mode: 'x',
+      }
+      }
+          }
     
 
       getgraph3 = () =>{
+        console.log(this.props.graphSettings.startTime + "start timmmmmm")
+        console.log(this.props.graphSettings.endTime + " end timmmmmm")
+        console.log(this.props.graphSettings.realTime)
        console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
@@ -109,7 +100,7 @@ class LineGraph extends Component {
 
          
         var params = {
-            EndTime: currentDate, /* required */
+            EndTime: this.props.graphSettings.endTime, /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
@@ -126,9 +117,7 @@ class LineGraph extends Component {
             Statistics: [
               'Average',
               /* more items */
-            ],
-         
-           
+            ], 
           }
         
           AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
@@ -178,14 +167,42 @@ class LineGraph extends Component {
             
             //  uniqueData =  Array.from(new Set(data));
             //  uniqueLabel =  Array.from(new Set(label));
+           
+            if(this.props.graphSettings.realTime === true){
+              this.intervalID = setTimeout(this.getgraph3, this.props.graphSettings.refreshRate);
+            }
+            
     
-              //this.intervalID3 = setTimeout(this.getgraph3.bind(this), this.state.refreshRate3);
-    
-           //   console.log("Graph4's data size is now " + this.state.dataTemp3.length);
+         
              
           };          
          
         }.bind(this));
+      }
+
+      componentWillMount() {
+        /*
+          stop getData() from continuing to run even
+          after unmounting this component. Notice we are calling
+          'clearTimeout()` here rather than `clearInterval()` as
+          in the previous example.
+        */
+      
+    //    if(this.props.graphSettings.realTime === true){
+    //     this.setState({options : {scales: {
+    //      xAxes: [
+    //        {
+    //          type: "realtime",
+    //          realtime: {
+    //            //refresh: this.props.graphSettings.refreshRate,
+    //            onRefresh: this.getgraph3()
+    //          }
+    //        }
+    //      ]
+    //  }}})
+    //  }else{
+    //     this.getgraph3();
+    //  }
       }
       componentDidMount() {
         this.getgraph3();
@@ -202,11 +219,18 @@ class LineGraph extends Component {
 
     
     render() {
-    
+      
       if(this.props.graphSettings.metricName!=="CPUUtilization"){
-        optionToSkip =  {  
+        this.optionToSkip =  {  
           scales: {
+           elements: {
+              point:{
+                  radius: 0,  
+              },
+      
+    }, 
             xAxes: [{
+             
               ticks: {
                 maxRotation: 0,
                 minRotation: 0,
@@ -240,16 +264,16 @@ class LineGraph extends Component {
        
       },
       
-      // // Container for zoom options
-      // zoom: {
-      //   // Boolean to enable zooming
-      //   enabled: true,
+      // Container for zoom options
+      zoom: {
+        // Boolean to enable zooming
+        enabled: true,
       
-      //   // Zooming directions. Remove the appropriate direction to disable 
-      //   // Eg. 'y' would only allow zooming in the y direction
-      //   mode: 'x',
+        // Zooming directions. Remove the appropriate direction to disable 
+        // Eg. 'y' would only allow zooming in the y direction
+        mode: 'x',
       
-      // }
+      }
 
     }
       
@@ -273,6 +297,13 @@ class LineGraph extends Component {
           }
         ]
       }
+      var graph;
+      // if(this.props.graphSettings.realTime === true){
+      //  graph = <Line height = "100px" data={lineGraphData} options = {this.state.options} ></Line>
+      // }
+      // else{
+       graph = <Line height = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
+     // }
       //console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
    
@@ -295,7 +326,7 @@ class LineGraph extends Component {
               </div>
            
               <div className = "chartAreaWrapper">
-               <Line height = "100px" data={lineGraphData} options = {optionToSkip}></Line>
+               {graph}
                </div>
               
             </div>
