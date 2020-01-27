@@ -36,6 +36,26 @@
     border-radius: 15px
 }
 
+.notResultDiv{
+    background-color: white;
+    border-radius: 15px;
+    margin: auto;
+    padding: 3%;
+    text-align: center;
+    width: 50%;
+    margin-top: 5%;
+    box-Shadow: 0 0 15px 0 rgba(6, 71, 248, 0.863)
+
+}
+
+.no_found_img{
+    width: 65%
+}
+
+.key{
+    color: red
+}
+
 .btnGroup{
     display: block;
 }
@@ -66,5 +86,16 @@
         width: 45%;
         margin: 2%;
         margin-top: 5%;
+    }
+
+    .notResultDiv{
+        padding: 3%;
+        width: 90%;
+        margin-top: 40%;
+    
+    }
+    
+    .no_found_img{
+        width: 100%
     }
 }

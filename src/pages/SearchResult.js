@@ -5,6 +5,7 @@ import Loader from 'react-loader-spinner'
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody } from 'reactstrap';
 import SearchTable from '../components/SearchTable'
+import not_found_img from '../assets/images/notfound.png'
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
@@ -23,27 +24,32 @@ class SearchResult extends React.Component {
             },
             results: [],
         }
-
-        this.getSearchResult = this.getSearchResult.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.getLogGroupName = this.getLogGroupName.bind(this);
         this.searchByLogGroupName = this.searchByLogGroupName.bind(this);
     }
 
+    //Update componets when page is initialize
     componentDidMount() {
         this.getLogGroupName();
-        setTimeout(() => this.setState({ loading: false }), 1000); 
     }
 
-    getSearchResult(value){
-        console.log("misael")
-        return true
-    }
+    //will update the components when new keyword is enter
+    componentDidUpdate(prevProps) {
+        if(this.props.location.state.search_keyword !== prevProps.location.state.search_keyword){
+            this.setState({results: [], loading: true})
+            for (var i = 0; i < this.state.logGroupName.length; i++) {
+                this.searchByLogGroupName(this.state.logGroupName[i])
+            }
+        }
+    } 
 
+    //gets new user input
     handleChange(event) {
         this.setState({keyword: event.target.value});
     }
 
+    //Funtion to get all the log group names from AWS
     getLogGroupName(){
         cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
             if (err){
@@ -52,24 +58,37 @@ class SearchResult extends React.Component {
                 let temp = data.logGroups;
                 for (var i = 0; i < temp.length; i++) {
                     this.setState(prevState => ({
-                        logGroupName : [...prevState.logGroupName, temp[i].logGroupName],
-                        loading : true
+                        logGroupName : [...prevState.logGroupName, temp[i].logGroupName]
                     }));
                 }
                 for (var i = 0; i < temp.length; i++) {
                     this.searchByLogGroupName(this.state.logGroupName[i]);
                 }
             }
-            this.setState({
-                loading : false
-            });
         }.bind(this))
     }
 
+    //Funtion to search on a specific log group name base on the keyword input by the user
     searchByLogGroupName(logName){
+        let key = this.props.location.state.search_keyword
+        let keySplit = key.split(" ");
+        let arrayKeyWords = [];
+        keySplit.forEach(element => {
+            arrayKeyWords.push("?" + element) //adds the OR sign to word
+            arrayKeyWords.push("?" + element.toUpperCase()) //adds uppercase  word
+            arrayKeyWords.push("?" + element.toLowerCase()) //adds lowercase word
+            arrayKeyWords.push("?" + element.charAt(0).toUpperCase() + element.slice(1).toLowerCase()) //adds uppercase to first letter word
+        });
+
+        //build filter pattern
+        let search_pattern = ""
+        arrayKeyWords.forEach(element => {
+            search_pattern += element + " "
+        });
+
         var params = {
             logGroupName: logName, /* required */
-            filterPattern: this.props.location.state.search_keyword /*keyword pass by the user */
+            filterPattern: search_pattern /*keyword pass by the user */
             // limit: 1000, 
         };
         
@@ -93,6 +112,7 @@ class SearchResult extends React.Component {
                     }));
                 }
             }  
+            setTimeout(() => this.setState({ loading: false }), 1000); 
         }.bind(this));
     }
 
@@ -124,7 +144,6 @@ class SearchResult extends React.Component {
                             color="#00BFFF"
                             height={100}
                             width={100}
-                            // timeout={3000} //3 secs
                         />
                         <div className="loaderText">Retrieving Search Results</div>
                     </div>
@@ -150,9 +169,19 @@ class SearchResult extends React.Component {
                                 </form>
                             </div>
                         ):(
-                            <div>
-                                {tables}
-                            </div>
+                            ( this.state.results.length === 0 ? 
+                                <div className="notResultDiv">
+                                    <img className="no_found_img" src={not_found_img} alt="Not Results" />
+                                    <h1>OOPS!</h1>
+                                    <h3>No results found for:</h3>
+                                    <h3 className="key">{value}</h3>
+
+                                </div> 
+                                : 
+                                <div>
+                                    {tables}
+                                </div>
+                            )
                         )}
                     </div>
                 )}

@@ -13,25 +13,25 @@ class SearchTable extends React.Component {
                 message:""
             },
             columns : [
-                {
-                    Header: 'Log Stream Name',
-                    accessor:'logStreamName',
-                    style:{
-                      textalign:"left"
-                    },
-                    width: 350,
-                    maxwidth:150,
-                    minwidth:150
-                },
+                // {
+                //     Header: 'Log Stream Name',
+                //     accessor:'logStreamName',
+                //     style:{
+                //       textalign:"left"
+                //     },
+                //     width: 50,
+                //     maxwidth:50,
+                //     minwidth:50
+                // },
                 {
                     Header: 'Time Stamp',
                     accessor:'timeStamp',
                     style:{
                         textalign:"left"
                     },
-                    width: 150,
-                    maxwidth:150,
-                    minwidth:150
+                    width: 220,
+                    maxwidth:220,
+                    minwidth:220
                 },
                 {
                     Header:'Message',
@@ -47,11 +47,13 @@ class SearchTable extends React.Component {
     newTableData(){
         let tableData = []
         var new_data = Object.create(this.state.tabledata);
-        // console.log(this.props.events)
       
         for (var i = 0; i < this.props.events.length; i++) {
+            var t = new Date(parseInt(this.props.events[i].timestamp));
+            let time = t.toGMTString();
+            console.log(time)
             new_data.logStreamName = this.props.events[i].logStreamName;
-            new_data.timeStamp= this.props.events[i].timestamp;
+            new_data.timeStamp= time;
             new_data.message = this.props.events[i].message;
         
             //push the object to the array
@@ -65,8 +67,12 @@ class SearchTable extends React.Component {
     }
 
     render(){
+        let tableSize = 20;
+        if(this.props.events.length < 20){
+            tableSize = this.props.events.length
+        }
         return(
-            <ReactTable columns = {this.state.columns} data= {this.newTableData()} defaultPageSize={20}>
+            <ReactTable columns = {this.state.columns} data= {this.newTableData()} defaultPageSize={tableSize}>
                 {(state, makeTable, instance) => {
                     return (
                     <div style={{ background: '#ffffff', borderRadius: '25px', width:'100%', height:'100%'}}>
