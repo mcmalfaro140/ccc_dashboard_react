@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import {Form} from 'react-bootstrap';
 import profilePic from '../assets/images/users/user-1.jpg';
 import { SketchPicker } from 'react-color'
+import DateTimePicker from 'react-datetime-picker';
+import GraphForm from '../components/graphForm';
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
@@ -44,7 +46,38 @@ class AuthLayout extends Component {
         this.handleChangeComplete = this.handleChangeComplete.bind(this);
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
+        this.toggleMixForm = this.toggleMixForm.bind(this);
+        this.mixUpdate = this.mixUpdate.bind(this);
+        this.readMixedSelection1 = this.readMixedSelection1.bind(this);
+        this.readMixedSelection2 = this.readMixedSelection2.bind(this);
+        this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
+        this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
+        this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeStartDate = this.changeStartDate.bind(this);
+        this.changeEndDate = this.changeEndDate.bind(this);
+
         this.state = {
+            mixGraph:{
+                typeOfGraph:"",
+                metricName:"", 
+                nameSpace:"",
+                chartName:"",
+                typeOfDimension : "InstanceId",
+                idValue:"",
+                startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                period:120,
+                endTime:new Date(),
+                colorSelected:"",
+    
+                typeOfGraph1:"",
+                metricName1:"", 
+                nameSpace1:"",
+                typeOfDimension1 : "InstanceId",
+                idValue1:"",
+                startTime1:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                endTime1:new Date(),
+                colorSelected1:"" 
+            },
             showMenu: false,
             screenWidth: 0,
             whichNamespace: "",
@@ -53,28 +86,37 @@ class AuthLayout extends Component {
             isCondensed: false,
             isFullScreen: false,
             modal0pem: false,
+            mixModalOpen: false,
             metricName:"", 
             nameSpace:"",
             chartName:"",
             typeOfDimension : "InstanceId",
             idValue:"",
-            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-            period:120,
+          //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+          startTime:new Date(), 
+          period:120,
             endTime:new Date() //if needed
            // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
         }
     }
 
+    changeStartDate = startTime =>{
+        this.setState({startTime})
+    }
+    changeEndDate = endTime =>{
+        this.setState({endTime})
+    }
+
     //toggle form
     toggleForm = () => {
         this.setState({modalOpen : !this.state.modalOpen})
-        this.setState({whichNamespace : ""})
+        // this.setState({whichNamespace : ""})
         this.setState({namespaceNotSelected : true})
-        if(this.state.colorSelected === undefined){
-            var randomColor = require('randomcolor');
-            this.setState({colorSelected : randomColor()})
-        }
+
 };
+    toggleMixForm = () =>{
+        this.setState({mixModalOpen : !this.state.mixModalOpen})
+    }
 
     signOut(e) {
         e.preventDefault();
@@ -87,14 +129,11 @@ class AuthLayout extends Component {
         this.setState({ showMenu: !this.state.showMenu});
         this.setState({ isCondensed: !this.state.isCondensed});
         // this.changeScreenSize(this.state.isCondensed)
-
-        
     }
 
     //toggle right side bar
     toggleRightSidebar = () => {
         document.body.classList.toggle("right-bar-enabled");
-
     }
 
     //Form update
@@ -115,8 +154,45 @@ class AuthLayout extends Component {
         this.setState({idValue : value[4]});
     }
 
+    //Mix form update
+    mixUpdate(e,i){
+        e.preventDefault();
+        value[i] = e.target.value;
+        if(value.length >9){
+            value = []
+        }
+        this.setState(prevState => {
+            let mixGraph = Object.assign({}, prevState.mixGraph);  
+            mixGraph.nameSpace = value[0];   
+            mixGraph.nameSpace1 = value[1];  
+            mixGraph.chartName = value[2];
+            mixGraph.metricName = value[3]; 
+            mixGraph.metricName1 = value[4]; 
+            mixGraph.typeOfDimension = value[5]; 
+            mixGraph.typeOfDimension1 = value[6]; 
+            mixGraph.idValue = value[7];
+            mixGraph.idValue1 = value[8];
+            return { mixGraph };                                
+          })
+      
+    }
+
     handleChangeComplete = (color) =>{
         this.setState({colorSelected : color.hex})
+    }
+    handleMixChangeComplete1 = (color) =>{
+        this.setState(prevState => {
+            let mixGraph = Object.assign({}, prevState.mixGraph);  
+            mixGraph.colorSelected = color.hex
+            return { mixGraph };                                
+          })
+    }
+    handleMixChangeComplete2 = (color) =>{
+        this.setState(prevState => {
+            let mixGraph = Object.assign({}, prevState.mixGraph);  
+            mixGraph.colorSelected1 = color.hex
+            return { mixGraph };                                
+          })
     }
 
     //Dropdown helper
@@ -137,6 +213,64 @@ class AuthLayout extends Component {
             this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes())})
             this.setState({period : 2400})
         }
+    }
+    readMixTimeSelection1(e){
+        if(e.target.value === "Last Hour"){
+            this.setState(prevState => {
+                let mixGraph = Object.assign({}, prevState.mixGraph);  
+                mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())
+                mixGraph.period = 60;
+                return { mixGraph };                                
+              })
+        }
+        if(e.target.value === "Last Day"){
+            this.setState(prevState => {
+                let mixGraph = Object.assign({}, prevState.mixGraph);  
+                mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
+                mixGraph.period = 120;
+                return { mixGraph };                                
+              })
+        
+        }
+        if(e.target.value === "Last Week"){
+
+            this.setState(prevState => {
+                let mixGraph = Object.assign({}, prevState.mixGraph);  
+                mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes())
+                mixGraph.period = 600;
+                return { mixGraph };                                
+              })
+        
+        
+        }
+        if(e.target.value === "Last Month"){
+            this.setState(prevState => {
+                let mixGraph = Object.assign({}, prevState.mixGraph);  
+                mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes())
+                mixGraph.period = 2400;
+                return { mixGraph };                                
+              })
+        }
+    }
+     
+    readMixedSelection1(e){
+        console.log(e.target.value);
+        var type = e.target.value;
+        this.setState(prevState => ({
+            mixGraph: {                   // object that we want to update
+                ...prevState.mixGraph,    // keep all other key-value pairs
+                typeOfGraph:type    // update the value of specific key
+            }
+        }))
+    }
+    readMixedSelection2(e){
+        console.log(e.target.value);
+        var type = e.target.value;
+        this.setState(prevState => {
+            let mixGraph = Object.assign({}, prevState.mixGraph);  
+            mixGraph.typeOfGraph1 = type;                                     
+            return { mixGraph };                               
+          })
     }
 
     //add event listener for screen resize. It is need it to set the right size for react grid
@@ -181,7 +315,7 @@ class AuthLayout extends Component {
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                     </Suspense>
                     
                     <div className="content-page">
@@ -194,9 +328,9 @@ class AuthLayout extends Component {
                                     </Container>
                                 </div>
                             </div>
-                        
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
-                            <ModalHeader toggle={this.toggleForm}>New Chart Form</ModalHeader>
+                            <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>
+                            {/* <ModalHeader toggle={this.toggleForm}>New Chart Form</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
                                 <form>
@@ -245,6 +379,26 @@ class AuthLayout extends Component {
                                             </Col>
                                         </Row>
                                     </Form>
+                                    <Form>
+                                    
+                                    <Row>
+                                        <Col>
+                                             <Form.Label>Start Time</Form.Label>
+                                                <DateTimePicker 
+                                                    value={this.state.startTime}
+                                                    onChange = {this.changeStartDate} />
+                                        </Col>
+                                        <Col>
+                                                <Form.Label>End Time</Form.Label>
+                                                        <DateTimePicker 
+                                                            value={this.state.endTime}
+                                                            onChange = {this.changeEndDate} />
+                                        </Col>
+                                    </Row>
+
+                                    
+
+                                    </Form>
                                     <Form.Group controlId="exampleForm.ControlSelect2">
                                         <Form.Label>Time Range</Form.Label>
                                         <Form.Control as="select"  
@@ -265,8 +419,9 @@ class AuthLayout extends Component {
                                        color = {this.state.colorSelected}
                                        onChange = {this.handleChangeComplete}
                                        />
-                                    
                                     </Form.Group>
+
+                                    
 
 
 
@@ -291,17 +446,292 @@ class AuthLayout extends Component {
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
                                                 endTime:new Date() //if needed
-                                            }
+                                            },
+                                            coordinates: {
+                                                x: 0,
+                                                y: 0,
+                                                w: 10,
+                                                h: 9,
+                                                minW: 6,
+                                                minH: 9
+                                            },
+                                          
                                         }
                                     }
                                 }}>
                                     <Button color="primary" onClick={this.toggleForm}>Create graph</Button>
                                 </Link>
                                 <Button color="secondary" onClick={this.toggleForm}>Cancel</Button>
+                            </ModalFooter> */}
+                            
+                        </Modal>
+
+                        <Modal isOpen={this.state.mixModalOpen} toggle={this.toggleMixForm} >
+                            <ModalHeader toggle={this.toggleMixForm}>New Mix Chart Form</ModalHeader>
+                            <ModalBody>
+                                Please provide all the inputs to create a mix chart.
+                                <form>
+                                <Form>
+                                    <Row>
+                                        <Col>
+                                         <Form.Label>Graph 1</Form.Label>
+                                        </Col>
+                                        <Col>
+                                         <Form.Label>Graph 2</Form.Label>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                                <Form.Group controlId="exampleForm.ControlSelect2">
+                                        <Row>
+                                            <Col>
+                                            <Form.Label>Type of graph: </Form.Label>
+                                            <Form.Control as="select"  
+                                        onChange={(e) => this.readMixedSelection1(e)}>
+                                        <option disabled selected>Make Selection</option>
+                                        <option value = "line">Line Graph</option>
+                                        <option value = "bar">Bar Graph</option>
+                                        </Form.Control>                                         
+                                           <Form.Text className="text-muted">
+                                            Select the type
+                                            </Form.Text>
+                                            </Col>
+                                            <Col>
+                                            <Form.Label>Type of graph: </Form.Label>
+                                            <Form.Control as="select"  
+                                        onChange={(e) => this.readMixedSelection2(e)}>
+                                        <option disabled selected>Make Selection</option>
+                                        <option value = "line">Line Graph</option>
+                                        <option value = "bar">Bar Graph</option>
+                                        </Form.Control>                                         
+                                           <Form.Text className="text-muted">
+                                            Select the type
+                                            </Form.Text>
+                                            </Col>
+                                        </Row>
+                                    </Form.Group>
+
+                                    <Form>
+                                        <Row>
+                                            <Col>
+                                            <Form.Label>Name Space: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,0)} />
+                                            <Form.Text className="text-muted">
+                                            specify the name space ...
+                                            </Form.Text>
+                                            </Col>
+                                            <Col>
+                                            <Form.Label>Name Space: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,1)} />
+                                            <Form.Text className="text-muted">
+                                            specify the name space ...
+                                            </Form.Text>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+
+                                    <Form.Group controlId="exampleForm.ControlSelect2">
+                                            <Form.Label>Chart name: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the chart name" onChange = {(e) => this.mixUpdate(e,2)} />
+                                            <Form.Text className="text-muted">
+                                            specify the chart name that you want...                                            
+                                            </Form.Text>  
+                                   </Form.Group>
+
+
+                                    <Form>
+                                        <Row>
+                                            <Col>
+                                            <Form.Label>Metric name: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,3)} />
+                                            <Form.Text className="text-muted">
+                                            specify the metric name that you want...                                        
+                                            </Form.Text>
+                                            </Col>
+                                            <Col>
+                                            <Form.Label>Metric name: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,4)} />
+                                            <Form.Text className="text-muted">
+                                            specify the metric name that you want...                                        
+                                            </Form.Text>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+
+                                {/* <Form.Group controlId="exampleForm.ControlSelect1">
+                                        <Form.Label>Name Space: </Form.Label>
+                                         <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,0)}/>
+                                        <Form.Text className="text-muted">
+                                        specify the name space ...
+                                        </Form.Text>
+                                    </Form.Group> */}
+
+                                    {/* <fieldset disabled={this.state.namespaceNotSelected}>
+                                    <Form.Group controlId="chartName">
+                                        <Form.Label>Chart Name: </Form.Label>
+                                        <Form.Control type="text" placeholder="Enter chart name" onChange = {(e) => this.update(e,1)}/>
+                                        <Form.Text className="text-muted">
+                                        specify the chart name that you want...
+                                        </Form.Text>
+                                    </Form.Group> */}
+
+                                    {/* <Form.Group controlId="metricName">
+                                        <Form.Label>Metric Name: </Form.Label> 
+                                         <Form.Control type="text" placeholder="Enter metric name" onChange = {(e) => this.update(e,2)}/>
+                                        <Form.Text className="text-muted">
+                                        specify the metric name that you want...
+                                        </Form.Text> 
+                                     </Form.Group>  */}
+                                    
+                                    <Form>
+                                        <Row>
+                                            <Col>
+                                            <Form.Label>Dimension: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,5)} />
+                                            <Form.Text className="text-muted">
+                                            Enter the dimension 
+                                            Ex.InstanceId
+                                            </Form.Text>
+                                            </Col>
+                                            <Col>
+                                            <Form.Label>Dimension: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,6)} />
+                                            <Form.Text className="text-muted">
+                                            Enter the dimension 
+                                            Ex.InstanceId
+                                            </Form.Text>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+
+                                    <Form>
+                                        <Row>
+                                            <Col>
+                                            <Form.Label>Value: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,7)} />
+                                            <Form.Text className="text-muted">
+                                            Enter the value
+                                            </Form.Text>
+                                            </Col>
+                                            <Col>
+                                            <Form.Label>Value: </Form.Label>
+                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,8)} />
+                                            <Form.Text className="text-muted">
+                                            Enter the value
+                                            </Form.Text>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+
+                                    <Form.Group controlId="exampleForm.ControlSelect2">
+                                            <Form.Label>Time Range</Form.Label>
+                                        <Form.Control as="select"  
+                                        onChange={(e) => this.readMixTimeSelection1(e)}>
+                                        <option disabled selected>Make Selection</option>
+                                        <option value = "Last Hour">Last Hour</option>
+                                        <option value = "Last Day">Last Day</option>
+                                        <option value = "Last Week">Last Week</option>
+                                        <option value = "Last Month">Last Month</option>
+                                        </Form.Control>
+                                        <Form.Text className="text-muted">
+                                            Select the time
+                                            </Form.Text>
+                                     </Form.Group>
+
+                                    {/* <Form.Group controlId="exampleForm.ControlSelect2">
+                                        <Form.Label>Time Range</Form.Label>
+                                        <Form.Control as="select"  
+                                        onChange={(e) => this.readSelection(e)}>
+                                        <option disabled selected>Make Selection</option>
+                                        <option value = "Last Hour">Last Hour</option>
+                                        <option value = "Last Day">Last Day</option>
+                                        <option value = "Last Week">Last Week</option>
+                                        <option value = "Last Month">Last Month</option>
+                                        </Form.Control>
+                                        <Form.Text className="text-muted">
+                                            Select the time
+                                            </Form.Text>
+                                    </Form.Group> */}
+
+                                    <Form>
+                                        <Row>
+                                            <Col>
+                                            <Form.Label>Graph Color</Form.Label>
+                                                <SketchPicker
+                                                color = {this.state.mixGraph.colorSelected}
+                                                onChange = {this.handleMixChangeComplete1}
+                                                />
+                                            </Col>
+                                            <Col>
+                                            <Form.Label>Graph Color</Form.Label>
+                                                <SketchPicker
+                                                color = {this.state.mixGraph.colorSelected1}
+                                                onChange = {this.handleMixChangeComplete2}
+                                                />
+                                             </Col>
+                                        </Row>
+                                    </Form>
+
+                                    {/* <Form.Group controlId="exampleForm.ControlSelect3">
+                                    <Form.Label>Graph Color</Form.Label>
+                                       <SketchPicker
+                                       color = {this.state.colorSelected}
+                                       onChange = {this.handleChangeComplete}
+                                       />
+                                    </Form.Group> */}
+                                   
+                                </form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Link to={{pathname:'/dashboard', 
+                                    state:{ 
+                                        newGraph:{
+                                            objectType:"graph", // options: graph or table
+                                            graphSettings: {
+                                                type:this.props.location.typeOfGraph, //options: line, pie, or bar
+                                                typeOfGraph: this.state.mixGraph.typeOfGraph,
+                                                typeOfGraph1 : this.state.mixGraph.typeOfGraph1,
+                                                realTime:"false", //options: true or false
+                                                metricName:this.state.mixGraph.metricName, 
+                                                metricName1:this.state.mixGraph.metricName1,
+                                                nameSpace:this.state.mixGraph.nameSpace,
+                                                nameSpace1:this.state.mixGraph.nameSpace1,
+                                                chartName:this.state.mixGraph.chartName,
+                                                typeOfDimension : this.state.mixGraph.typeOfDimension,
+                                                typeOfDimension1 : this.state.mixGraph.typeOfDimension1,
+                                                idValue:this.state.mixGraph.idValue,
+                                                idValue1:this.state.mixGraph.idValue1,
+                                                refreshRate:"",
+                                                colorSelected:this.state.mixGraph.colorSelected,
+                                                colorSelected1:this.state.mixGraph.colorSelected1,
+                                                period:this.state.mixGraph.period,
+                                                period1:this.state.mixGraph.period1,
+                                                startTime:this.state.mixGraph.startTime, //if needed
+                                                endTime:new Date() //if needed
+                                            },
+                                            coordinates: {
+                                                x: 0,
+                                                y: 0,
+                                                w: 6,
+                                                h: 4,
+                                                minW: 6,
+                                                minH: 9
+                                            },
+                                          
+                                        }
+                                    }
+                                }}>
+                                    <Button color="primary" onClick={this.toggleMixForm}>Create graph</Button>
+                                </Link>
+                                <Button color="secondary" onClick={this.toggleMixForm}>Cancel</Button>
                             </ModalFooter>
                         </Modal>
                     </div>
-                </div>
+                   
+                    
+
+
+                    </div>
+           
 
                 <RightSidebar title={"Settings"}>
                     <RightSidebarContent user={this.props.user} />

@@ -84,14 +84,17 @@
 #sidebar-menu {
     width: 250px;
     background-color: #b8c6db;
-    background-image: linear-gradient($body-bg 20%,#F3E6E8    95%);
+    background-image: linear-gradient(white 20%,#F3E6E8    95%);
+    box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.486), 0 1px 0 0 rgba(0, 0, 0, 0.02);
     height: 100vh;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
     overflow-x: hidden;
+    overflow-y: visible;
     margin-top: $topbar-height;
+    padding-bottom: $topbar-height;
     >ul {
         >li {
             >a {
@@ -183,7 +186,7 @@
 }
 span.logo-lg {
     width: 250px;
-    background-color: $body-bg ;
+    background-color: white ;
 }
 
 // Enlarge menu

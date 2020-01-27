@@ -25,6 +25,7 @@ const barGraph = React.lazy(() => import('./components/BarGraph.js'));
 const TableForm = React.lazy(() => import('./components/TableForm.js'));
 const historicForm = React.lazy(() => import('./components/HistoricGraphForm.js'));
 const historicLineGraph = React.lazy(() => import('./components/HistoricLineGraph.js'));
+const SearchResult = React.lazy(() => import('./pages/SearchResult'))
 // handle auth and authorization
 
 const PrivateRoute = ({ component: Component, roles, ...rest }) => (
@@ -53,6 +54,7 @@ const routes = [
   { path: '/logout', name: 'Logout', component: Logout, route: Route },
   { path: '/forget-password', name: 'Forget Password', component: ForgetPassword, route: Route },
   { path: '/register', name: 'Register', component: Register, route: Route },
+  { path: '/search_results', name: 'SearchResult', component: SearchResult,route: PrivateRoute, title: "Search Results" },
   { path: '/confirm', name: 'Confirm', component: ConfirmAccount, route: Route },
   { path: '/form', name: 'Form', component: form, route: PrivateRoute, roles: ['Admin'], title: "New Graph Form" },
   { path: '/lineGraph', name: 'LineGraph', component: lineGraph, route: Route },

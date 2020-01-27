@@ -4,76 +4,39 @@ import myKeys from '../keys.json';
 import {Bar} from 'react-chartjs-2';
 import 'chartjs-plugin-zoom';
 
-/**
- * Renders the preloader
- */
-
 var currentDate = new Date();
-var optionToSkip =  {  
-    scales: {
-      xAxes: [{
-        ticks: {
-          maxRotation: 0,
-          minRotation: 0,
-      fontSize: 10,
-      //autoSkip: true,
-      maxTicksLimit: 10
+var options = {
+  elements: {
+    point:{
+        radius: 0,
+       
     },
-      gridLines: {
-        display: false ,
-       // color: "black  "
-      },
-      }] , 
-      yAxes: [{
-        ticks: {
-            beginAtZero:true,
-          //  fontColor: 'black   '
-        },
-        gridLines: {
-          display: true ,
-         // color: "black  "
-        },
-    }], 
-
-
-},
-pan: {
-  // Boolean to enable panning
-  enabled: true,
-
-  // Panning directions. Remove the appropriate direction to disable 
-  // Eg. 'y' would only allow panning in the y direction
-  mode: 'x'
-},
-
-// Container for zoom options
-zoom: {
-  // Boolean to enable zooming
-  enabled: true,
-
-  // Zooming directions. Remove the appropriate direction to disable 
-  // Eg. 'y' would only allow zooming in the y direction
-  mode: 'x',
+   
+}, 
 }
 
-}
-  
-class BarGraph extends Component {
+class MixGraph extends Component {
     constructor(){
         super();
-      //  this.myRef = React.createRef();
+      
         this.state = {
             graphColor:"red",
             data:[],
+            data1:[],
             label:[],
+            label1:[],
             holder:[],
+            holder1:[],
             uniqueData:[],
+            uniqueData1:[],
             uniqueLabel:[],
+            uniqueLabel1:[],
             showOptions: false,
 
           };
+
         this.showOptions = this.showOptions.bind(this);
-      
+
     }
       
       getgraph = () =>{
@@ -158,7 +121,66 @@ class BarGraph extends Component {
           };          
          
         }.bind(this));
+
+        
+        console.log("id is "+this.props.graphSettings.idValue1);
+        var typeOfD1 = this.props.graphSettings.typeOfDimension1;
+        var idVal1 = this.props.graphSettings.idValue1;
+        if(typeOfD1 == null){typeOfD1 = "InstanceId"}
+        if(idVal1 == null){idVal1 = "i-01e27ec0da2c4d296"}
+         var params1 = {
+             EndTime: currentDate, /* required */
+             MetricName: this.props.graphSettings.metricName1, /* required */
+             Namespace: this.props.graphSettings.nameSpace1, /* required */
+             Period: this.props.graphSettings.period, /* required */
+             StartTime: this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
+           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
+            Dimensions: [
+               {
+                 Name: typeOfD1, /* required */
+                 // Value: 'i-031339fed44b9fac8' /* required */
+                 Value: idVal1
+               },
+               /* more items */
+             ],
+             Statistics: [
+               'Average',
+               /* more items */
+             ],
+           }
+        
+         cloudwatch3.getMetricStatistics(params1, function(err, data) {
+          // console.log("inside function")
+           if (err) console.log(err, err.stack); // an error occurred
+           else {
+             let sortedData =  data.Datapoints.sort(function(a, b) {
+               var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
+               return dateA - dateB;
+           });
+            this.setState({holder1:sortedData})
+            console.log(this.state.holder1);
+              for (var i = 0; i < this.state.holder1.length; i++) {
+              
+                  
+                   this.setState(prevState => ({
+                     data1 : [...prevState.data1, this.state.holder1[i].Average]
+                   }));
+               }
+            
+             
+             //  uniqueData =  Array.from(new Set(data));
+             //  uniqueLabel =  Array.from(new Set(label));
+     
+               //this.intervalID3 = setTimeout(this.getgraph3.bind(this), this.state.refreshRate3);
+     
+            //   console.log("Graph4's data size is now " + this.state.dataTemp3.length);
+              
+           };          
+          
+         }.bind(this));
       }
+
+    
       componentDidMount() {
         this.getgraph();
         if(this.props.graphSettings.colorSelected != null){
@@ -171,86 +193,62 @@ class BarGraph extends Component {
         this.setState({ showOptions: !this.state.showOptions});
       }
 
-      showOptions(e){
-        e.preventDefault();
-        this.setState({ showOptions: !this.state.showOptions});
-      }
+    //   showOptions(e){
+    //     e.preventDefault();
+    //     this.setState({ showOptions: !this.state.showOptions});
+    //   }
 
     render() {
-      if(this.props.graphSettings.metricName==="CPUUtilization"){
-       optionToSkip={
-        scales: {
-          xAxes: [{
-            ticks: {
-                maxRotation: 0,
-                minRotation: 0,
-            fontSize: 10,
-            //autoSkip: true,
-            maxTicksLimit: 10
-          },
-          gridLines: {
-            display: false ,
-           // color: "black  "
-          },
-             
-         }] , 
-         
-          yAxes: [{
-           //stacked: true,
-            ticks: {
-              fontSize: 10,
-              min: 0,
-              max: 1,// Your absolute max value
-              callback: function (value) {
-                return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
-              },
-              //  fontColor: 'black   '
-            },
-            gridLines: {
-              display: true ,
-             // color: "black  "
-            },
-        }], 
+      
        
-      },
-      pan: {
-        // Boolean to enable panning
-        enabled: true,
-      
-        // Panning directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow panning in the y direction
-        mode: 'x'
-      },
-      
-      // Container for zoom options
-      zoom: {
-        // Boolean to enable zooming
-        enabled: true,
-      
-        // Zooming directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow zooming in the y direction
-        mode: 'x',
-      }
-    }
-      }
      
       
        //console.log(this.props.graphSettings.colorSelected + "hey")
-       
-       const lineGraphData = {
+
+       const data = {
         labels: this.state.label,
-        datasets: [
-          {
+        datasets: [{
             label: this.props.graphSettings.metricName,
+            type: this.props.graphSettings.typeOfGraph,
             data: this.state.data,
-            fill: true,         
-           // borderColor: 'lightblue', // Line color
-            backgroundColor: this.state.graphColor,
-            maintainAspectRatio : false,
-            responsive:true
-          }
-        ]
-      }
+            fill: false,
+            borderColor: this.props.graphSettings.colorSelected,
+            backgroundColor: this.props.graphSettings.colorSelected,
+            pointBackgroundColor: this.props.graphSettings.colorSelected,
+            pointHoverBackgroundColor: '#EC932F',
+            pointHoverBorderColor: '#EC932F',
+            borderWidth:1
+           
+          },{
+            type: this.props.graphSettings.typeOfGraph1,
+            label: this.props.graphSettings.metricName1,
+            data: this.state.data1,
+            fill: false,
+            backgroundColor: this.props.graphSettings.colorSelected1,
+            borderColor: this.props.graphSettings.colorSelected1,
+            hoverBackgroundColor: '#71B37C',
+            hoverBorderColor: '#71B37C',
+            borderWidth:1
+           
+          }]
+      };
+
+   
+       
+    //    const lineGraphData = {
+    //     labels: this.state.label,
+    //     datasets: [
+    //       {
+    //         label: this.props.graphSettings.metricName,
+    //         data: this.state.data,
+    //         fill: true,         
+    //        // borderColor: 'lightblue', // Line color
+    //         backgroundColor: this.state.graphColor,
+    //         maintainAspectRatio : false,
+    //         responsive:true
+    //       }
+    //     ]
+    //   }
     
      //console.log(this.state.data.length + " and " + this.state.data[0])
       
@@ -272,7 +270,7 @@ class BarGraph extends Component {
                 </div>
               </div>
              
-              <Bar height = "100px" data={lineGraphData} options = {optionToSkip}
+              <Bar height = "100px" data={data} options = {options}
               />
            
             </div>
@@ -281,4 +279,4 @@ class BarGraph extends Component {
     }
 }
 
-export default BarGraph;
+export default MixGraph;
