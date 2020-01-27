@@ -22,9 +22,10 @@ import {
 
 /**
  * Fetch data from given url
- * @param {*} url 
+ * @param {*} url
  * @param {*} options 
  */
+
 const fetchJSON = (url, options = {}) => {
     return fetch(url, options)
         .then(response => {
@@ -46,15 +47,44 @@ const fetchJSON = (url, options = {}) => {
  */
 const setSession = (user) => {
     let cookies = new Cookies();
-    if (user)
+    if (user){
         cookies.set("user", JSON.stringify(user), { path: "/" });
-    else
+    }else{
         cookies.remove("user");
+    }
 };
 /**
  * Login the user
  * @param {*} payload - username and password 
  */
+
+ //Backend connection
+
+// function* login({ payload: { username, password } }) {
+//     const options = {
+//         body: JSON.stringify({ username, password }),
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' }
+//     };
+//     //TODO: fix error for not authorize users
+//     try {
+//         const response = yield call(fetchJSON, 'http://localhost:5050/authenticate', options);
+//         console.log(response)
+//         setSession(response);
+//         yield put(loginUserSuccess(response));
+//     } catch (error) {
+//         let message;
+//         switch (error.status) {
+//             case 500: message = 'Internal Server Error'; break;
+//             case 401: message = 'Invalid credentials'; break;
+//             default: message = error;
+//         }
+//         yield put(loginUserFailed(message));
+//         setSession(null);
+//     }
+// }
+
+
 function* login({ payload: { username, password } }) {
     const options = {
         body: JSON.stringify({ username, password }),
@@ -77,6 +107,7 @@ function* login({ payload: { username, password } }) {
         setSession(null);
     }
 }
+
 
 
 /**

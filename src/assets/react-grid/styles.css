@@ -63,3 +63,23 @@
   bottom: 0;
   transform: rotate(45deg);
 }
+
+.chartAreaWrapper {
+
+  width: 600;
+  overflow-x: auto;
+}
+
+.react-switch {
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+

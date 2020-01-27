@@ -1,28 +1,32 @@
 import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody } from 'reactstrap';
+
 import LineGraph from '../components/LineGraph'
-import BarGraph from '../components/BarGraph'
-import Table from './Tables'
-import LogReport from '../components/logRepotComp'
+import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
+import BarGraph from '../components/BarGraph';
+import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
 import GridLayout from 'react-grid-layout';
+import Table from './Tables'
+import LogReport from '../components/logRepotComp'
 
 //import css needed for reac-grid-layout
-import '../assets/react-grid/styles.css'
-import '../assets/react-grid/styles1.css'
+import '../assets/react-grid/styles.css';
+import '../assets/react-grid/styles1.css';
 
 
 var currentDate = new Date()
 
 
 class DefaultDashboard extends Component {
-
+   
     constructor(props) {
+        
         super(props);
         this.state = {
             user: getLoggedInUser(),
@@ -31,12 +35,12 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
-                            realTime:"false", //options: true or false
+                            realTime:true, //options: true or false
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"",
+                            refreshRate:"30000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
@@ -47,7 +51,8 @@ class DefaultDashboard extends Component {
                         w: 20,
                         h: 19,
                         minW: 6,
-                        minH: 9
+                        minH: 9,
+                        maxH: 18
                     }
                 },
                 {
@@ -69,12 +74,12 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
                             type:"bar", //options: line, pie, or bar
-                            realTime:"false", //options: true or false
+                            realTime:true, //options: true or false
                             metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"",
+                            refreshRate:"30000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
@@ -110,8 +115,7 @@ class DefaultDashboard extends Component {
                         minW: 6,
                         minH: 9
                     }
-                },
-                
+                },               
             ],
             showOptions: false,
             systemHealth: false
@@ -127,15 +131,26 @@ class DefaultDashboard extends Component {
         if(nextProps.location.state){
             //only activate adds to the array if the props are the specify ones
             if(nextProps.location.state.newMasterTable){
-                temp.push(nextProps.location.state.newMasterTable);
-                this.setState({
-                    userDashboard: temp
-                })
+                let newName = nextProps.location.state.newMasterTable.chartName;
+                let preName = this.state.newUpcomingPropsName;
+                if(newName !== preName){
+                    temp.push(nextProps.location.state.newMasterTable);
+                    this.setState({
+                        userDashboard: temp,
+                        newUpcomingPropsName: newName
+                    })
+                }
             }else if(nextProps.location.state.newGraph){
-                temp.push(nextProps.location.state.newGraph);
-                this.setState({
-                    userDashboard: temp
-                })
+                let newName = nextProps.location.state.newGraph.graphSettings.chartName;
+                let preName = this.state.newUpcomingPropsName;
+                if(newName !== preName){
+                    temp.push(nextProps.location.state.newGraph);
+                    this.setState({
+                        userDashboard: temp,
+                        newUpcomingPropsName: newName
+                    })
+                }
+                
             }
         }
         
@@ -178,7 +193,7 @@ class DefaultDashboard extends Component {
             // console.log(actualHeight)
             // console.log(this.props.isCondensed)
            //This part will render the table
-            if(item.objectType == "table"){
+            if(item.objectType === "table"){
                 return (
                     //min for table w:4 h:11
                 <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
@@ -229,18 +244,27 @@ class DefaultDashboard extends Component {
                                                 
                         </Card>);
                 }
+                else if(item.graphSettings.type === "mix"){
+                    return (
+                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                            <CardBody style={{overflow:'hidden'}}>
+                                <MixGraph {...item}></MixGraph>
+                            </CardBody>
+                                                
+                        </Card>);
+                }
             }
         });
         return (
             <React.Fragment>
-                <div id="dashboard">
+                <div id="dashboard" style={{paddingTop:'1%'}}>
                     { /* preloader */}
                     {this.props.loading && <Loader />}
-                    <Card>
+                    <Card style={{boxShadow: '0 0 15px 0 rgba(30,144,255, 0.486)'}}>
                         <div style={{paddingBottom:'1%'}}className="card-body">
                         <h3 className="float-left" >System Health Bar</h3>
                             <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
-                            <div style={{paddingTop:'-10px'}} className="float-left">Last 24 Hours</div>
+                            <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
                             { this.state.systemHealth? (
                             <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
                             <a href="" class="dropdown-item">Last 24 Hours</a>
@@ -250,9 +274,10 @@ class DefaultDashboard extends Component {
                             ): null }
                         </div>
                         </div>
-                        <CardBody style={{paddingTop:'0%'}}>
+                        <CardBody style={{paddingTop:'0%', margin: '0%'}}>
                             <Row>
                                 <LogReport/>
+                                <LogWarn/>
                                 <NightlyTasks/>
                                 <ServerStatus/>
                             </Row>
