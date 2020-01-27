@@ -12,6 +12,8 @@ import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
 import GridLayout from 'react-grid-layout';
+import Table from './Tables'
+import LogReport from '../components/logRepotComp'
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
