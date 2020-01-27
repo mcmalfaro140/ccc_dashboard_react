@@ -3,12 +3,10 @@ import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 
 import LineGraph from '../components/LineGraph'
-import BarGraph from '../components/BarGraph'
-import Table from './Tables'
-import LogReport from '../components/logRepotComp'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
+import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';

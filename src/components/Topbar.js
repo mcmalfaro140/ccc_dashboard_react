@@ -92,7 +92,15 @@ const ProfileMenus = [{
 class Topbar extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      keyword : ""
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({keyword: event.target.value});
   }
 
 
@@ -107,12 +115,14 @@ class Topbar extends Component {
               <form className="app-search">
                 <div className="app-search-box">
                   <div className="input-group">
-                    <input type="text" className="form-control" placeholder="Search..." />
-                    <div className="input-group-append">
-                      <button className="btn" type="submit">
-                        <i className="fe-search"></i>
-                      </button>
-                    </div>
+                    <input type="text" className="form-control" placeholder="Search..." value={this.state.keyword} onChange={this.handleChange} />
+                    <Link to={{pathname:'/search_results', state: { search_keyword: this.state.keyword}}} >
+                      <div className="input-group-append">
+                        <button className="btn" type="submit">
+                          <i className="fe-search"></i>
+                        </button>
+                      </div>
+                    </Link>
                   </div>
                 </div>
               </form>
