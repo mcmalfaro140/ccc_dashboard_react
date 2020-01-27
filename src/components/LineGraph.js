@@ -31,6 +31,7 @@ class LineGraph extends Component {
             options : ""
         };
         this.showOptions = this.showOptions.bind(this);
+
         this.componentWillMount = this.componentWillMount.bind(this);
     
     this.optionToSkip =  { 
@@ -44,8 +45,8 @@ class LineGraph extends Component {
       xAxes: [{
         
         ticks: {
-            maxRotation: 0,
-            minRotation: 0,
+            // maxRotation: 0,
+            // minRotation: 0,
         fontSize: 10,
         //autoSkip: true,
         maxTicksLimit: 10
@@ -161,12 +162,14 @@ class LineGraph extends Component {
                   this.setState(prevState => ({
                     data : [...prevState.data, this.state.holder[i].Average]
                   }));
+
+                  // this.setState({uniqueData : Array.from(new Set(this.state.data))});
+                  // this.setState({uniqueLabel: Array.from(new Set(this.state.label))});
               }
               
            
             
-            //  uniqueData =  Array.from(new Set(data));
-            //  uniqueLabel =  Array.from(new Set(label));
+            
            
             if(this.props.graphSettings.realTime === true){
               this.intervalID = setTimeout(this.getgraph3, this.props.graphSettings.refreshRate);
@@ -189,13 +192,16 @@ class LineGraph extends Component {
         */
       
     //    if(this.props.graphSettings.realTime === true){
+    //      console.log(this.props)
     //     this.setState({options : {scales: {
     //      xAxes: [
     //        {
     //          type: "realtime",
     //          realtime: {
     //            //refresh: this.props.graphSettings.refreshRate,
-    //            onRefresh: this.getgraph3()
+    //            onRefresh: function(){
+    //              this.getgraph3()
+    //            }
     //          }
     //        }
     //      ]
@@ -232,8 +238,8 @@ class LineGraph extends Component {
             xAxes: [{
              
               ticks: {
-                maxRotation: 0,
-                minRotation: 0,
+                // maxRotation: 0,
+                // minRotation: 0,
             fontSize: 10,
             //autoSkip: true,
             maxTicksLimit: 10
@@ -302,7 +308,7 @@ class LineGraph extends Component {
       //  graph = <Line height = "100px" data={lineGraphData} options = {this.state.options} ></Line>
       // }
       // else{
-       graph = <Line height = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
+       graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
      // }
       //console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
@@ -325,9 +331,9 @@ class LineGraph extends Component {
                 </div>
               </div>
            
-              <div className = "chartAreaWrapper">
+             
                {graph}
-               </div>
+              
               
             </div>
         );

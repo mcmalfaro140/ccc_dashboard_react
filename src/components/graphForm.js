@@ -88,6 +88,9 @@ class graphForm extends Component {
     }}
 
     refreshGraph(e){
+       if(e.target.value === "Thirty Seconds"){
+           this.setState({refreshRate : 30000})
+       }
        if(e.target.value === "One minute"){
            this.setState({refreshRate : 60000 })
        }
@@ -252,6 +255,7 @@ class graphForm extends Component {
             <Form.Control as="select"  
             onChange={(e) => this.refreshGraph(e)}>
             <option disabled selected>Make Selection</option>
+            <option value = "Thirty Seconds">Thirty Seconds</option>
             <option value = "One minute">One minute</option>
             <option value = "Ten minutes">Ten minutes</option>
             <option value = "Half an hour">Half an hour</option>

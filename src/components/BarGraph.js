@@ -148,7 +148,8 @@ class BarGraph extends Component {
                   }));
               }
            
-            
+              this.setState({uniqueData : Array.from(new Set(this.state.data))});
+              this.setState({uniqueLabel: Array.from(new Set(this.state.label))});
             //  uniqueData =  Array.from(new Set(data));
             //  uniqueLabel =  Array.from(new Set(label));
             if(this.props.graphSettings.realTime === true){
@@ -237,11 +238,11 @@ class BarGraph extends Component {
        //console.log(this.props.graphSettings.colorSelected + "hey")
        
        const lineGraphData = {
-        labels: this.state.label,
+        labels: this.state.uniqueLabel,
         datasets: [
           {
             label: this.props.graphSettings.metricName,
-            data: this.state.data,
+            data: this.state.uniqueData,
             fill: true,         
            // borderColor: 'lightblue', // Line color
             backgroundColor: this.state.graphColor,

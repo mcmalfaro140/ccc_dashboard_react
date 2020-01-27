@@ -24,8 +24,9 @@ var currentDate = new Date()
 
 
 class DefaultDashboard extends Component {
-
+   
     constructor(props) {
+        
         super(props);
         this.state = {
             user: getLoggedInUser(),
@@ -34,12 +35,12 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
-                            realTime:"false", //options: true or false
+                            realTime:true, //options: true or false
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"",
+                            refreshRate:"30000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
@@ -73,12 +74,12 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
                             type:"bar", //options: line, pie, or bar
-                            realTime:"false", //options: true or false
+                            realTime:true, //options: true or false
                             metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"",
+                            refreshRate:"30000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
