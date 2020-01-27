@@ -29,6 +29,10 @@ class graphForm extends Component {
         this.readSelection = this.readSelection.bind(this);
         this.handleChangeComplete = this.handleChangeComplete.bind(this);
         this.toggleSwitch = this.toggleSwitch.bind(this);
+        this.handleChangeForStart = this.handleChangeForStart.bind(this);
+        this.handleChangeForEnd = this.handleChangeForEnd.bind(this);
+        this.refreshGraph = this.refreshGraph.bind(this);
+   
       
         this.state = { 
             newGraph:{
@@ -55,6 +59,7 @@ class graphForm extends Component {
             },
             showMenu: false,
             isRealTime: false,
+            refreshRate:0,
             screenWidth: 0,
             whichNamespace: "",
             colorSelected:"",
@@ -69,9 +74,9 @@ class graphForm extends Component {
             typeOfDimension : "InstanceId",
             idValue:"",
           //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-          startTime:new Date(), 
+          startTime:"", 
           period:120,
-            endTime:new Date() //if needed
+            endTime:"" //if needed
               ,
        
            
@@ -81,8 +86,25 @@ class graphForm extends Component {
     
     
     }}
-    toggleSwitch = () =>{
-        this.setState({isRealTime: !this.state.isRealTime})
+
+    refreshGraph(e){
+       if(e.target.value === "Thirty Seconds"){
+           this.setState({refreshRate : 30000})
+       }
+       if(e.target.value === "One minute"){
+           this.setState({refreshRate : 60000 })
+       }
+       if(e.target.value === "Ten minutes"){
+           this.setState({refreshRate : 600000})
+       }
+       if(e.target.value === "Half an hour"){
+           this.setState({refreshRate : 1800000})
+       }
+    }
+
+    toggleSwitch (isRealTime){
+        console.log("is it real ? " + isRealTime)
+        this.setState({isRealTime})
     }
     toggleForm = () => {
         this.setState({modalOpen : !this.state.modalOpen})
@@ -92,6 +114,7 @@ class graphForm extends Component {
 };
     //Dropdown helper
     readSelection(e){
+      this.setState({endTime : new Date()})
       if(e.target.value === "Last Hour"){
           this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())})
           this.setState({period : 60})
@@ -112,6 +135,30 @@ class graphForm extends Component {
 
   handleChangeComplete = (color) =>{
     this.setState({colorSelected : color.hex})
+
+
+    if(this.state.isRealTime === false){
+    var dateDiff = this.state.endTime.getTime() - this.state.startTime.getTime()
+    var days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+    console.log(days + " the date diff")
+    console.log(this.state.startTime + " satart")
+    console.log(this.state.endTime + "  end time")
+    console.log(this.state.isRealTime + "real timmmm")
+    if(days === 1){
+        this.setState({period:540});
+    }
+    if(days >1 && days <5){
+        this.setState({period: 900});
+    }
+    if(days > 5 && days < 25){
+        this.setState({period: 1800});
+    }
+    if(days > 25 ){
+
+        this.setState({period: 3600})
+    }
+}
+    
 }
 
     update(e,i){
@@ -129,6 +176,8 @@ class graphForm extends Component {
       this.setState({metricName : value[2]});
       this.setState({typeOfDimension : value[3]});
       this.setState({idValue : value[4]});
+
+      
   }
 
 
@@ -160,26 +209,88 @@ class graphForm extends Component {
         
        
     }
+  
 
  
-    // handleChangeForStart = date => {
-    //     this.setState({
-    //       startTime: date
-    //     });
-    //     console.log(this.state.startTime)
-    //   };
-      // handleChangeForEnd = date => {
-      //   this.setState({
-      //     endTime: date
-      //   });
-      //   console.log(this.state.endTime)
-      // };
+     handleChangeForStart = date => {
+        this.setState({
+          startTime: date
+        });
+       
+      };
+      handleChangeForEnd = date => {
+        this.setState({
+          endTime: date
+        });
+      };
 
-
+    
+    
     
 
     render() {
-  
+
+        
+        var timeSelection;
+        if(this.state.isRealTime === true){
+            timeSelection = 
+         <div>
+             
+            <Form.Group controlId="exampleForm.ControlSelect2">
+            <Form.Label>Time Range</Form.Label>
+            <Form.Control as="select"  
+            onChange={(e) => this.readSelection(e)}>
+            <option disabled selected>Make Selection</option>
+            <option value = "Last Hour">Last Hour</option>
+            <option value = "Last Day">Last Day</option>
+            <option value = "Last Week">Last Week</option>
+            </Form.Control>
+            <Form.Text className="text-muted">
+                Select the time
+                </Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="exampleForm.ControlSelect10">
+            <Form.Label>Refresh Rate</Form.Label>
+            <Form.Control as="select"  
+            onChange={(e) => this.refreshGraph(e)}>
+            <option disabled selected>Make Selection</option>
+            <option value = "Thirty Seconds">Thirty Seconds</option>
+            <option value = "One minute">One minute</option>
+            <option value = "Ten minutes">Ten minutes</option>
+            <option value = "Half an hour">Half an hour</option>
+            
+            </Form.Control>
+            <Form.Text className="text-muted">
+                Select the refresh rate
+                </Form.Text>
+            </Form.Group>
+         </div>
+           
+            
+        }
+        else{
+            timeSelection = 
+            <div>
+            <Form>                        
+            <Row>
+                <Col>
+                     <Form.Label>Start Time</Form.Label>
+                        <DateTimePicker 
+                            value={this.state.startTime}
+                            onChange = {this.handleChangeForStart} />
+                </Col>
+                <Col>
+                        <Form.Label>End Time</Form.Label>
+                                <DateTimePicker 
+                                    value={this.state.endTime}
+                                    onChange = { this.handleChangeForEnd} />
+                </Col>
+            </Row>
+            </Form>
+           
+            </div>
+        }
 
       // console.log("the str is " + str);
       
@@ -191,17 +302,9 @@ class graphForm extends Component {
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
                                 <form>
-                                <Form.Group controlId="exampleForm.ControlSelect1">
-                                        <Form.Label>Name Space: </Form.Label>
-                                         <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,0)}/>
-                                        <Form.Text className="text-muted">
-                                        specify the name space ...
-                                        </Form.Text>
-                                    </Form.Group>
-
                                 <Form.Group>
-                                    <label>
-                                        <span>Real Time</span>
+                                    <label className="center">
+                                    <h5>Real Time</h5>
                                     <Switch
                                         checked={this.state.isRealTime}
                                         onChange={this.toggleSwitch}
@@ -213,14 +316,26 @@ class graphForm extends Component {
                                         boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
                                         activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
                                         height={15}
-                                        width={60}
+                                        width={40}
                                         className="react-switch"
                                         id="material-switch"
+
                                     />
-                                         <span>Historic</span>
+                                        
 
                                     </label>
                                 </Form.Group>
+
+
+                                <Form.Group controlId="exampleForm.ControlSelect1">
+                                        <Form.Label>Name Space: </Form.Label>
+                                         <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,0)}/>
+                                        <Form.Text className="text-muted">
+                                        specify the name space ...
+                                        </Form.Text>
+                                    </Form.Group>
+
+                                
 
                                     <fieldset disabled={this.state.namespaceNotSelected}>
                                     <Form.Group controlId="chartName">
@@ -258,7 +373,9 @@ class graphForm extends Component {
                                             </Col>
                                         </Row>
                                     </Form>
-                                    <Form>
+
+                                    {timeSelection}
+                                    {/* <Form>
                                     
                                     <Row>
                                         <Col>
@@ -291,7 +408,7 @@ class graphForm extends Component {
                                         <Form.Text className="text-muted">
                                             Select the time
                                             </Form.Text>
-                                    </Form.Group>
+                                    </Form.Group> */}
                                     <Form.Group controlId="exampleForm.ControlSelect3">
                                     <Form.Label>Graph Color</Form.Label>
                                        <SketchPicker
@@ -320,11 +437,11 @@ class graphForm extends Component {
                                                 chartName:this.state.chartName,
                                                 typeOfDimension : this.state.typeOfDimension,
                                                 idValue:this.state.idValue,
-                                                refreshRate:"",
+                                                refreshRate: this.state.refreshRate,
                                                 colorSelected:this.state.colorSelected,
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
-                                                endTime:new Date() //if needed
+                                                endTime:this.state.endTime //if needed
                                             },
                                             coordinates: {
                                                 x: 0,
