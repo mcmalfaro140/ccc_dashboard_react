@@ -80,7 +80,7 @@ return(
         <ReactTable
             columns = {columns}
             data= {newTableData()}
-            defaultPageSize={5}
+            defaultPageSize={10}
         >
         {(state, makeTable, instance) => {
             return (

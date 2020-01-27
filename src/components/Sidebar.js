@@ -122,6 +122,7 @@ class SideNavContent extends React.Component {
                                             tableSettings:{
                                                 master:"true",
                                             },
+                                            chartName:'ja',
                                             coordinates: {
                                                 x: 0,
                                                 y: 0,
@@ -139,10 +140,18 @@ class SideNavContent extends React.Component {
                             </Link>
                       </li>
                       <li>
-                          <Link to="/" className="waves-effect side-nav-link-ref">
+                          {/* <Link to="/" className="waves-effect side-nav-link-ref">
                               <i class="fe-search"></i>
                               <span> Search Logs </span>
-                          </Link>
+
+                          </Link> */}
+                          <Link to={{pathname:'/TableForm',
+                                typeOfGraph : 'searchLogs' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Search Logs </span>
+                            </Link>
                       </li>
                   </ul>
                   ): null }

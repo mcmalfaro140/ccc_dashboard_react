@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import "react-table/react-table.css";
+//import { handleTableCellClick } from "./CellExpandHandler.js";
 
 
 
@@ -9,11 +10,13 @@ function NewTable (props) {
 
 //Object to hold the data for a single log event
 const tabledata = {
-  loggroupnames: props.loggroupnames,
+  loggroupnames : props.logGroups,
   recordsmatched:props.recordsmatched,
   logger:"",
-  message:""
+  message:"",
+  scannedLogStreams:props.scannedLogStreams
 };
+
 
 //Json Array for the log events
 var dataFromtable = [];
@@ -23,8 +26,9 @@ function newTableData () {
 
   for (var i = 0; i < tabledata.loggroupnames.length; i++) {
 
-    new_data.loggroupnames= props.loggroupnames[i];
+    new_data.loggroupnames = props.loggroupnames[i];
     new_data.recordsmatched = props.recordsmatched[i];
+    new_data.scannedLogStreams = props.scannedLogStreams[i];
     // new_data.logger = props.logger[i];
     // new_data.message = props.message[i];
 
@@ -33,6 +37,8 @@ function newTableData () {
 
     //new object instantiation
     new_data = Object.create(tabledata);
+
+    
   }
 
 
@@ -65,20 +71,58 @@ const columns = [
  
   {
     Header:'Message',
-    accessor:'message'
+    accessor:'scannedLogStreams'
 
   }
 ];
 
-return(
+//Subrow component to display errror messages briefly
+const subComponent = row => {
+    return (
+      <div>
+        {row.original.types.map((type, id) => {
+          return (
+            <div className='subRow' key={ id }>{ type.name }</div>
+          );
+        })}
+      </div>
+    );
+  };
+  
 
+return(
+    
+    
 
         <ReactTable
             columns = {columns}
+            Subcomponent = {subComponent}
+            expandedRows={ true }
             data= {newTableData()}
-            defaultPageSize={20}
+            defaultPageSize={5}
+            getTdProps={(state, rowInfo, column, instance,...rest) => {
+                return {
+                  onClick: (e, handleOriginal) => {
+                console.log('A Td Element was clicked!')
+                console.log('it produced this event:', e)
+                console.log('It was in this column:', column)
+                console.log('It was in this row:', rowInfo)
+                console.log('It was in this table instance:', instance.props.data)
+         
+                // IMPORTANT! React-Table uses onClick internally to trigger
+                // events like expanding SubComponents and pivots.
+                // By default a custom 'onClick' handler will override this functionality.
+                // If you want to fire the original onClick handler, call the
+                // 'handleOriginal' function.
+                if (handleOriginal) {
+                  handleOriginal()
+                }
+              }
+            }
+        }}
+
         >
-        {(state, makeTable, instance) => {
+        {(state, makeTable, instance,rowInfo, column,...rest) => {
             return (
               <div
                 style={{
@@ -92,8 +136,11 @@ return(
               </div>
             )
           }}
+
         </ReactTable>
       )
 }
+
+
 
 export default NewTable;

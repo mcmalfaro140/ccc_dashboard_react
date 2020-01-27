@@ -10,8 +10,8 @@ var cloudwatchlogs = new AWS.CloudWatchLogs();
 
 class Tables extends React.Component {
 
-  constructor (){
-    super();
+  constructor (props){
+    super(props);
 
     this.state = {
       params : {

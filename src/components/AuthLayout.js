@@ -193,7 +193,7 @@ class AuthLayout extends Component {
                                         </Suspense>
                                     </Container>
                                 </div>
-                            </div>
+                    </div>
                         
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <ModalHeader toggle={this.toggleForm}>New Chart Form</ModalHeader>
