@@ -15,6 +15,7 @@ import GridLayout from 'react-grid-layout';
 import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 
+
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
