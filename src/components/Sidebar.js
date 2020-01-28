@@ -128,26 +128,28 @@ class SideNavContent extends React.Component {
                   </a>
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
-                       <li>
-                       <Link to={{pathname:'/dashboard', 
-                                    state:{ 
-                                        newMasterTable:{
-                                            objectType:"table", // options: graph or table
-                                            chartName: "My Log Table",
-                                            tableSettings:{
-                                                master:"true",
-                                            },
-                                            coordinates: {
-                                                x: 0,
-                                                y: 0,
-                                                w: 20,
-                                                h: 11,
-                                                minW: 4,
-                                                minH: 11
-                                            }
-                                        }
-                                    }
-                                }} className="waves-effect side-nav-link-ref">
+                       <li onClick = {this.props.toggleTableForm}>
+                       <Link 
+                    //    to={{pathname:'/dashboard', 
+                    //                 state:{ 
+                    //                     newMasterTable:{
+                    //                         objectType:"table", // options: graph or table
+                    //                         chartName: "My Log Table",
+                    //                         tableSettings:{
+                    //                             master:"true",
+                    //                         },
+                    //                         coordinates: {
+                    //                             x: 0,
+                    //                             y: 0,
+                    //                             w: 20,
+                    //                             h: 11,
+                    //                             minW: 4,
+                    //                             minH: 11
+                    //                         }
+                    //                     }
+                    //                 }
+                    //             }} 
+                                className="waves-effect side-nav-link-ref">
                             {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref"> */}
                               <i class="mdi mdi-table-large"></i>
                               <span> New Log Table </span>
