@@ -11,7 +11,7 @@ import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
-import GridLayout from 'react-grid-layout';
+import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 
@@ -292,9 +292,16 @@ class DefaultDashboard extends Component {
                         </CardBody>
                     </Card>
 
-                    <GridLayout className="layout" cols={20} rowHeight={30} width={this.props.screenSize} onLayoutChange={(layout) => this.recordCoordinateChange(layout)} style={{margin:0}}>
+                    <ResponsiveGridLayout className="layout" 
+                        breakpoints={{lg: 1200, md: 996, sm: 768}}
+                        cols={{lg: 21, md: 14, sm: 7}}
+                        // cols={20} 
+                        // rowHeight={30} 
+                        width={this.props.screenSize} 
+                        // onLayoutChange={(layout) => this.recordCoordinateChange(layout)} 
+                        style={{margin:0}}>
                         {items}
-                    </GridLayout>
+                    </ResponsiveGridLayout>
                 </div>
             </React.Fragment>
         )
