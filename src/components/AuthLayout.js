@@ -48,14 +48,14 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.toggleMixForm = this.toggleMixForm.bind(this);
-        this.mixUpdate = this.mixUpdate.bind(this);
-        this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
-        this.changeStartDate = this.changeStartDate.bind(this);
-        this.changeEndDate = this.changeEndDate.bind(this);
+       // this.mixUpdate = this.mixUpdate.bind(this);
+      //  this.readMixedSelection1 = this.readMixedSelection1.bind(this);
+       // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
+     //   this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
+     //   this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
+     //   this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+     //   this.changeStartDate = this.changeStartDate.bind(this);
+    //    this.changeEndDate = this.changeEndDate.bind(this);
 
         this.state = {
             mixGraph:{
