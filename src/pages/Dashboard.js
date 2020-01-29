@@ -15,6 +15,8 @@ import GridLayout from 'react-grid-layout';
 import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 
+import TestLine from '../components/TestLine'
+
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
@@ -40,7 +42,7 @@ class DefaultDashboard extends Component {
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"10000",
+                            refreshRate:"30000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
@@ -224,7 +226,7 @@ class DefaultDashboard extends Component {
                         //Perfect size for line chart w = 12 and H = 16
                         <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
-                                <LineGraph {...item}></LineGraph>
+                                <TestLine {...item}></TestLine>
                             </CardBody>
                         </Card>);
                 }else if(item.graphSettings.type === "bar"){

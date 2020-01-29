@@ -16,25 +16,22 @@ import 'chartjs-plugin-streaming';
 
 
 class LineGraph extends Component {
-    intervalID;
-    constructor(){
-      
-        super();
-        this.state = {
-            graphColor:"blue",
-            data:[],
-            label:[],
-            holder:[],
-            uniqueData:[],
-            uniqueLabel:[],
-            showOptions: false,
-            options : "",
-            prevValues: []
-        };
-        this.showOptions = this.showOptions.bind(this);
-
-        this.componentWillMount = this.componentWillMount.bind(this);
-    
+  intervalID;
+  constructor(){
+    super();
+    this.state = {
+      graphColor:"blue",
+        data:[],
+        label:[],
+        holder:[],
+        uniqueData:[],
+        uniqueLabel:[],
+        showOptions: false,
+        options : "",
+        prevValues: []
+    };
+    this.showOptions = this.showOptions.bind(this);
+    this.componentWillMount = this.componentWillMount.bind(this);
     this.optionToSkip =  { 
       animation: {
         duration: 2000
@@ -43,54 +40,49 @@ class LineGraph extends Component {
         point:{
             radius: 0,  
         },
-      
-    }, 
-        scales: {
-      xAxes: [{
-        
-        ticks: {
-            // maxRotation: 0,
-            // minRotation: 0,
-        fontSize: 10,
-        //autoSkip: true,
-        maxTicksLimit: 10
-      },
-      gridLines: {
-        display: false ,
-       // color: "black  "
-      },
-         
-     }] , 
-     
-      yAxes: [{
-       //stacked: true,
-        ticks: {
-          stepSize: 0.2,
+      }, 
+      scales: {
+        xAxes: [{
+          ticks: {
+              // maxRotation: 0,
+              // minRotation: 0,
           fontSize: 10,
-          min: 0,
-          max: 1,// Your absolute max value
-          callback: function (value) {
-            return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+          //autoSkip: true,
+          maxTicksLimit: 10
           },
-          //  fontColor: 'black   '
-        },
-        gridLines: {
-          display: true ,
-         // color: "black  "
-        },
-    }],
- 
-},
-      pan: {
-        enabled: true,
-        mode: 'x'
+          gridLines: {
+            display: false ,
+          // color: "black  "
+          },
+        }], 
+        yAxes: [{
+          //stacked: true,
+          ticks: {
+            stepSize: 0.2,
+            fontSize: 10,
+            min: 0,
+            max: 1,// Your absolute max value
+            callback: function (value) {
+              return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+            },
+              //  fontColor: 'black   '
+          },
+          gridLines: {
+            display: true ,
+            // color: "black  "
+          },
+        }],
       },
-      zoom: {
-        enabled: true,
-        mode: 'x',
-      }
-      }
-          }
+        pan: {
+          enabled: true,
+          mode: 'x'
+        },
+        zoom: {
+          enabled: true,
+          mode: 'x',
+        }
+    }
+  }
     
 
       getgraph = () =>{
@@ -149,27 +141,20 @@ class LineGraph extends Component {
           
            this.setState({holder:sortedData})
 
-           if(this.state.prevValues.length !== 0){
-             this.state.holder.forEach(element => {
-               
-             });
-             console.log("not empty now")
-           }
-            
-          //  console.log(this.state.holder);
+           console.log(this.state.holder)
          
-             for (var i = 0; i < this.state.holder.length; i++) {
-              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
-               console.log(this.state.label.includes(newTimestamp))
-              //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
-               if(!this.state.label.includes(newTimestamp)){
-                this.setState({label: [...this.state.label,newTimestamp]});
-                this.setState(prevState => ({
-                  data : [...prevState.data, this.state.holder[i].Average]
-                }));
-               }else{
+            //  for (var i = 0; i < this.state.holder.length; i++) {
+            //   let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+            //    console.log(this.state.label.includes(newTimestamp))
+            //   //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+            //    if(!this.state.label.includes(newTimestamp)){
+            //     this.setState({label: [...this.state.label,newTimestamp]});
+            //     this.setState(prevState => ({
+            //       data : [...prevState.data, this.state.holder[i].Average]
+            //     }));
+            //    }else{
               
-               }
+            //    }
               
              
              
@@ -199,7 +184,7 @@ class LineGraph extends Component {
                  
 
               
-              }
+              // }
 
               // console.log(this.state.label + " hey i m label")
               
@@ -216,7 +201,7 @@ class LineGraph extends Component {
          
           // console.log(this.state.data)
           // console.log(this.state.label)  
-          this.setState({prevValues : this.state.holder})
+          // this.setState({prevValues : this.state.holder})
          
         }.bind(this));
         return [this.state.data, this.state.label];
@@ -365,7 +350,7 @@ class LineGraph extends Component {
 
                       x: Date.now(),
 
-                      y: Math.random()
+                      y: Math.random()*100
 
                     });
 
