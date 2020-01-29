@@ -36,27 +36,6 @@ class graphForm extends Component {
       
         this.state = { 
             newGraph:{
-              mixGraph:{
-                typeOfGraph:"",
-                metricName:"", 
-                nameSpace:"",
-                chartName:"",
-                typeOfDimension : "InstanceId",
-                idValue:"",
-                startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                period:120,
-                endTime:new Date(),
-                colorSelected:"",
-    
-                typeOfGraph1:"",
-                metricName1:"", 
-                nameSpace1:"",
-                typeOfDimension1 : "InstanceId",
-                idValue1:"",
-                startTime1:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                endTime1:new Date(),
-                colorSelected1:"" 
-            },
             showMenu: false,
             isRealTime: false,
             refreshRate:0,

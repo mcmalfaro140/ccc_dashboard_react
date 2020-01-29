@@ -28,13 +28,17 @@ class LineGraph extends Component {
             uniqueData:[],
             uniqueLabel:[],
             showOptions: false,
-            options : ""
+            options : "",
+            prevValues: []
         };
         this.showOptions = this.showOptions.bind(this);
 
         this.componentWillMount = this.componentWillMount.bind(this);
     
     this.optionToSkip =  { 
+      animation: {
+        duration: 2000
+      },
       elements: {
         point:{
             radius: 0,  
@@ -89,11 +93,19 @@ class LineGraph extends Component {
           }
     
 
-      getgraph3 = () =>{
-        console.log(this.props.graphSettings.startTime + "start timmmmmm")
-        console.log(this.props.graphSettings.endTime + " end timmmmmm")
-        console.log(this.props.graphSettings.realTime)
-       console.log("id is "+this.props.graphSettings.idValue);
+      getgraph = () =>{
+
+        if(this.props.graphSettings.realTime === true){
+          // this.setState({data:[]})
+          // this.setState({label:[]})
+          this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
+      
+        }
+
+      //   console.log(this.props.graphSettings.startTime + "start timmmmmm")
+      //   console.log(this.props.graphSettings.endTime + " end timmmmmm")
+      //   console.log(this.props.graphSettings.realTime)
+      //  console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
@@ -133,54 +145,81 @@ class LineGraph extends Component {
               var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
               return dateA - dateB;
           });
+         
+          
            this.setState({holder:sortedData})
-           console.log(this.state.holder);
-             for (var i = 0; i < this.state.holder.length/2; i++) {
-              if(this.state.holder[i].Timestamp.getHours()<12){
-                if(this.state.holder[i].Timestamp.getMinutes()<10){
-                  this.setState(prevState => ({
-                    label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-                  }));
-                }
-                else{
-              this.setState(prevState => ({
-                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-              }));
-            }
-          }
-            else{
-              if(this.state.holder[i].Timestamp.getMinutes()<10){
-                this.setState(prevState => ({
-                  label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-                }));
-              }else{
-              this.setState(prevState => ({
-                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-              }));
-            }
-          }
-                  this.setState(prevState => ({
-                    data : [...prevState.data, this.state.holder[i].Average]
-                  }));
 
-                  // this.setState({uniqueData : Array.from(new Set(this.state.data))});
-                  // this.setState({uniqueLabel: Array.from(new Set(this.state.label))});
+           if(this.state.prevValues.length !== 0){
+             this.state.holder.forEach(element => {
+               
+             });
+             console.log("not empty now")
+           }
+            
+          //  console.log(this.state.holder);
+         
+             for (var i = 0; i < this.state.holder.length; i++) {
+              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+               console.log(this.state.label.includes(newTimestamp))
+              //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+               if(!this.state.label.includes(newTimestamp)){
+                this.setState({label: [...this.state.label,newTimestamp]});
+                this.setState(prevState => ({
+                  data : [...prevState.data, this.state.holder[i].Average]
+                }));
+               }else{
+              
+               }
+              
+             
+             
+          //     if(this.state.holder[i].Timestamp.getHours()<12){
+          //       if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //         this.setState(prevState => ({
+          //           label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //         }));
+          //       }
+          //       else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //     }));
+          //   }
+          // }
+          //   else{
+          //     if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //       this.setState(prevState => ({
+          //         label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //       }));
+          //     }else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //     }));
+          //   }
+          // }
+                 
+
+              
               }
+
+              // console.log(this.state.label + " hey i m label")
               
            
             
             
            
-            if(this.props.graphSettings.realTime === true){
-              this.intervalID = setTimeout(this.getgraph3, this.props.graphSettings.refreshRate);
-            }
+           
             
     
          
              
-          };          
+          };     
+         
+          // console.log(this.state.data)
+          // console.log(this.state.label)  
+          this.setState({prevValues : this.state.holder})
          
         }.bind(this));
+        return [this.state.data, this.state.label];
       }
 
       componentWillMount() {
@@ -211,10 +250,11 @@ class LineGraph extends Component {
     //  }
       }
       componentDidMount() {
-        this.getgraph3();
+        this.getgraph();
         if(this.props.graphSettings.colorSelected != null){
          this.setState({graphColor:this.props.graphSettings.colorSelected})
         }
+        this.setState({ prevValues: this.state.holder}) // set values at the begining
         
       }
 
@@ -228,6 +268,9 @@ class LineGraph extends Component {
       
       if(this.props.graphSettings.metricName!=="CPUUtilization"){
         this.optionToSkip =  {  
+          animation: {
+            duration: 2000
+          },
           scales: {
            elements: {
               point:{
@@ -293,7 +336,7 @@ class LineGraph extends Component {
         datasets: [
           {
             label: this.props.graphSettings.metricName,
-            data: this.state.data,
+            data: [],
             fill: true,         
             borderColor: this.state.graphColor, // Line color
             backgroundColor:Color(this.state.graphColor).alpha(0.5),
@@ -303,13 +346,46 @@ class LineGraph extends Component {
           }
         ]
       }
+      let newData = this.getgraph()[0]
+      let newLabel = this.getgraph()[1]
+      console.log(newData )
+      console.log(newLabel)
+      const RToptions = {
+        scales: {
+          xAxes: [
+            {
+              type: "realtime",
+              realtime: {
+                onRefresh: function(chart) {
+                  // lineGraphData.datasets.data = newData
+                  // lineGraphData.labels = newLabel
+                  chart.lineGraphData.datasets.forEach(function(dataset) {
+
+                    dataset.data.push({
+
+                      x: Date.now(),
+
+                      y: Math.random()
+
+                    });
+
+                  });
+
+              
+                },
+                
+              }
+            }
+          ]
+        }
+      };
       var graph;
-      // if(this.props.graphSettings.realTime === true){
-      //  graph = <Line height = "100px" data={lineGraphData} options = {this.state.options} ></Line>
-      // }
-      // else{
+      if(this.props.graphSettings.realTime === true){
+       graph = <Line height = "100px" data={lineGraphData} options = {RToptions} ></Line>
+      }
+      else{
        graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
-     // }
+      }
       //console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
    

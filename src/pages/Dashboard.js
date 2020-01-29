@@ -40,7 +40,7 @@ class DefaultDashboard extends Component {
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"30000",
+                            refreshRate:"10000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed

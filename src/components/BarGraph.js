@@ -13,8 +13,8 @@ var optionToSkip =  {
     scales: {
       xAxes: [{
         ticks: {
-          maxRotation: 0,
-          minRotation: 0,
+          // maxRotation: 0,
+          // minRotation: 0,
       fontSize: 10,
       //autoSkip: true,
       maxTicksLimit: 10
@@ -59,7 +59,7 @@ zoom: {
 }
   
 class BarGraph extends Component {
-  intervalID3;
+    intervalID;
     constructor(){
         super();
       //  this.myRef = React.createRef();
@@ -78,6 +78,13 @@ class BarGraph extends Component {
     }
       
       getgraph = () =>{
+        if(this.props.graphSettings.realTime === true){
+          // this.setState({data:[]})
+          // this.setState({label:[]})
+          this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
+      
+        }
+
         console.log(this.props.graphSettings.realTime)
         console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
@@ -118,43 +125,55 @@ class BarGraph extends Component {
           });
            this.setState({holder:sortedData})
            console.log(this.state.holder);
-             for (var i = 0; i < this.state.holder.length/3; i++) {
-              if(this.state.holder[i].Timestamp.getHours()<12){
-                if(this.state.holder[i].Timestamp.getMinutes()<10){
-                  this.setState(prevState => ({
-                    label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-                  }));
-                }
-                else{
-              this.setState(prevState => ({
-                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-              }));
-            }
-          }
-            else{
-              if(this.state.holder[i].Timestamp.getMinutes()<10){
-                this.setState(prevState => ({
-                  label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-                }));
+             for (var i = 0; i < this.state.holder.length; i++) {
+              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+              console.log(this.state.label.includes(newTimestamp))
+             //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+              if(!this.state.label.includes(newTimestamp)){
+               this.setState({label: [...this.state.label,newTimestamp]});
+               this.setState(prevState => ({
+                 data : [...prevState.data, this.state.holder[i].Average]
+               }));
               }else{
-              this.setState(prevState => ({
-                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-              }));
-            }
-          }
-                 
-                  this.setState(prevState => ({
-                    data : [...prevState.data, this.state.holder[i].Average]
-                  }));
+             
               }
+          //     if(this.state.holder[i].Timestamp.getHours()<12){
+          //       if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //         this.setState(prevState => ({
+          //           label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //         }));
+          //       }
+          //       else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //     }));
+          //   }
+          // }
+          //   else{
+          //     if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //       this.setState(prevState => ({
+          //         label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //       }));
+          //     }else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //     }));
+          //   }
+          // }
+                 
+          //         this.setState(prevState => ({
+          //           data : [...prevState.data, this.state.holder[i].Average]
+          //         }));
+          //     }
            
-              this.setState({uniqueData : Array.from(new Set(this.state.data))});
-              this.setState({uniqueLabel: Array.from(new Set(this.state.label))});
-            //  uniqueData =  Array.from(new Set(data));
-            //  uniqueLabel =  Array.from(new Set(label));
-            if(this.props.graphSettings.realTime === true){
-              this.intervalID3 = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
-            }
+          //     this.setState({uniqueData : Array.from(new Set(this.state.data))});
+          //     this.setState({uniqueLabel: Array.from(new Set(this.state.label))});
+          //   //  uniqueData =  Array.from(new Set(data));
+          //   //  uniqueLabel =  Array.from(new Set(label));
+          //   if(this.props.graphSettings.realTime === true){
+          //     this.intervalID3 = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
+             }
+             console.log(this.state.label)
     
            //   console.log("Graph4's data size is now " + this.state.dataTemp3.length);
              
@@ -182,8 +201,8 @@ class BarGraph extends Component {
         scales: {
           xAxes: [{
             ticks: {
-                maxRotation: 0,
-                minRotation: 0,
+                // maxRotation: 0,
+                // minRotation: 0,
             fontSize: 10,
             //autoSkip: true,
             maxTicksLimit: 10
@@ -237,12 +256,12 @@ class BarGraph extends Component {
       
        //console.log(this.props.graphSettings.colorSelected + "hey")
        
-       const lineGraphData = {
-        labels: this.state.uniqueLabel,
+       const barGraphData = {
+        labels: this.state.label,
         datasets: [
           {
             label: this.props.graphSettings.metricName,
-            data: this.state.uniqueData,
+            data: this.state.data,
             fill: true,         
            // borderColor: 'lightblue', // Line color
             backgroundColor: this.state.graphColor,
@@ -272,7 +291,7 @@ class BarGraph extends Component {
                 </div>
               </div>
              
-              <Bar height = "100px" data={lineGraphData} options = {optionToSkip}
+              <Bar height = "100px" width = "100px" data={barGraphData} options = {optionToSkip}
               />
            
             </div>

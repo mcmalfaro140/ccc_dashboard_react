@@ -11,14 +11,14 @@ var options = {
         radius: 0,
        
     },
-   
 }, 
 }
 
 class MixGraph extends Component {
+    intervalID;
     constructor(){
         super();
-      
+        
         this.state = {
             graphColor:"red",
             data:[],
@@ -40,7 +40,12 @@ class MixGraph extends Component {
     }
       
       getgraph = () =>{
-
+        if(this.props.graphSettings.realTime === true){
+          // this.setState({data:[]})
+          // this.setState({label:[]})
+          this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
+      
+        }
         console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
@@ -81,33 +86,42 @@ class MixGraph extends Component {
            this.setState({holder:sortedData})
            console.log(this.state.holder);
              for (var i = 0; i < this.state.holder.length; i++) {
-              if(this.state.holder[i].Timestamp.getHours()<12){
-                if(this.state.holder[i].Timestamp.getMinutes()<10){
-                  this.setState(prevState => ({
-                    label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-                  }));
-                }
-                else{
-              this.setState(prevState => ({
-                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-              }));
-            }
-          }
-            else{
-              if(this.state.holder[i].Timestamp.getMinutes()<10){
-                this.setState(prevState => ({
-                  label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-                }));
+              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+              console.log(this.state.label.includes(newTimestamp))
+             //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+              if(!this.state.label.includes(newTimestamp)){
+               this.setState({label: [...this.state.label,newTimestamp]});
+               this.setState(prevState => ({
+                 data : [...prevState.data, this.state.holder[i].Average]
+               }));
               }else{
-              this.setState(prevState => ({
-                label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-              }));
-            }
-          }
+             
+              }
+          //     if(this.state.holder[i].Timestamp.getHours()<12){
+          //       if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //         this.setState(prevState => ({
+          //           label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //         }));
+          //       }
+          //       else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //     }));
+          //   }
+          // }
+          //   else{
+          //     if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //       this.setState(prevState => ({
+          //         label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //       }));
+          //     }else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //     }));
+          //   }
+          // }
                  
-                  this.setState(prevState => ({
-                    data : [...prevState.data, this.state.holder[i].Average]
-                  }));
+                 
               }
            
             
@@ -160,11 +174,19 @@ class MixGraph extends Component {
             this.setState({holder1:sortedData})
             console.log(this.state.holder1);
               for (var i = 0; i < this.state.holder1.length; i++) {
-              
+
+                let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+                console.log(this.state.label1.includes(newTimestamp))
+               //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+                if(!this.state.label1.includes(newTimestamp)){
+                 this.setState({label1: [...this.state.label1,newTimestamp]});
+                 this.setState(prevState => ({
+                  data1 : [...prevState.data1, this.state.holder1[i].Average]
+                }));
+                }else{
+               
+                }
                   
-                   this.setState(prevState => ({
-                     data1 : [...prevState.data1, this.state.holder1[i].Average]
-                   }));
                }
             
              
@@ -270,7 +292,7 @@ class MixGraph extends Component {
                 </div>
               </div>
              
-              <Bar height = "100px" data={data} options = {options}
+              <Bar height = "100px" width = "100px" data={data} options = {options}
               />
            
             </div>
