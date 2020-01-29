@@ -19,6 +19,7 @@ class SearchResult extends React.Component {
             loading: true,
             keyword : "",
             logGroupName : [],
+            noResults: false,
             params : {
                 limit : '50'
             },
@@ -37,7 +38,7 @@ class SearchResult extends React.Component {
     //will update the components when new keyword is enter
     componentDidUpdate(prevProps) {
         if(this.props.location.state.search_keyword !== prevProps.location.state.search_keyword){
-            this.setState({results: [], loading: true})
+            this.setState({results: [], loading: true, noResults: false})
             for (var i = 0; i < this.state.logGroupName.length; i++) {
                 this.searchByLogGroupName(this.state.logGroupName[i])
             }
@@ -93,6 +94,7 @@ class SearchResult extends React.Component {
         };
         
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
+            console.log(data)
             if(err){
                 console.log(err, err.stack); // an error occurred
             }else{ 
@@ -110,9 +112,16 @@ class SearchResult extends React.Component {
                     this.setState(prevState => ({
                         results : [...prevState.results, new_data]
                     }));
-                }
+
+                    
+                }                
             }  
-            setTimeout(() => this.setState({ loading: false }), 1000); 
+            setTimeout(() => 
+            {if(this.state.results.length === 0){
+                this.setState({ loading: false, noResults: true })
+            }else{
+                this.setState({ loading: false})
+            }}, 1000); 
         }.bind(this));
     }
 
@@ -169,7 +178,7 @@ class SearchResult extends React.Component {
                                 </form>
                             </div>
                         ):(
-                            ( this.state.results.length === 0 ? 
+                            ( this.state.noResults ? 
                                 <div className="notResultDiv">
                                     <img className="no_found_img" src={not_found_img} alt="Not Results" />
                                     <h1>OOPS!</h1>
