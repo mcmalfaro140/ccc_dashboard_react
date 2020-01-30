@@ -336,7 +336,7 @@ class LineGraph extends Component {
         datasets: [
           {
             label: this.props.graphSettings.metricName,
-            data: [],
+            data: this.state.data,
             fill: true,         
             borderColor: this.state.graphColor, // Line color
             backgroundColor:Color(this.state.graphColor).alpha(0.5),
@@ -346,46 +346,46 @@ class LineGraph extends Component {
           }
         ]
       }
-      let newData = this.getgraph()[0]
-      let newLabel = this.getgraph()[1]
-      console.log(newData )
-      console.log(newLabel)
-      const RToptions = {
-        scales: {
-          xAxes: [
-            {
-              type: "realtime",
-              realtime: {
-                onRefresh: function(chart) {
-                  // lineGraphData.datasets.data = newData
-                  // lineGraphData.labels = newLabel
-                  chart.lineGraphData.datasets.forEach(function(dataset) {
+      // let newData = this.getgraph()[0]
+      // let newLabel = this.getgraph()[1]
+      // console.log(newData )
+      // console.log(newLabel)
+      // const RToptions = {
+      //   scales: {
+      //     xAxes: [
+      //       {
+      //         type: "realtime",
+      //         realtime: {
+      //           onRefresh: function(chart) {
+      //             // lineGraphData.datasets.data = newData
+      //             // lineGraphData.labels = newLabel
+      //             chart.config.lineGraphData.datasets.forEach(function(dataset) {
 
-                    dataset.data.push({
+      //               dataset.data.push({
 
-                      x: Date.now(),
+      //                 x: Date.now(),
 
-                      y: Math.random()
+      //                 y: Math.random()
 
-                    });
+      //               });
 
-                  });
+      //             });
 
               
-                },
+      //           },
                 
-              }
-            }
-          ]
-        }
-      };
+      //         }
+      //       }
+      //     ]
+      //   }
+      // };
       var graph;
-      if(this.props.graphSettings.realTime === true){
-       graph = <Line height = "100px" data={lineGraphData} options = {RToptions} ></Line>
-      }
-      else{
+      // if(this.props.graphSettings.realTime === true){
+      //  graph = <Line height = "100px" data={lineGraphData} options = {RToptions} ></Line>
+      // }
+      // else{
        graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
-      }
+     // }
       //console.log(this.state.graphColor+"the color");
      //console.log(this.state.data.length + " and " + this.state.data[0])
    
