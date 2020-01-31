@@ -78,12 +78,12 @@ class BarGraph extends Component {
     }
       
       getgraph = () =>{
-        if(this.props.graphSettings.realTime === true){
-          // this.setState({data:[]})
-          // this.setState({label:[]})
-          this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
+        // if(this.props.graphSettings.realTime === true){
+        //   // this.setState({data:[]})
+        //   // this.setState({label:[]})
+        //   this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
       
-        }
+        // }
 
         console.log(this.props.graphSettings.realTime)
         console.log("id is "+this.props.graphSettings.idValue);
@@ -119,6 +119,7 @@ class BarGraph extends Component {
          // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
           else {
+            console.log(data)
             let sortedData =  data.Datapoints.sort(function(a, b) {
               var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
               return dateA - dateB;
