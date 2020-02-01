@@ -8,6 +8,9 @@ import { SketchPicker } from 'react-color'
 import DateTimePicker from 'react-datetime-picker';
 import Switch from "react-switch";
 import '../assets/react-grid/styles.css'
+import ReactLightCalendar from '@lls/react-light-calendar'
+import '@lls/react-light-calendar/dist/index.css' // Default Style
+
 
 // import DateTimePicker from 'react-datetime-picker';
 
@@ -29,13 +32,14 @@ class graphForm extends Component {
         this.readSelection = this.readSelection.bind(this);
         this.handleChangeComplete = this.handleChangeComplete.bind(this);
         this.toggleSwitch = this.toggleSwitch.bind(this);
-        this.handleChangeForStart = this.handleChangeForStart.bind(this);
-        this.handleChangeForEnd = this.handleChangeForEnd.bind(this);
+        // this.handleChangeForStart = this.handleChangeForStart.bind(this);
+        // this.handleChangeForEnd = this.handleChangeForEnd.bind(this);
         this.refreshGraph = this.refreshGraph.bind(this);
+        this.onDateRangeSelection = this.onDateRangeSelection.bind(this);
    
       
         this.state = { 
-            newGraph:{
+            
             showMenu: false,
             isRealTime: false,
             refreshRate:0,
@@ -58,10 +62,6 @@ class graphForm extends Component {
             endTime:"" //if needed
               ,
        
-           
-        
-
-        }
     
     
     }}
@@ -116,27 +116,7 @@ class graphForm extends Component {
     this.setState({colorSelected : color.hex})
 
 
-    if(this.state.isRealTime === false){
-    var dateDiff = this.state.endTime.getTime() - this.state.startTime.getTime()
-    var days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
-    console.log(days + " the date diff")
-    console.log(this.state.startTime + " satart")
-    console.log(this.state.endTime + "  end time")
-    console.log(this.state.isRealTime + "real timmmm")
-    if(days === 1){
-        this.setState({period:540});
-    }
-    if(days >1 && days <5){
-        this.setState({period: 900});
-    }
-    if(days > 5 && days < 25){
-        this.setState({period: 1800});
-    }
-    if(days > 25 ){
-
-        this.setState({period: 3600})
-    }
-}
+   
     
 }
 
@@ -189,19 +169,55 @@ class graphForm extends Component {
        
     }
   
-
+    onDateRangeSelection = (startTime, endTime) => {
+        this.setState({startTime , endTime})
+    
+            console.log(startTime + " - " + endTime)
+            let start, end;
+            if(startTime != null){
+                start = new Date(startTime);
+            }
+            if(endTime != null){
+                end = new Date(endTime);
+            }
+            if(start!=null && end!=null){
+            let dateDiff = end.getTime() - start.getTime();
+            let days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+            if(days === 1){
+                this.setState({period:540});
+            }
+            if(days >1 && days <5){
+                this.setState({period: 900});
+            }
+            if(days > 5 && days < 25){
+                this.setState({period: 1800});
+            }
+            if(days > 25 ){
+                this.setState({period: 3600})
+            }
+        }
+        
+    }
  
-     handleChangeForStart = date => {
-        this.setState({
-          startTime: date
-        });
+    //  handleChangeForStart(e,i) {
+    //     let holder = [];
+    //     holder[i] = e.target.value;
+    //     if(holder.length>2){
+    //         holder = [];
+    //     }
+    //     this.setState({
+    //       startTime: holder[0],
+    //       endTime:holder[1]
+    //     });
        
-      };
-      handleChangeForEnd = date => {
-        this.setState({
-          endTime: date
-        });
-      };
+    //   };
+    //   handleChangeForEnd = date => {
+    //     this.setState({
+    //       endTime: date
+    //     });
+
+        
+    //   };
 
     
     
@@ -216,7 +232,7 @@ class graphForm extends Component {
          <div>
              
             <Form.Group controlId="exampleForm.ControlSelect2">
-            <Form.Label>Time Range</Form.Label>
+            <Form.Label>X Axis Time Range</Form.Label>
             <Form.Control as="select"  
             onChange={(e) => this.readSelection(e)}>
             <option disabled selected>Make Selection</option>
@@ -251,22 +267,9 @@ class graphForm extends Component {
         else{
             timeSelection = 
             <div>
-            <Form>                        
-            <Row>
-                <Col>
-                     <Form.Label>Start Time</Form.Label>
-                        <DateTimePicker 
-                            value={this.state.startTime}
-                            onChange = {this.handleChangeForStart} />
-                </Col>
-                <Col>
-                        <Form.Label>End Time</Form.Label>
-                                <DateTimePicker 
-                                    value={this.state.endTime}
-                                    onChange = { this.handleChangeForEnd} />
-                </Col>
-            </Row>
-            </Form>
+            <Form.Group>
+                <ReactLightCalendar startDate={this.state.startTime} endDate={this.state.endTime} onChange={this.onDateRangeSelection} range displayTime />
+            </Form.Group>
            
             </div>
         }
@@ -304,7 +307,7 @@ class graphForm extends Component {
 
                                     </label>
                                 </Form.Group>
-
+                               
 
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>
@@ -404,6 +407,7 @@ class graphForm extends Component {
                                 </form>
                             </ModalBody>
                             <ModalFooter>
+                                
                                 <Link to={{pathname:'/dashboard', 
                                     state:{ 
                                         newGraph:{

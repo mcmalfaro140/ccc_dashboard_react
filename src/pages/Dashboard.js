@@ -37,12 +37,12 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
-                            realTime:true, //options: true or false
+                            realTime:false, //options: true or false
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"30000",
+                            refreshRate:"2000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed

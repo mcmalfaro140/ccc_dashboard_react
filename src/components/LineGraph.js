@@ -31,7 +31,7 @@ class LineGraph extends Component {
         prevValues: [],
     };
     this.showOptions = this.showOptions.bind(this);
-    this.componentWillMount = this.componentWillMount.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
     this.optionToSkip =  { 
       elements: {
         point:{
@@ -79,6 +79,7 @@ class LineGraph extends Component {
           mode: 'x',
         }
     }
+    
   }
     
 
@@ -102,11 +103,11 @@ class LineGraph extends Component {
 
          
         var params = {
-            EndTime: this.props.graphSettings.endTime, /* required */
+            EndTime: new Date(this.props.graphSettings.endTime), /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
-            StartTime:  this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
+            StartTime:  new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
@@ -140,18 +141,18 @@ class LineGraph extends Component {
 
            console.log(this.state.holder)
          
-            //  for (var i = 0; i < this.state.holder.length; i++) {
-            //   let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
-            //    console.log(this.state.label.includes(newTimestamp))
-            //   //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
-            //    if(!this.state.label.includes(newTimestamp)){
-            //     this.setState({label: [...this.state.label,newTimestamp]});
-            //     this.setState(prevState => ({
-            //       data : [...prevState.data, this.state.holder[i].Average]
-            //     }));
-            //    }else{
+             for (var i = 0; i < this.state.holder.length; i++) {
+              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+               console.log(this.state.label.includes(newTimestamp))
+              //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+               if(!this.state.label.includes(newTimestamp)){
+                this.setState({label: [...this.state.label,newTimestamp]});
+                this.setState(prevState => ({
+                  data : [...prevState.data, this.state.holder[i].Average]
+                }));
+               }else{
               
-            //    }
+               }
               
              
              
@@ -181,7 +182,7 @@ class LineGraph extends Component {
                  
 
               
-              // }
+               }
 
               // console.log(this.state.label + " hey i m label")
               
@@ -204,35 +205,68 @@ class LineGraph extends Component {
         return [this.state.data, this.state.label];
       }
 
-      componentWillMount() {
-        /*
-          stop getData() from continuing to run even
-          after unmounting this component. Notice we are calling
-          'clearTimeout()` here rather than `clearInterval()` as
-          in the previous example.
-        */
+      onRefresh(chart){
+        var typeOfD = this.props.graphSettings.typeOfDimension;
+        var idVal = this.props.graphSettings.idValue;
+        if(typeOfD == null){typeOfD = "InstanceId"}
+        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
+        var RTParams = {
+          EndTime: new Date(), /* required */
+          MetricDataQueries: [ /* required */
+            {
+              Id: 'realTimeData', /* required */
+              MetricStat: {
+                Metric: { /* required */
+                  Dimensions: [
+                    {
+                      Name: typeOfD, /* required */
+                      Value: idVal /* required */
+                    },
+                    /* more items */
+                  ],
+                  MetricName: this.props.graphSettings.metricName,
+                  Namespace: this.props.graphSettings.nameSpace
+                },
+                Period: this.props.graphSettings.period, /* required */
+                Stat: 'Average', /* required */
+              },
+             // Period: this.props.graphSettings.period,
+             // ReturnData: true 
+            },
+            /* more items */
+          ],
+          StartTime:  this.props.graphSettings.startTime, /* required */
+          ScanBy: 'TimestampDescending'
+         // MaxDatapoints: 2,
+        }
+        
+          chart.data.datasets.forEach(function(dataset) {
+           let cloudwatch = new AWS.CloudWatch();
+           let newData;
+           let temp;
+           cloudwatch.getMetricData(RTParams, function(err, data) {
+             if (err) console.log(err, err.stack); // an error occurred
+             else  {   
+               console.log(data);  
+               temp = data.MetricDataResults[0].Values[0];
+               if(newData !== temp)  {
+                 newData = temp;
+                
+               }
+               console.log(newData)
+                 }       // successful response
+                 dataset.data.push({                               
+                   x: new Date(),
+                   y: newData
+               });
+           });                             
+          });
       
-    //    if(this.props.graphSettings.realTime === true){
-    //      console.log(this.props)
-    //     this.setState({options : {scales: {
-    //      xAxes: [
-    //        {
-    //          type: "realtime",
-    //          realtime: {
-    //            //refresh: this.props.graphSettings.refreshRate,
-    //            onRefresh: function(){
-    //              this.getgraph3()
-    //            }
-    //          }
-    //        }
-    //      ]
-    //  }}})
-    //  }else{
-    //     this.getgraph3();
-    //  }
       }
       componentDidMount() {
-        this.getgraph();
+        if(this.props.graphSettings.realTime === false){
+             this.getgraph();
+        }
         if(this.props.graphSettings.colorSelected != null){
          this.setState({graphColor:this.props.graphSettings.colorSelected})
         }
@@ -250,15 +284,13 @@ class LineGraph extends Component {
       
       if(this.props.graphSettings.metricName!=="CPUUtilization"){
         this.optionToSkip =  {  
+          elements: {
+            point:{
+                radius: 0,  
+            },
+          }, 
           scales: {
-           elements: {
-              point:{
-                  radius: 0,  
-              },
-      
-    }, 
-            xAxes: [{
-             
+            xAxes: [{  
               ticks: {
                 // maxRotation: 0,
                 // minRotation: 0,
@@ -325,39 +357,7 @@ class LineGraph extends Component {
           }
         ]
       }
-      var typeOfD = this.props.graphSettings.typeOfDimension;
-      var idVal = this.props.graphSettings.idValue;
-      if(typeOfD == null){typeOfD = "InstanceId"}
-      if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
-      var RTParams = {
-        EndTime: new Date(), /* required */
-        MetricDataQueries: [ /* required */
-          {
-            Id: 'realTimeData', /* required */
-            MetricStat: {
-              Metric: { /* required */
-                Dimensions: [
-                  {
-                    Name: typeOfD, /* required */
-                    Value: idVal /* required */
-                  },
-                  /* more items */
-                ],
-                MetricName: this.props.graphSettings.metricName,
-                Namespace: this.props.graphSettings.nameSpace
-              },
-              Period: this.props.graphSettings.period, /* required */
-              Stat: 'Average', /* required */
-            },
-           // Period: this.props.graphSettings.period,
-           // ReturnData: true 
-          },
-          /* more items */
-        ],
-        StartTime:  this.props.graphSettings.startTime, /* required */
-        ScanBy: 'TimestampDescending'
-       // MaxDatapoints: 2,
-      }
+     
      
       var graph;
       if(this.props.graphSettings.realTime === true){
@@ -366,13 +366,18 @@ class LineGraph extends Component {
            datasets: [{
                label: this.props.graphSettings.metricName,
                borderColor: 'rgb(54, 162, 235)',
-               backgroundColor: 'rgba(54, 162, 235, 0.5)',
+               //backgroundColor: 'rgba(54, 162, 235, 0.5)',
                lineTension: 0,
-               borderDash: [8, 4]
+              // borderDash: [8, 4]
                }
            ]
        }}
        options={{
+        elements: {
+          point:{
+              radius: 0,  
+          },
+        }, 
            scales: {
                xAxes: [{
                    type: 'realtime',
@@ -384,28 +389,8 @@ class LineGraph extends Component {
                        ttl: undefined,     // data will be automatically deleted as it disappears off the chart
 
                        // a callback to update datasets
-                       onRefresh: function(chart) {
-                           chart.data.datasets.forEach(function(dataset) {
-                            let cloudwatch = new AWS.CloudWatch();
-                            let newData;
-                            let temp;
-                            cloudwatch.getMetricData(RTParams, function(err, data) {
-                              if (err) console.log(err, err.stack); // an error occurred
-                              else  {   
-                                console.log(data);  
-                                temp = data.MetricDataResults[0].Values[0];
-                                if(newData !== temp)  {
-                                  newData = temp;
-                                  dataset.data.push({                               
-                                    x: data.MetricDataResults[0].Timestamps[0],
-                                    y: newData
-                                });
-                                }
-                                console.log(newData)
-                                  }       // successful response
-                            });                             
-                           });
-                       },
+                       //move callback function outside
+                       onRefresh: this.onRefresh,
                        delay: 2000
                    }
                }]
