@@ -29,6 +29,7 @@ class LineGraph extends Component {
         showOptions: false,
         options : "",
         prevValues: [],
+        unit:""
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
@@ -150,6 +151,7 @@ class LineGraph extends Component {
                 this.setState(prevState => ({
                   data : [...prevState.data, this.state.holder[i].Average]
                 }));
+                 this.setState({unit: this.state.holder[i].Unit})
                }else{
               
                }
@@ -200,6 +202,7 @@ class LineGraph extends Component {
           // console.log(this.state.data)
           // console.log(this.state.label)  
           // this.setState({prevValues : this.state.holder})
+          console.log(this.state.unit + " unit ");
          
         }.bind(this));
         return [this.state.data, this.state.label];
@@ -261,7 +264,20 @@ class LineGraph extends Component {
                });
            });                             
           });
-      
+          
+          if(this.state.unit === "Percent" || this.props.graphSettings.metricName==="CPUUtilization"){
+            chart.options.scales.yAxes[0].ticks = {
+              // stepSize: 0.2,
+              // fontSize: 10,
+              // min: 0,
+              // max: 1,// Your absolute max value
+              callback: function (value) {
+                return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+              },
+            }
+           
+            
+          }
       }
       componentDidMount() {
         if(this.props.graphSettings.realTime === false){
@@ -281,7 +297,8 @@ class LineGraph extends Component {
 
     
     render() {
-      
+    
+     
       if(this.props.graphSettings.metricName!=="CPUUtilization"){
         this.optionToSkip =  {  
           elements: {
@@ -357,9 +374,9 @@ class LineGraph extends Component {
           }
         ]
       }
+   
      
-     
-      var graph;
+      let graph;
       if(this.props.graphSettings.realTime === true){
        graph = <Line
        data={{
@@ -382,7 +399,7 @@ class LineGraph extends Component {
                xAxes: [{
                    type: 'realtime',
                    realtime: {
-                       duration: 900000,    // this would be the length of the graph in this case it display 15 mins
+                       duration: 120000,    // this would be the length of the graph in this case it display 15 mins
                        refresh: 10000,      // onRefresh callback will be called every 1000 ms *** 
                        delay: 1000,        // delay of 1000 ms, so upcoming values are known before plotting a line
                        pause: false,       // chart is not paused
@@ -391,9 +408,12 @@ class LineGraph extends Component {
                        // a callback to update datasets
                        //move callback function outside
                        onRefresh: this.onRefresh,
-                       delay: 2000
+                      
                    }
-               }]
+               }],
+               yAxes:[
+
+               ],           
            },
           //  plugins: {
           //      streaming: {            // per-chart option

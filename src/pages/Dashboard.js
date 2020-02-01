@@ -37,7 +37,7 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
-                            realTime:false, //options: true or false
+                            realTime:true, //options: true or false
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
@@ -76,7 +76,7 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     graphSettings: {
                             type:"bar", //options: line, pie, or bar
-                            realTime:true, //options: true or false
+                            realTime:false, //options: true or false
                             metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar",
