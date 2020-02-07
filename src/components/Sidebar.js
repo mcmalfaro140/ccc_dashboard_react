@@ -155,10 +155,10 @@ class SideNavContent extends React.Component {
                               <span> New Log Table </span>
                             </Link>
                       </li>
-                      <li>
-                          <Link to="/" className="waves-effect side-nav-link-ref">
+                      <li onClick = {this.props.toggleSearchModal}>
+                          <Link className="waves-effect side-nav-link-ref">
                               <i class="fe-search"></i>
-                              <span> Search Logs </span>
+                              <span> Advanced Search</span>
                           </Link>
                       </li>
                   </ul>
