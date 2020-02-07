@@ -12,7 +12,7 @@
     "color": "^3.1.2",
     "jwt-decode": "^2.2.0",
     "metismenujs": "^1.0.3",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "randomcolor": "^0.5.4",
     "react": "^16.7.0",
     "react-bootstrap": "^1.0.0-beta.14",

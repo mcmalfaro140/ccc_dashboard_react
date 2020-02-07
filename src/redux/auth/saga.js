@@ -70,13 +70,14 @@ const setSession = (user) => {
 //     try {
 //         const response = yield call(fetchJSON, 'http://localhost:5050/authenticate', options);
 //         console.log(response)
+//         console.log("yeah")
 //         setSession(response);
 //         yield put(loginUserSuccess(response));
 //     } catch (error) {
 //         let message;
 //         switch (error.status) {
-//             case 500: message = 'Internal Server Error'; break;
-//             case 401: message = 'Invalid credentials'; break;
+//             case 404: message = 'Internal Server Error'; break;
+//             case 412: message = 'Invalid credentials'; break;
 //             default: message = error;
 //         }
 //         yield put(loginUserFailed(message));
