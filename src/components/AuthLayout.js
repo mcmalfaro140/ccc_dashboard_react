@@ -40,30 +40,8 @@ const RightSidebarContent = (props) => {
 
 
 class AuthLayout extends Component {
-
     constructor(props) {
         super(props);
-
-        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
-        this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
-        this.toggleMenu = this.toggleMenu.bind(this);
-        this.readSelection = this.readSelection.bind(this);
-        this.goFullScreen = this.goFullScreen.bind(this);
-        this.handleChangeComplete = this.handleChangeComplete.bind(this);
-        this.changeScreenSize = this.changeScreenSize.bind(this);
-        this.handleExitFull = this.handleExitFull.bind(this);
-        this.toggleMixForm = this.toggleMixForm.bind(this);
-        this.mixUpdate = this.mixUpdate.bind(this);
-        this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
-        this.changeStartDate = this.changeStartDate.bind(this);
-        this.changeEndDate = this.changeEndDate.bind(this);
-        this.toggleSearchModal = this.toggleSearchModal.bind(this);
-
         this.state = {
             mixGraph:{
                 typeOfGraph:"",
@@ -94,7 +72,7 @@ class AuthLayout extends Component {
             isCondensed: false,
             isFullScreen: false,
             modal0pem: false,
-            modalSearch: true,
+            modalSearch: false,
             modalTableOpen: false,
             mixModalOpen: false,
             metricName:"", 
@@ -108,6 +86,25 @@ class AuthLayout extends Component {
             endTime:new Date() //if needed
            // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
         }
+        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
+        this.toggleForm = this.toggleForm.bind(this);
+        this.toggleTableForm = this.toggleTableForm.bind(this);
+        this.toggleMenu = this.toggleMenu.bind(this);
+        this.readSelection = this.readSelection.bind(this);
+        this.goFullScreen = this.goFullScreen.bind(this);
+        this.handleChangeComplete = this.handleChangeComplete.bind(this);
+        this.changeScreenSize = this.changeScreenSize.bind(this);
+        this.handleExitFull = this.handleExitFull.bind(this);
+        this.toggleMixForm = this.toggleMixForm.bind(this);
+        // this.mixUpdate = this.mixUpdate.bind(this);
+        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
+        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
+        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
+        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
+        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeStartDate = this.changeStartDate.bind(this);
+        this.changeEndDate = this.changeEndDate.bind(this);
+        this.toggleSearchModal = this.toggleSearchModal.bind(this);
     }
 
     changeStartDate = startTime =>{
