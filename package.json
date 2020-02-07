@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@lls/react-light-calendar": "^2.0.7",
     "availity-reactstrap-validation": "^2.5.1",
     "aws-sdk": "^2.524.0",
     "bootstrap": "^4.3.1",
