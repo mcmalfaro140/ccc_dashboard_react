@@ -59,7 +59,6 @@ zoom: {
 }
   
 class BarGraph extends Component {
-    intervalID;
     constructor(){
         super();
       //  this.myRef = React.createRef();
@@ -74,9 +73,81 @@ class BarGraph extends Component {
 
           };
         this.showOptions = this.showOptions.bind(this);
+        this.onRefresh = this.onRefresh.bind(this);
       
     }
+    onRefresh(chart){
+      var typeOfD = this.props.graphSettings.typeOfDimension;
+      var idVal = this.props.graphSettings.idValue;
+      if(typeOfD == null){typeOfD = "InstanceId"}
+      if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
+      var RTParams = {
+        EndTime: new Date(), /* required */
+        MetricDataQueries: [ /* required */
+          {
+            Id: 'realTimeData', /* required */
+            MetricStat: {
+              Metric: { /* required */
+                Dimensions: [
+                  {
+                    Name: typeOfD, /* required */
+                    Value: idVal /* required */
+                  },
+                  /* more items */
+                ],
+                MetricName: this.props.graphSettings.metricName,
+                Namespace: this.props.graphSettings.nameSpace
+              },
+              Period: this.props.graphSettings.period, /* required */
+              Stat: 'Average', /* required */
+            },
+           // Period: this.props.graphSettings.period,
+           // ReturnData: true 
+          },
+          /* more items */
+        ],
+        StartTime:  this.props.graphSettings.startTime, /* required */
+        ScanBy: 'TimestampDescending'
+       // MaxDatapoints: 2,
+      }
       
+        chart.data.datasets.forEach(function(dataset) {
+         let cloudwatch = new AWS.CloudWatch();
+         let newData;
+         let temp;
+         cloudwatch.getMetricData(RTParams, function(err, data) {
+           if (err) console.log(err, err.stack); // an error occurred
+           else  {   
+             console.log(data);  
+             temp = data.MetricDataResults[0].Values[0];
+             if(newData !== temp)  {
+               newData = temp;
+              
+             }
+             console.log(newData)
+               }       // successful response
+               dataset.data.push({                               
+                 x: new Date(),
+                 y: newData
+             });
+             console.log(dataset.data)
+         });                             
+        });
+        
+        if(this.state.unit === "Percent" || this.props.graphSettings.metricName==="CPUUtilization"){
+          chart.options.scales.yAxes[0].ticks = {
+            // stepSize: 0.2,
+            // fontSize: 10,
+             min: 0,
+             max: 1,// Your absolute max value
+            callback: function (value) {
+              return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+            },
+          }
+         
+          
+        }
+    }
       getgraph = () =>{
         // if(this.props.graphSettings.realTime === true){
         //   // this.setState({data:[]})
@@ -183,7 +254,9 @@ class BarGraph extends Component {
         }.bind(this));
       }
       componentDidMount() {
-        this.getgraph();
+        if(this.props.graphSettings.realTime === false){
+          this.getgraph();
+     }
         if(this.props.graphSettings.colorSelected != null){
           this.setState({ graphColor : this.props.graphSettings.colorSelected })
         }
@@ -271,8 +344,53 @@ class BarGraph extends Component {
           }
         ]
       }
-    
-     //console.log(this.state.data.length + " and " + this.state.data[0])
+
+      let graph;
+      if(this.props.graphSettings.realTime === true){
+       graph = <Bar
+       data={{
+           datasets: [{
+               label: this.props.graphSettings.metricName,
+               fill:true,
+               strokeColor: "rgba(220,220,220,0.8)",
+               backgroundColor:"rgba(220,220,220,0.5)",
+               borderWidth: 1
+              // borderDash: [8, 4]
+               }
+           ]
+       }}
+       options={{
+           scales: {
+               xAxes: [{
+                   type: 'realtime',
+                   realtime: {
+                       duration: 120000,    // this would be the length of the graph in this case it display 15 mins
+                       refresh: 10000,      // onRefresh callback will be called every 1000 ms *** 
+                       delay: 1000,        // delay of 1000 ms, so upcoming values are known before plotting a line
+                       pause: false,       // chart is not paused
+                       ttl: undefined,     // data will be automatically deleted as it disappears off the chart
+
+                       // a callback to update datasets
+                       //move callback function outside
+                       onRefresh: this.onRefresh,
+                      
+                   }
+               }],
+               yAxes:[{
+                 ticks:{
+                  min: 0,
+                  max: 1,// Your absolute max value
+                }
+              }
+               ],           
+           },
+         
+       }}/>
+      }
+      else{
+       graph = <Bar height = "100px" width = "100px" data={barGraphData} options = {optionToSkip}
+       />
+      }
       
         return (
             
@@ -292,8 +410,7 @@ class BarGraph extends Component {
                 </div>
               </div>
              
-              <Bar height = "100px" width = "100px" data={barGraphData} options = {optionToSkip}
-              />
+              {graph}
            
             </div>
             

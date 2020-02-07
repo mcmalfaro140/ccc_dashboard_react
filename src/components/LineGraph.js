@@ -5,6 +5,7 @@ import myKeys from '../keys.json';
 import '../assets/react-grid/styles.css'
 import 'chartjs-plugin-zoom';
 import 'chartjs-plugin-streaming';
+import { Link } from 'react-router-dom';
 
 
 /**
@@ -269,8 +270,8 @@ class LineGraph extends Component {
             chart.options.scales.yAxes[0].ticks = {
               // stepSize: 0.2,
               // fontSize: 10,
-              // min: 0,
-              // max: 1,// Your absolute max value
+               min: 0,
+               max: 1,// Your absolute max value
               callback: function (value) {
                 return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
               },
@@ -383,8 +384,8 @@ class LineGraph extends Component {
            datasets: [{
                label: this.props.graphSettings.metricName,
                borderColor: 'rgb(54, 162, 235)',
-               //backgroundColor: 'rgba(54, 162, 235, 0.5)',
-               lineTension: 0,
+               backgroundColor: 'rgba(54, 162, 235, 0.5)',
+               
               // borderDash: [8, 4]
                }
            ]
@@ -411,8 +412,12 @@ class LineGraph extends Component {
                       
                    }
                }],
-               yAxes:[
-
+               yAxes:[{
+                 ticks:{
+                  min: 0,
+                  max: 1,// Your absolute max value
+                }
+              }
                ],           
            },
           //  plugins: {
@@ -440,7 +445,9 @@ class LineGraph extends Component {
                   { this.state.showOptions? (
                     <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
                       <a href="" class="dropdown-item">Modify</a>
-                      <a href="" class="dropdown-item">Delete</a>
+                      <Link to={{pathname:'/deleteGraph',  graphInfor: this.props.graphSettings}} >
+                       Delete
+                      </Link>
                     </div>
                   ): null }
                 </div>
