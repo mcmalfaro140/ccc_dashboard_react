@@ -20,15 +20,9 @@ const form = React.lazy(() => import('./components/graphForm.js'));
 const lineGraph = React.lazy(() => import('./components/LineGraph.js'));
 const barGraph = React.lazy(() => import('./components/BarGraph.js'));
 const TableForm = React.lazy(() => import('./components/TableForm.js'));
-<<<<<<< HEAD
-const Pie = React.lazy(() => import('./components/Pie.js'));
-
-
-=======
 const historicForm = React.lazy(() => import('./components/HistoricGraphForm.js'));
 const historicLineGraph = React.lazy(() => import('./components/HistoricLineGraph.js'));
 const SearchResult = React.lazy(() => import('./pages/SearchResult'))
->>>>>>> 6c5dfbfffc8cefe6f2ad0e112d35399909894ba1
 // handle auth and authorization
 
 const PrivateRoute = ({ component: Component, roles, ...rest }) => (
@@ -64,7 +58,7 @@ const routes = [
    { path: '/barGraph', name: 'BarGraph', component: barGraph, route: Route },
    { path: '/TableForm', name: 'TableForm', component: TableForm, route: Route },
    { path: '/Tables', name: 'Tables', component: Tables, route: Route },
-   { path: '/Pie', name: 'Pie', component: Pie, route: Route },
+   
 
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },

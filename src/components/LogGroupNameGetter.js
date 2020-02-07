@@ -2,6 +2,8 @@ import React from 'react';
 import AWS from 'aws-sdk';
 import mykey from '../keys.json';
 import LogTableForm from './LogTableForm';
+import TableFormPop from './TableFormPop';
+
 
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});

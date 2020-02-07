@@ -60,6 +60,8 @@ class DefaultDashboard extends Component {
                     objectType:"table", // options: graph or table
                     tableSettings:{
                         master:"true",
+                        chartName:"Master Table"
+                       
                     },
                     coordinates: {
                         x: 0,
@@ -129,10 +131,15 @@ class DefaultDashboard extends Component {
 
     componentWillReceiveProps(nextProps){
         let temp = this.state.userDashboard
+
         if(nextProps.location.state){
             //only activate adds to the array if the props are the specify ones
+
+
             if(nextProps.location.state.newMasterTable){
-                let newName = nextProps.location.state.newMasterTable.chartName;
+                console.log(nextProps.location.state.newMasterTable.tableSettings.chartName)
+
+                let newName = nextProps.location.state.newMasterTable.tableSettings.chartName;
                 let preName = this.state.newUpcomingPropsName;
                 if(newName !== preName){
                     temp.push(nextProps.location.state.newMasterTable);
@@ -195,12 +202,13 @@ class DefaultDashboard extends Component {
             // console.log(this.props.isCondensed)
            //This part will render the table
             if(item.objectType === "table"){
+                console.log(item.tableSettings.chartName)
                 return (
                     //min for table w:4 h:11
                 <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
                     <div style={{width:'100%'}}>
-                        <h2 className="float-left" >Logs Table</h2>
-                        <div style={{paddingTop:'23px'}} className="dropdown float-right show" onClick={this.showOptions}>
+                <h2 className="float-left" >{item.tableSettings.chartName}</h2>
+                        <div style={{paddingTop:'25px'}} className="dropdown float-right show" onClick={this.showOptions}>
                             <a className="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="true">
                             <i style={{fontSize:'130%'}}className="mdi mdi-dots-vertical"></i>
                             </a>
@@ -213,7 +221,7 @@ class DefaultDashboard extends Component {
                         </div>
                     </div>
                     <CardBody>
-                        <Table/>
+                            <Table {...item}/>
                     </CardBody>
                                         
                 </Card>);

@@ -113,8 +113,9 @@ class AuthLayout extends Component {
     //toggle form
     toggleForm = () => {
         this.setState({modalOpen : !this.state.modalOpen})
-        // this.setState({whichNamespace : ""})
-        this.setState({namespaceNotSelected : true})
+        
+        //makes the table full width instead of a condensed table
+        this.setState({isCondesed : !this.state.isCondensed})
 
 };
     toggleMixForm = () =>{
@@ -321,7 +322,7 @@ class AuthLayout extends Component {
             <div className="app">
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
-                        <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
+                        <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu}  isCondensed={this.state.isCondensed} toggleForm={this.toggleForm}/>
                         <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                     </Suspense>
                     
@@ -336,8 +337,8 @@ class AuthLayout extends Component {
                                 </div>
                             </div>
 
-                        <Modal isOpen={this.state.modalTableOpen} toggle={this.toggleTableForm} >
-                            <TableFormPop/>
+                        <Modal isOpen={this.state.modalTableOpen} >
+                            <TableFormPop toggle={this.toggleTableForm}/>
                         </Modal>
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>

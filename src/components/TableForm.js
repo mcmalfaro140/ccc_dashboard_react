@@ -97,30 +97,7 @@ class TableForm extends React.Component {
     return (
 
       <div>
-      <Card style={{ width: '18rem', height:'30rem' }}>
-        <Card.Body>
-          <Card.Title style = {{textAlign:"center"}}>Log Form</Card.Title>
-          <Card.Subtitle className="mb-2 text-strong">Choose Log Group Name</Card.Subtitle>
-          
-          <Card.Text>
-          <Form.Group controlId="exampleForm.ControlSelect2" value="submit">
-                <Form.Control as="select" multiple>
-                  <option>App1</option>
-                  <option>LogGroup2</option>
-                  <option>LogGroup3</option>
-                  <option>LogGroup4</option>
-                  <option>LogGroup5</option>
-                </Form.Control>
-          </Form.Group>
-          
-          </Card.Text>
-          
-          <Card.Link pathName={'/dashboard'} value= "submit" onChange={this.handleChange}>Card Link</Card.Link>
-          <Card.Link href="#">Another Link</Card.Link>
-       
-        </Card.Body>
-      </Card>
-
+      
         <LogGroupNameGetter params={this.state.params}
           callBackFromParent={this.LogGroupNameCallback}
         />
