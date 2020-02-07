@@ -60,6 +60,86 @@
     display: block;
 }
 
+//no yet optimize for phone
+.table_header{
+    border-top: black solid 3px;
+    border-bottom: black solid 3px;
+}
+
+.row_results{
+    font-size: 125%;
+    :hover{
+        cursor: pointer;
+    }
+}
+
+.col_results{
+    width: 110px;
+}
+.hid_cell{
+    background-color: white
+}
+
+.table_logs_header{
+    > thead {
+        >tr {
+            > th {
+                background-color: #007bff;
+                color: white;
+                font-size: 120%
+            }
+        }
+    }
+}
+
+.time_col{
+    width: 15%;
+}
+
+.table_logs_cell{
+    :hover{
+        cursor: pointer;
+    }
+    > td {
+        > i {
+            display: inline-block;
+            color: red;
+            font-size: 120%;
+            font-weight: 700;
+            transition: all 0.3s linear;
+        }
+    }
+
+}
+
+.down {
+    transform: rotate(90deg);
+}
+
+
+.color{
+    background-color: rgba(230, 230, 230, 0.596);
+}
+
+// .logsBody{
+//     font-size: 110%;
+//     :hover{
+//         cursor: pointer;
+//     }
+//     > tr {
+//         background-color: rgba(240, 240, 240, 0.541);
+//         > td {
+//             > i {
+//                 font-size: 110%;
+//                 color: red;
+//             }
+//         }
+//     }
+// }
+
+
+
+
 @media only screen and (max-width: 768px) {
     .loader{
         width: 30%;
@@ -99,3 +179,12 @@
         width: 100%
     }
 }
+
+@keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(90deg);
+    }
+  }

@@ -12,6 +12,7 @@ import GraphForm from '../components/graphForm';
 import MixGraphForm from '../components/MixGraphForm';
 
 import TableFormPop from '../components/TableFormPop'
+import AdvSearchModal from '../components/searchComp/AdvSearchModal'
 
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
@@ -53,14 +54,15 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.toggleMixForm = this.toggleMixForm.bind(this);
-       // this.mixUpdate = this.mixUpdate.bind(this);
-      //  this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-       // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-     //   this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-     //   this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-     //   this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
-     //   this.changeStartDate = this.changeStartDate.bind(this);
-    //    this.changeEndDate = this.changeEndDate.bind(this);
+        this.mixUpdate = this.mixUpdate.bind(this);
+        this.readMixedSelection1 = this.readMixedSelection1.bind(this);
+        this.readMixedSelection2 = this.readMixedSelection2.bind(this);
+        this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
+        this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
+        this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeStartDate = this.changeStartDate.bind(this);
+        this.changeEndDate = this.changeEndDate.bind(this);
+        this.toggleSearchModal = this.toggleSearchModal.bind(this);
 
         this.state = {
             mixGraph:{
@@ -92,6 +94,7 @@ class AuthLayout extends Component {
             isCondensed: false,
             isFullScreen: false,
             modal0pem: false,
+            modalSearch: true,
             modalTableOpen: false,
             mixModalOpen: false,
             metricName:"", 
@@ -127,6 +130,10 @@ class AuthLayout extends Component {
 
     toggleTableForm = () =>{
         this.setState({modalTableOpen : !this.state.modalTableOpen})
+    }
+
+    toggleSearchModal = () =>{
+        this.setState({modalSearch : !this.state.modalSearch})
     }
 
     signOut(e) {
@@ -235,7 +242,7 @@ class AuthLayout extends Component {
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                     </Suspense>
                     
                     <div className="content-page">
@@ -252,7 +259,11 @@ class AuthLayout extends Component {
                             <TableFormPop/>
                         </Modal>
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
-                            <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>   
+                            <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
+                        </Modal>
+
+                        <Modal isOpen={this.state.modalSearch} toggle={this.toggleSearchModal} >
+                            <AdvSearchModal toggle={this.toggleSearchModal}/>                           
                         </Modal>
 
                         <Modal isOpen={this.state.mixModalOpen} toggle={this.toggleMixForm} >

@@ -30,6 +30,9 @@ class TableFormPop extends Component {
                         </Form.Group>
                     </form>
                 </ModalBody>
+                <ModalFooter>
+                    <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
+                </ModalFooter>
             </div>
         )
     }

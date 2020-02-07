@@ -1,7 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody } from 'reactstrap';
-
+import ReactTable from 'react-table';
 import LineGraph from '../components/LineGraph'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
@@ -56,8 +56,8 @@ class DefaultDashboard extends Component {
                         w: 20,
                         h: 19,
                         minW: 6,
-                        minH: 9,
-                        maxH: 18
+                        // minH: 9,
+                        // maxH: 18
                     }
                 },
                 {
@@ -71,8 +71,8 @@ class DefaultDashboard extends Component {
                         y: 2,
                         w: 20,
                         h: 11,
-                        minW: 4,
-                        minH: 11
+                        // minW: 4,
+                        // minH: 11
                     }
                     
                 },
@@ -96,8 +96,8 @@ class DefaultDashboard extends Component {
                         y: 3,
                         w: 10,
                         h: 10,
-                        minW: 6,
-                        minH: 9
+                        // minW: 6,
+                        // minH: 9
                     }
                 },
                 {
@@ -120,8 +120,8 @@ class DefaultDashboard extends Component {
                         y: 3,
                         w: 10,
                         h: 10,
-                        minW: 6,
-                        minH: 9
+                        // minW: 6,
+                        // minH: 9
                     }
                 },               
             ],

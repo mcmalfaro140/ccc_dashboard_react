@@ -2,10 +2,12 @@ import React from 'react';
 import AWS from 'aws-sdk';
 import mykey from '../keys.json';
 import Loader from 'react-loader-spinner'
-import { Link } from 'react-router-dom';
-import { Button, Card, CardBody } from 'reactstrap';
-import SearchTable from '../components/SearchTable'
-import not_found_img from '../assets/images/notfound.png'
+
+//Import componets
+import LogTableResult from '../components/searchComp/LogTableResult'
+import Fail from '../components/searchComp/Fail'
+import NoFound from '../components/searchComp/NoFound'
+import LogGroupList from '../components/searchComp/LogGroupList'
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
@@ -16,9 +18,11 @@ class SearchResult extends React.Component {
     constructor (props){
         super(props);
         this.state = {
+            id: 0,
             loading: true,
+            showLogTable: false,
             keyword : "",
-            logGroupName : [],
+            logGroupNames : [],
             noResults: false,
             params : {
                 limit : '50'
@@ -28,19 +32,23 @@ class SearchResult extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.getLogGroupName = this.getLogGroupName.bind(this);
         this.searchByLogGroupName = this.searchByLogGroupName.bind(this);
+        this.show = this.show.bind(this)
+        this.setId = this.setId.bind(this)
     }
 
     //Update componets when page is initialize
     componentDidMount() {
+        this.setState({results: [], loading: true, noResults: false})
         this.getLogGroupName();
     }
 
     //will update the components when new keyword is enter
     componentDidUpdate(prevProps) {
+        console.log("search porps update")
         if(this.props.location.state.search_keyword !== prevProps.location.state.search_keyword){
             this.setState({results: [], loading: true, noResults: false})
-            for (var i = 0; i < this.state.logGroupName.length; i++) {
-                this.searchByLogGroupName(this.state.logGroupName[i])
+            for (var i = 0; i < this.state.logGroupNames.length; i++) {
+                this.searchByLogGroupName(this.state.logGroupNames[i])
             }
         }
     } 
@@ -52,6 +60,7 @@ class SearchResult extends React.Component {
 
     //Funtion to get all the log group names from AWS
     getLogGroupName(){
+        console.log("init search")
         cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
             if (err){
                 console.log(err, err.stack); // an error occurred
@@ -59,11 +68,11 @@ class SearchResult extends React.Component {
                 let temp = data.logGroups;
                 for (var i = 0; i < temp.length; i++) {
                     this.setState(prevState => ({
-                        logGroupName : [...prevState.logGroupName, temp[i].logGroupName]
+                        logGroupNames : [...prevState.logGroupNames, temp[i].logGroupName]
                     }));
                 }
                 for (var i = 0; i < temp.length; i++) {
-                    this.searchByLogGroupName(this.state.logGroupName[i]);
+                    this.searchByLogGroupName(this.state.logGroupNames[i]);
                 }
             }
         }.bind(this))
@@ -94,7 +103,6 @@ class SearchResult extends React.Component {
         };
         
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
-            console.log(data)
             if(err){
                 console.log(err, err.stack); // an error occurred
             }else{ 
@@ -125,6 +133,15 @@ class SearchResult extends React.Component {
         }.bind(this));
     }
 
+    show(e){
+        e.preventDefault();
+        this.setState({showLogTable: !this.state.showLogTable})
+    }
+
+    setId(id){
+        this.setState({id: id, showLogTable: !this.state.showLogTable})
+    }
+
     render() {
         let empty_str = true;
         var value = this.props.location.state.search_keyword
@@ -132,18 +149,6 @@ class SearchResult extends React.Component {
             empty_str = false
         }
 
-        const tables = this.state.results.map((item, i) => {
-            return(
-                <Card className="card-box"> 
-                    <div style={{width:'100%'}}>
-                        <h2 className="float-left" >{item.logGroupName}</h2>
-                    </div>
-                    <CardBody>
-                        <SearchTable events={item.events}></SearchTable>
-                    </CardBody>
-                </Card>
-            )
-        })
         return (
             <div>
                 { this.state.loading ? (
@@ -159,36 +164,17 @@ class SearchResult extends React.Component {
                 ): (
                     <div>
                         { empty_str ? (
-                            <div className="errorbox">
-                                <div className="errorTxt">Please enter a keyword to search and try again!!!</div>
-                                <form className="app-search">
-                                    <div className="app-search-box">
-                                        <div className="input-group">
-                                            <input type="text" className="form-control" placeholder="Search..." value={this.state.keyword} onChange={this.handleChange} />
-                                        </div>
-                                        <div className="btnGroup">
-                                            <Link to={{pathname:'/search_results', state: { search_keyword: this.state.keyword}}} >
-                                                <Button className="searchBtn" color="primary" size="lg">Search</Button>
-                                            </Link>
-                                            <Link to={{pathname:'/dashboard'}} >
-                                                <Button className="searchBtn" color="primary" size="lg">Go back</Button>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                            <Fail/>
                         ):(
                             ( this.state.noResults ? 
-                                <div className="notResultDiv">
-                                    <img className="no_found_img" src={not_found_img} alt="Not Results" />
-                                    <h1>OOPS!</h1>
-                                    <h3>No results found for:</h3>
-                                    <h3 className="key">{value}</h3>
-
-                                </div> 
+                                <NoFound value={value}/>
                                 : 
                                 <div>
-                                    {tables}
+                                    {this.state.showLogTable ? 
+                                        <LogTableResult results={this.state.results[this.state.id]} showToggle ={this.show}/>
+                                        : 
+                                        <LogGroupList results={this.state.results} setId={this.setId}/>
+                                    }
                                 </div>
                             )
                         )}
