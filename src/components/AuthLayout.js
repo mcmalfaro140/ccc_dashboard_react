@@ -8,7 +8,11 @@ import profilePic from '../assets/images/users/user-1.jpg';
 import { SketchPicker } from 'react-color'
 import DateTimePicker from 'react-datetime-picker';
 import GraphForm from '../components/graphForm';
+
 import MixGraphForm from '../components/MixGraphForm';
+
+import TableFormPop from '../components/TableFormPop'
+
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
@@ -41,6 +45,7 @@ class AuthLayout extends Component {
 
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
+        this.toggleTableForm = this.toggleTableForm.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
         this.readSelection = this.readSelection.bind(this);
         this.goFullScreen = this.goFullScreen.bind(this);
@@ -87,6 +92,7 @@ class AuthLayout extends Component {
             isCondensed: false,
             isFullScreen: false,
             modal0pem: false,
+            modalTableOpen: false,
             mixModalOpen: false,
             metricName:"", 
             nameSpace:"",
@@ -118,6 +124,10 @@ class AuthLayout extends Component {
     toggleMixForm = () =>{
     this.setState({mixModalOpen : !this.state.mixModalOpen})
 }
+
+    toggleTableForm = () =>{
+        this.setState({modalTableOpen : !this.state.modalTableOpen})
+    }
 
     signOut(e) {
         e.preventDefault();
@@ -225,7 +235,7 @@ class AuthLayout extends Component {
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                     </Suspense>
                     
                     <div className="content-page">
@@ -238,6 +248,9 @@ class AuthLayout extends Component {
                                     </Container>
                                 </div>
                             </div>
+                        <Modal isOpen={this.state.modalTableOpen} toggle={this.toggleTableForm} >
+                            <TableFormPop/>
+                        </Modal>
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>   
                         </Modal>
