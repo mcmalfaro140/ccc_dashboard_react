@@ -23,6 +23,7 @@ const TableForm = React.lazy(() => import('./components/TableForm.js'));
 const historicForm = React.lazy(() => import('./components/HistoricGraphForm.js'));
 const historicLineGraph = React.lazy(() => import('./components/HistoricLineGraph.js'));
 const SearchResult = React.lazy(() => import('./pages/SearchResult'))
+const DeleteGraph = React.lazy(()=>import('./components/DeleteGraph'));
 // handle auth and authorization
 
 const PrivateRoute = ({ component: Component, roles, ...rest }) => (
@@ -58,8 +59,14 @@ const routes = [
    { path: '/barGraph', name: 'BarGraph', component: barGraph, route: Route },
    { path: '/TableForm', name: 'TableForm', component: TableForm, route: Route },
    { path: '/Tables', name: 'Tables', component: Tables, route: Route },
+<<<<<<< HEAD
    
 
+=======
+   { path: '/historicForm', name: 'HistoricGraphForm', component: historicForm, route: Route },
+   { path: '/historicLineGraph', name: 'HistoricLineGraph', component: historicLineGraph, route: Route },
+   {path:"/deleteGraph", name : 'DeleteGraph', component:DeleteGraph,route:Route},
+>>>>>>> 7592b81d55261d1d6d313cd04831e716966ced67
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },
   {

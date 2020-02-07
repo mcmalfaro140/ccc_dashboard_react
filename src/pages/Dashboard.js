@@ -16,6 +16,9 @@ import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 
 
+import TestLine from '../components/TestLine'
+
+
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
@@ -34,6 +37,7 @@ class DefaultDashboard extends Component {
             userDashboard: [
                 {
                     objectType:"graph", // options: graph or table
+                    id:0,
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
                             realTime:true, //options: true or false
@@ -41,7 +45,7 @@ class DefaultDashboard extends Component {
                             nameSpace:"AWS/EC2",
                             chartName:"Test",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"30000",
+                            refreshRate:"2000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
@@ -58,6 +62,7 @@ class DefaultDashboard extends Component {
                 },
                 {
                     objectType:"table", // options: graph or table
+                    id:1,
                     tableSettings:{
                         master:"true",
                         chartName:"Master Table"
@@ -75,14 +80,15 @@ class DefaultDashboard extends Component {
                 },
                 {
                     objectType:"graph", // options: graph or table
+                    id:2,
                     graphSettings: {
                             type:"bar", //options: line, pie, or bar
-                            realTime:true, //options: true or false
+                            realTime:false, //options: true or false
                             metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"30000",
+                            refreshRate:"2000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
@@ -98,6 +104,7 @@ class DefaultDashboard extends Component {
                 },
                 {
                     objectType:"graph", // options: graph or table
+                    id:3,
                     graphSettings: {
                             type:"pie", //options: line, pie, or bar
                             realTime:"false", //options: true or false
