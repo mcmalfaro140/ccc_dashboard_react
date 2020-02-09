@@ -225,8 +225,6 @@ class AuthLayout extends Component {
   
 
     render() {
-        // gets the child view which we would like to render
-        // const children = this.props.children || null;
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
               screenSize: this.state.screenWidth,
@@ -241,7 +239,6 @@ class AuthLayout extends Component {
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
                         <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                     </Suspense>
-                    
                     <div className="content-page">
                             <div className="content">
                                 <div>
@@ -267,13 +264,7 @@ class AuthLayout extends Component {
                             <MixGraphForm whatever = {this.props.location.typeOfGraph} toggleMixForm = {this.toggleMixForm}/>                            
                         </Modal>
                     </div>
-                   
-                    
-
-
-                    </div>
-           
-
+                </div>
                 <RightSidebar title={"Settings"}>
                     <RightSidebarContent user={this.props.user} />
                 </RightSidebar>
@@ -288,11 +279,4 @@ const mapStateToProps = (state) => {
         user: state.Auth.user
     }
 }
-
-
-// var ec2Form = React.createClass({
-//     render:function(){
-//         return(<h3>hey</h3>)
-//     }
-// })
 export default connect(mapStateToProps, null)(AuthLayout);

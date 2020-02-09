@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import ReactLightCalendar from '@lls/react-light-calendar'
 import '@lls/react-light-calendar/dist/index.css'
-import { FormLabel, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 
 class AdvSearchModal extends React.Component {

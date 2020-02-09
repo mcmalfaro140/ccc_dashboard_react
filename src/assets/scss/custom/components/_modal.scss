@@ -58,6 +58,21 @@
     display: none;
 }
 
+.calendar_modal{
+    >div{
+        width: 350px;
+        height: 550px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        >div{
+            width: 290px;
+            justify-content: center;
+        }
+    }
+    
+}
+
 // Custom animation modal
 .modal-demo {
     width: 600px !important;

@@ -8,6 +8,7 @@ import LogTableResult from '../components/searchComp/LogTableResult'
 import Fail from '../components/searchComp/Fail'
 import NoFound from '../components/searchComp/NoFound'
 import LogGroupList from '../components/searchComp/LogGroupList'
+import SearchFilterBar from '../components/searchComp/SearchFilterBar'
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
@@ -151,6 +152,7 @@ class SearchResult extends React.Component {
 
         return (
             <div>
+                <SearchFilterBar/>
                 { this.state.loading ? (
                     <div class="loader">
                         <Loader

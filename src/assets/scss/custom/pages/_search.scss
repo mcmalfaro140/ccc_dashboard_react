@@ -121,24 +121,52 @@
     background-color: rgba(230, 230, 230, 0.596);
 }
 
-// .logsBody{
-//     font-size: 110%;
-//     :hover{
-//         cursor: pointer;
-//     }
-//     > tr {
-//         background-color: rgba(240, 240, 240, 0.541);
-//         > td {
-//             > i {
-//                 font-size: 110%;
-//                 color: red;
-//             }
-//         }
-//     }
-// }
+//Search Filter Bar
 
+.search_filter_bar{
+    margin-top: 1%;
+    > div:nth-child(1){
+        >div{
+            height: 120px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    }
+    > div:nth-child(2){
+        >div{
+            height: 120px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            > div{
+                >div {
+                    >div{
+                        margin: 1%;
+                        text-align: center;
+                        color: rgba(56, 56, 56, 0.596);
+                        cursor: pointer;
+                    }
+                    >div:nth-child(1){
+                        color: red;
+                        border-block-end: red solid 1px;
+                    }
+                    >div:nth-child(6){
+                        >div {
+                            >button {
+                                background-color: #ffffff00;
+                                color: rgba(56, 56, 56, 0.596);
 
+                            }
+                        }
+                    }
+                }
 
+            }
+        }
+    }
+
+}
+
+.calendar_modal{
+    background-color: #ffffff00;
+}
 
 @media only screen and (max-width: 768px) {
     .loader{
