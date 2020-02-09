@@ -13,30 +13,15 @@ class SearchTable extends React.Component {
                 message:""
             },
             columns : [
-                // {
-                //     Header: 'Log Stream Name',
-                //     accessor:'logStreamName',
-                //     style:{
-                //       textalign:"left"
-                //     },
-                //     width: 50,
-                //     maxwidth:50,
-                //     minwidth:50
-                // },
                 {
-                    Header: 'Time Stamp',
-                    accessor:'timeStamp',
+                    Header: 'Log Group Names',
+                    accessor:'logGroupName',
                     style:{
-                        textalign:"left"
+                      textalign:"left"
                     },
-                    width: 220,
-                    maxwidth:220,
-                    minwidth:220
-                },
-                {
-                    Header:'Message',
-                    accessor:'message'
-              
+                    // width: 50,
+                    // maxwidth:50,
+                    // minwidth:50
                 }
             ]
 
@@ -48,20 +33,20 @@ class SearchTable extends React.Component {
         let tableData = []
         var new_data = Object.create(this.state.tabledata);
       
-        for (var i = 0; i < this.props.events.length; i++) {
-            var t = new Date(parseInt(this.props.events[i].timestamp));
-            let time = t.toGMTString();
-            console.log(time)
-            new_data.logStreamName = this.props.events[i].logStreamName;
-            new_data.timeStamp= time;
-            new_data.message = this.props.events[i].message;
+        // for (var i = 0; i < this.props.events.length; i++) {
+        //     var t = new Date(parseInt(this.props.events[i].timestamp));
+        //     let time = t.toGMTString();
+        //     // console.log(time)
+        //     new_data.logStreamName = this.props.events[i].logStreamName;
+        //     new_data.timeStamp= time;
+        //     new_data.message = this.props.events[i].message;
         
-            //push the object to the array
-            tableData.push(new_data);
+        //     //push the object to the array
+        //     tableData.push(new_data);
         
-            //new object instantiation
-            new_data = Object.create(this.state.tabledata);
-        }
+        //     //new object instantiation
+        //     new_data = Object.create(this.state.tabledata);
+        // }
 
         return tableData;
     }

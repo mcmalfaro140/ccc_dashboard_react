@@ -25,10 +25,14 @@ class TableFormPop extends Component {
                     Please provide all the inputs to create a new Table.
                     <form>
                         <Form.Group>
+                            <br/>
                             <Form.Label>Choose the log group/s: </Form.Label>
                         </Form.Group>
                     </form>
                 </ModalBody>
+                <ModalFooter>
+                    <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
+                </ModalFooter>
             </div>
         )
     }
