@@ -13,7 +13,7 @@ import MixGraphForm from '../components/MixGraphForm';
 import LineGraph from '../components/LineGraph'
 
 import TableFormPop from '../components/TableFormPop'
-
+import AdvSearchModal from '../components/searchComp/AdvSearchModal'
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
@@ -40,7 +40,6 @@ const RightSidebarContent = (props) => {
 
 
 class AuthLayout extends Component {
-
     constructor(props) {
         super(props);
 
@@ -54,14 +53,15 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.toggleMixForm = this.toggleMixForm.bind(this);
-       // this.mixUpdate = this.mixUpdate.bind(this);
-      //  this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-       // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-     //   this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-     //   this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-     //   this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
-     //   this.changeStartDate = this.changeStartDate.bind(this);
-    //    this.changeEndDate = this.changeEndDate.bind(this);
+        // this.mixUpdate = this.mixUpdate.bind(this);
+        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
+        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
+        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
+        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
+        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeStartDate = this.changeStartDate.bind(this);
+        this.changeEndDate = this.changeEndDate.bind(this);
+        this.toggleSearchModal = this.toggleSearchModal.bind(this);
 
         this.state = {
             mixGraph:{
@@ -93,6 +93,7 @@ class AuthLayout extends Component {
             isCondensed: false,
             isFullScreen: false,
             modal0pem: false,
+            modalSearch: false,
             modalTableOpen: false,
             mixModalOpen: false,
             metricName:"", 
@@ -106,6 +107,25 @@ class AuthLayout extends Component {
             endTime:new Date() //if needed
            // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
         }
+        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
+        this.toggleForm = this.toggleForm.bind(this);
+        this.toggleTableForm = this.toggleTableForm.bind(this);
+        this.toggleMenu = this.toggleMenu.bind(this);
+        this.readSelection = this.readSelection.bind(this);
+        this.goFullScreen = this.goFullScreen.bind(this);
+        this.handleChangeComplete = this.handleChangeComplete.bind(this);
+        this.changeScreenSize = this.changeScreenSize.bind(this);
+        this.handleExitFull = this.handleExitFull.bind(this);
+        this.toggleMixForm = this.toggleMixForm.bind(this);
+        // this.mixUpdate = this.mixUpdate.bind(this);
+        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
+        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
+        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
+        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
+        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeStartDate = this.changeStartDate.bind(this);
+        this.changeEndDate = this.changeEndDate.bind(this);
+        this.toggleSearchModal = this.toggleSearchModal.bind(this);
     }
 
     changeStartDate = startTime =>{
@@ -128,6 +148,10 @@ class AuthLayout extends Component {
 
     toggleTableForm = () =>{
         this.setState({modalTableOpen : !this.state.modalTableOpen})
+    }
+
+    toggleSearchModal = () =>{
+        this.setState({modalSearch : !this.state.modalSearch})
     }
 
     signOut(e) {
@@ -222,8 +246,6 @@ class AuthLayout extends Component {
   
 
     render() {
-        // gets the child view which we would like to render
-        // const children = this.props.children || null;
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
               screenSize: this.state.screenWidth,
@@ -236,10 +258,9 @@ class AuthLayout extends Component {
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
 
                     </Suspense>
-                    
                     <div className="content-page">
                             <div className="content">
                                 <div>
@@ -254,20 +275,18 @@ class AuthLayout extends Component {
                             <TableFormPop/>
                         </Modal>
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
-                            <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>   
+                            <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
+                        </Modal>
+
+                        <Modal isOpen={this.state.modalSearch} toggle={this.toggleSearchModal} >
+                            <AdvSearchModal toggle={this.toggleSearchModal}/>                           
                         </Modal>
 
                         <Modal isOpen={this.state.mixModalOpen} toggle={this.toggleMixForm} >
                             <MixGraphForm whatever = {this.props.location.typeOfGraph} toggleMixForm = {this.toggleMixForm}/>                            
                         </Modal>
                     </div>
-                   
-                    
-
-
-                    </div>
-           
-
+                </div>
                 <RightSidebar title={"Settings"}>
                     <RightSidebarContent user={this.props.user} />
                 </RightSidebar>
@@ -282,11 +301,4 @@ const mapStateToProps = (state) => {
         user: state.Auth.user
     }
 }
-
-
-// var ec2Form = React.createClass({
-//     render:function(){
-//         return(<h3>hey</h3>)
-//     }
-// })
 export default connect(mapStateToProps, null)(AuthLayout);
