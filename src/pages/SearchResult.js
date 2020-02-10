@@ -82,6 +82,7 @@ class SearchResult extends React.Component {
     //Funtion to search on a specific log group name base on the keyword input by the user
     searchByLogGroupName(logName){
         let key = this.props.location.state.search_keyword
+        let range = this.props.location.state.range;
         let keySplit = key.split(" ");
         let arrayKeyWords = [];
         keySplit.forEach(element => {
@@ -97,11 +98,21 @@ class SearchResult extends React.Component {
             search_pattern += element + " "
         });
 
-        var params = {
-            logGroupName: logName, /* required */
-            filterPattern: search_pattern /*keyword pass by the user */
-            // limit: 1000, 
-        };
+        if(range !== "all"){
+            var params = {
+                logGroupName: logName, /* required */
+                endTime: this.location.state.
+                filterPattern: search_pattern /*keyword pass by the user */
+                // limit: 1000, 
+            };
+        }else{
+            var params = {
+                logGroupName: logName, /* required */
+                filterPattern: search_pattern /*keyword pass by the user */
+                // limit: 1000, 
+            };
+        }
+        
         
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
@@ -144,6 +155,7 @@ class SearchResult extends React.Component {
     }
 
     render() {
+        console.log(this.props)
         let empty_str = true;
         var value = this.props.location.state.search_keyword
         if(value.length > 0){
