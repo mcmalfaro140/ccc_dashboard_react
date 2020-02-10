@@ -9,6 +9,7 @@ import { SketchPicker } from 'react-color'
 import DateTimePicker from 'react-datetime-picker';
 import GraphForm from '../components/graphForm';
 import MixGraphForm from '../components/MixGraphForm';
+import LineGraph from '../components/LineGraph'
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
@@ -226,6 +227,8 @@ class AuthLayout extends Component {
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
                         <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        {/* <LineGraph toggleForm={this.toggleForm}></LineGraph> */}
+                   
                     </Suspense>
                     
                     <div className="content-page">

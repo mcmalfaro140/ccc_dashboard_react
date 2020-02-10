@@ -8,6 +8,7 @@ import 'chartjs-plugin-streaming';
 import { Link } from 'react-router-dom';
 
 
+
 /**
  * Renders the preloader
  */
@@ -182,27 +183,10 @@ class LineGraph extends Component {
           //     }));
           //   }
           // }
-                 
-
-              
+                         
                }
-
-              // console.log(this.state.label + " hey i m label")
-              
-           
-            
-            
-           
-           
-            
-    
-         
-             
           };     
-         
-          // console.log(this.state.data)
-          // console.log(this.state.label)  
-          // this.setState({prevValues : this.state.holder})
+
           console.log(this.state.unit + " unit ");
          
         }.bind(this));
@@ -210,6 +194,7 @@ class LineGraph extends Component {
       }
 
       onRefresh(chart){
+        console.log(this.props.id + "... " + this.props.objectType);
         var typeOfD = this.props.graphSettings.typeOfDimension;
         var idVal = this.props.graphSettings.idValue;
         if(typeOfD == null){typeOfD = "InstanceId"}
@@ -280,6 +265,7 @@ class LineGraph extends Component {
             
           }
       }
+      
       componentDidMount() {
         if(this.props.graphSettings.realTime === false){
              this.getgraph();
@@ -290,6 +276,13 @@ class LineGraph extends Component {
         this.setState({ prevValues: this.state.holder}) // set values at the begining
         
       }
+      sendDeletionData = () => {
+        this.props.parentCallback(this.props.id);
+   }
+      sendModifyData = () => {
+        this.props.callback(this.props.id);
+      }
+    
 
       showOptions(e){
         e.preventDefault();
@@ -298,7 +291,7 @@ class LineGraph extends Component {
 
     
     render() {
-    
+    console.log(this.props);
      
       if(this.props.graphSettings.metricName!=="CPUUtilization"){
         this.optionToSkip =  {  
@@ -333,33 +326,21 @@ class LineGraph extends Component {
           }], 
       },
       pan: {
-        // Boolean to enable panning
         enabled: true,
-      
-        // Panning directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow panning in the y direction
         mode: 'x',
        
       },
       
-      // Container for zoom options
       zoom: {
         // Boolean to enable zooming
         enabled: true,
-      
-        // Zooming directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow zooming in the y direction
         mode: 'x',
       
       }
 
     }
-      
-      }
-      
-      
-     
-      var Color = require('color');
+  }
+      let Color = require('color');
        const lineGraphData = {
         labels: this.state.label,
         datasets: [
@@ -375,8 +356,8 @@ class LineGraph extends Component {
           }
         ]
       }
-   
-     
+    
+ 
       let graph;
       if(this.props.graphSettings.realTime === true){
        graph = <Line
@@ -415,23 +396,20 @@ class LineGraph extends Component {
                yAxes:[{
                  ticks:{
                   min: 0,
-                  max: 1,// Your absolute max value
+                
                 }
               }
                ],           
            },
-          //  plugins: {
-          //      streaming: {            // per-chart option
-          //          frameRate: 5       // chart is drawn 30 times every second
-          //      }
-          //  }
+        
        }}/>
       }
       else{
        graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
       }
-      //console.log(this.state.graphColor+"the color");
-     //console.log(this.state.data.length + " and " + this.state.data[0])
+    
+    
+      
    
         return (
             
@@ -444,8 +422,10 @@ class LineGraph extends Component {
                   </a>
                   { this.state.showOptions? (
                     <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                      <a href="" class="dropdown-item">Modify</a>
-                      <Link to={{pathname:'/deleteGraph',  graphInfor: this.props.graphSettings}} >
+                      <Link to={{typeOfGraph : 'line' ,pathname:'/dashboard'}} onClick = {this.sendModifyData}>
+                       Modify
+                      </Link >
+                      <Link to={{pathname:'/dashboard'}} onClick = {this.sendDeletionData} >
                        Delete
                       </Link>
                     </div>

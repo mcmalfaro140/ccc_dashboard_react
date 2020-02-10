@@ -215,17 +215,9 @@ class MixGraph extends Component {
         this.setState({ showOptions: !this.state.showOptions});
       }
 
-    //   showOptions(e){
-    //     e.preventDefault();
-    //     this.setState({ showOptions: !this.state.showOptions});
-    //   }
-
+    
     render() {
       
-       
-     
-      
-       //console.log(this.props.graphSettings.colorSelected + "hey")
 
        const data = {
         labels: this.state.label,
