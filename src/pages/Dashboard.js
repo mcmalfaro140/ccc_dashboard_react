@@ -230,11 +230,18 @@ class DefaultDashboard extends Component {
 
     //Gets call when the user resize the dashboard. Saves the new coordinates
     recordCoordinateChange(newLayout){
+        console.log(newLayout);
         if(this.props.screenSize > 1200){ //will only save big screen dashboard not mobile or table
             let temp = this.state.userDashboard
+            console.log(temp)
             let updatedIndex = [];
+            let chart;
             newLayout.forEach((element, i) => {
-                let chart = temp[parseInt(element.i)];
+                // let chart = temp[parseInt(element.i)];
+                temp.some((a) => {
+                    chart = a;
+                    return a.id === parseInt(element.i)
+                })
                 chart.coordinates.y = element.y
                 chart.coordinates.x = element.x
                 updatedIndex.push(chart)
