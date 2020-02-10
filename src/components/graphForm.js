@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Row, Col, CardBody } from 'reactstrap';
 import { SketchPicker } from 'react-color'
-import DateTimePicker from 'react-datetime-picker';
 import Switch from "react-switch";
 import '../assets/react-grid/styles.css'
 import ReactLightCalendar from '@lls/react-light-calendar'
@@ -20,7 +19,6 @@ import '@lls/react-light-calendar/dist/index.css' // Default Style
  */
 
  var value = [];
- var str= "";
  var currentDate = new Date();
 class graphForm extends Component {
 
@@ -141,33 +139,33 @@ class graphForm extends Component {
 
 
    
-    submit(e){
+    // submit(e){
   
       
-        e.preventDefault();
+    //     e.preventDefault();
        
-        this.props.history.push({
-           // pathname: str,
-            pathname: "/Dashboard",
-            state: {
-                newGraph : this.state.newGraph,
-                // metricName: this.state.metricName,
-                // nameSpace : this.state.nameSpace,
-                // chartName : this.state.chartName,
-                // // accessKeyId : this.state.accessKeyId,
-                // // secretAccessKey : this.state.secretAccessKey,
-                // instanceId : this.state.instanceId,
-                // //region : this.state.region,
-                // // startTime : this.state.startTime,
-                // // endTime : this.state.endTime
+    //     this.props.history.push({
+    //        // pathname: str,
+    //         pathname: "/Dashboard",
+    //         state: {
+    //             newGraph : this.state.newGraph,
+    //             // metricName: this.state.metricName,
+    //             // nameSpace : this.state.nameSpace,
+    //             // chartName : this.state.chartName,
+    //             // // accessKeyId : this.state.accessKeyId,
+    //             // // secretAccessKey : this.state.secretAccessKey,
+    //             // instanceId : this.state.instanceId,
+    //             // //region : this.state.region,
+    //             // // startTime : this.state.startTime,
+    //             // // endTime : this.state.endTime
 
 
             
-            }  
-        })
+    //         }  
+    //     })
         
        
-    }
+    // }
   
     onDateRangeSelection = (startTime, endTime) => {
         this.setState({startTime , endTime})
@@ -183,11 +181,14 @@ class graphForm extends Component {
             if(start!=null && end!=null){
             let dateDiff = end.getTime() - start.getTime();
             let days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+            if(days<1){
+                this.setState({period:60});
+            }
             if(days === 1){
-                this.setState({period:540});
+                this.setState({period:120});
             }
             if(days >1 && days <5){
-                this.setState({period: 900});
+                this.setState({period: 600});
             }
             if(days > 5 && days < 25){
                 this.setState({period: 1800});
@@ -225,7 +226,6 @@ class graphForm extends Component {
 
     render() {
 
-        
         var timeSelection;
         if(this.state.isRealTime === true){
             timeSelection = 
@@ -411,6 +411,7 @@ class graphForm extends Component {
                                 <Link to={{pathname:'/dashboard', 
                                     state:{ 
                                         newGraph:{
+                                            id:"",
                                             objectType:"graph", // options: graph or table
                                             graphSettings: {
                                                 type:this.props.whatever, //options: line, pie, or bar
@@ -424,7 +425,9 @@ class graphForm extends Component {
                                                 colorSelected:this.state.colorSelected,
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
-                                                endTime:this.state.endTime //if needed
+                                                endTime:this.state.endTime, //if needed
+                                               
+                                                
                                             },
                                             coordinates: {
                                                 x: 0,
@@ -435,9 +438,14 @@ class graphForm extends Component {
                                                 minH: 9
                                             },
                                           
-                                        }
+                                        },
                                     }
-                                }}>
+                                   
+                                }
+                                }
+                                toggleForm ={this.props.toggleForm}
+                            
+                                >
                                     <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
                                 </Link>
                                 <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>

@@ -10,6 +10,7 @@ import DateTimePicker from 'react-datetime-picker';
 import GraphForm from '../components/graphForm';
 
 import MixGraphForm from '../components/MixGraphForm';
+import LineGraph from '../components/LineGraph'
 
 import TableFormPop from '../components/TableFormPop'
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
@@ -258,6 +259,7 @@ class AuthLayout extends Component {
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
                         <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+
                     </Suspense>
                     <div className="content-page">
                             <div className="content">

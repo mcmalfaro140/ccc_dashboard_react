@@ -1,22 +1,27 @@
 import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody } from 'reactstrap';
+
 import ReactTable from 'react-table';
 import LineGraph from '../components/LineGraph'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
+
 import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
+
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 
 
-import TestLine from '../components/TestLine'
+
+import GraphForm from '../components/graphForm';
+
 
 
 //import css needed for reac-grid-layout
@@ -34,6 +39,8 @@ class DefaultDashboard extends Component {
         super(props);
         this.state = {
             user: getLoggedInUser(),
+            isModify : false,
+            stickyFormData :{},
             userDashboard: [
                 {
                     objectType:"graph", // options: graph or table
@@ -41,7 +48,7 @@ class DefaultDashboard extends Component {
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
                             realTime:true, //options: true or false
-                            metricName:"CPUUtilization", 
+                            metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test 1",
                             instanceId:"i-01e27ec0da2c4d296",
@@ -80,8 +87,8 @@ class DefaultDashboard extends Component {
                     id:2,
                     graphSettings: {
                             type:"bar", //options: line, pie, or bar
-                            realTime:false, //options: true or false
-                            metricName:"CPUCreditUsage", 
+                            realTime:true, //options: true or false
+                            metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar 2",
                             instanceId:"i-01e27ec0da2c4d296",
@@ -157,6 +164,27 @@ class DefaultDashboard extends Component {
         this.recordCoordinateChange = this.recordCoordinateChange.bind(this);
     }
 
+    deleteFunction = (childData) => {
+           let newDashboard = this.state.userDashboard;
+            for(let i = newDashboard.length -1; i>=0;--i){
+                if(newDashboard[i].id === childData){
+                    newDashboard.splice(i,1);
+                    this.setState({userDashboard : newDashboard});
+                }   
+        }
+  }
+
+    modifyFunction = (childData) => {
+            let newDashboard = this.state.userDashboard;
+            this.setState({isModify: !this.state.isModify});
+            for(let i = newDashboard.length-1; i>=0;--i){
+                if(newDashboard[i].id === childData){
+                    this.setState({stickyFormData : newDashboard[i]});
+                }
+            }
+    }
+    
+
     componentWillReceiveProps(nextProps){
         let temp = this.state.userDashboard
         if(nextProps.location.state){
@@ -165,6 +193,7 @@ class DefaultDashboard extends Component {
                 let newName = nextProps.location.state.newMasterTable.chartName;
                 let preName = this.state.newUpcomingPropsName;
                 if(newName !== preName){
+                    nextProps.location.state.newMasterTable["id"] = this.state.userDashboard.length;
                     temp.push(nextProps.location.state.newMasterTable);
                     this.setState({
                         userDashboard: temp,
@@ -175,15 +204,19 @@ class DefaultDashboard extends Component {
                 let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                 let preName = this.state.newUpcomingPropsName;
                 if(newName !== preName){
+                  //  nextProps.location.state.newGraph.id = this.state.userDashboard.length
+                  nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
                     temp.push(nextProps.location.state.newGraph);
                     this.setState({
                         userDashboard: temp,
                         newUpcomingPropsName: newName
                     })
                 }
+                console.log(this.state.userDashboard);
                 
             }
-        }
+          
+        }       
         
     }
     showOptions(e){
@@ -217,6 +250,7 @@ class DefaultDashboard extends Component {
     
 
     render() {
+        console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
                 return (
@@ -246,7 +280,7 @@ class DefaultDashboard extends Component {
                     return (
                         <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
-                                <LineGraph {...item}></LineGraph>
+                                <LineGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyFunction}></LineGraph>
                             </CardBody>
                         </Card>);
                 }else if(item.graphSettings.type === "bar"){
@@ -254,8 +288,7 @@ class DefaultDashboard extends Component {
                         <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
                                 <BarGraph {...item}></BarGraph>
-                            </CardBody>
-                                                
+                            </CardBody>                                  
                         </Card>);
                 }else if(item.graphSettings.type === "pie"){
                     return (

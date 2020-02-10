@@ -139,7 +139,7 @@ class BarGraph extends Component {
             // stepSize: 0.2,
             // fontSize: 10,
              min: 0,
-             max: 1,// Your absolute max value
+              max: 1,// Your absolute max value
             callback: function (value) {
               return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
             },
@@ -379,7 +379,6 @@ class BarGraph extends Component {
                yAxes:[{
                  ticks:{
                   min: 0,
-                  max: 1,// Your absolute max value
                 }
               }
                ],           
