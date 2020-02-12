@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
+import SNSTopicSubscriptionList from './SNSTopicSubscriptionList';
+
+
 class RightSideBar extends Component {
     rightBarNodeRef;
 
@@ -72,9 +75,11 @@ class RightSideBar extends Component {
                     </div>
                     <PerfectScrollbar>
                         {component}
+
+                        <SNSTopicSubscriptionList />
                     </PerfectScrollbar>
                 </div>
-                <div className="rightbar-overlay"></div>
+                <div className="rightbar-overlay" />
             </React.Fragment>
         )
     }

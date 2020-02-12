@@ -168,7 +168,7 @@ class SideNavContent extends React.Component {
             
 
               <li>
-                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}> {/* Put new component here */}
                       <i class="mdi mdi-bell-ring-outline"></i>
                       <span> Alerts </span>
                   </a>

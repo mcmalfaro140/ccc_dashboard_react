@@ -63,3 +63,4 @@ export const forgetPasswordFailed = (error: string): AuthAction => ({
     type: FORGET_PASSWORD_FAILED,
     payload: error
 });
+ 
