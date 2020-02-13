@@ -10,6 +10,9 @@ import { SketchPicker } from 'react-color'
 import DateTimePicker from 'react-datetime-picker';
 import Switch from "react-switch";
 import '../assets/react-grid/styles.css'
+import MaterialTable from '../components/MaterialTable.js'
+
+
 
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
@@ -17,13 +20,27 @@ var cloudwatchlogs = new AWS.CloudWatchLogs();
 
 var logNames = []
 var currentDate = new Date();
- var value = [];
+var value = [];
+var arr = []
+const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
 
 class TableFormPop extends Component {
 
     constructor(props) {
         super(props);
         this.state = { 
+            value:[],
             params:{
                 limit:'50'
             },
@@ -36,7 +53,7 @@ class TableFormPop extends Component {
                 tableSettings: {
                     chartName: "This is a chart name from TableFormProps",
                     typeOfDimension : "Jaman",
-                    idValue:'3',
+                    recordValue:[],
                     refreshRate: '',
                     period:'',
                     startTime:'', //if needed
@@ -51,13 +68,19 @@ class TableFormPop extends Component {
                     minH: 9
                 },
             },
-            modalOpen: false
+            modalOpen: false,
+            filterLogParams: {
+                logGroupName: 'App1', /* required */
+                filterPattern: '',
+                limit: 1000
+              }
 
 
         }
 
 this.readMixTimeSelection1= this.readMixTimeSelection1.bind(this);
 this.toggleForm = this.toggleForm.bind(this);
+this.onAddingItem = this.onAddingItem.bind(this);
 this.update = this.update.bind(this);
         
     }
@@ -116,42 +139,111 @@ getLogGroupName =  () => {
                         for (var i = 0; i < data.logGroups.length; i++) {
 
                             this.setState(prevState => ({
-                              recordArray : [...prevState.recordArray, {logGroupName : data.logGroups[i].logGroupName
-                            , isChecked:false}]
-                            }));
+                                recordArray : [...prevState.recordArray, {logGroupName : data.logGroups[i ].logGroupName
+                              , isChecked:false}]
+                              }));
+                            this.setState({
+
+                                filterLogParams : {
+                                    logGroupName : data.logGroups[i].logGroupName,
+                                    filterPattern: '',
+                                    limit: 1000
+                                }
+                            })
+                            
+                           var logEvent =  cloudwatchlogs.filterLogEvents(this.state.filterLogParams, function(err, data) {
+                                if (err) console.log(err, err.stack); // an error occurred
+                                else{
+    
+                                    return data
+                                
+                                }    
+                              }.bind(this));
+
+
+                             
+                              var recordArrayCopy = JSON.parse(JSON.stringify(this.state.recordArray , getCircularReplacer()))
+                                console.log(recordArrayCopy)
+                             
+                                recordArrayCopy[i].logStreamNames = logEvent
+                             
+                              this.setState({
+                                  recordArray : recordArrayCopy 
+                                  })
+                                  this.setState({
+                                    newMasterTable: {
+                                        tableSettings: {  
+                                            recordValue : recordArrayCopy
+                                        }
+                                
+                                 }}); 
+
                         }
 
                           this.logNames = this.state.recordArray.splice(0)
                           this.setState(({
                               recordArray:  this.logNames
                           }))
-                          console.log(this.state.recordArray);
+                           
+                       
 
                           console.log(this.logNames);
+                          
 
                         };
+                        console.log(this.state.newMasterTable.tableSettings.recordValue)
+
+                        console.log(this.state.recordArray);
+
+                        
+
           }.bind(this));
 
 };
 
-onAddingItem = (i) => (event) => {
-    console.log(event.target.checked)
-    this.setState((state, props) => {
-      state.recordArray[i].isChecked = !state.recordArray[i].isChecked;
-      return {
-        recordArray: state.recordArray
-      }
-    })
-    
+
+
+onAddingItem (event)  {
+
+     this.arr = Array.from(event.target.selectedOptions, (item) => item.value).splice(0)
+
+    console.log(this.arr)
+   
+    this.setState(prevState => ({ 
+
+        value : this.arr
+    }));
+    console.log(this.state.value)
+
+
+    // for (let i = 0 ; i < this.state.value.length ; i++) {   
+    //     this.setState({
+
+    //         filterLogParams : {
+    //             logGroupName : this.state.value[i]
+    //         }
+    //     })
+    // }
+
+   // console.log(this.state.filterLogParams.logGroupName)
+   event.preventDefault();
+
+      
 };
 
 
 toggleForm = () => {
     
+
+
     this.setState({modalOpen : !this.state.modalOpen})
     this.setState(prevState => ({
         modalOpen: !prevState.modalOpen
     }));
+
+    
+
+
 
 };
 
@@ -163,20 +255,26 @@ update(e,i){
         value = [];
     }
   
-    console.log(value[1])
+    //console.log(value[1])
  
-    this.setState({newMasterTable: {tableSettings: {chartName : value[0]}}});
-
+    this.setState({
+        newMasterTable: {
+            tableSettings: {
+                 chartName : value[0]
+            }
+        
+        
+    }});
     
 }
 
 
 
     render(){
-        
+     
     
         let {recordArray} =  this.state;
-
+       
 
         return(
 
@@ -194,12 +292,12 @@ update(e,i){
                 </Form.Group>
                         
                         {/* Log group Name selection */}
-            <Form.Group>
+            <Form.Group controlId="recordValue">
                 <Form.Label>Choose the log group name(s)</Form.Label>
                     {/* <Form.Control as = "select" onChange={(e) => this.readMixTimeSelection1(e)}> */}
                     {/* <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple> */}
                     
-                    <Input type="select" multiple={true} defaultValue={"Select a name"} className="dropselect_tag" name="tag" onChange = {(e) => this.update(e,1)}>
+                    <Input type="select" multiple={true} defaultValue={"Select a name"} className="dropselect_tag" name="tag" onChange = {this.onAddingItem}>
                      { recordArray.map((product, i) =>{
 
                          return(
@@ -234,6 +332,23 @@ update(e,i){
                     
             </Form.Group>
 
+            <Form.Group controlId="exampleForm.ControlSelect2">
+                                            <Form.Label>Refresh Rate</Form.Label>
+                                        <Form.Control as="select"  
+                                        onChange={(e) => this.readMixTimeSelection1(e)}>
+                                        <option disabled selected>Make Selection</option>
+                                        <option value = "Last Hour">Every 30 Seconds</option>
+                                        <option value = "Last Day">Every Minute</option>
+                                        <option value = "Last Week">Every 5 Minute</option>
+                                        <option value = "Last Month">Every Hour</option>
+                                        </Form.Control>
+                                        <Form.Text className="text-muted">
+                                            Select the Refresh time
+                                            </Form.Text>
+                    
+                    
+            </Form.Group>
+
                    
                  </form>
                 
@@ -248,8 +363,9 @@ update(e,i){
                                             objectType:"table", // options: graph or table
                                             tableSettings: {
                                                 chartName: this.state.newMasterTable.tableSettings.chartName,
+                                                
                                                 typeOfDimension : "JamanTypeDimension",
-                                                idValue:this.state.idValue,
+                                                recordValue:this.state.newMasterTable.tableSettings.recordValue,
                                                 refreshRate: this.state.refreshRate,
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
@@ -268,7 +384,6 @@ update(e,i){
                                     }
                                 }}>
                                
-
                                 <Button color="primary"  onClick={this.props.toggle}>Done</Button>                                
                                 </Link>
                                 <Button outline color="secondary" data-dismiss="modal" onClick={this.props.toggle}>Cancel</Button>                          
@@ -285,17 +400,3 @@ update(e,i){
 export default connect()(TableFormPop);
 
 
-
-
-
-
-  {/* { recordArray.map((product, i) =>{
-                        return(
-                                <div class="checkbox checkbox-circle checkbox-color-scheme">
-                                    <label class="checkbox-checked">
-                                        <input type="checkbox" value={product.logGroupName} checked={product.isChecked} onChange={this.onAddingItem(i)}/> <span class="label-text">{product.logGroupName}</span>
-                                    </label>
-                                </div>
-                            
-                        )
-                     })} */}

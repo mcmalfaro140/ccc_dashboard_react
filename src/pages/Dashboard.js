@@ -12,7 +12,8 @@ import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
 import GridLayout from 'react-grid-layout';
-import Table from './Tables'
+//import SimpleTable from '../components/MaterialTable.js'
+import Tables from './Tables.js'
 import LogReport from '../components/logRepotComp'
 
 
@@ -64,8 +65,14 @@ class DefaultDashboard extends Component {
                     objectType:"table", // options: graph or table
                     id:1,
                     tableSettings:{
-                        master:"true",
-                        chartName:"Master Table"
+                        master:"false",
+                        chartName:"Master Table",
+                        recordValue:[ "/aws/apigateway/trying","/aws/lambda/ChatRoomConnectFunction","/aws/lambda/ChatRoomDisconnectFunction",
+                        "/aws/lambda/ChatRoomOnMessageFunction","/aws/lambda/LogsToElasticsearch_searchlogs","/aws/lambda/asdvasjhdgja",
+                        "/aws/lambda/dummy", "/aws/lambda/notification", "/aws/rds/instance/database-1/error","App1","notificationsLogs",
+                        "sns","test"
+                            ]
+                       
                        
                     },
                     coordinates: {
@@ -145,15 +152,20 @@ class DefaultDashboard extends Component {
 
             if(nextProps.location.state.newMasterTable){
                 console.log(nextProps.location.state.newMasterTable.tableSettings.chartName)
+                console.log(nextProps.location.state.newMasterTable.tableSettings.recordValue)
 
                 let newName = nextProps.location.state.newMasterTable.tableSettings.chartName;
+               
                 let preName = this.state.newUpcomingPropsName;
+                
                 if(newName !== preName){
                     temp.push(nextProps.location.state.newMasterTable);
                     this.setState({
                         userDashboard: temp,
                         newUpcomingPropsName: newName
+
                     })
+
                 }
             }else if(nextProps.location.state.newGraph){
                 let newName = nextProps.location.state.newGraph.graphSettings.chartName;
@@ -210,12 +222,13 @@ class DefaultDashboard extends Component {
            //This part will render the table
             if(item.objectType === "table"){
                 console.log(item.tableSettings.chartName)
+
                 return (
                     //min for table w:4 h:11
                 <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
                     <div style={{width:'100%'}}>
                 <h2 className="float-left" >{item.tableSettings.chartName}</h2>
-                        <div style={{paddingTop:'25px'}} className="dropdown float-right show" onClick={this.showOptions}>
+                        <div  className="dropdown float-right show" onClick={this.showOptions}>
                             <a className="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="true">
                             <i style={{fontSize:'130%'}}className="mdi mdi-dots-vertical"></i>
                             </a>
@@ -228,7 +241,7 @@ class DefaultDashboard extends Component {
                         </div>
                     </div>
                     <CardBody>
-                            <Table {...item}/>
+                            <Tables {...item}/>
                     </CardBody>
                                         
                 </Card>);
