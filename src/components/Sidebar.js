@@ -135,6 +135,19 @@ class SideNavContent extends React.Component {
                                 <span> New Log Table </span>
                             </Link>
                       </li>
+                      <li>
+                          {/* <Link to="/" className="waves-effect side-nav-link-ref">
+                              <i class="fe-search"></i>
+                              <span> Search Logs </span>
+
+                          </Link> */}
+                          <Link to={{pathname:'/TableForm',
+                                typeOfGraph : 'searchLogs' }}
+                                onClick = {this.props.toggleForm}
+                                className="waves-effect side-nav-link-ref">
+                                <i className="mdi mdi-chart-bar"></i>
+                                <span> Search Logs </span>
+                            </Link>
                       <li onClick = {this.props.toggleSearchModal}>
                           <Link className="waves-effect side-nav-link-ref">
                               <i class="fe-search"></i>

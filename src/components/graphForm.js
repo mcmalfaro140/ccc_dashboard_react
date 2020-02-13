@@ -139,6 +139,34 @@ class graphForm extends Component {
 
 
    
+    submit(e){
+
+
+        e.preventDefault();
+
+        this.props.history.push({
+           // pathname: str,
+            pathname: "/Dashboard",
+            state: {
+                newGraph : this.state.newGraph,
+                // metricName: this.state.metricName,
+                // nameSpace : this.state.nameSpace,
+                // chartName : this.state.chartName,
+                // // accessKeyId : this.state.accessKeyId,
+                // // secretAccessKey : this.state.secretAccessKey,
+                // instanceId : this.state.instanceId,
+                // //region : this.state.region,
+                // // startTime : this.state.startTime,
+                // // endTime : this.state.endTime
+
+
+
+            }
+        })
+
+
+    }
+=======
     // submit(e){
   
       

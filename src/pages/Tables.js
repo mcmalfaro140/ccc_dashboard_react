@@ -10,8 +10,8 @@ var cloudwatchlogs = new AWS.CloudWatchLogs();
 
 class Tables extends React.Component {
 
-  constructor (){
-    super();
+  constructor (props){
+    super(props);
 
     this.state = {
       params : {
@@ -35,16 +35,22 @@ class Tables extends React.Component {
           message:[]
       }]
     }
-    // this.handleChange = this.handleChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
+
   }
 
 
 componentWillMount(){
       this.getdata();
-}
-    getdata = () => {
 
+}
+
+componentDidMount(){
+  console.log(this.props.tableSettings.chartName)
+  this.getdata();
+}
+
+
+    getdata = () => {
       cloudwatchlogs.getLogEvents(this.state.params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else  {
@@ -91,12 +97,20 @@ componentWillMount(){
   
 
 render() {
-
-  return (
-        <Table  timeStamp = {this.state.tableData[0].timeStamp}
+  
+  var table;
+  table = <Table  timeStamp = {this.state.tableData[0].timeStamp}
           level = {this.state.tableData[0].level}
           logger = {this.state.tableData[0].logger}
           message = {this.state.tableData[0].message}/>
+  return (
+      
+      
+          <div>
+              
+              {table}
+
+          </div>
       
   );
   }

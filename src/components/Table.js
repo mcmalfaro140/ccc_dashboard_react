@@ -60,8 +60,7 @@ const columns = [
     },
     width: 100,
     maxwidth:100,
-    minwidth:100,
-    filterable:true
+    minwidth:100
   },
   {
     Header:'Logger',
@@ -69,7 +68,9 @@ const columns = [
   },
   {
     Header:'Message',
-    accessor:'message'
+    accessor:'message',
+    filterable:true
+
 
   }
 ];

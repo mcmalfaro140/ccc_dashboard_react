@@ -13,6 +13,9 @@ import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
+import GridLayout from 'react-grid-layout';
+//import SimpleTable from '../components/MaterialTable.js'
+import Tables from './Tables.js'
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import Table from './Tables'
@@ -70,7 +73,15 @@ class DefaultDashboard extends Component {
                     objectType:"table", // options: graph or table
                     id:1,
                     tableSettings:{
-                        master:"true",
+                        master:"false",
+                        chartName:"Master Table",
+                        recordValue:[ "/aws/apigateway/trying","/aws/lambda/ChatRoomConnectFunction","/aws/lambda/ChatRoomDisconnectFunction",
+                        "/aws/lambda/ChatRoomOnMessageFunction","/aws/lambda/LogsToElasticsearch_searchlogs","/aws/lambda/asdvasjhdgja",
+                        "/aws/lambda/dummy", "/aws/lambda/notification", "/aws/rds/instance/database-1/error","App1","notificationsLogs",
+                        "sns","test"
+                            ]
+                       
+                       
                     },
                     coordinates: {
                         x: ((1 %3)*8),
@@ -187,18 +198,28 @@ class DefaultDashboard extends Component {
 
     componentWillReceiveProps(nextProps){
         let temp = this.state.userDashboard
+
         if(nextProps.location.state){
             //only activate adds to the array if the props are the specify ones
+
+
             if(nextProps.location.state.newMasterTable){
-                let newName = nextProps.location.state.newMasterTable.chartName;
+                console.log(nextProps.location.state.newMasterTable.tableSettings.chartName)
+                console.log(nextProps.location.state.newMasterTable.tableSettings.recordValue)
+
+                let newName = nextProps.location.state.newMasterTable.tableSettings.chartName;
+               
                 let preName = this.state.newUpcomingPropsName;
+                
                 if(newName !== preName){
                     nextProps.location.state.newMasterTable["id"] = this.state.userDashboard.length;
                     temp.push(nextProps.location.state.newMasterTable);
                     this.setState({
                         userDashboard: temp,
                         newUpcomingPropsName: newName
+
                     })
+
                 }
             }else if(nextProps.location.state.newGraph){
                 let newName = nextProps.location.state.newGraph.graphSettings.chartName;
@@ -253,11 +274,13 @@ class DefaultDashboard extends Component {
         console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
+                console.log(item.tableSettings.chartName)
+
                 return (
                 <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
                     <div style={{width:'100%'}}>
-                        <h2 className="float-left" >Logs Table</h2>
-                        <div style={{paddingTop:'23px'}} className="dropdown float-right show" onClick={this.showOptions}>
+                <h2 className="float-left" >{item.tableSettings.chartName}</h2>
+                        <div  className="dropdown float-right show" onClick={this.showOptions}>
                             <a className="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="true">
                             <i style={{fontSize:'130%'}}className="mdi mdi-dots-vertical"></i>
                             </a>
@@ -270,7 +293,7 @@ class DefaultDashboard extends Component {
                         </div>
                     </div>
                     <CardBody>
-                        <Table/>
+                            <Tables {...item}/>
                     </CardBody>
                                         
                 </Card>);
