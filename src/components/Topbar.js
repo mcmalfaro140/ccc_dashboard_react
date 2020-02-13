@@ -97,10 +97,15 @@ class Topbar extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleBack = this.handleBack.bind(this);
   }
 
   handleChange(event) {
     this.setState({keyword: event.target.value});
+  }
+
+  handleBack() {
+    this.props.history.push('/');
   }
 
 
@@ -131,30 +136,34 @@ class Topbar extends Component {
             <li>
               <NotificationDropdown notifications={Notifications} />
             </li>
-
-            {/* <li>
-              <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
-            </li> */}
-
-
-            {/* <li className="dropdown notification-list">
-              <button className="btn btn-link nav-link right-bar-toggle waves-effect waves-light" onClick={this.props.rightSidebarToggle}>
-                <i className="fe-settings noti-icon"></i>
-              </button>
-            </li> */}
           </ul>
+          { this.props.title === "Dashboard" ?
+            (<ul className="list-unstyled topnav-menu topnav-menu-left m-0">
+              <li>
+                <button className="button-menu-mobile waves-effect" onClick={this.props.menuToggle}>
+                  <i className="fe-menu"></i>
+                </button>
+              </li>
 
-          <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
-            <li>
-              <button className="button-menu-mobile waves-effect" onClick={this.props.menuToggle}>
-                <i className="fe-menu"></i>
-              </button>
-            </li>
+              <li>
+                <h3 className="page-title-main">{this.props.title}</h3>
+              </li>
+            </ul>
+            ):(
+            <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
+              <li>
+                <button className="button-menu-mobile waves-effect" onClick={this.handleBack}>
+                  <i class="mdi mdi-arrow-left-bold"></i>
+                </button>
+              </li>
 
-            <li>
-              <h3 className="page-title-main">{this.props.title}</h3>
-            </li>
-          </ul>
+              <li>
+                <h3 className="page-title-main">{this.props.title}</h3>
+              </li>
+            </ul>
+            )
+          }
+          
             
         </div>
       </React.Fragment >

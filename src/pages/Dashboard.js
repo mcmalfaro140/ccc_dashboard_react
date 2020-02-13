@@ -2,10 +2,12 @@ import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 
+import ReactTable from 'react-table';
 import LineGraph from '../components/LineGraph'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
+
 import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
@@ -14,10 +16,15 @@ import { Button } from 'react-bootstrap';
 import GridLayout from 'react-grid-layout';
 //import SimpleTable from '../components/MaterialTable.js'
 import Tables from './Tables.js'
+
+import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
+import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 
 
-import TestLine from '../components/TestLine'
+
+import GraphForm from '../components/graphForm';
+
 
 
 //import css needed for reac-grid-layout
@@ -35,6 +42,8 @@ class DefaultDashboard extends Component {
         super(props);
         this.state = {
             user: getLoggedInUser(),
+            isModify : false,
+            stickyFormData :{},
             userDashboard: [
                 {
                     objectType:"graph", // options: graph or table
@@ -42,9 +51,9 @@ class DefaultDashboard extends Component {
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
                             realTime:true, //options: true or false
-                            metricName:"CPUUtilization", 
+                            metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
-                            chartName:"Test",
+                            chartName:"Test 1",
                             instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"2000",
                             period:180,
@@ -52,13 +61,12 @@ class DefaultDashboard extends Component {
                             endTime:new Date() //if needed
                         },
                     coordinates: {
-                        x: 0,
-                        y: 1,
-                        w: 20,
-                        h: 19,
-                        minW: 6,
-                        minH: 9,
-                        maxH: 18
+                        x: (0 %3)*8 ,
+                        y: 0,
+                        w: 8,
+                        h: 3,
+                        minW: 8,
+                        minH: 3
                     }
                 },
                 {
@@ -76,12 +84,12 @@ class DefaultDashboard extends Component {
                        
                     },
                     coordinates: {
-                        x: 0,
-                        y: 2,
-                        w: 20,
-                        h: 11,
-                        minW: 4,
-                        minH: 11
+                        x: ((1 %3)*8),
+                        y: 0,
+                        w: 8,
+                        h: 3,
+                        minW: 8,
+                        minH: 3
                     }
                     
                 },
@@ -90,10 +98,34 @@ class DefaultDashboard extends Component {
                     id:2,
                     graphSettings: {
                             type:"bar", //options: line, pie, or bar
-                            realTime:false, //options: true or false
-                            metricName:"CPUCreditUsage", 
+                            realTime:true, //options: true or false
+                            metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
-                            chartName:"TestBar",
+                            chartName:"TestBar 2",
+                            instanceId:"i-01e27ec0da2c4d296",
+                            refreshRate:"2000",
+                            period:180,
+                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                            endTime:new Date() //if needed
+                        },
+                        coordinates: {
+                            x: ((2 %3)*8),
+                            y: 0,
+                            w: 8,
+                            h: 3,
+                            minW: 8,
+                            minH: 3
+                        }
+                },
+                {
+                    objectType:"graph", // options: graph or table
+                    id:3,
+                    graphSettings: {
+                            type:"line", //options: line, pie, or bar
+                            realTime:true, //options: true or false
+                            metricName:"CPUUtilization", 
+                            nameSpace:"AWS/EC2",
+                            chartName:"Test 3",
                             instanceId:"i-01e27ec0da2c4d296",
                             refreshRate:"2000",
                             period:180,
@@ -102,37 +134,37 @@ class DefaultDashboard extends Component {
                         },
                     coordinates: {
                         x: 0,
-                        y: 3,
-                        w: 10,
-                        h: 10,
-                        minW: 6,
-                        minH: 9
+                        y: 6,
+                        w: 12,
+                        h: 3,
+                        minW: 8,
+                        minH: 3
                     }
                 },
                 {
                     objectType:"graph", // options: graph or table
-                    id:3,
+                    id:4,
                     graphSettings: {
-                            type:"pie", //options: line, pie, or bar
-                            realTime:"false", //options: true or false
+                            type:"line", //options: line, pie, or bar
+                            realTime:true, //options: true or false
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
-                            chartName:"Test",
+                            chartName:"Test 4",
                             instanceId:"i-01e27ec0da2c4d296",
-                            refreshRate:"",
-                            period:"",
+                            refreshRate:"2000",
+                            period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date() //if needed
                         },
                     coordinates: {
-                        x: 10,
-                        y: 3,
-                        w: 10,
-                        h: 10,
-                        minW: 6,
-                        minH: 9
+                        x: 12,
+                        y: 6,
+                        w: 12,
+                        h: 3,
+                        minW: 8,
+                        minH: 3
                     }
-                },               
+                },
             ],
             showOptions: false,
             systemHealth: false
@@ -142,6 +174,27 @@ class DefaultDashboard extends Component {
         this.systemHealth = this.systemHealth.bind(this);
         this.recordCoordinateChange = this.recordCoordinateChange.bind(this);
     }
+
+    deleteFunction = (childData) => {
+           let newDashboard = this.state.userDashboard;
+            for(let i = newDashboard.length -1; i>=0;--i){
+                if(newDashboard[i].id === childData){
+                    newDashboard.splice(i,1);
+                    this.setState({userDashboard : newDashboard});
+                }   
+        }
+  }
+
+    modifyFunction = (childData) => {
+            let newDashboard = this.state.userDashboard;
+            this.setState({isModify: !this.state.isModify});
+            for(let i = newDashboard.length-1; i>=0;--i){
+                if(newDashboard[i].id === childData){
+                    this.setState({stickyFormData : newDashboard[i]});
+                }
+            }
+    }
+    
 
     componentWillReceiveProps(nextProps){
         let temp = this.state.userDashboard
@@ -159,6 +212,7 @@ class DefaultDashboard extends Component {
                 let preName = this.state.newUpcomingPropsName;
                 
                 if(newName !== preName){
+                    nextProps.location.state.newMasterTable["id"] = this.state.userDashboard.length;
                     temp.push(nextProps.location.state.newMasterTable);
                     this.setState({
                         userDashboard: temp,
@@ -171,15 +225,19 @@ class DefaultDashboard extends Component {
                 let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                 let preName = this.state.newUpcomingPropsName;
                 if(newName !== preName){
+                  //  nextProps.location.state.newGraph.id = this.state.userDashboard.length
+                  nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
                     temp.push(nextProps.location.state.newGraph);
                     this.setState({
                         userDashboard: temp,
                         newUpcomingPropsName: newName
                     })
                 }
+                console.log(this.state.userDashboard);
                 
             }
-        }
+          
+        }       
         
     }
     showOptions(e){
@@ -193,17 +251,19 @@ class DefaultDashboard extends Component {
 
     //Gets call when the user resize the dashboard. Saves the new coordinates
     recordCoordinateChange(newLayout){
-        let temp = this.state.userDashboard
-        newLayout.forEach(element => {
-            let chart = temp[parseInt(element.i)]
-            chart.coordinates.x = element.x
-            chart.coordinates.y = element.y
-            chart.coordinates.w = element.w
-            chart.coordinates.h = element.h
-        });
-        this.setState({
-            userDashboard: temp
-        })
+        if(this.props.screenSize > 1200){ //will only save big screen dashboard not mobile or table
+            let temp = this.state.userDashboard
+            let updatedIndex = [];
+            newLayout.forEach((element, i) => {
+                let chart = temp[parseInt(element.i)];
+                chart.coordinates.y = element.y
+                chart.coordinates.x = element.x
+                updatedIndex.push(chart)
+            });
+            this.setState({
+                userDashboard: updatedIndex
+            })
+        }
         
     }
     
@@ -211,21 +271,13 @@ class DefaultDashboard extends Component {
     
 
     render() {
+        console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
-            let actualHeight = item.coordinates.h 
-            if(this.props.isCondensed){
-                actualHeight = actualHeight + 10
-            }
-            //this.props.isCondensed ? actualHeight = actualHeight : actualHeight = actualHeight + 10;
-            // console.log(actualHeight)
-            // console.log(this.props.isCondensed)
-           //This part will render the table
             if(item.objectType === "table"){
                 console.log(item.tableSettings.chartName)
 
                 return (
-                    //min for table w:4 h:11
-                <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
+                <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
                     <div style={{width:'100%'}}>
                 <h2 className="float-left" >{item.tableSettings.chartName}</h2>
                         <div  className="dropdown float-right show" onClick={this.showOptions}>
@@ -249,24 +301,21 @@ class DefaultDashboard extends Component {
             }else if(item.objectType === "graph"){
                 if(item.graphSettings.type === "line"){
                     return (
-                        //min for chart w:4 h:7
-                        //Perfect size for line chart w = 12 and H = 16
-                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                        <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
-                                <LineGraph {...item}></LineGraph>
+                                <LineGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyFunction}></LineGraph>
                             </CardBody>
                         </Card>);
                 }else if(item.graphSettings.type === "bar"){
                     return (
-                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                        <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
                                 <BarGraph {...item}></BarGraph>
-                            </CardBody>
-                                                
+                            </CardBody>                                  
                         </Card>);
                 }else if(item.graphSettings.type === "pie"){
                     return (
-                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                        <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody>
                                 
                             </CardBody>
@@ -275,7 +324,7 @@ class DefaultDashboard extends Component {
                 }
                 else if(item.graphSettings.type === "mix"){
                     return (
-                        <Card key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: actualHeight, minW: item.coordinates.minW, minH:item.coordinates.minH}}>
+                        <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
                                 <MixGraph {...item}></MixGraph>
                             </CardBody>
@@ -313,9 +362,14 @@ class DefaultDashboard extends Component {
                         </CardBody>
                     </Card>
 
-                    <GridLayout className="layout" cols={20} rowHeight={30} width={this.props.screenSize} onLayoutChange={(layout) => this.recordCoordinateChange(layout)} style={{margin:0}}>
+                    <ResponsiveGridLayout className="layout" 
+                        breakpoints={{lg: 1200, md: 996, sm: 768}}
+                        cols={{lg: 24, md: 12, sm: 8}}
+                        width={this.props.screenSize} 
+                        onLayoutChange={(layout) => this.recordCoordinateChange(layout)} 
+                        style={{margin:0}}>
                         {items}
-                    </GridLayout>
+                    </ResponsiveGridLayout>
                 </div>
             </React.Fragment>
         )
