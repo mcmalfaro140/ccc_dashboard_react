@@ -394,8 +394,10 @@ update(e,i){
                             <br/>
                             <Form.Label>Choose the log group/s: </Form.Label>
                         </Form.Group>
-                    </form>
-                </ModalBody>
+                        
+                
+                   
+               
                 <ModalFooter>
                     <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
                 </ModalFooter>

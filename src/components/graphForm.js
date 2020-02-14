@@ -164,7 +164,7 @@ class graphForm extends Component {
 
 
     }
-=======
+
     // submit(e){
   
       
@@ -410,7 +410,7 @@ class graphForm extends Component {
                                 </form>
                             </ModalBody>
                             <ModalFooter>
-                                {console.log(this.props.graphInfor.metricName)}
+                              
                                 <Link to={{pathname:'/dashboard', 
                                     state:{ 
                                         newGraph:{
@@ -420,11 +420,11 @@ class graphForm extends Component {
                                                 type:this.props.whatever, //options: line, pie, or bar
                                                 realTime:this.state.isRealTime, //options: true or false
                                                 // metricName:this.state.metricName!==""? this.state.metricName: (this.props.graphInfor!=null?this.props.graphInfor.metricName:""), 
-                                                metricName : this.state.metricName!=null ? this.state.metricName: this.props.graphInfor.metricName,
-                                                nameSpace:this.state.nameSpace!=null ? this.state.nameSpace: this.props.graphInfor.nameSpace,
-                                                chartName:this.state.chartName!=null? this.state.chartName: this.props.graphInfor.chartName,
-                                                typeOfDimension:this.state.typeOfDimension!=null? this.state.typeOfDimension: this.props.graphInfor.typeOfDimension,
-                                                idValue:this.state.idValue!=null? this.state.idValue: this.props.graphInfor.idValue,
+                                                metricName : this.state.metricName!=null ? this.state.metricName: (this.props.graphInfor!=null?this.props.graphInfor.metricName:""),
+                                                nameSpace:this.state.nameSpace!=null ? this.state.nameSpace: (this.props.graphInfor!=null?this.props.graphInfor.nameSpace:""),
+                                                chartName:this.state.chartName!=null? this.state.chartName: (this.props.graphInfor!=null?this.props.graphInfor.chartName:""),
+                                                typeOfDimension:this.state.typeOfDimension!=null? this.state.typeOfDimension: (this.props.graphInfor!=null?this.props.graphInfor.typeOfDimension:""),
+                                                idValue:this.state.idValue!=null? this.state.idValue: (this.props.graphInfor!=null?this.props.graphInfor.idValue:""),
                                                 refreshRate: this.state.refreshRate,
                                                 colorSelected:this.state.colorSelected,
                                                 period:this.state.period,
