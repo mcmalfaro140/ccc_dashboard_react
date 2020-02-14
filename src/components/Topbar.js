@@ -114,7 +114,7 @@ class Topbar extends Component {
     return (
       <React.Fragment>
         <div className="navbar-custom">
-          <ul className="list-unstyled topnav-menu float-right mb-0">
+          {/* <ul className="list-unstyled topnav-menu float-right mb-0">
 
             <li className="d-none d-sm-block">
               <form className="app-search">
@@ -136,7 +136,7 @@ class Topbar extends Component {
             <li>
               <NotificationDropdown notifications={Notifications} />
             </li>
-          </ul>
+          </ul> */}
           { this.props.title === "Dashboard" ?
             (<ul className="list-unstyled topnav-menu topnav-menu-left m-0">
               <li>
