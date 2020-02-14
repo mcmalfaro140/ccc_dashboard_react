@@ -1,6 +1,6 @@
 import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Card, CardBody } from 'reactstrap';
+import { Row, Col, Card, CardBody, Modal } from 'reactstrap';
 
 import ReactTable from 'react-table';
 import LineGraph from '../components/LineGraph'
@@ -42,8 +42,6 @@ class DefaultDashboard extends Component {
         super(props);
         this.state = {
             user: getLoggedInUser(),
-            isModify : false,
-            stickyFormData :{},
             userDashboard: [
                 {
                     objectType:"graph", // options: graph or table
@@ -54,11 +52,13 @@ class DefaultDashboard extends Component {
                             metricName:"CPUCreditUsage", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test 1",
-                            instanceId:"i-01e27ec0da2c4d296",
+                            typeOfDimension: 'InstanceId',
+                            idValue:"i-01e27ec0da2c4d296",
                             refreshRate:"2000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date() //if needed
+                            endTime:new Date(), //if needed
+                            colorSelected:"#a3d9f3",
                         },
                     coordinates: {
                         x: (0 %3)*8 ,
@@ -102,11 +102,13 @@ class DefaultDashboard extends Component {
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"TestBar 2",
-                            instanceId:"i-01e27ec0da2c4d296",
+                            typeOfDimension: 'InstanceId',
+                            idValue:"i-01e27ec0da2c4d296",
                             refreshRate:"2000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date() //if needed
+                            endTime:new Date(), //if needed
+                            colorSelected:"#a6e22e"
                         },
                         coordinates: {
                             x: ((2 %3)*8),
@@ -126,11 +128,13 @@ class DefaultDashboard extends Component {
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test 3",
-                            instanceId:"i-01e27ec0da2c4d296",
+                            typeOfDimension:'InstanceId',
+                            idValue:"i-01e27ec0da2c4d296",
                             refreshRate:"2000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date() //if needed
+                            endTime:new Date(), //if needed
+                            colorSelected:"#800000"
                         },
                     coordinates: {
                         x: 0,
@@ -146,15 +150,17 @@ class DefaultDashboard extends Component {
                     id:4,
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
-                            realTime:true, //options: true or false
+                            realTime:false, //options: true or false
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test 4",
-                            instanceId:"i-01e27ec0da2c4d296",
+                            typeOfDimension:'InstanceId',
+                            idValue:"i-01e27ec0da2c4d296",
                             refreshRate:"2000",
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date() //if needed
+                            endTime:new Date(), //if needed
+                            colorSelected:"#a3d9f3"
                         },
                     coordinates: {
                         x: 12,
@@ -167,7 +173,10 @@ class DefaultDashboard extends Component {
                 },
             ],
             showOptions: false,
-            systemHealth: false
+            systemHealth: false,
+            isModify : false,
+            stickyFormData :{},
+            selectedGraphId:"",
 
         };
         this.showOptions = this.showOptions.bind(this);
@@ -186,58 +195,83 @@ class DefaultDashboard extends Component {
   }
 
     modifyFunction = (childData) => {
-            let newDashboard = this.state.userDashboard;
-            this.setState({isModify: !this.state.isModify});
+            this.setState({isModify :true});
+            this.setState({selectedGraphId : childData});
+            const newDashboard = this.state.userDashboard;
             for(let i = newDashboard.length-1; i>=0;--i){
                 if(newDashboard[i].id === childData){
-                    this.setState({stickyFormData : newDashboard[i]});
+                    this.setState({stickyFormData : newDashboard[i].graphSettings});
                 }
             }
     }
     
+    toggleForm = () =>{
+        this.setState({isModify : !this.state.isModify});
+    }
 
     componentWillReceiveProps(nextProps){
-        let temp = this.state.userDashboard
 
-        if(nextProps.location.state){
-            //only activate adds to the array if the props are the specify ones
+        
+            let temp = this.state.userDashboard
+            if(nextProps.location.state){
+                //only activate adds to the array if the props are the specify ones
+                if(nextProps.location.state.newMasterTable){
+                    let newName = nextProps.location.state.newMasterTable.chartName;
+                    let preName = this.state.newUpcomingPropsName;
+                    if(newName !== preName){
+                        nextProps.location.state.newMasterTable["id"] = this.state.userDashboard.length;
+                        temp.push(nextProps.location.state.newMasterTable);
+                        this.setState({
+                            userDashboard: temp,
+                            newUpcomingPropsName: newName
+                        })
+                    }
+                }else if(nextProps.location.state.newGraph){
+                    if(this.state.isModify === false){
+                        let newName = nextProps.location.state.newGraph.graphSettings.chartName;
+                        let preName = this.state.newUpcomingPropsName;
+                        if(newName !== preName){
+                        //  nextProps.location.state.newGraph.id = this.state.userDashboard.length
+                        nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
+                            temp.push(nextProps.location.state.newGraph);
+                            this.setState({
+                                userDashboard: temp,
+                                newUpcomingPropsName: newName
+                            })
+                        }
+                        //console.log(this.state.userDashboard);
+                        
+                    }else{
+                        const id = this.state.selectedGraphId;
+                        const newDashboard = this.state.userDashboard;   
+                        console.log(nextProps.location.state.newGraph.graphSettings.realTime)
+                        console.log(nextProps.location.state.newGraph.graphSettings.startTime)
+                        for(let i = newDashboard.length-1; i>=0; i--){     
+                            if(newDashboard[i].id === id){
+                                newDashboard[i].graphSettings.metricName = nextProps.location.state.newGraph.graphSettings.metricName;
+                                newDashboard[i].graphSettings.nameSpace = nextProps.location.state.newGraph.graphSettings.nameSpace;
+                                newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
+                                newDashboard[i].graphSettings.chartName = nextProps.location.state.newGraph.graphSettings.chartName;
+                                newDashboard[i].graphSettings.typeOfDimension= nextProps.location.state.newGraph.graphSettings.typeOfDimension;
+                                newDashboard[i].graphSettings.idValue= nextProps.location.state.newGraph.graphSettings.idValue;
+                                newDashboard[i].graphSettings.realTime= nextProps.location.state.newGraph.graphSettings.realTime;
+                                if(nextProps.location.state.newGraph.graphSettings.realTime === true){
+                                    newDashboard[i].graphSettings.refreshRate= nextProps.location.state.newGraph.graphSettings.refreshRate;
+                                }
+                                newDashboard[i].graphSettings.startTime = nextProps.location.state.newGraph.graphSettings.startTime;
+                                newDashboard[i].graphSettings.endTime = nextProps.location.state.newGraph.graphSettings.endTime;
+                                newDashboard[i].graphSettings.colorSelected= nextProps.location.state.newGraph.graphSettings.colorSelected;
+                                newDashboard[i].graphSettings.period= nextProps.location.state.newGraph.graphSettings.period;
+                            }
+                        }
+                        this.setState({userDashboard : newDashboard});
+                        this.setState({isModify : false});
 
+                    }
+            }   
+    }    
 
-            if(nextProps.location.state.newMasterTable){
-                console.log(nextProps.location.state.newMasterTable.tableSettings.chartName)
-                console.log(nextProps.location.state.newMasterTable.tableSettings.recordValue)
-
-                let newName = nextProps.location.state.newMasterTable.tableSettings.chartName;
-               
-                let preName = this.state.newUpcomingPropsName;
-                
-                if(newName !== preName){
-                    nextProps.location.state.newMasterTable["id"] = this.state.userDashboard.length;
-                    temp.push(nextProps.location.state.newMasterTable);
-                    this.setState({
-                        userDashboard: temp,
-                        newUpcomingPropsName: newName
-
-                    })
-
-                }
-            }else if(nextProps.location.state.newGraph){
-                let newName = nextProps.location.state.newGraph.graphSettings.chartName;
-                let preName = this.state.newUpcomingPropsName;
-                if(newName !== preName){
-                  //  nextProps.location.state.newGraph.id = this.state.userDashboard.length
-                  nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
-                    temp.push(nextProps.location.state.newGraph);
-                    this.setState({
-                        userDashboard: temp,
-                        newUpcomingPropsName: newName
-                    })
-                }
-                console.log(this.state.userDashboard);
-                
-            }
-          
-        }       
+       
         
     }
     showOptions(e){
@@ -251,11 +285,18 @@ class DefaultDashboard extends Component {
 
     //Gets call when the user resize the dashboard. Saves the new coordinates
     recordCoordinateChange(newLayout){
+        console.log(newLayout);
         if(this.props.screenSize > 1200){ //will only save big screen dashboard not mobile or table
             let temp = this.state.userDashboard
+            console.log(temp)
             let updatedIndex = [];
+            let chart;
             newLayout.forEach((element, i) => {
-                let chart = temp[parseInt(element.i)];
+                // let chart = temp[parseInt(element.i)];
+                temp.some((a) => {
+                    chart = a;
+                    return a.id === parseInt(element.i)
+                })
                 chart.coordinates.y = element.y
                 chart.coordinates.x = element.x
                 updatedIndex.push(chart)
@@ -300,12 +341,13 @@ class DefaultDashboard extends Component {
             //This part will render the Graph
             }else if(item.objectType === "graph"){
                 if(item.graphSettings.type === "line"){
-                    return (
-                        <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
+                    return (   
+                       <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
                                 <LineGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyFunction}></LineGraph>
                             </CardBody>
-                        </Card>);
+                        </Card>
+                       );
                 }else if(item.graphSettings.type === "bar"){
                     return (
                         <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
@@ -334,7 +376,12 @@ class DefaultDashboard extends Component {
             }
         });
         return (
+            
             <React.Fragment>
+                 <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
+                     <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
+                    />
+                </Modal>
                 <div id="dashboard" style={{paddingTop:'1%'}}>
                     { /* preloader */}
                     {this.props.loading && <Loader />}
@@ -368,6 +415,7 @@ class DefaultDashboard extends Component {
                         width={this.props.screenSize} 
                         onLayoutChange={(layout) => this.recordCoordinateChange(layout)} 
                         style={{margin:0}}>
+                            
                         {items}
                     </ResponsiveGridLayout>
                 </div>

@@ -22,7 +22,7 @@ class LineGraph extends Component {
   constructor(){
     super();
     this.state = {
-      graphColor:"blue",
+        graphColor:"blue",
         data:[],
         label:[],
         holder:[],
@@ -35,82 +35,25 @@ class LineGraph extends Component {
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
-    this.optionToSkip =  { 
-      elements: {
-        point:{
-            radius: 0,  
-        },
-      }, 
-      scales: {
-        xAxes: [{
-          ticks: {
-              // maxRotation: 0,
-              // minRotation: 0,
-          fontSize: 10,
-          //autoSkip: true,
-          maxTicksLimit: 10
-          },
-          gridLines: {
-            display: false ,
-          // color: "black  "
-          },
-        }], 
-        yAxes: [{
-          //stacked: true,
-          ticks: {
-            stepSize: 0.2,
-            fontSize: 10,
-            min: 0,
-            max: 1,// Your absolute max value
-            callback: function (value) {
-              return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
-            },
-              //  fontColor: 'black   '
-          },
-          gridLines: {
-            display: true ,
-            // color: "black  "
-          },
-        }],
-      },
-        pan: {
-          enabled: true,
-          mode: 'x'
-        },
-        zoom: {
-          enabled: true,
-          mode: 'x',
-        }
-    }
+    
     
   }
     
 
       getgraph = () =>{
-
-        // if(this.props.graphSettings.realTime === true){
-        //   // this.setState({data:[]})
-        //   // this.setState({label:[]})
-        //   this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
-      
-        // }
-
-      //   console.log(this.props.graphSettings.startTime + "start timmmmmm")
-      //   console.log(this.props.graphSettings.endTime + " end timmmmmm")
-      //   console.log(this.props.graphSettings.realTime)
-      //  console.log("id is "+this.props.graphSettings.idValue);
+        
+       console.log(this.props.graphSettings);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
 
-         
         var params = {
             EndTime: new Date(this.props.graphSettings.endTime), /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
-            StartTime:  new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+            StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
@@ -129,6 +72,8 @@ class LineGraph extends Component {
           AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
           AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
+       
+
         cloudwatch3.getMetricStatistics(params, function(err, data) {
          // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
@@ -141,7 +86,7 @@ class LineGraph extends Component {
          
           
            this.setState({holder:sortedData})
-
+          console.log(data);
            console.log(this.state.holder)
          
              for (var i = 0; i < this.state.holder.length; i++) {
@@ -187,14 +132,13 @@ class LineGraph extends Component {
                }
           };     
 
-          console.log(this.state.unit + " unit ");
+         // console.log(this.state.unit + " unit ");
          
         }.bind(this));
-        return [this.state.data, this.state.label];
       }
 
       onRefresh(chart){
-        console.log(this.props.id + "... " + this.props.objectType);
+       // console.log(this.props.id + "... " + this.props.objectType);
         var typeOfD = this.props.graphSettings.typeOfDimension;
         var idVal = this.props.graphSettings.idValue;
         if(typeOfD == null){typeOfD = "InstanceId"}
@@ -236,13 +180,13 @@ class LineGraph extends Component {
            cloudwatch.getMetricData(RTParams, function(err, data) {
              if (err) console.log(err, err.stack); // an error occurred
              else  {   
-               console.log(data);  
+              // console.log(data);  
                temp = data.MetricDataResults[0].Values[0];
                if(newData !== temp)  {
                  newData = temp;
                 
                }
-               console.log(newData)
+              // console.log(newData)
                  }       // successful response
                  dataset.data.push({                               
                    x: new Date(),
@@ -263,10 +207,15 @@ class LineGraph extends Component {
             }
            
             
+          }else{
+            chart.options.scales.yAxes[0].ticks = {
+                min: 0, 
+            }
           }
       }
       
       componentDidMount() {
+        console.log(this.props.graphSettings.realTime);
         if(this.props.graphSettings.realTime === false){
              this.getgraph();
         }
@@ -275,6 +224,15 @@ class LineGraph extends Component {
         }
         this.setState({ prevValues: this.state.holder}) // set values at the begining
         
+      }
+      componentWillUnmount(){
+        console.log(this.state.holder.length);
+        if(this.state.holder.length !== 0){
+          this.setState({holder:[]});
+          this.setState({data: []});
+          this.setState({label:[]});
+          this.setState({unit:""});
+        }
       }
       sendDeletionData = () => {
         this.props.parentCallback(this.props.id);
@@ -291,10 +249,13 @@ class LineGraph extends Component {
 
     
     render() {
-    console.log(this.props);
-     
-      if(this.props.graphSettings.metricName!=="CPUUtilization"){
-        this.optionToSkip =  {  
+  //     if(this.props.graphSettings.realTime === false){
+  //       this.getgraph();
+  //  }
+    console.log(this.props.graphSettings);
+    let optionToSkip;
+    if(this.state.unit !== "Percent" || this.props.graphSettings.metricName!=="CPUUtilization"){
+        optionToSkip =  {  
           elements: {
             point:{
                 radius: 0,  
@@ -338,6 +299,54 @@ class LineGraph extends Component {
       
       }
 
+    }
+  }else{
+    optionToSkip =  { 
+      elements: {
+        point:{
+            radius: 0,  
+        },
+      }, 
+      scales: {
+        xAxes: [{
+          ticks: {
+              // maxRotation: 0,
+              // minRotation: 0,
+          fontSize: 10,
+          //autoSkip: true,
+          maxTicksLimit: 10
+          },
+          gridLines: {
+            display: false ,
+          // color: "black  "
+          },
+        }], 
+        yAxes: [{
+          //stacked: true,
+          ticks: {
+            stepSize: 0.2,
+            fontSize: 10,
+            min: 0,
+            max: 1,// Your absolute max value
+            callback: function (value) {
+              return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+            },
+              //  fontColor: 'black   '
+          },
+          gridLines: {
+            display: true ,
+            // color: "black  "
+          },
+        }],
+      },
+        pan: {
+          enabled: true,
+          mode: 'x'
+        },
+        zoom: {
+          enabled: true,
+          mode: 'x',
+        }
     }
   }
       let Color = require('color');
@@ -394,10 +403,7 @@ class LineGraph extends Component {
                    }
                }],
                yAxes:[{
-                 ticks:{
-                  min: 0,
                 
-                }
               }
                ],           
            },
@@ -405,7 +411,7 @@ class LineGraph extends Component {
        }}/>
       }
       else{
-       graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
+       graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {optionToSkip} ></Line>
       }
     
     
