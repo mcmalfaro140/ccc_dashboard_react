@@ -353,7 +353,7 @@ class BarGraph extends Component {
                label: this.props.graphSettings.metricName,
                fill:true,
                strokeColor: "rgba(220,220,220,0.8)",
-               backgroundColor:"rgba(220,220,220,0.5)",
+               backgroundColor:this.state.graphColor,
                borderWidth: 1
               // borderDash: [8, 4]
                }
