@@ -12,7 +12,7 @@ import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
 import GridLayout from 'react-grid-layout';
-//import SimpleTable from '../components/MaterialTable.js'
+import SimpleTable from '../components/MaterialTable.js'
 import Tables from './Tables.js'
 import LogReport from '../components/logRepotComp'
 
@@ -225,7 +225,7 @@ class DefaultDashboard extends Component {
 
                 return (
                     //min for table w:4 h:11
-                <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
+                <Card className="card-box" key={i} data-grid={{x: item.coordinates.x, y: item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h + 22, minW: item.coordinates.minW, minH:item.coordinates.minH}}> 
                     <div style={{width:'100%'}}>
                 <h2 className="float-left" >{item.tableSettings.chartName}</h2>
                         <div  className="dropdown float-right show" onClick={this.showOptions}>
@@ -241,7 +241,7 @@ class DefaultDashboard extends Component {
                         </div>
                     </div>
                     <CardBody>
-                            <Tables {...item}/>
+                            <SimpleTable {...item}/>
                     </CardBody>
                                         
                 </Card>);
@@ -294,13 +294,13 @@ class DefaultDashboard extends Component {
                         <h3 className="float-left" >System Health Bar</h3>
                             <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
                             <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
-                            { this.state.systemHealth? (
+                            {/* { this.state.systemHealth? (
                             <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
                             <a href="" class="dropdown-item">Last 24 Hours</a>
                             <a href="" class="dropdown-item">Last 48 Hours</a>
                             <a href="" class="dropdown-item">Last 72 Hours</a>
                             </div>
-                            ): null }
+                            ): null } */}
                         </div>
                         </div>
                         <CardBody style={{paddingTop:'0%', margin: '0%'}}>
