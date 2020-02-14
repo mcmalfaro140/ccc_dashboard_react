@@ -3,6 +3,7 @@ import { Card, CardBody, Table, Row, Col, Modal, ModalHeader, ModalFooter, Butto
 import ReactLightCalendar from '@lls/react-light-calendar'
 import '@lls/react-light-calendar/dist/index.css'
 import ReactDOM from 'react-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 class LogGroupList extends React.Component {
     constructor (props){
@@ -13,7 +14,8 @@ class LogGroupList extends React.Component {
             startDate,
             endDate: new Date(startDate),
             prevId: "c-0",
-            open: false
+            open: false,
+            values: ["all","1h","6h","1d","1w","Custome"]
         }
         this.calendar = this.calendar.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -29,19 +31,27 @@ class LogGroupList extends React.Component {
         let prevElem = document.getElementById(this.state.prevId);
         let newElem = document.getElementById(id);
 
-        ReactDOM.findDOMNode(newElem).style.color = "red";
-        ReactDOM.findDOMNode(newElem).style.borderBlockEnd = "red solid 1px";
-        ReactDOM.findDOMNode(prevElem).style.color = "rgba(56, 56, 56, 0.596)";
+        ReactDOM.findDOMNode(prevElem).style.color = "#24242496";
         ReactDOM.findDOMNode(prevElem).style.borderBlockEnd = "none";
 
+        ReactDOM.findDOMNode(newElem).style.color = "red";
+        ReactDOM.findDOMNode(newElem).style.borderBlockEnd = "red solid 1px";
+
         if(id === "c-5"){
-            ReactDOM.findDOMNode(newElem).style.color = "red";
-            ReactDOM.findDOMNode(newElem).style.borderBlockEnd = "red solid 1px";
             this.calendar()
+        }else{
+            if( id === "c-0"){
+                this.setState({prevId: id, range: "all", startDate:"" , endDate:"" })
+            }else if( id === "c-1"){
+                this.setState({prevId: id, range: "1h", endDate: this.state.startDate - 3600}) //3600 sec in 1 hour
+            }else if( id === "c-2"){
+                this.setState({prevId: id, range: "6h", endDate: this.state.startDate - 21600})
+            }else if( id === "c-3"){
+                this.setState({prevId: id, range: "1d", endDate: this.state.startDate - 86400})
+            }else if( id === "c-4"){
+                this.setState({prevId: id, range: "1w", endDate: this.state.startDate - 604800})
+            }
         }
-
-        this.setState({prevId: id})
-
     }
 
     render(){
@@ -55,6 +65,8 @@ class LogGroupList extends React.Component {
             )
         });
 
+        // const my_row = this.state.values.map((item,))
+
         return(
             <div>
                 <Card className="card-box"> 
@@ -64,9 +76,19 @@ class LogGroupList extends React.Component {
                             <Col id="c-0" onClick={() => this.handleChange("c-0")} >
                                 All
                             </Col>
-                            <Col id="c-1" onClick={() => this.handleChange("c-1")} >
+                            <Link
+                                to={{
+                                    pathname:'/search_results',
+                                    state:{
+                                        search_keyword: this.props.search_keyword,
+                                        range: this.state.range,
+                                        startTime: this.state.startDate,
+                                        endTime: this.state.endDate
+                                    }
+                                }}
+                            ><Col id="c-1" onClick={() => this.handleChange("c-1")} >
                                 1h
-                            </Col>
+                            </Col></Link>
                             <Col id="c-2" onClick={() => this.handleChange("c-2")} >
                                 6h
                             </Col>

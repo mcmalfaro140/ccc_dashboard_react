@@ -121,7 +121,7 @@ class Topbar extends Component {
                 <div className="app-search-box">
                   <div className="input-group">
                     <input type="text" className="form-control" placeholder="Search..." value={this.state.keyword} onChange={this.handleChange} />
-                    <Link to={{pathname:'/search_results', state: { search_keyword: this.state.keyword}}} >
+                    <Link to={{pathname:'/search_results', state: { search_keyword: this.state.keyword, range: "all"}}} >
                       <div className="input-group-append">
                         <button className="btn" type="submit">
                           <i className="fe-search"></i>

@@ -46,7 +46,18 @@ class SearchResult extends React.Component {
     //will update the components when new keyword is enter
     componentDidUpdate(prevProps) {
         console.log("search porps update")
-        if(this.props.location.state.search_keyword !== prevProps.location.state.search_keyword){
+        let keyword = this.props.location.state.search_keyword
+        let preKeyword = prevProps.location.state.search_keyword
+        let range = this.props.location.state.range
+        let preRange = prevProps.location.state.range
+        if(range !== preRange ){
+            if(keyword !== preKeyword){
+                this.setState({results: [], loading: true, noResults: false})
+                for (var i = 0; i < this.state.logGroupNames.length; i++) {
+                    this.searchByLogGroupName(this.state.logGroupNames[i])
+                }
+            }
+        }else if (keyword !== preKeyword){
             this.setState({results: [], loading: true, noResults: false})
             for (var i = 0; i < this.state.logGroupNames.length; i++) {
                 this.searchByLogGroupName(this.state.logGroupNames[i])
@@ -101,14 +112,15 @@ class SearchResult extends React.Component {
         if(range !== "all"){
             var params = {
                 logGroupName: logName, /* required */
-                endTime: this.location.state.
-                filterPattern: search_pattern /*keyword pass by the user */
+                endTime: this.props.location.state.endTime,
+                filterPattern: search_pattern, /*keyword passed by the user */
+                startTime: this.props.location.state.startTime
                 // limit: 1000, 
             };
         }else{
             var params = {
                 logGroupName: logName, /* required */
-                filterPattern: search_pattern /*keyword pass by the user */
+                filterPattern: search_pattern /*keyword passed by the user */
                 // limit: 1000, 
             };
         }
@@ -187,7 +199,7 @@ class SearchResult extends React.Component {
                                     {this.state.showLogTable ? 
                                         <LogTableResult results={this.state.results[this.state.id]} showToggle ={this.show}/>
                                         : 
-                                        <LogGroupList results={this.state.results} setId={this.setId}/>
+                                        <LogGroupList results={this.state.results} setId={this.setId} search_keyword={this.props.location.state.search_keyword}/>
                                     }
                                 </div>
                             )
