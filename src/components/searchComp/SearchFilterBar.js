@@ -35,6 +35,8 @@ class SearchFilterBar extends React.Component {
         ReactDOM.findDOMNode(prevElem).style.borderBlockEnd = "none";
 
         if(id === "col-5"){
+            ReactDOM.findDOMNode(newElem).style.color = "red";
+            ReactDOM.findDOMNode(newElem).style.borderBlockEnd = "red solid 1px";
             this.openCalendar()
         }
 
@@ -45,21 +47,16 @@ class SearchFilterBar extends React.Component {
     render(){
         const { startDate, endDate } = this.state
         return(
-            <Row className="search_filter_bar">
-                <Col>
-                    <Card>
-                        <CardBody>
+            <Card className="search_filter_bar">
+                <CardBody>
+                    <Row >
+                        <Col>
                             <Label>New Search: </Label>
                             <Row>
-                                <Col  xs="10"><Input type="text" name="keyWord" id="keyWord" placeholder="Enter a keyword" /></Col>
-                                <Col ><Button color="primary">Search</Button></Col>
-                            </Row>    
-                        </CardBody>
-                    </Card>
-                </Col>
-                <Col>
-                    <Card>
-                        <CardBody>
+                                <Col ><Input type="text" name="keyWord" id="keyWord" placeholder="Enter a keyword" /></Col>
+                            </Row>
+                        </Col>
+                        <Col>
                             <Label>Filters: </Label>
                             <Row>
                                 <Col id="col-0" onClick={() => this.handleColorChange("col-0")}>
@@ -78,6 +75,7 @@ class SearchFilterBar extends React.Component {
                                     1w
                                 </Col>
                                 <Col id="col-5" onClick={() => this.handleColorChange("col-5")}> Custome </Col>
+                                <Col ><Button color="primary">Search</Button></Col>
                             </Row>
                             <Modal isOpen={this.state.dropDownOpen} className="calendar_modal">
                                 <ModalHeader >Select a Time Range:</ModalHeader>
@@ -87,10 +85,10 @@ class SearchFilterBar extends React.Component {
                                     <Button color="secondary" onClick={this.openCalendar}>Cancel</Button>
                                 </ModalFooter>
                             </Modal>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
         )
     }
 }
