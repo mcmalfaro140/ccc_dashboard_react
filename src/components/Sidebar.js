@@ -154,9 +154,11 @@ class SideNavContent extends React.Component {
                               <span> Advanced Search</span>
                           </Link>
                       </li>
+                      </li>
                   </ul>
                   ): null }
-              </li>
+           </li>
+           
 
             
 
