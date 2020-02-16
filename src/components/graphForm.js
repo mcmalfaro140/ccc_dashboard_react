@@ -165,33 +165,6 @@ class graphForm extends Component {
 
     }
 
-    // submit(e){
-  
-      
-    //     e.preventDefault();
-       
-    //     this.props.history.push({
-    //        // pathname: str,
-    //         pathname: "/Dashboard",
-    //         state: {
-    //             newGraph : this.state.newGraph,
-    //             // metricName: this.state.metricName,
-    //             // nameSpace : this.state.nameSpace,
-    //             // chartName : this.state.chartName,
-    //             // // accessKeyId : this.state.accessKeyId,
-    //             // // secretAccessKey : this.state.secretAccessKey,
-    //             // instanceId : this.state.instanceId,
-    //             // //region : this.state.region,
-    //             // // startTime : this.state.startTime,
-    //             // // endTime : this.state.endTime
-
-
-            
-    //         }  
-    //     })
-        
-       
-    // }
   
     onDateRangeSelection = (startTime, endTime) => {
         this.setState({startTime , endTime})
@@ -226,37 +199,24 @@ class graphForm extends Component {
         
     }
  
-    //  handleChangeForStart(e,i) {
-    //     let holder = [];
-    //     holder[i] = e.target.value;
-    //     if(holder.length>2){
-    //         holder = [];
-    //     }
-    //     this.setState({
-    //       startTime: holder[0],
-    //       endTime:holder[1]
-    //     });
-       
-    //   };
-    //   handleChangeForEnd = date => {
-    //     this.setState({
-    //       endTime: date
-    //     });
-
-        
-    //   };
-
     
     
     
 
     render() {
-        console.log(this.props.graphInfor);
         var timeSelection;
-        if(this.state.isRealTime === true){
+        let isModify;
+        if(this.props.graphInfor!= null){
+            if(this.props.graphInfor.realTime === true){
+                isModify = true;
+            }
+            else{
+                isModify = false;
+            }
+        }
+        if(this.state.isRealTime === true ){
             timeSelection = 
-         <div>
-             
+             <div>            
             <Form.Group controlId="exampleForm.ControlSelect2">
             <Form.Label>X Axis Time Range</Form.Label>
             <Form.Control as="select"  
@@ -291,7 +251,7 @@ class graphForm extends Component {
            
             
         }
-        else{
+        else if(this.state.isRealTime === false){
             timeSelection = 
             <div>
             <Form.Group>
@@ -300,62 +260,46 @@ class graphForm extends Component {
            
             </div>
         }
-
-        var button;
-        
-        if(this.props.graphInfor == null){
-            button = <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
-        }
-        else{
-            button = <Button color="primary" onClick={this.props.toggleForm}>Modify graph</Button>
-        }
-       
-
-      // console.log("the str is " + str);
-      
-        return (
-
-         
+  
+        return (  
                         <div>
                         <ModalHeader toggle={this.props.toggleForm}>New Chart Form</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
                                 <form>
+                                
+                                {/* {this.props.graphInfor == null && ( */}
                                 <Form.Group>
-                                    <label className="center">
-                                    <h5>Real Time</h5>
-                                    <Switch
-                                        checked={this.state.isRealTime}
-                                        onChange={this.toggleSwitch}
-                                        onColor="#86d3ff"
-                                        onHandleColor="#2693e6"
-                                        handleDiameter={20}
-                                        uncheckedIcon={false}
-                                        checkedIcon={false}
-                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                        height={15}
-                                        width={40}
-                                        className="react-switch"
-                                        id="material-switch"
-                                    />
-                                        
-
-                                    </label>
-                                </Form.Group>
-                               
-
+                                <label className="center">
+                                <h5>Real Time</h5>
+                                <Switch
+                                    checked={this.state.isRealTime}
+                                    onChange={this.toggleSwitch}
+                                    onColor="#86d3ff"
+                                    onHandleColor="#2693e6"
+                                    handleDiameter={20}
+                                    uncheckedIcon={false}
+                                    checkedIcon={false}
+                                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                    height={15}
+                                    width={40}
+                                    className="react-switch"
+                                    id="material-switch"
+                                />
+                                </label>
+                            </Form.Group> 
+                            {/* )} */}
+                            {this.props.graphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>
                                          <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,0)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.nameSpace:"" }/>
                                         <Form.Text className="text-muted">
                                         specify the name space ...
                                         </Form.Text>
-                                    </Form.Group>
+                                    </Form.Group> : null}
 
-                                
-
-                                 
+                            
                                     <Form.Group controlId="chartName">
                                         <Form.Label>Chart Name: </Form.Label>
                                         <Form.Control type="text" placeholder="Enter chart name" onChange = {(e) => this.update(e,1)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.chartName:""}/>
@@ -364,14 +308,16 @@ class graphForm extends Component {
                                         </Form.Text>
                                     </Form.Group>
 
+                                    {this.props.graphInfor == null?
                                     <Form.Group controlId="metricName">
                                         <Form.Label>Metric Name: </Form.Label> 
                                          <Form.Control type="text" placeholder="Enter metric name" onChange = {(e) => this.update(e,2)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.metricName:""}/>
                                         <Form.Text className="text-muted">
                                         specify the metric name that you want...
                                         </Form.Text> 
-                                     </Form.Group> 
+                                     </Form.Group>:null} 
                                     
+                                     {this.props.graphInfor == null?
                                     <Form>
                                         <Row>
                                             <Col>
@@ -390,7 +336,7 @@ class graphForm extends Component {
                                             </Form.Text>
                                             </Col>
                                         </Row>
-                                    </Form>
+                                    </Form> : null}
 
                                     {timeSelection}
                                    
@@ -450,9 +396,9 @@ class graphForm extends Component {
                                
                               
                                 >
-
-                                    {/* <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button> */}
-                                    {button}
+                                    
+                                   <Button color="primary" onClick={this.props.toggleForm}>{this.props.graphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
+                                  
                                 </Link>
                                 <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
                             </ModalFooter>

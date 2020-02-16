@@ -31,7 +31,8 @@ class LineGraph extends Component {
         showOptions: false,
         options : "",
         prevValues: [],
-        unit:""
+        unit:"",
+        graphSetting:"",
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
@@ -49,11 +50,11 @@ class LineGraph extends Component {
        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
 
         var params = {
-            EndTime: new Date(this.props.graphSettings.endTime), /* required */
+            EndTime: new Date(this.props.graphSettings.endTime).toISOString(), /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
-            StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+            StartTime: new Date(this.props.graphSettings.startTime).toISOString(), /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
@@ -218,6 +219,7 @@ class LineGraph extends Component {
         console.log(this.props.graphSettings.realTime);
         if(this.props.graphSettings.realTime === false){
              this.getgraph();
+             this.setState({graphSetting : this.props.graphSettings.startTime + " - " + this.props.graphSettings.endTime})
         }
         if(this.props.graphSettings.colorSelected != null){
          this.setState({graphColor:this.props.graphSettings.colorSelected})
@@ -225,14 +227,13 @@ class LineGraph extends Component {
         this.setState({ prevValues: this.state.holder}) // set values at the begining
         
       }
-      componentWillUnmount(){
-        console.log(this.state.holder.length);
-        if(this.state.holder.length !== 0){
-          this.setState({holder:[]});
-          this.setState({data: []});
-          this.setState({label:[]});
-          this.setState({unit:""});
-        }
+      componentWillReceiveProps(nextProp){
+        console.log(nextProp.graphSettings);
+        if(nextProp.graphSettings.realTime === false){
+          if(this.state.graphSetting !== nextProp.graphSettings.startTime + " - " + nextProp.graphSettings.endTime){
+              this.getgraph();
+          }
+      }
       }
       sendDeletionData = () => {
         this.props.parentCallback(this.props.id);
