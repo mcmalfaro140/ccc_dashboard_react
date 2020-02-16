@@ -165,33 +165,6 @@ class graphForm extends Component {
 
     }
 
-    // submit(e){
-  
-      
-    //     e.preventDefault();
-       
-    //     this.props.history.push({
-    //        // pathname: str,
-    //         pathname: "/Dashboard",
-    //         state: {
-    //             newGraph : this.state.newGraph,
-    //             // metricName: this.state.metricName,
-    //             // nameSpace : this.state.nameSpace,
-    //             // chartName : this.state.chartName,
-    //             // // accessKeyId : this.state.accessKeyId,
-    //             // // secretAccessKey : this.state.secretAccessKey,
-    //             // instanceId : this.state.instanceId,
-    //             // //region : this.state.region,
-    //             // // startTime : this.state.startTime,
-    //             // // endTime : this.state.endTime
-
-
-            
-    //         }  
-    //     })
-        
-       
-    // }
   
     onDateRangeSelection = (startTime, endTime) => {
         this.setState({startTime , endTime})
@@ -226,32 +199,11 @@ class graphForm extends Component {
         
     }
  
-    //  handleChangeForStart(e,i) {
-    //     let holder = [];
-    //     holder[i] = e.target.value;
-    //     if(holder.length>2){
-    //         holder = [];
-    //     }
-    //     this.setState({
-    //       startTime: holder[0],
-    //       endTime:holder[1]
-    //     });
-       
-    //   };
-    //   handleChangeForEnd = date => {
-    //     this.setState({
-    //       endTime: date
-    //     });
-
-        
-    //   };
-
     
     
     
 
     render() {
-        console.log(this.props.graphInfor);
         var timeSelection;
         if(this.state.isRealTime === true){
             timeSelection = 
@@ -301,17 +253,18 @@ class graphForm extends Component {
             </div>
         }
 
-        var button;
+        let button;
+        let switches;
+
         
         if(this.props.graphInfor == null){
             button = <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
         }
         else{
             button = <Button color="primary" onClick={this.props.toggleForm}>Modify graph</Button>
+            
         }
        
-
-      // console.log("the str is " + str);
       
         return (
 

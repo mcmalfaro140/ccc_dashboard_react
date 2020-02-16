@@ -248,23 +248,7 @@ class MixGraph extends Component {
       };
 
    
-       
-    //    const lineGraphData = {
-    //     labels: this.state.label,
-    //     datasets: [
-    //       {
-    //         label: this.props.graphSettings.metricName,
-    //         data: this.state.data,
-    //         fill: true,         
-    //        // borderColor: 'lightblue', // Line color
-    //         backgroundColor: this.state.graphColor,
-    //         maintainAspectRatio : false,
-    //         responsive:true
-    //       }
-    //     ]
-    //   }
-    
-     //console.log(this.state.data.length + " and " + this.state.data[0])
+      
       
         return (
             

@@ -42,7 +42,7 @@ class LineGraph extends Component {
 
       getgraph = () =>{
         
-       console.log(this.props.graphSettings);
+     //  console.log(this.props.graphSettings);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
@@ -86,12 +86,12 @@ class LineGraph extends Component {
          
           
            this.setState({holder:sortedData})
-          console.log(data);
-           console.log(this.state.holder)
+         // console.log(data);
+         //  console.log(this.state.holder)
          
              for (var i = 0; i < this.state.holder.length; i++) {
               let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
-               console.log(this.state.label.includes(newTimestamp))
+              // console.log(this.state.label.includes(newTimestamp))
               //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
                if(!this.state.label.includes(newTimestamp)){
                 this.setState({label: [...this.state.label,newTimestamp]});
@@ -214,8 +214,9 @@ class LineGraph extends Component {
           }
       }
       
+      
       componentDidMount() {
-        console.log(this.props.graphSettings.realTime);
+      //  console.log(this.props.graphSettings.realTime);
         if(this.props.graphSettings.realTime === false){
              this.getgraph();
         }
@@ -225,15 +226,15 @@ class LineGraph extends Component {
         this.setState({ prevValues: this.state.holder}) // set values at the begining
         
       }
-      componentWillUnmount(){
-        console.log(this.state.holder.length);
-        if(this.state.holder.length !== 0){
-          this.setState({holder:[]});
-          this.setState({data: []});
-          this.setState({label:[]});
-          this.setState({unit:""});
-        }
-      }
+      // componentWillUnmount(){
+      //   console.log(this.state.holder.length);
+      //   if(this.state.holder.length !== 0){
+      //     this.setState({holder:[]});
+      //     this.setState({data: []});
+      //     this.setState({label:[]});
+      //     this.setState({unit:""});
+      //   }
+      // }
       sendDeletionData = () => {
         this.props.parentCallback(this.props.id);
    }
@@ -252,7 +253,7 @@ class LineGraph extends Component {
   //     if(this.props.graphSettings.realTime === false){
   //       this.getgraph();
   //  }
-    console.log(this.props.graphSettings);
+   // console.log(this.props.graphSettings);
     let optionToSkip;
     if(this.state.unit !== "Percent" || this.props.graphSettings.metricName!=="CPUUtilization"){
         optionToSkip =  {  
@@ -361,7 +362,6 @@ class LineGraph extends Component {
             backgroundColor:Color(this.state.graphColor).alpha(0.5),
             responsive: true,
             borderWidth:1
-           
           }
         ]
       }
@@ -428,12 +428,22 @@ class LineGraph extends Component {
                   </a>
                   { this.state.showOptions? (
                     <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                      <Link to={{typeOfGraph : 'line' ,pathname:'/dashboard'}} onClick = {this.sendModifyData}>
-                       Modify
-                      </Link >
-                      <Link to={{pathname:'/dashboard'}} onClick = {this.sendDeletionData} >
-                       Delete
-                      </Link>
+                      <ul> 
+                        <li>
+                          <Link to={{typeOfGraph : 'line' ,pathname:'/dashboard'}} onClick = {this.sendModifyData}>
+                          Modify
+                          </Link >
+                        </li>
+                        <li>
+                          <Link to={{pathname:'/dashboard'}} onClick = {this.sendDeletionData} >
+                          Delete
+                          </Link>
+                        </li>
+                        
+                      
+                      </ul>
+                     
+                    
                     </div>
                   ): null }
                 </div>
