@@ -118,13 +118,13 @@ class BarGraph extends Component {
          cloudwatch.getMetricData(RTParams, function(err, data) {
            if (err) console.log(err, err.stack); // an error occurred
            else  {   
-             console.log(data);  
+            // console.log(data);  
              temp = data.MetricDataResults[0].Values[0];
              if(newData !== temp)  {
                newData = temp;
               
              }
-             console.log(newData)
+           //  console.log(newData)
                }       // successful response
                dataset.data.push({                               
                  x: new Date(),
@@ -139,7 +139,7 @@ class BarGraph extends Component {
             // stepSize: 0.2,
             // fontSize: 10,
              min: 0,
-             max: 1,// Your absolute max value
+              max: 1,// Your absolute max value
             callback: function (value) {
               return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
             },
@@ -190,13 +190,13 @@ class BarGraph extends Component {
          // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
           else {
-            console.log(data)
+           // console.log(data)
             let sortedData =  data.Datapoints.sort(function(a, b) {
               var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
               return dateA - dateB;
           });
            this.setState({holder:sortedData})
-           console.log(this.state.holder);
+        //   console.log(this.state.holder);
              for (var i = 0; i < this.state.holder.length; i++) {
               let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
               console.log(this.state.label.includes(newTimestamp))
@@ -245,7 +245,7 @@ class BarGraph extends Component {
           //   if(this.props.graphSettings.realTime === true){
           //     this.intervalID3 = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
              }
-             console.log(this.state.label)
+           //  console.log(this.state.label)
     
            //   console.log("Graph4's data size is now " + this.state.dataTemp3.length);
              
@@ -379,7 +379,6 @@ class BarGraph extends Component {
                yAxes:[{
                  ticks:{
                   min: 0,
-                  max: 1,// Your absolute max value
                 }
               }
                ],           

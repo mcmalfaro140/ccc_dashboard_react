@@ -389,6 +389,19 @@ update(e,i){
                                 <Button outline color="secondary" data-dismiss="modal" onClick={this.props.toggle}>Cancel</Button>                          
                                 
                   </ModalFooter>
+
+                        <Form.Group>
+                            <br/>
+                            <Form.Label>Choose the log group/s: </Form.Label>
+                        </Form.Group>
+                        
+                
+                   
+               
+                <ModalFooter>
+                    <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
+                </ModalFooter>
+
             </div>
         )
     }

@@ -128,50 +128,23 @@ class SideNavContent extends React.Component {
                   </a>
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
-                       <li onClick = {this.props.toggleTableForm}>
-                       <Link 
-                    //    to={{pathname:'/dashboard', 
-                    //                 state:{ 
-                    //                     newMasterTable:{
-                    //                         objectType:"table", // options: graph or table
-                    //                         chartName: "My Log Table",
-                    //                         tableSettings:{
-                    //                             master:"true",
-                    //                         },
-                    //                         coordinates: {
-                    //                             x: 0,
-                    //                             y: 0,
-                    //                             w: 20,
-                    //                             h: 11,
-                    //                             minW: 4,
-                    //                             minH: 11
-                    //                         }
-                    //                     }
-                    //                 }
-                    //             }} 
+                       {/* <li onClick = {this.props.toggleTableForm}>
+                        <Link 
                                 className="waves-effect side-nav-link-ref">
-                            {/* <a onClick={this.props.toggleForm} className="waves-effect side-nav-link-ref"> */}
-                              <i class="mdi mdi-table-large"></i>
-                              <span> New Log Table </span>
+                                <i class="mdi mdi-table-large"></i>
+                                <span> New Log Table </span>
                             </Link>
-                      </li>
-                      <li>
-                          {/* <Link to="/" className="waves-effect side-nav-link-ref">
+                      </li> */}
+                      <li onClick = {this.props.toggleSearchModal}>
+                          <Link className="waves-effect side-nav-link-ref">
                               <i class="fe-search"></i>
-                              <span> Search Logs </span>
-
-                          </Link> */}
-                          <Link to={{pathname:'/TableForm',
-                                typeOfGraph : 'searchLogs' }}
-                                onClick = {this.props.toggleForm}
-                                className="waves-effect side-nav-link-ref">
-                                <i className="mdi mdi-chart-bar"></i>
-                                <span> Search Logs </span>
-                            </Link>
+                              <span> Log Search</span>
+                          </Link>
                       </li>
                   </ul>
                   ): null }
-              </li>
+           </li>
+           
 
             
 

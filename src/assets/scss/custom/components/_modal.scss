@@ -14,6 +14,65 @@
     max-width: none;
 }
 
+.search_modal{
+    > div {
+        > h5 {
+            color:#007bff;
+            font-size: 150%
+        }
+        > form {
+            > div:nth-child(2){
+                cursor: pointer;
+                > div {
+                    padding: 2%;
+                    text-align: center;
+                    > div{
+                        color: #24242496;
+                    }
+                    > div:nth-child(1){
+                        border-block-end: red solid 1px;
+                        color: red;
+                        
+                        
+                    }
+                }
+            }
+            > div:nth-child(3){
+                display: none;
+                > div:nth-child(2){
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+    > div:nth-child(3){
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.collapse_cal{
+    display: none;
+}
+
+.calendar_modal{
+    >div{
+        width: 350px;
+        height: 550px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        >div{
+            width: 290px;
+            justify-content: center;
+        }
+    }
+    
+}
+
 // Custom animation modal
 .modal-demo {
     width: 600px !important;

@@ -8,6 +8,7 @@ import 'chartjs-plugin-streaming';
 import { Link } from 'react-router-dom';
 
 
+
 /**
  * Renders the preloader
  */
@@ -21,7 +22,7 @@ class LineGraph extends Component {
   constructor(){
     super();
     this.state = {
-      graphColor:"blue",
+        graphColor:"blue",
         data:[],
         label:[],
         holder:[],
@@ -34,7 +35,273 @@ class LineGraph extends Component {
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
-    this.optionToSkip =  { 
+    
+    
+  }
+    
+
+      getgraph = () =>{
+        
+       console.log(this.props.graphSettings);
+       var typeOfD = this.props.graphSettings.typeOfDimension;
+       var idVal = this.props.graphSettings.idValue;
+       if(typeOfD == null){typeOfD = "InstanceId"}
+       if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
+
+        var params = {
+            EndTime: new Date(this.props.graphSettings.endTime), /* required */
+            MetricName: this.props.graphSettings.metricName, /* required */
+            Namespace: this.props.graphSettings.nameSpace, /* required */
+            Period: this.props.graphSettings.period, /* required */
+            StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+         
+           Dimensions: [
+              {
+                Name: typeOfD, /* required */
+                // Value: 'i-031339fed44b9fac8' /* required */
+                Value: idVal
+              },
+              /* more items */
+            ],
+            Statistics: [
+              'Average',
+              /* more items */
+            ], 
+          }
+        
+          AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
+          AWS.config.logger = console; 
+        let cloudwatch3 = new AWS.CloudWatch();
+       
+
+        cloudwatch3.getMetricStatistics(params, function(err, data) {
+         // console.log("inside function")
+          if (err) console.log(err, err.stack); // an error occurred
+          else {
+            
+           let sortedData =  data.Datapoints.sort(function(a, b) {
+              var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
+              return dateA - dateB;
+          });
+         
+          
+           this.setState({holder:sortedData})
+          console.log(data);
+           console.log(this.state.holder)
+         
+             for (var i = 0; i < this.state.holder.length; i++) {
+              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+               console.log(this.state.label.includes(newTimestamp))
+              //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+               if(!this.state.label.includes(newTimestamp)){
+                this.setState({label: [...this.state.label,newTimestamp]});
+                this.setState(prevState => ({
+                  data : [...prevState.data, this.state.holder[i].Average]
+                }));
+                 this.setState({unit: this.state.holder[i].Unit})
+               }else{
+              
+               }
+              
+             
+             
+          //     if(this.state.holder[i].Timestamp.getHours()<12){
+          //       if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //         this.setState(prevState => ({
+          //           label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //         }));
+          //       }
+          //       else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
+          //     }));
+          //   }
+          // }
+          //   else{
+          //     if(this.state.holder[i].Timestamp.getMinutes()<10){
+          //       this.setState(prevState => ({
+          //         label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //       }));
+          //     }else{
+          //     this.setState(prevState => ({
+          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
+          //     }));
+          //   }
+          // }
+                         
+               }
+          };     
+
+         // console.log(this.state.unit + " unit ");
+         
+        }.bind(this));
+      }
+
+      onRefresh(chart){
+       // console.log(this.props.id + "... " + this.props.objectType);
+        var typeOfD = this.props.graphSettings.typeOfDimension;
+        var idVal = this.props.graphSettings.idValue;
+        if(typeOfD == null){typeOfD = "InstanceId"}
+        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
+        var RTParams = {
+          EndTime: new Date(), /* required */
+          MetricDataQueries: [ /* required */
+            {
+              Id: 'realTimeData', /* required */
+              MetricStat: {
+                Metric: { /* required */
+                  Dimensions: [
+                    {
+                      Name: typeOfD, /* required */
+                      Value: idVal /* required */
+                    },
+                    /* more items */
+                  ],
+                  MetricName: this.props.graphSettings.metricName,
+                  Namespace: this.props.graphSettings.nameSpace
+                },
+                Period: this.props.graphSettings.period, /* required */
+                Stat: 'Average', /* required */
+              },
+             // Period: this.props.graphSettings.period,
+             // ReturnData: true 
+            },
+            /* more items */
+          ],
+          StartTime:  this.props.graphSettings.startTime, /* required */
+          ScanBy: 'TimestampDescending'
+         // MaxDatapoints: 2,
+        }
+        
+          chart.data.datasets.forEach(function(dataset) {
+           let cloudwatch = new AWS.CloudWatch();
+           let newData;
+           let temp;
+           cloudwatch.getMetricData(RTParams, function(err, data) {
+             if (err) console.log(err, err.stack); // an error occurred
+             else  {   
+              // console.log(data);  
+               temp = data.MetricDataResults[0].Values[0];
+               if(newData !== temp)  {
+                 newData = temp;
+                
+               }
+              // console.log(newData)
+                 }       // successful response
+                 dataset.data.push({                               
+                   x: new Date(),
+                   y: newData
+               });
+           });                             
+          });
+          
+          if(this.state.unit === "Percent" || this.props.graphSettings.metricName==="CPUUtilization"){
+            chart.options.scales.yAxes[0].ticks = {
+              // stepSize: 0.2,
+              // fontSize: 10,
+               min: 0,
+               max: 1,// Your absolute max value
+              callback: function (value) {
+                return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
+              },
+            }
+           
+            
+          }else{
+            chart.options.scales.yAxes[0].ticks = {
+                min: 0, 
+            }
+          }
+      }
+      
+      componentDidMount() {
+        console.log(this.props.graphSettings.realTime);
+        if(this.props.graphSettings.realTime === false){
+             this.getgraph();
+        }
+        if(this.props.graphSettings.colorSelected != null){
+         this.setState({graphColor:this.props.graphSettings.colorSelected})
+        }
+        this.setState({ prevValues: this.state.holder}) // set values at the begining
+        
+      }
+      componentWillUnmount(){
+        console.log(this.state.holder.length);
+        if(this.state.holder.length !== 0){
+          this.setState({holder:[]});
+          this.setState({data: []});
+          this.setState({label:[]});
+          this.setState({unit:""});
+        }
+      }
+      sendDeletionData = () => {
+        this.props.parentCallback(this.props.id);
+   }
+      sendModifyData = () => {
+        this.props.callback(this.props.id);
+      }
+    
+
+      showOptions(e){
+        e.preventDefault();
+        this.setState({ showOptions: !this.state.showOptions});
+      }
+
+    
+    render() {
+  //     if(this.props.graphSettings.realTime === false){
+  //       this.getgraph();
+  //  }
+    console.log(this.props.graphSettings);
+    let optionToSkip;
+    if(this.state.unit !== "Percent" || this.props.graphSettings.metricName!=="CPUUtilization"){
+        optionToSkip =  {  
+          elements: {
+            point:{
+                radius: 0,  
+            },
+          }, 
+          scales: {
+            xAxes: [{  
+              ticks: {
+                // maxRotation: 0,
+                // minRotation: 0,
+            fontSize: 10,
+            //autoSkip: true,
+            maxTicksLimit: 10
+          },
+            gridLines: {
+              display: false ,
+             // color: "black  "
+            },
+            }] , 
+            yAxes: [{
+              ticks: {
+                  beginAtZero:true,
+                //  fontColor: 'black   '
+              },
+              gridLines: {
+                display: true ,
+               // color: "black  "
+              },
+          }], 
+      },
+      pan: {
+        enabled: true,
+        mode: 'x',
+       
+      },
+      
+      zoom: {
+        // Boolean to enable zooming
+        enabled: true,
+        mode: 'x',
+      
+      }
+
+    }
+  }else{
+    optionToSkip =  { 
       elements: {
         point:{
             radius: 0,  
@@ -81,285 +348,8 @@ class LineGraph extends Component {
           mode: 'x',
         }
     }
-    
   }
-    
-
-      getgraph = () =>{
-
-        // if(this.props.graphSettings.realTime === true){
-        //   // this.setState({data:[]})
-        //   // this.setState({label:[]})
-        //   this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
-      
-        // }
-
-      //   console.log(this.props.graphSettings.startTime + "start timmmmmm")
-      //   console.log(this.props.graphSettings.endTime + " end timmmmmm")
-      //   console.log(this.props.graphSettings.realTime)
-      //  console.log("id is "+this.props.graphSettings.idValue);
-       var typeOfD = this.props.graphSettings.typeOfDimension;
-       var idVal = this.props.graphSettings.idValue;
-       if(typeOfD == null){typeOfD = "InstanceId"}
-       if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
-
-         
-        var params = {
-            EndTime: new Date(this.props.graphSettings.endTime), /* required */
-            MetricName: this.props.graphSettings.metricName, /* required */
-            Namespace: this.props.graphSettings.nameSpace, /* required */
-            Period: this.props.graphSettings.period, /* required */
-            StartTime:  new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
-         
-           Dimensions: [
-              {
-                Name: typeOfD, /* required */
-                // Value: 'i-031339fed44b9fac8' /* required */
-                Value: idVal
-              },
-              /* more items */
-            ],
-            Statistics: [
-              'Average',
-              /* more items */
-            ], 
-          }
-        
-          AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
-          AWS.config.logger = console; 
-        let cloudwatch3 = new AWS.CloudWatch();
-        cloudwatch3.getMetricStatistics(params, function(err, data) {
-         // console.log("inside function")
-          if (err) console.log(err, err.stack); // an error occurred
-          else {
-            
-           let sortedData =  data.Datapoints.sort(function(a, b) {
-              var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
-              return dateA - dateB;
-          });
-         
-          
-           this.setState({holder:sortedData})
-
-           console.log(this.state.holder)
-         
-             for (var i = 0; i < this.state.holder.length; i++) {
-              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
-               console.log(this.state.label.includes(newTimestamp))
-              //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
-               if(!this.state.label.includes(newTimestamp)){
-                this.setState({label: [...this.state.label,newTimestamp]});
-                this.setState(prevState => ({
-                  data : [...prevState.data, this.state.holder[i].Average]
-                }));
-                 this.setState({unit: this.state.holder[i].Unit})
-               }else{
-              
-               }
-              
-             
-             
-          //     if(this.state.holder[i].Timestamp.getHours()<12){
-          //       if(this.state.holder[i].Timestamp.getMinutes()<10){
-          //         this.setState(prevState => ({
-          //           label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-          //         }));
-          //       }
-          //       else{
-          //     this.setState(prevState => ({
-          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " AM"]
-          //     }));
-          //   }
-          // }
-          //   else{
-          //     if(this.state.holder[i].Timestamp.getMinutes()<10){
-          //       this.setState(prevState => ({
-          //         label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':0' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-          //       }));
-          //     }else{
-          //     this.setState(prevState => ({
-          //       label : [...prevState.label,  this.state.holder[i].Timestamp.getHours() + ':' + this.state.holder[i].Timestamp.getMinutes() + " PM"]
-          //     }));
-          //   }
-          // }
-                 
-
-              
-               }
-
-              // console.log(this.state.label + " hey i m label")
-              
-           
-            
-            
-           
-           
-            
-    
-         
-             
-          };     
-         
-          // console.log(this.state.data)
-          // console.log(this.state.label)  
-          // this.setState({prevValues : this.state.holder})
-          console.log(this.state.unit + " unit ");
-         
-        }.bind(this));
-        return [this.state.data, this.state.label];
-      }
-
-      onRefresh(chart){
-        var typeOfD = this.props.graphSettings.typeOfDimension;
-        var idVal = this.props.graphSettings.idValue;
-        if(typeOfD == null){typeOfD = "InstanceId"}
-        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
-        var RTParams = {
-          EndTime: new Date(), /* required */
-          MetricDataQueries: [ /* required */
-            {
-              Id: 'realTimeData', /* required */
-              MetricStat: {
-                Metric: { /* required */
-                  Dimensions: [
-                    {
-                      Name: typeOfD, /* required */
-                      Value: idVal /* required */
-                    },
-                    /* more items */
-                  ],
-                  MetricName: this.props.graphSettings.metricName,
-                  Namespace: this.props.graphSettings.nameSpace
-                },
-                Period: this.props.graphSettings.period, /* required */
-                Stat: 'Average', /* required */
-              },
-             // Period: this.props.graphSettings.period,
-             // ReturnData: true 
-            },
-            /* more items */
-          ],
-          StartTime:  this.props.graphSettings.startTime, /* required */
-          ScanBy: 'TimestampDescending'
-         // MaxDatapoints: 2,
-        }
-        
-          chart.data.datasets.forEach(function(dataset) {
-           let cloudwatch = new AWS.CloudWatch();
-           let newData;
-           let temp;
-           cloudwatch.getMetricData(RTParams, function(err, data) {
-             if (err) console.log(err, err.stack); // an error occurred
-             else  {   
-               console.log(data);  
-               temp = data.MetricDataResults[0].Values[0];
-               if(newData !== temp)  {
-                 newData = temp;
-                
-               }
-               console.log(newData)
-                 }       // successful response
-                 dataset.data.push({                               
-                   x: new Date(),
-                   y: newData
-               });
-           });                             
-          });
-          
-          if(this.state.unit === "Percent" || this.props.graphSettings.metricName==="CPUUtilization"){
-            chart.options.scales.yAxes[0].ticks = {
-              // stepSize: 0.2,
-              // fontSize: 10,
-               min: 0,
-               max: 1,// Your absolute max value
-              callback: function (value) {
-                return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
-              },
-            }
-           
-            
-          }
-      }
-      componentDidMount() {
-        if(this.props.graphSettings.realTime === false){
-             this.getgraph();
-        }
-        if(this.props.graphSettings.colorSelected != null){
-         this.setState({graphColor:this.props.graphSettings.colorSelected})
-        }
-        this.setState({ prevValues: this.state.holder}) // set values at the begining
-        
-      }
-
-      showOptions(e){
-        e.preventDefault();
-        this.setState({ showOptions: !this.state.showOptions});
-      }
-
-    
-    render() {
-    
-     
-      if(this.props.graphSettings.metricName!=="CPUUtilization"){
-        this.optionToSkip =  {  
-          elements: {
-            point:{
-                radius: 0,  
-            },
-          }, 
-          scales: {
-            xAxes: [{  
-              ticks: {
-                // maxRotation: 0,
-                // minRotation: 0,
-            fontSize: 10,
-            //autoSkip: true,
-            maxTicksLimit: 10
-          },
-            gridLines: {
-              display: false ,
-             // color: "black  "
-            },
-            }] , 
-            yAxes: [{
-              ticks: {
-                  beginAtZero:true,
-                //  fontColor: 'black   '
-              },
-              gridLines: {
-                display: true ,
-               // color: "black  "
-              },
-          }], 
-      },
-      pan: {
-        // Boolean to enable panning
-        enabled: true,
-      
-        // Panning directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow panning in the y direction
-        mode: 'x',
-       
-      },
-      
-      // Container for zoom options
-      zoom: {
-        // Boolean to enable zooming
-        enabled: true,
-      
-        // Zooming directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow zooming in the y direction
-        mode: 'x',
-      
-      }
-
-    }
-      
-      }
-      
-      
-     
-      var Color = require('color');
+      let Color = require('color');
        const lineGraphData = {
         labels: this.state.label,
         datasets: [
@@ -375,8 +365,8 @@ class LineGraph extends Component {
           }
         ]
       }
-   
-     
+    
+ 
       let graph;
       if(this.props.graphSettings.realTime === true){
        graph = <Line
@@ -413,25 +403,19 @@ class LineGraph extends Component {
                    }
                }],
                yAxes:[{
-                 ticks:{
-                  min: 0,
-                  max: 1,// Your absolute max value
-                }
+                
               }
                ],           
            },
-          //  plugins: {
-          //      streaming: {            // per-chart option
-          //          frameRate: 5       // chart is drawn 30 times every second
-          //      }
-          //  }
+        
        }}/>
       }
       else{
-       graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {this.optionToSkip} ></Line>
+       graph = <Line height = "100px" width = "100px" data={lineGraphData} options = {optionToSkip} ></Line>
       }
-      //console.log(this.state.graphColor+"the color");
-     //console.log(this.state.data.length + " and " + this.state.data[0])
+    
+    
+      
    
         return (
             
@@ -444,8 +428,10 @@ class LineGraph extends Component {
                   </a>
                   { this.state.showOptions? (
                     <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                      <a href="" class="dropdown-item">Modify</a>
-                      <Link to={{pathname:'/deleteGraph',  graphInfor: this.props.graphSettings}} >
+                      <Link to={{typeOfGraph : 'line' ,pathname:'/dashboard'}} onClick = {this.sendModifyData}>
+                       Modify
+                      </Link >
+                      <Link to={{pathname:'/dashboard'}} onClick = {this.sendDeletionData} >
                        Delete
                       </Link>
                     </div>

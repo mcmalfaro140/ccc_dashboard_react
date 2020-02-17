@@ -97,10 +97,15 @@ class Topbar extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleBack = this.handleBack.bind(this);
   }
 
   handleChange(event) {
     this.setState({keyword: event.target.value});
+  }
+
+  handleBack() {
+    this.props.history.push('/');
   }
 
 
@@ -109,14 +114,14 @@ class Topbar extends Component {
     return (
       <React.Fragment>
         <div className="navbar-custom">
-          <ul className="list-unstyled topnav-menu float-right mb-0">
+          {/* <ul className="list-unstyled topnav-menu float-right mb-0">
 
             <li className="d-none d-sm-block">
               <form className="app-search">
                 <div className="app-search-box">
                   <div className="input-group">
                     <input type="text" className="form-control" placeholder="Search..." value={this.state.keyword} onChange={this.handleChange} />
-                    <Link to={{pathname:'/search_results', state: { search_keyword: this.state.keyword}}} >
+                    <Link to={{pathname:'/search_results', state: { search_keyword: this.state.keyword, range: "all"}}} >
                       <div className="input-group-append">
                         <button className="btn" type="submit">
                           <i className="fe-search"></i>
@@ -131,30 +136,34 @@ class Topbar extends Component {
             <li>
               <NotificationDropdown notifications={Notifications} />
             </li>
+          </ul> */}
+          { this.props.title === "Dashboard" ?
+            (<ul className="list-unstyled topnav-menu topnav-menu-left m-0">
+              <li>
+                <button className="button-menu-mobile waves-effect" onClick={this.props.menuToggle}>
+                  <i className="fe-menu"></i>
+                </button>
+              </li>
 
-            {/* <li>
-              <ProfileDropdown profilePic={profilePic} menuItems={ProfileMenus} username={'Nik Patel'} />
-            </li> */}
+              <li>
+                <h3 className="page-title-main">{this.props.title}</h3>
+              </li>
+            </ul>
+            ):(
+            <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
+              <li>
+                <button className="button-menu-mobile waves-effect" onClick={this.handleBack}>
+                  <i class="mdi mdi-arrow-left-bold"></i>
+                </button>
+              </li>
 
-
-            {/* <li className="dropdown notification-list">
-              <button className="btn btn-link nav-link right-bar-toggle waves-effect waves-light" onClick={this.props.rightSidebarToggle}>
-                <i className="fe-settings noti-icon"></i>
-              </button>
-            </li> */}
-          </ul>
-
-          <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
-            <li>
-              <button className="button-menu-mobile waves-effect" onClick={this.props.menuToggle}>
-                <i className="fe-menu"></i>
-              </button>
-            </li>
-
-            <li>
-              <h3 className="page-title-main">{this.props.title}</h3>
-            </li>
-          </ul>
+              <li>
+                <h3 className="page-title-main">{this.props.title}</h3>
+              </li>
+            </ul>
+            )
+          }
+          
             
         </div>
       </React.Fragment >
