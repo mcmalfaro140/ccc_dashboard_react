@@ -5,7 +5,6 @@ import Loader from 'react-loader-spinner'
 
 //Import componets
 import LogTableResult from '../components/searchComp/LogTableResult'
-import Fail from '../components/searchComp/Fail'
 import NoFound from '../components/searchComp/NoFound'
 import LogGroupList from '../components/searchComp/LogGroupList'
 import SearchFilterBar from '../components/searchComp/SearchFilterBar'
@@ -24,6 +23,7 @@ class SearchResult extends React.Component {
             showLogTable: false,
             keyword : "",
             logGroupNames : [],
+            filterNames: [],
             noResults: false,
             params : {
                 limit : '50'
@@ -35,33 +35,50 @@ class SearchResult extends React.Component {
         this.searchByLogGroupName = this.searchByLogGroupName.bind(this);
         this.show = this.show.bind(this)
         this.setId = this.setId.bind(this)
+        this.filter = this.filter.bind(this);
+    }
+
+    filter(isFilter){
+        if(this.state.logGroupNames.length === 0){
+            this.getLogGroupName();
+        }
+        if(isFilter === true){
+            let temp = this.props.location.state.filterNames;
+            temp.forEach((element) => {
+                this.searchByLogGroupName(element);
+            })
+        }else{
+            let temp = this.props.location.state.logGroupNames;
+            temp.forEach((element) => {
+                this.searchByLogGroupName(element);
+            })
+        }
     }
 
     //Update componets when page is initialize
     componentDidMount() {
-        this.setState({results: [], loading: true, noResults: false})
-        this.getLogGroupName();
+        // console.log("component")
+        // console.log(this.props)
+        this.setState({results: [], loading: true, noResults: false, logGroupNames: this.props.location.state.logGroupNames})
+        this.filter(this.props.location.state.isFilterbyName)
     }
 
     //will update the components when new keyword is enter
     componentDidUpdate(prevProps) {
-        console.log("search porps update")
+        // console.log("component did update")
+        // console.log(this.props)
         let keyword = this.props.location.state.search_keyword
         let preKeyword = prevProps.location.state.search_keyword
         let range = this.props.location.state.range
         let preRange = prevProps.location.state.range
-        if(range !== preRange ){
-            if(keyword !== preKeyword){
-                this.setState({results: [], loading: true, noResults: false})
-                for (var i = 0; i < this.state.logGroupNames.length; i++) {
-                    this.searchByLogGroupName(this.state.logGroupNames[i])
-                }
-            }
-        }else if (keyword !== preKeyword){
-            this.setState({results: [], loading: true, noResults: false})
-            for (var i = 0; i < this.state.logGroupNames.length; i++) {
-                this.searchByLogGroupName(this.state.logGroupNames[i])
-            }
+        let filter = this.props.location.state.filterNames;
+        let prevFilter = prevProps.location.state.filterNames.length;
+        let isFilter = this.props.location.state.isFilterbyName;
+        let prevIsFilter = prevProps.location.state.isFilterbyName;
+
+        if(range !== preRange || keyword !== preKeyword || filter.length !== prevFilter || isFilter !== prevIsFilter){
+            this.setState({results: [], loading: true, noResults: false, filterNames: filter})
+            this.filter(isFilter)
         }
     } 
 
@@ -72,7 +89,6 @@ class SearchResult extends React.Component {
 
     //Funtion to get all the log group names from AWS
     getLogGroupName(){
-        console.log("init search")
         cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
             if (err){
                 console.log(err, err.stack); // an error occurred
@@ -82,9 +98,6 @@ class SearchResult extends React.Component {
                     this.setState(prevState => ({
                         logGroupNames : [...prevState.logGroupNames, temp[i].logGroupName]
                     }));
-                }
-                for (var i = 0; i < temp.length; i++) {
-                    this.searchByLogGroupName(this.state.logGroupNames[i]);
                 }
             }
         }.bind(this))
@@ -131,7 +144,6 @@ class SearchResult extends React.Component {
                 console.log(err, err.stack); // an error occurred
             }else{ 
                 if(data.events.length > 0){
-
                     let resultData = {
                         logGroupName: "",
                         events: []
@@ -140,11 +152,10 @@ class SearchResult extends React.Component {
                     var new_data = Object.create(resultData);  
                     new_data.logGroupName = logName;
                     new_data.events = data.events
-
                     this.setState(prevState => ({
                         results : [...prevState.results, new_data]
                     }));
-
+                    // console.log(this.state.results)
                     
                 }                
             }  
@@ -167,16 +178,11 @@ class SearchResult extends React.Component {
     }
 
     render() {
-        console.log(this.props)
-        let empty_str = true;
         var value = this.props.location.state.search_keyword
-        if(value.length > 0){
-            empty_str = false
-        }
 
         return (
             <div>
-                <SearchFilterBar/>
+                <SearchFilterBar search_keyword={this.props.location.state.search_keyword} range={this.props.location.state.range} isFilterbyName={this.props.location.state.isFilterbyName} logGroupNames={this.props.location.state.logGroupNames} filterNames={this.props.location.state.filterNames} id={this.props.location.state.id}/>
                 { this.state.loading ? (
                     <div class="loader">
                         <Loader
@@ -189,21 +195,17 @@ class SearchResult extends React.Component {
                     </div>
                 ): (
                     <div>
-                        { empty_str ? (
-                            <Fail/>
-                        ):(
-                            ( this.state.noResults ? 
-                                <NoFound value={value}/>
-                                : 
-                                <div>
-                                    {this.state.showLogTable ? 
-                                        <LogTableResult results={this.state.results[this.state.id]} showToggle ={this.show}/>
-                                        : 
-                                        <LogGroupList results={this.state.results} setId={this.setId} search_keyword={this.props.location.state.search_keyword}/>
-                                    }
-                                </div>
-                            )
-                        )}
+                        { this.state.noResults ? 
+                            <NoFound value={value}/>
+                            : 
+                            <div>
+                                {this.state.showLogTable ? 
+                                    <LogTableResult results={this.state.results[this.state.id]} showToggle ={this.show}/>
+                                    : 
+                                    <LogGroupList results={this.state.results} setId={this.setId} search_keyword={this.props.location.state.search_keyword}/>
+                                }
+                            </div>
+                        }
                     </div>
                 )}
             </div>

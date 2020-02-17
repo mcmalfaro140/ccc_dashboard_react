@@ -1,10 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText, CustomInput } from 'reactstrap';
 import ReactLightCalendar from '@lls/react-light-calendar'
 import '@lls/react-light-calendar/dist/index.css'
 import { Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import AWS from 'aws-sdk';
+import mykey from '../../keys.json';
+
+AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
+var cloudwatchlogs = new AWS.CloudWatchLogs();
 
 
 
@@ -18,17 +23,68 @@ class AdvSearchModal extends React.Component {
             endDate: new Date(startDate),
             prevId: "col-0",
             keyword: "",
-            range: "all"
+            range: "all",
+            params : {},
+            logGroupNames : [],
+            filterNames : [],
+            isFilterbyName: false
         }
         this.handleColorChange = this.handleColorChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.getLogGroupName = this.getLogGroupName.bind(this);
+        this.activateList = this.activateList.bind(this);
+        this.addName = this.addName.bind(this);
+    }
+
+    getLogGroupName(){
+        cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
+            if (err){
+                console.log(err, err.stack); // an error occurred
+            }else  {
+                let temp = data.logGroups;
+                for (var i = 0; i < temp.length; i++) {
+                    this.setState(prevState => ({
+                        logGroupNames : [...prevState.logGroupNames, temp[i].logGroupName]
+                    }));
+                }
+            }
+        }.bind(this))
+    }
+
+    componentDidMount(){
+        this.getLogGroupName();
+    }
+
+    activateList(){
+        let element = document.getElementById("logGroupNamesDiv");
+        if(ReactDOM.findDOMNode(element).style.display !== "none"){
+            ReactDOM.findDOMNode(element).style.display = "none"
+            this.setState({isFilterbyName: false})
+        }else{
+            ReactDOM.findDOMNode(element).style.display = "block"
+            this.setState({isFilterbyName: true})
+        }
+        
+    }
+
+    addName(str,id){
+        let element = document.getElementById(id);
+        
+        if(element.checked === true){
+            this.setState(prevState => ({
+                filterNames : [...prevState.filterNames, str]
+            }));
+        }else{
+            let temp = this.state.filterNames.splice(this.state.filterNames.indexOf(str), 1);
+            this.setState({filterNames: temp})
+        }
     }
 
     onChange = (startDate, endDate) => this.setState({ startDate, endDate });
 
     handleInputChange(event) {
         this.setState({keyword: event.target.value});
-      }
+    }
 
     handleColorChange(id) {
         let prevElem = document.getElementById(this.state.prevId);
@@ -47,9 +103,9 @@ class AdvSearchModal extends React.Component {
         }else if( id === "col-1"){
             this.setState({prevId: id, range: "1h", endDate: this.state.startDate - 3600}) //3600 sec in 1 hour
         }else if( id === "col-2"){
-            this.setState({prevId: id, range: "6h", endDate: this.state.startDate - 21600})
+            this.setState({prevId: id,  range: "6h", endDate: this.state.startDate - 21600})
         }else if( id === "col-3"){
-            this.setState({prevId: id, range: "1d", endDate: this.state.startDate - 86400})
+            this.setState({prevId: id,  range: "1d", endDate: this.state.startDate - 86400})
         }else if( id === "col-4"){
             this.setState({prevId: id, range: "1w", endDate: this.state.startDate - 604800})
         }else if( id === "col-5"){
@@ -69,6 +125,11 @@ class AdvSearchModal extends React.Component {
         var end = new Date(parseInt(endDate));
         let startTime = start.toGMTString();
         let endTime = end.toGMTString();
+        const names = this.state.logGroupNames.map((item, index) => {
+            return(
+                <CustomInput type="checkbox" id={index} label={item} onChange={()=>this.addName(item,index)} />
+            )
+        })
         return(
             <div className="search_modal">
                 <ModalHeader >Advanced Log Search</ModalHeader>
@@ -76,6 +137,12 @@ class AdvSearchModal extends React.Component {
                     <Form>
                         <FormGroup>
                             <Input type="text" name="keyWord" id="keyWord" placeholder="Enter a keyword" value={this.state.keyword} onChange={this.handleInputChange} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label><CustomInput type="switch" id="logGroupSwitch" name="logGroupSwitch" label="Filter by Log Group Name?" onChange={this.activateList} /></Label>
+                            <div id="logGroupNamesDiv" style={{display:'none'}}>
+                                {names}
+                            </div>
                         </FormGroup>
                         <FormGroup>
                             <Label>Filter by Time: </Label>
@@ -127,7 +194,11 @@ class AdvSearchModal extends React.Component {
                                 search_keyword: this.state.keyword,
                                 range: this.state.range,
                                 startTime: this.state.startDate,
-                                endTime: this.state.endDate
+                                endTime: this.state.endDate,
+                                isFilterbyName: this.state.isFilterbyName,
+                                logGroupNames : this.state.logGroupNames,
+                                filterNames: this.state.filterNames,
+                                id: this.state.prevId
                             }
                         }}
                     >
