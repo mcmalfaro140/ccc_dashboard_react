@@ -42,19 +42,19 @@ class LineGraph extends Component {
     
 
       getgraph = () =>{
-        
-       console.log(this.props.graphSettings);
+     
+     //  console.log(this.props.graphSettings);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
 
         var params = {
-            EndTime: new Date(this.props.graphSettings.endTime).toISOString(), /* required */
+            EndTime: new Date(this.props.graphSettings.endTime), /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
-            StartTime: new Date(this.props.graphSettings.startTime).toISOString(), /* required **********************************Always change it to a new start time */ 
+            StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
          
            Dimensions: [
               {
@@ -72,7 +72,7 @@ class LineGraph extends Component {
         
           AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
           AWS.config.logger = console; 
-        let cloudwatch3 = new AWS.CloudWatch();
+          let cloudwatch3 = new AWS.CloudWatch();
        
 
         cloudwatch3.getMetricStatistics(params, function(err, data) {
@@ -87,12 +87,12 @@ class LineGraph extends Component {
          
           
            this.setState({holder:sortedData})
-          console.log(data);
-           console.log(this.state.holder)
+          // console.log(data);
+          //  console.log(this.state.holder)
          
              for (var i = 0; i < this.state.holder.length; i++) {
-              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
-               console.log(this.state.label.includes(newTimestamp))
+              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+             //  console.log(newTimestamp)
               //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
                if(!this.state.label.includes(newTimestamp)){
                 this.setState({label: [...this.state.label,newTimestamp]});
@@ -218,9 +218,11 @@ class LineGraph extends Component {
       componentDidMount() {
         console.log(this.props.graphSettings.realTime);
         if(this.props.graphSettings.realTime === false){
+             this.setState({graphSetting : new Date(this.props.graphSettings.startTime) + " - " + new Date(this.props.graphSettings.endTime)})
              this.getgraph();
-             this.setState({graphSetting : this.props.graphSettings.startTime + " - " + this.props.graphSettings.endTime})
+             console.log(this.props.graphSettings.startTime + " - " + this.props.graphSettings.endTime);
         }
+       
         if(this.props.graphSettings.colorSelected != null){
          this.setState({graphColor:this.props.graphSettings.colorSelected})
         }
@@ -228,9 +230,15 @@ class LineGraph extends Component {
         
       }
       componentWillReceiveProps(nextProp){
-        console.log(nextProp.graphSettings);
+        console.log(new Date(nextProp.graphSettings.startTime )+ " - " + new Date(nextProp.graphSettings.endTime));
+        console.log(this.state.graphSetting);
         if(nextProp.graphSettings.realTime === false){
-          if(this.state.graphSetting !== nextProp.graphSettings.startTime + " - " + nextProp.graphSettings.endTime){
+          if(this.state.graphSetting !== (new Date(nextProp.graphSettings.startTime) + " - " + new Date(nextProp.graphSettings.endTime))){
+            if(this.state.holder.length > 0){
+                this.setState({holder:[]});
+                this.setState({label:[]});
+                this.setState({data:[]});
+              }
               this.getgraph();
           }
       }
@@ -253,7 +261,7 @@ class LineGraph extends Component {
   //     if(this.props.graphSettings.realTime === false){
   //       this.getgraph();
   //  }
-    console.log(this.props.graphSettings);
+    //console.log(this.props.graphSettings);
     let optionToSkip;
     if(this.state.unit !== "Percent" || this.props.graphSettings.metricName!=="CPUUtilization"){
         optionToSkip =  {  

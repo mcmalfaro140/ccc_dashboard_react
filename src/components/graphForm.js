@@ -136,34 +136,7 @@ class graphForm extends Component {
       
   }
   
-   
-    submit(e){
 
-
-        e.preventDefault();
-
-        this.props.history.push({
-           // pathname: str,
-            pathname: "/Dashboard",
-            state: {
-                newGraph : this.state.newGraph,
-                // metricName: this.state.metricName,
-                // nameSpace : this.state.nameSpace,
-                // chartName : this.state.chartName,
-                // // accessKeyId : this.state.accessKeyId,
-                // // secretAccessKey : this.state.secretAccessKey,
-                // instanceId : this.state.instanceId,
-                // //region : this.state.region,
-                // // startTime : this.state.startTime,
-                // // endTime : this.state.endTime
-
-
-
-            }
-        })
-
-
-    }
 
   
     onDateRangeSelection = (startTime, endTime) => {
@@ -205,15 +178,15 @@ class graphForm extends Component {
 
     render() {
         var timeSelection;
-        let isModify;
-        if(this.props.graphInfor!= null){
-            if(this.props.graphInfor.realTime === true){
-                isModify = true;
-            }
-            else{
-                isModify = false;
-            }
-        }
+        // let isModify;
+        // if(this.props.graphInfor!= null){
+        //     if(this.props.graphInfor.realTime === true){
+        //         isModify = true;
+        //     }
+        //     else{
+        //         isModify = false;
+        //     }
+        // }
         if(this.state.isRealTime === true ){
             timeSelection = 
              <div>            

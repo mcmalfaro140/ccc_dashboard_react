@@ -203,6 +203,7 @@ class DefaultDashboard extends Component {
                     this.setState({stickyFormData : newDashboard[i].graphSettings});
                 }
             }
+            
     }
     
     toggleForm = () =>{
@@ -231,7 +232,6 @@ class DefaultDashboard extends Component {
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                         let preName = this.state.newUpcomingPropsName;
                         if(newName !== preName){
-                        //  nextProps.location.state.newGraph.id = this.state.userDashboard.length
                         nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
                             temp.push(nextProps.location.state.newGraph);
                             this.setState({
@@ -304,6 +304,7 @@ class DefaultDashboard extends Component {
             this.setState({
                 userDashboard: updatedIndex
             })
+            console.log(updatedIndex)
         }
         
     }
