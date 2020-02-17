@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle} from 'reactstrap';
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
 
 import profilePic from '../assets/images/users/defaultUser.png';
-import Logout from '../pages/auth/Logout';
 import logo from '../assets/images/logo_ccc.png';
-
-var currentDate = new Date();
 
 
 //Side menu navigation
@@ -84,7 +80,7 @@ class SideNavContent extends React.Component {
               </li>
               <li className={this.state.realTimeActive ? ("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showRealtimeOptions}>
-                        <i class="mdi mdi-elevation-rise"></i>
+                        <i className="mdi mdi-elevation-rise"></i>
                       <span> Charts </span>
                       <span className="menu-arrow"></span>
                   </a>
@@ -104,7 +100,7 @@ class SideNavContent extends React.Component {
                                 typeOfGraph : 'line' }}
                                 onClick = {this.props.toggleForm}
                                 className="waves-effect side-nav-link-ref">
-                                <i class="mdi mdi-chart-line"></i>
+                                <i className="mdi mdi-chart-line"></i>
                                 <span> Line Chart </span>
                             </Link>
                       </li>
@@ -122,7 +118,7 @@ class SideNavContent extends React.Component {
               </li>
               <li className={this.state.logTableActive? ("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showLogTableOptions}>
-                      <i class="mdi mdi-folder-multiple-outline"></i>
+                      <i className="mdi mdi-folder-multiple-outline"></i>
                       <span> Logs </span>
                       <span className="menu-arrow"></span>
                   </a>
@@ -137,7 +133,7 @@ class SideNavContent extends React.Component {
                       </li> */}
                       <li onClick = {this.props.toggleSearchModal}>
                           <Link className="waves-effect side-nav-link-ref">
-                              <i class="fe-search"></i>
+                              <i className="fe-search"></i>
                               <span> Log Search</span>
                           </Link>
                       </li>
@@ -150,19 +146,19 @@ class SideNavContent extends React.Component {
 
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
-                      <i class="mdi mdi-bell-ring-outline"></i>
+                      <i className="mdi mdi-bell-ring-outline"></i>
                       <span> Alerts </span>
                   </a>
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.goFullScreen}>
-                      <i class="mdi mdi-fullscreen"></i>
+                      <i className="mdi mdi-fullscreen"></i>
                       <span> FullScreen Mode </span>
                   </a>
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
-                      <i class="mdi mdi-settings"></i>
+                      <i className="mdi mdi-settings"></i>
                       <span> Settings </span>
                   </a>
               </li>
