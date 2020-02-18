@@ -197,8 +197,26 @@ class graphForm extends Component {
     
 
     render() {
-        let timeSelection;    
-        if(this.state.isRealTime === true ){
+        var timeSelection;
+        // let isModify;
+        // if(this.props.graphInfor!= null){
+        //     if(this.props.graphInfor.realTime === true){
+        //         isModify = true;
+        //     }
+        //     else{
+        //         isModify = false;
+        //     }
+        // }
+        let isModify;
+        if(this.props.graphInfor!= null){
+            if(this.props.graphInfor.realTime === true){
+                isModify = true;
+            }
+            else{
+                isModify = false;
+            }
+        }
+        if(this.state.isRealTime === true || isModify){
             timeSelection = 
              <div>            
             <Form.Group controlId="exampleForm.ControlSelect2">
@@ -243,6 +261,7 @@ class graphForm extends Component {
          </div>    
         }
         else if(this.state.isRealTime === false){
+            console.log(this.state.isRealTime)
             timeSelection = 
             <div>
             <Form.Group>
@@ -259,7 +278,12 @@ class graphForm extends Component {
                                 Please provide all the inputs to create a chart.
                                 <form>
                                 
+<<<<<<< HEAD
                                  {this.props.graphInfor == null ?
+=======
+                                {/* {this.props.graphInfor == null && ( */}
+                                {this.props.graphInfor == null ?
+>>>>>>> change
                                 <Form.Group>
                                 <label className="center">
                                 <h5>Real Time</h5>
@@ -279,8 +303,13 @@ class graphForm extends Component {
                                     id="material-switch"
                                 />
                                 </label>
+<<<<<<< HEAD
                             </Form.Group> 
                              : ""} 
+=======
+                            </Form.Group> : null}
+                            {/* )} */}
+>>>>>>> change
                             {this.props.graphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>
