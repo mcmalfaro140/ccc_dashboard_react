@@ -32,7 +32,8 @@ class LineGraph extends Component {
         options : "",
         prevValues: [],
         unit:"",
-        graphSetting:"",
+        currentGraphSetting:"",
+         isModify: false,
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
@@ -216,11 +217,8 @@ class LineGraph extends Component {
       }
       
       componentDidMount() {
-        console.log(this.props.graphSettings.realTime);
         if(this.props.graphSettings.realTime === false){
-             this.setState({graphSetting : new Date(this.props.graphSettings.startTime) + " - " + new Date(this.props.graphSettings.endTime)})
              this.getgraph();
-             console.log(this.props.graphSettings.startTime + " - " + this.props.graphSettings.endTime);
         }
        
         if(this.props.graphSettings.colorSelected != null){
@@ -230,23 +228,30 @@ class LineGraph extends Component {
         
       }
       componentWillReceiveProps(nextProp){
-        console.log(new Date(nextProp.graphSettings.startTime )+ " - " + new Date(nextProp.graphSettings.endTime));
-        console.log(this.state.graphSetting);
-        if(nextProp.graphSettings.realTime === false){
-          if(this.state.graphSetting !== (new Date(nextProp.graphSettings.startTime) + " - " + new Date(nextProp.graphSettings.endTime))){
-            if(this.state.holder.length > 0){
-                this.setState({holder:[]});
-                this.setState({label:[]});
-                this.setState({data:[]});
-              }
-              this.getgraph();
+        let currentGraphSetting = this.state.currentGraphSetting;
+        let newGraphSetting = nextProp.graphSettings;
+        console.log(currentGraphSetting)
+        console.log(newGraphSetting);
+        if(nextProp.graphSettings.realTime === false){   
+          if(currentGraphSetting !== newGraphSetting){  
+            this.setState({currentGraphSetting : newGraphSetting});  
+             if(this.state.isModify === true){
+              if(this.state.holder.length > 0){
+                  this.setState({holder:[],label:[],data:[]});
+                }
+                this.getgraph();
+                this.setState({isModify:false});
+                
           }
       }
+    }
+    
       }
       sendDeletionData = () => {
         this.props.parentCallback(this.props.id);
    }
       sendModifyData = () => {
+        this.setState({isModify:true});
         this.props.callback(this.props.id);
       }
     
@@ -366,8 +371,8 @@ class LineGraph extends Component {
             label: this.props.graphSettings.metricName,
             data: this.state.data,
             fill: true,         
-            borderColor: this.state.graphColor, // Line color
-            backgroundColor:Color(this.state.graphColor).alpha(0.5),
+            borderColor: this.props.graphSettings.colorSelected, // Line color
+            backgroundColor:Color(this.props.graphSettings.colorSelected).alpha(0.5),
             responsive: true,
             borderWidth:1
            

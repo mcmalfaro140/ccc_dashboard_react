@@ -174,7 +174,8 @@ class DefaultDashboard extends Component {
             ],
             showOptions: false,
             systemHealth: false,
-            isModify : false,
+            isToggle : false,
+            isUpdate: false,
             stickyFormData :{},
             selectedGraphId:"",
 
@@ -195,7 +196,8 @@ class DefaultDashboard extends Component {
   }
 
     modifyFunction = (childData) => {
-            this.setState({isModify :true});
+            this.setState({isToggle :true});
+            this.setState({isUpdate: true});
             this.setState({selectedGraphId : childData});
             const newDashboard = this.state.userDashboard;
             for(let i = newDashboard.length-1; i>=0;--i){
@@ -207,12 +209,11 @@ class DefaultDashboard extends Component {
     }
     
     toggleForm = () =>{
-        this.setState({isModify : !this.state.isModify});
+        this.setState({isToggle : !this.state.isToggle});
     }
 
     componentWillReceiveProps(nextProps){
-
-        
+            console.log(this.state.isUpdate);
             let temp = this.state.userDashboard
             if(nextProps.location.state){
                 //only activate adds to the array if the props are the specify ones
@@ -228,7 +229,7 @@ class DefaultDashboard extends Component {
                         })
                     }
                 }else if(nextProps.location.state.newGraph){
-                    if(this.state.isModify === false){
+                    if(this.state.isUpdate === false){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                         let preName = this.state.newUpcomingPropsName;
                         if(newName !== preName){
@@ -239,13 +240,12 @@ class DefaultDashboard extends Component {
                                 newUpcomingPropsName: newName
                             })
                         }
-                        //console.log(this.state.userDashboard);
-                        
+                        //console.log(this.state.userDashboard); 
                     }else{
                         const id = this.state.selectedGraphId;
                         const newDashboard = this.state.userDashboard;   
-                        console.log(nextProps.location.state.newGraph.graphSettings.realTime)
-                        console.log(nextProps.location.state.newGraph.graphSettings.startTime)
+                        // console.log(nextProps.location.state.newGraph.graphSettings.realTime)
+                        // console.log(nextProps.location.state.newGraph.graphSettings.startTime)
                         for(let i = newDashboard.length-1; i>=0; i--){     
                             if(newDashboard[i].id === id){
                                 newDashboard[i].graphSettings.metricName = nextProps.location.state.newGraph.graphSettings.metricName;
@@ -265,8 +265,8 @@ class DefaultDashboard extends Component {
                             }
                         }
                         this.setState({userDashboard : newDashboard});
-                        this.setState({isModify : false});
-
+                        this.setState({isUpdate : false});
+                        console.log(this.state.isUpdate);
                     }
             }   
     }    
@@ -304,7 +304,7 @@ class DefaultDashboard extends Component {
             this.setState({
                 userDashboard: updatedIndex
             })
-            console.log(updatedIndex)
+            
         }
         
     }
@@ -313,11 +313,10 @@ class DefaultDashboard extends Component {
     
 
     render() {
-        console.log(this.props)
+        // console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
                 console.log(item.tableSettings.chartName)
-
                 return (
                 <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
                     <div style={{width:'100%'}}>
@@ -379,7 +378,7 @@ class DefaultDashboard extends Component {
         return (
             
             <React.Fragment>
-                 <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
+                 <Modal isOpen={this.state.isToggle} toggle = {this.toggleForm} > 
                      <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
                     />
                 </Modal>
