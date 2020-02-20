@@ -116,34 +116,18 @@ handleChangeForStart = date => {
     if(e.target.value === "Last Hour"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())})
         this.setState({period : 60})
-        // this.setState(prevState => {
-        //     let mixGraph = Object.assign({}, prevState.mixGraph);  
-        //     mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())
-        //     mixGraph.period = 60;
-        //     return { mixGraph };                                
-        //   })
+    
     }
     if(e.target.value === "Last Day"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
         this.setState({period : 120})
-        // this.setState(prevState => {
-        //     let mixGraph = Object.assign({}, prevState.mixGraph);  
-        //     mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
-        //     mixGraph.period = 120;
-        //     return { mixGraph };                                
-        //   })
+  
     
     }
     if(e.target.value === "Last Week"){
 
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes())})
         this.setState({period : 600})
-        // this.setState(prevState => {
-        //     let mixGraph = Object.assign({}, prevState.mixGraph);  
-        //     mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes())
-        //     mixGraph.period = 600;
-        //     return { mixGraph };                                
-        //   })
     
     
     }
@@ -399,30 +383,7 @@ handleMixChangeComplete2 = (color) =>{
                                         </Row>
                                     </Form>
 
-                                {/* <Form.Group controlId="exampleForm.ControlSelect1">
-                                        <Form.Label>Name Space: </Form.Label>
-                                         <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,0)}/>
-                                        <Form.Text className="text-muted">
-                                        specify the name space ...
-                                        </Form.Text>
-                                    </Form.Group> */}
-
-                                    {/* <fieldset disabled={this.state.namespaceNotSelected}>
-                                    <Form.Group controlId="chartName">
-                                        <Form.Label>Chart Name: </Form.Label>
-                                        <Form.Control type="text" placeholder="Enter chart name" onChange = {(e) => this.update(e,1)}/>
-                                        <Form.Text className="text-muted">
-                                        specify the chart name that you want...
-                                        </Form.Text>
-                                    </Form.Group> */}
-
-                                    {/* <Form.Group controlId="metricName">
-                                        <Form.Label>Metric Name: </Form.Label> 
-                                         <Form.Control type="text" placeholder="Enter metric name" onChange = {(e) => this.update(e,2)}/>
-                                        <Form.Text className="text-muted">
-                                        specify the metric name that you want...
-                                        </Form.Text> 
-                                     </Form.Group>  */}
+                              
                                     
                                     <Form>
                                         <Row>

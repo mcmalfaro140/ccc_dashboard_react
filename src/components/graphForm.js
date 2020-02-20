@@ -71,23 +71,28 @@ class graphForm extends Component {
         console.log(this.props.graphInfor);
         if(this.props.graphInfor != null){
             this.setState({isRealTime : this.props.graphInfor.realTime});
-            this.setState({startTime : new Date(this.props.graphInfor.startTime).getTime()});
-            this.setState({endTime : new Date(this.props.graphInfor.endTime).getTime()})
+            if(this.props.graphInfor.realTime === false){
+                this.setState({startTime : new Date(this.props.graphInfor.startTime).getTime()});
+                this.setState({endTime : new Date(this.props.graphInfor.endTime).getTime()})
+            } else{
+                this.setState({startTime : new Date(this.props.graphInfor.startTime)});
+                this.setState({endTime : new Date(this.props.graphInfor.endTime)})
+            }      
             this.setState({colorSelected : this.props.graphInfor.colorSelected});
         }
     }
     refreshGraph(e){
-       if(e.target.value === "Thirty Seconds"){
-           this.setState({refreshRate : 30000, refreshRateSelection : 'Thirty Seconds'});
+       if(e.target.value === "Three Seconds"){
+           this.setState({refreshRate : 3000, refreshRateSelection : 'Three Seconds'});
+       }
+       if(e.target.value === "Ten Seconds"){
+           this.setState({refreshRate : 10000,refreshRateSelection : 'Ten Seconds' });
        }
        if(e.target.value === "One minute"){
-           this.setState({refreshRate : 60000,refreshRateSelection : 'One minute' });
+           this.setState({refreshRate : 60000,refreshRateSelection: 'One minute' });
        }
        if(e.target.value === "Ten minutes"){
-           this.setState({refreshRate : 600000,refreshRateSelection: 'Ten minutes' });
-       }
-       if(e.target.value === "Half an hour"){
-           this.setState({refreshRate : 1800000, refreshRateSelection:'Half an hour'});
+           this.setState({refreshRate : 600000, refreshRateSelection:'Ten minutes'});
        }
     }
 
@@ -152,11 +157,8 @@ class graphForm extends Component {
 
       
   }
-  
 
-
-  
-    onDateRangeSelection = (startTime, endTime) => {
+ onDateRangeSelection = (startTime, endTime) => {
         console.log(startTime + ' - ' + endTime)
         this.setState({startTime , endTime})
     
@@ -203,9 +205,12 @@ class graphForm extends Component {
             <Form.Label>X Axis Time Range</Form.Label>
             <Form.Control as="select"  
             onChange={(e) => this.readSelection(e)}
-            defaultValue = {this.props.graphInfor==null?"":this.props.graphInfor.xAxisSelection}
+            defaultValue = {this.props.graphInfor==null?null:this.props.graphInfor.xAxisSelection}
             >
-            {/* <option disabled selected>Make Selection</option> */}
+                {this.props.graphInfor==null?
+                    <option disabled selected>Make Selection</option>
+                    :null
+                }
             <option value = "Last 15 Minutes">Last 15 Minutes</option>
             <option value = "Last Hour">Last Hour</option>
             <option value = "Last Two Hours">Last Two Hours</option>
@@ -220,12 +225,15 @@ class graphForm extends Component {
             <Form.Label>Refresh Rate</Form.Label>
             <Form.Control as="select"  
             onChange={(e) => this.refreshGraph(e)}
-            defaultValue = {this.props.graphInfor==null?"":this.props.graphInfor.refreshRateSelection}>
-            {/* <option disabled selected>Make Selection</option> */}
-            <option value = "Thirty Seconds">Thirty Seconds</option>
+            defaultValue = {this.props.graphInfor==null?null:this.props.graphInfor.refreshRateSelection}>
+            {this.props.graphInfor==null?
+                    <option disabled selected>Make Selection</option>
+                    :null
+                }
+            <option value = "Three Seconds">Three Seconds</option>
+            <option value = "Ten Seconds">Ten Seconds</option>
             <option value = "One minute">One minute</option>
             <option value = "Ten minutes">Ten minutes</option>
-            <option value = "Half an hour">Half an hour</option>
             
             </Form.Control>
             <Form.Text className="text-muted">

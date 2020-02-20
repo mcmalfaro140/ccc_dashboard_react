@@ -94,7 +94,7 @@ class DefaultDashboard extends Component {
                             chartName:"TestBar 2",
                             typeOfDimension: 'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:2000,
+                            refreshRate:10000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
@@ -339,7 +339,7 @@ class DefaultDashboard extends Component {
                     return (
                         <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
-                                <BarGraph {...item}></BarGraph>
+                                <BarGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyFunction}></BarGraph>
                             </CardBody>                                  
                         </Card>);
                 }else if(item.graphSettings.type === "pie"){

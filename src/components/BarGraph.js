@@ -3,60 +3,12 @@ import AWS from 'aws-sdk';
 import myKeys from '../keys.json';
 import {Bar} from 'react-chartjs-2';
 import 'chartjs-plugin-zoom';
-
+import { Link } from 'react-router-dom';
 /**
  * Renders the preloader
  */
 
-var currentDate = new Date();
-var optionToSkip =  {  
-    scales: {
-      xAxes: [{
-        ticks: {
-          // maxRotation: 0,
-          // minRotation: 0,
-      fontSize: 10,
-      //autoSkip: true,
-      maxTicksLimit: 10
-    },
-      gridLines: {
-        display: false ,
-       // color: "black  "
-      },
-      }] , 
-      yAxes: [{
-        ticks: {
-            beginAtZero:true,
-          //  fontColor: 'black   '
-        },
-        gridLines: {
-          display: true ,
-         // color: "black  "
-        },
-    }], 
 
-
-},
-pan: {
-  // Boolean to enable panning
-  enabled: true,
-
-  // Panning directions. Remove the appropriate direction to disable 
-  // Eg. 'y' would only allow panning in the y direction
-  mode: 'x'
-},
-
-// Container for zoom options
-zoom: {
-  // Boolean to enable zooming
-  enabled: true,
-
-  // Zooming directions. Remove the appropriate direction to disable 
-  // Eg. 'y' would only allow zooming in the y direction
-  mode: 'x',
-}
-
-}
   
 class BarGraph extends Component {
     constructor(){
@@ -70,6 +22,8 @@ class BarGraph extends Component {
             uniqueData:[],
             uniqueLabel:[],
             showOptions: false,
+            isModify:false,
+            graphSetting:{}
 
           };
         this.showOptions = this.showOptions.bind(this);
@@ -106,7 +60,7 @@ class BarGraph extends Component {
           },
           /* more items */
         ],
-        StartTime:  this.props.graphSettings.startTime, /* required */
+        StartTime:  new Date(this.props.graphSettings.startTime), /* required */
         ScanBy: 'TimestampDescending'
        // MaxDatapoints: 2,
       }
@@ -139,7 +93,7 @@ class BarGraph extends Component {
             // stepSize: 0.2,
             // fontSize: 10,
              min: 0,
-              max: 1,// Your absolute max value
+             max: 1,// Your absolute max value
             callback: function (value) {
               return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
             },
@@ -163,11 +117,11 @@ class BarGraph extends Component {
        if(typeOfD == null){typeOfD = "InstanceId"}
        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
         var params = {
-            EndTime: currentDate, /* required */
+            EndTime: new Date(this.props.graphSettings.endTime), /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
-            StartTime: this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
+            StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
            Dimensions: [
               {
@@ -253,14 +207,73 @@ class BarGraph extends Component {
          
         }.bind(this));
       }
+      compareObj(obj1, obj2) {
+        //Loop through properties in object 1
+        for (let p in obj1) {
+          //Check property exists on both objects
+          if (obj1.hasOwnProperty(p) !== obj2.hasOwnProperty(p)) return false;
+       
+          switch (typeof (obj1[p])) {
+            //Deep compare objects
+            case 'object':
+              if (!this.compareObj(obj1[p], obj2[p])) return false;
+              break;
+            //Compare function code
+            case 'function':
+              if (typeof (obj2[p]) == 'undefined' || (p !== 'compare' && obj1[p].toString() !== obj2[p].toString())) return false;
+              break;
+            //Compare values
+            default:
+              if (obj1[p] !== obj2[p]) return false;
+          }
+        }
+       
+        //Check object 2 for any extra properties
+        for (let p in obj2) {
+          if (typeof (obj1[p]) == 'undefined') return false;
+        }
+        return true;
+      };
+      
       componentDidMount() {
         if(this.props.graphSettings.realTime === false){
-          this.getgraph();
-     }
-        if(this.props.graphSettings.colorSelected != null){
-          this.setState({ graphColor : this.props.graphSettings.colorSelected })
+           // this.setState({graphSetting : this.props.graphSettings});
+            // this.setState({graphSetting : new Date(this.props.graphSettings.startTime) + " - " + new Date(this.props.graphSettings.endTime)})
+             this.getgraph();
+          //   console.log(this.props.graphSettings.startTime + " - " + this.props.graphSettings.endTime);
         }
+       
+        if(this.props.graphSettings.colorSelected != null){
+         this.setState({graphColor:this.props.graphSettings.colorSelected})
+        }
+        this.setState({ prevValues: this.state.holder}) // set values at the begining
+        
       }
+      componentWillReceiveProps(nextProp){
+        const isEqual = this.compareObj(this.state.graphSetting, nextProp.graphSettings)  
+        console.log(isEqual);    
+        if(nextProp.graphSettings.realTime === false){
+          if(this.state.isModify === true && isEqual === false){
+              if(this.state.holder.length > 0){
+                  this.setState({holder:[]});
+                  this.setState({label:[]});
+                  this.setState({data:[]});
+                }
+                this.getgraph();
+                this.setState({isModify:false});
+             //   this.setState({graphSetting : nextProp.graphSettings});
+            }
+      }
+    
+      }
+      sendDeletionData = () => {
+        this.props.parentCallback(this.props.id);
+   }
+      sendModifyData = () => {
+        this.setState({isModify:true});
+        this.props.callback(this.props.id);
+      }
+    
 
       showOptions(e){
         e.preventDefault();
@@ -270,8 +283,60 @@ class BarGraph extends Component {
       
 
     render() {
-      if(this.props.graphSettings.metricName==="CPUUtilization"){
-       optionToSkip={
+      let optionToSkip;
+      if(this.state.unit !== "Percent" || this.props.graphSettings.metricName!=="CPUUtilization"){
+          optionToSkip =  {  
+            elements: {
+              point:{
+                  radius: 0,  
+              },
+            }, 
+            scales: {
+              xAxes: [{  
+                ticks: {
+                  // maxRotation: 0,
+                  // minRotation: 0,
+              fontSize: 10,
+              //autoSkip: true,
+              maxTicksLimit: 10
+            },
+              gridLines: {
+                display: false ,
+               // color: "black  "
+              },
+              }] , 
+              yAxes: [{
+                ticks: {
+                    beginAtZero:true,
+                  //  fontColor: 'black   '
+                },
+                gridLines: {
+                  display: true ,
+                 // color: "black  "
+                },
+            }], 
+        },
+        pan: {
+          enabled: true,
+          mode: 'x',
+         
+        },
+        
+        zoom: {
+          // Boolean to enable zooming
+          enabled: true,
+          mode: 'x',
+        
+        }
+  
+      }
+    }else{
+      optionToSkip =  { 
+        elements: {
+          point:{
+              radius: 0,  
+          },
+        }, 
         scales: {
           xAxes: [{
             ticks: {
@@ -280,55 +345,40 @@ class BarGraph extends Component {
             fontSize: 10,
             //autoSkip: true,
             maxTicksLimit: 10
-          },
-          gridLines: {
-            display: false ,
-           // color: "black  "
-          },
-             
-         }] , 
-         
+            },
+            gridLines: {
+              display: false ,
+            // color: "black  "
+            },
+          }], 
           yAxes: [{
-           //stacked: true,
+            //stacked: true,
             ticks: {
+              stepSize: 0.2,
               fontSize: 10,
               min: 0,
               max: 1,// Your absolute max value
               callback: function (value) {
                 return (value / this.max * 100).toFixed(0) + '%'; // convert it to percentage
               },
-              //  fontColor: 'black   '
+                //  fontColor: 'black   '
             },
             gridLines: {
               display: true ,
-             // color: "black  "
+              // color: "black  "
             },
-        }], 
-       
-      },
-      pan: {
-        // Boolean to enable panning
-        enabled: true,
-      
-        // Panning directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow panning in the y direction
-        mode: 'x'
-      },
-      
-      // Container for zoom options
-      zoom: {
-        // Boolean to enable zooming
-        enabled: true,
-      
-        // Zooming directions. Remove the appropriate direction to disable 
-        // Eg. 'y' would only allow zooming in the y direction
-        mode: 'x',
+          }],
+        },
+          pan: {
+            enabled: true,
+            mode: 'x'
+          },
+          zoom: {
+            enabled: true,
+            mode: 'x',
+          }
       }
     }
-      }
-     
-      
-       //console.log(this.props.graphSettings.colorSelected + "hey")
        
        const barGraphData = {
         labels: this.state.label,
@@ -353,9 +403,8 @@ class BarGraph extends Component {
                label: this.props.graphSettings.metricName,
                fill:true,
                strokeColor: "rgba(220,220,220,0.8)",
-               backgroundColor:this.state.graphColor,
-               borderWidth: 1
-              // borderDash: [8, 4]
+               backgroundColor:this.props.graphSettings.colorSelected,
+ 
                }
            ]
        }}
@@ -364,8 +413,8 @@ class BarGraph extends Component {
                xAxes: [{
                    type: 'realtime',
                    realtime: {
-                       duration: 120000,    // this would be the length of the graph in this case it display 15 mins
-                       refresh: 10000,      // onRefresh callback will be called every 1000 ms *** 
+                       duration: this.props.graphSettings.xAxisRange==null?120000:this.props.graphSettings.xAxisRange,    // this would be the length of the graph in this case it display 15 mins
+                       refresh: this.props.graphSettings.refreshRate,      // onRefresh callback will be called every 1000 ms *** 
                        delay: 1000,        // delay of 1000 ms, so upcoming values are known before plotting a line
                        pause: false,       // chart is not paused
                        ttl: undefined,     // data will be automatically deleted as it disappears off the chart
@@ -374,7 +423,7 @@ class BarGraph extends Component {
                        //move callback function outside
                        onRefresh: this.onRefresh,
                       
-                   }
+                   },
                }],
                yAxes:[{
                  ticks:{
@@ -402,8 +451,12 @@ class BarGraph extends Component {
                   </a>
                   { this.state.showOptions? (
                     <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                      <a href="" class="dropdown-item">Modify</a>
-                      <a href="" class="dropdown-item">Delete</a>
+                     <Link to={{typeOfGraph : 'line' ,pathname:'/dashboard'}} onClick = {this.sendModifyData} class="dropdown-item">
+                       Modify
+                      </Link >
+                      <Link to={{pathname:'/dashboard'}} onClick = {this.sendDeletionData} class="dropdown-item">
+                       Delete
+                      </Link>
                     </div>
                   ): null }
                 </div>

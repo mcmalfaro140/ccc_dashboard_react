@@ -18,7 +18,6 @@ import { Link } from 'react-router-dom';
 
 
 class LineGraph extends Component {
-  intervalID;
   constructor(){
     super();
     this.state = {
@@ -37,8 +36,7 @@ class LineGraph extends Component {
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
-    
-    
+
   }
     
 
@@ -170,7 +168,7 @@ class LineGraph extends Component {
             },
             /* more items */
           ],
-          StartTime:  this.props.graphSettings.startTime, /* required */
+          StartTime:  new Date(this.props.graphSettings.startTime), /* required */
           ScanBy: 'TimestampDescending'
          // MaxDatapoints: 2,
         }
