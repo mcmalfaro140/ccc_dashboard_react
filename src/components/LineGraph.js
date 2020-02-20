@@ -32,8 +32,8 @@ class LineGraph extends Component {
         options : "",
         prevValues: [],
         unit:"",
-        currentGraphSetting:"",
-         isModify: false,
+        graphSetting:"",
+        // isModify: false,
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
@@ -215,10 +215,40 @@ class LineGraph extends Component {
             }
           }
       }
+      compareObj(obj1, obj2) {
+        //Loop through properties in object 1
+        for (let p in obj1) {
+          //Check property exists on both objects
+          if (obj1.hasOwnProperty(p) !== obj2.hasOwnProperty(p)) return false;
+       
+          switch (typeof (obj1[p])) {
+            //Deep compare objects
+            case 'object':
+              if (!this.compareObj(obj1[p], obj2[p])) return false;
+              break;
+            //Compare function code
+            case 'function':
+              if (typeof (obj2[p]) == 'undefined' || (p !== 'compare' && obj1[p].toString() !== obj2[p].toString())) return false;
+              break;
+            //Compare values
+            default:
+              if (obj1[p] !== obj2[p]) return false;
+          }
+        }
+       
+        //Check object 2 for any extra properties
+        for (let p in obj2) {
+          if (typeof (obj1[p]) == 'undefined') return false;
+        }
+        return true;
+      };
       
       componentDidMount() {
         if(this.props.graphSettings.realTime === false){
+           // this.setState({graphSetting : this.props.graphSettings});
+            // this.setState({graphSetting : new Date(this.props.graphSettings.startTime) + " - " + new Date(this.props.graphSettings.endTime)})
              this.getgraph();
+          //   console.log(this.props.graphSettings.startTime + " - " + this.props.graphSettings.endTime);
         }
        
         if(this.props.graphSettings.colorSelected != null){
@@ -228,23 +258,20 @@ class LineGraph extends Component {
         
       }
       componentWillReceiveProps(nextProp){
-        let currentGraphSetting = this.state.currentGraphSetting;
-        let newGraphSetting = nextProp.graphSettings;
-        console.log(currentGraphSetting)
-        console.log(newGraphSetting);
-        if(nextProp.graphSettings.realTime === false){   
-          if(currentGraphSetting !== newGraphSetting){  
-            this.setState({currentGraphSetting : newGraphSetting});  
-             if(this.state.isModify === true){
+        const isEqual = this.compareObj(this.state.graphSetting, nextProp.graphSettings)  
+        console.log(isEqual);    
+        if(nextProp.graphSettings.realTime === false){
+          if(this.state.isModify === true && isEqual === false){
               if(this.state.holder.length > 0){
-                  this.setState({holder:[],label:[],data:[]});
+                  this.setState({holder:[]});
+                  this.setState({label:[]});
+                  this.setState({data:[]});
                 }
                 this.getgraph();
                 this.setState({isModify:false});
-                
-          }
+             //   this.setState({graphSetting : nextProp.graphSettings});
+            }
       }
-    }
     
       }
       sendDeletionData = () => {
@@ -387,8 +414,8 @@ class LineGraph extends Component {
        data={{
            datasets: [{
                label: this.props.graphSettings.metricName,
-               borderColor: 'rgb(54, 162, 235)',
-               backgroundColor: 'rgba(54, 162, 235, 0.5)',
+               borderColor: this.props.graphSettings.colorSelected,
+               backgroundColor: Color(this.props.graphSettings.colorSelected).alpha(0.5),
                
               // borderDash: [8, 4]
                }
@@ -404,8 +431,8 @@ class LineGraph extends Component {
                xAxes: [{
                    type: 'realtime',
                    realtime: {
-                       duration: 120000,    // this would be the length of the graph in this case it display 15 mins
-                       refresh: 10000,      // onRefresh callback will be called every 1000 ms *** 
+                       duration: this.props.graphSettings.xAxisRange==null?120000:this.props.graphSettings.xAxisRange,    // this would be the length of the graph in this case it display 15 mins
+                       refresh: this.props.graphSettings.refreshRate,      // onRefresh callback will be called every 1000 ms *** 
                        delay: 1000,        // delay of 1000 ms, so upcoming values are known before plotting a line
                        pause: false,       // chart is not paused
                        ttl: undefined,     // data will be automatically deleted as it disappears off the chart
@@ -442,12 +469,14 @@ class LineGraph extends Component {
                   </a>
                   { this.state.showOptions? (
                     <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                      <Link to={{typeOfGraph : 'line' ,pathname:'/dashboard'}} onClick = {this.sendModifyData}>
+
+                      <Link to={{typeOfGraph : 'line' ,pathname:'/dashboard'}} onClick = {this.sendModifyData} class="dropdown-item">
                        Modify
                       </Link >
-                      <Link to={{pathname:'/dashboard'}} onClick = {this.sendDeletionData} >
+                      <Link to={{pathname:'/dashboard'}} onClick = {this.sendDeletionData} class="dropdown-item">
                        Delete
                       </Link>
+
                     </div>
                   ): null }
                 </div>

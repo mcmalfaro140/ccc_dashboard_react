@@ -20,21 +20,13 @@ import Tables from './Tables.js'
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import Table from './Tables'
 import LogReport from '../components/logRepotComp'
-
-
-
 import GraphForm from '../components/graphForm';
-
-
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
 
-
-var currentDate = new Date()
-
-
+var currentDate = new Date();
 class DefaultDashboard extends Component {
    
     constructor(props) {
@@ -54,7 +46,7 @@ class DefaultDashboard extends Component {
                             chartName:"Test 1",
                             typeOfDimension: 'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
+                            refreshRate:2000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
@@ -79,9 +71,7 @@ class DefaultDashboard extends Component {
                         "/aws/lambda/ChatRoomOnMessageFunction","/aws/lambda/LogsToElasticsearch_searchlogs","/aws/lambda/asdvasjhdgja",
                         "/aws/lambda/dummy", "/aws/lambda/notification", "/aws/rds/instance/database-1/error","App1","notificationsLogs",
                         "sns","test"
-                            ]
-                       
-                       
+                            ]        
                     },
                     coordinates: {
                         x: ((1 %3)*8),
@@ -104,7 +94,7 @@ class DefaultDashboard extends Component {
                             chartName:"TestBar 2",
                             typeOfDimension: 'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
+                            refreshRate:2000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
@@ -130,7 +120,7 @@ class DefaultDashboard extends Component {
                             chartName:"Test 3",
                             typeOfDimension:'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
+                            refreshRate:2000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
@@ -156,7 +146,7 @@ class DefaultDashboard extends Component {
                             chartName:"Test 4",
                             typeOfDimension:'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
+                            refreshRate:2000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
@@ -174,8 +164,7 @@ class DefaultDashboard extends Component {
             ],
             showOptions: false,
             systemHealth: false,
-            isToggle : false,
-            isUpdate: false,
+            isModify : false,
             stickyFormData :{},
             selectedGraphId:"",
 
@@ -196,24 +185,21 @@ class DefaultDashboard extends Component {
   }
 
     modifyFunction = (childData) => {
-            this.setState({isToggle :true});
-            this.setState({isUpdate: true});
+            this.setState({isModify :true});
             this.setState({selectedGraphId : childData});
             const newDashboard = this.state.userDashboard;
             for(let i = newDashboard.length-1; i>=0;--i){
                 if(newDashboard[i].id === childData){
                     this.setState({stickyFormData : newDashboard[i].graphSettings});
                 }
-            }
-            
+            }           
     }
     
     toggleForm = () =>{
-        this.setState({isToggle : !this.state.isToggle});
+        this.setState({isModify : !this.state.isModify});
     }
 
     componentWillReceiveProps(nextProps){
-            console.log(this.state.isUpdate);
             let temp = this.state.userDashboard
             if(nextProps.location.state){
                 //only activate adds to the array if the props are the specify ones
@@ -229,10 +215,12 @@ class DefaultDashboard extends Component {
                         })
                     }
                 }else if(nextProps.location.state.newGraph){
-                    if(this.state.isUpdate === false){
+                    console.log(this.state.isModify);
+                    if(this.state.isModify === false){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                         let preName = this.state.newUpcomingPropsName;
-                        if(newName !== preName){
+                        console.log(temp.includes(nextProps.location.state.newGraph.graphSettings));
+                        if(newName !== preName && !temp.includes(nextProps.location.state.newGraph.graphSettings)){
                         nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
                             temp.push(nextProps.location.state.newGraph);
                             this.setState({
@@ -240,33 +228,35 @@ class DefaultDashboard extends Component {
                                 newUpcomingPropsName: newName
                             })
                         }
-                        //console.log(this.state.userDashboard); 
+                        //console.log(this.state.userDashboard);
+                        
                     }else{
                         const id = this.state.selectedGraphId;
                         const newDashboard = this.state.userDashboard;   
-                        // console.log(nextProps.location.state.newGraph.graphSettings.realTime)
-                        // console.log(nextProps.location.state.newGraph.graphSettings.startTime)
+                        console.log(nextProps.location.state.newGraph.graphSettings.realTime)
+                        console.log(nextProps.location.state.newGraph.graphSettings.startTime)
                         for(let i = newDashboard.length-1; i>=0; i--){     
                             if(newDashboard[i].id === id){
                                 newDashboard[i].graphSettings.metricName = nextProps.location.state.newGraph.graphSettings.metricName;
                                 newDashboard[i].graphSettings.nameSpace = nextProps.location.state.newGraph.graphSettings.nameSpace;
                                 newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
                                 newDashboard[i].graphSettings.chartName = nextProps.location.state.newGraph.graphSettings.chartName;
-                                newDashboard[i].graphSettings.typeOfDimension= nextProps.location.state.newGraph.graphSettings.typeOfDimension;
-                                newDashboard[i].graphSettings.idValue= nextProps.location.state.newGraph.graphSettings.idValue;
-                                newDashboard[i].graphSettings.realTime= nextProps.location.state.newGraph.graphSettings.realTime;
+                                newDashboard[i].graphSettings.typeOfDimension = nextProps.location.state.newGraph.graphSettings.typeOfDimension;
+                                newDashboard[i].graphSettings.idValue = nextProps.location.state.newGraph.graphSettings.idValue;
+                                newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
                                 if(nextProps.location.state.newGraph.graphSettings.realTime === true){
-                                    newDashboard[i].graphSettings.refreshRate= nextProps.location.state.newGraph.graphSettings.refreshRate;
+                                    newDashboard[i].graphSettings.refreshRate = nextProps.location.state.newGraph.graphSettings.refreshRate;
                                 }
                                 newDashboard[i].graphSettings.startTime = nextProps.location.state.newGraph.graphSettings.startTime;
                                 newDashboard[i].graphSettings.endTime = nextProps.location.state.newGraph.graphSettings.endTime;
-                                newDashboard[i].graphSettings.colorSelected= nextProps.location.state.newGraph.graphSettings.colorSelected;
-                                newDashboard[i].graphSettings.period= nextProps.location.state.newGraph.graphSettings.period;
+                                newDashboard[i].graphSettings.colorSelected = nextProps.location.state.newGraph.graphSettings.colorSelected;
+                                newDashboard[i].graphSettings.period = nextProps.location.state.newGraph.graphSettings.period;
                             }
                         }
                         this.setState({userDashboard : newDashboard});
-                        this.setState({isUpdate : false});
-                        console.log(this.state.isUpdate);
+                        this.setState({isModify : false});
+                        console.log(this.state.isModify);
+                        console.log(this.state.userDashboard);
                     }
             }   
     }    
@@ -304,19 +294,16 @@ class DefaultDashboard extends Component {
             this.setState({
                 userDashboard: updatedIndex
             })
-            
         }
         
     }
-    
- 
-    
 
     render() {
-        // console.log(this.props)
+        console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
                 console.log(item.tableSettings.chartName)
+
                 return (
                 <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
                     <div style={{width:'100%'}}>
@@ -378,7 +365,7 @@ class DefaultDashboard extends Component {
         return (
             
             <React.Fragment>
-                 <Modal isOpen={this.state.isToggle} toggle = {this.toggleForm} > 
+                 <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
                      <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
                     />
                 </Modal>
