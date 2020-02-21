@@ -58,9 +58,9 @@ class DefaultDashboard extends Component {
                         x: (0 %3)*8 ,
                         y: 0,
                         w: 8,
-                        h: 2,
+                        h: 3,
                         minW: 8,
-                        minH: 2
+                        minH: 3
                     }
                 },
                 {
@@ -86,9 +86,9 @@ class DefaultDashboard extends Component {
                             x: ((1 %3)*8),
                             y: 0,
                             w: 8,
-                            h: 2,
+                            h: 3,
                             minW: 8,
-                            minH: 2
+                            minH: 3
                         }
                 },
                 {
@@ -114,9 +114,9 @@ class DefaultDashboard extends Component {
                         x: ((2 %3)*8),
                         y: 0,
                         w: 8,
-                        h: 2,
+                        h: 3,
                         minW: 8,
-                        minH: 2
+                        minH: 3
                     }
                 },
                 {
@@ -140,9 +140,9 @@ class DefaultDashboard extends Component {
                         x: ((0 %3)*8),
                         y: 6,
                         w: 8,
-                        h: 2,
+                        h: 3,
                         minW: 8,
-                        minH: 2
+                        minH: 3
                     }
                 },
             ],

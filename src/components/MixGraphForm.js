@@ -523,9 +523,9 @@ handleMixChangeComplete2 = (color) =>{
                                                 x: 0,
                                                 y: 0,
                                                 w: 8,
-                                                h: 2,
+                                                h: 3,
                                                 minW: 8,
-                                                minH: 2
+                                                minH: 3
                                             },
                                           
                                         }
