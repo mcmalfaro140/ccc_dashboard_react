@@ -10,10 +10,7 @@ import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
-import { Button } from 'react-bootstrap';
-import GridLayout from 'react-grid-layout';
 import SimpleTable from '../components/MaterialTable.js'
-import Tables from './Tables.js'
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import LogReport from '../components/logRepotComp'
