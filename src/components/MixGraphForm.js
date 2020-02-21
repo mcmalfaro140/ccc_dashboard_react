@@ -522,16 +522,16 @@ handleMixChangeComplete2 = (color) =>{
                                             coordinates: {
                                                 x: 0,
                                                 y: 0,
-                                                w: 6,
-                                                h: 4,
-                                                minW: 6,
-                                                minH: 9
+                                                w: 8,
+                                                h: 2,
+                                                minW: 8,
+                                                minH: 2
                                             },
                                           
                                         }
                                     }
                                 }}>
-                                    <Button color="primary" onClick={this.props.toggleMixForm}>Create graph</Button>
+                                     <Button color="primary" onClick={this.props.toggleMixForm}>{this.props.graphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
                                 </Link>
                                 <Button color="secondary" onClick={this.props.toggleMixForm}>Cancel</Button>
                             </ModalFooter>

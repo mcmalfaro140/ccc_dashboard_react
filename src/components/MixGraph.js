@@ -292,7 +292,7 @@ class MixGraph extends Component {
                 </div>
               </div>
              
-              <Bar height = "100px" width = "100px" data={data} options = {options}
+              <Bar data={data} options = {options}
               />
            
             </div>
