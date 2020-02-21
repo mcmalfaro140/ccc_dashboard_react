@@ -159,8 +159,8 @@ class DefaultDashboard extends Component {
     }
 
     componentDidMount(){
-        let savedDashboard = JSON.parse(this.state.user.dashboard)
-        this.setState({userDashboard: savedDashboard})
+        // let savedDashboard = JSON.parse(this.state.user.dashboard)
+        // this.setState({userDashboard: savedDashboard})
     }
 
     test(id){
