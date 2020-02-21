@@ -2,6 +2,7 @@ import React from 'react';
 import AWS from 'aws-sdk';
 import mykey from '../keys.json';
 import Loader from 'react-loader-spinner'
+import { Button } from 'react-bootstrap';
 
 //Import componets
 import LogTableResult from '../components/searchComp/LogTableResult'
@@ -11,6 +12,7 @@ import SearchFilterBar from '../components/searchComp/SearchFilterBar'
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
+var ec2= new AWS.EC2();
 
 
 class SearchResult extends React.Component {
