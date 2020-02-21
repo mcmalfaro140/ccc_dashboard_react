@@ -62,7 +62,7 @@ const setSession = (user) => {
 
 function* login({ payload: { username, password } }) {
     const options = {
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password}),
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     };
@@ -130,7 +130,7 @@ function* logout({ payload: { history } }) {
  */
 function* register({ payload: { fullname, email, password } }) {
     const options = {
-        body: JSON.stringify({ fullname, email, password }),
+        body: JSON.stringify({ fullname, email, password}),
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     };
