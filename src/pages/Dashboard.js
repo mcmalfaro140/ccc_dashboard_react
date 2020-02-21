@@ -46,11 +46,13 @@ class DefaultDashboard extends Component {
                             chartName:"Test 1",
                             typeOfDimension: 'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:2000,
+                            refreshRate:3000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
                             colorSelected:"#a3d9f3",
+                            xAxisSelection:'Last 15 Minutes',
+                            refreshRateSelection:'Three Seconds'
                         },
                     coordinates: {
                         x: (0 %3)*8 ,
@@ -76,7 +78,9 @@ class DefaultDashboard extends Component {
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
-                            colorSelected:"#a6e22e"
+                            colorSelected:"#a6e22e",
+                            xAxisSelection:'Last 15 Minutes',
+                            refreshRateSelection:'Ten Seconds'
                         },
                         coordinates: {
                             x: ((1 %3)*8),
@@ -98,11 +102,13 @@ class DefaultDashboard extends Component {
                             chartName:"Test 3",
                             typeOfDimension:'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:2000,
+                            refreshRate:3000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
-                            colorSelected:"#800000"
+                            colorSelected:"#800000",
+                            xAxisSelection:'Last 15 Minutes',
+                            refreshRateSelection:'Three Seconds'
                         },
                     coordinates: {
                         x: ((2 %3)*8),
@@ -124,7 +130,7 @@ class DefaultDashboard extends Component {
                             chartName:"Test 4",
                             typeOfDimension:'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:2000,
+                            refreshRate:3000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
