@@ -8,6 +8,8 @@ import { SketchPicker } from 'react-color'
 import DateTimePicker from 'react-datetime-picker';
 import Switch from "react-switch";
 import '../assets/react-grid/styles.css'
+import ReactLightCalendar from '@lls/react-light-calendar'
+
 
 // import DateTimePicker from 'react-datetime-picker';
 
@@ -26,8 +28,8 @@ class MixGraphForm extends Component {
         
         
         
-        this.handleChangeForStart = this.handleChangeForStart.bind(this);
-        this.handleChangeForEnd = this.handleChangeForEnd.bind(this);
+        // this.handleChangeForStart = this.handleChangeForStart.bind(this);
+        // this.handleChangeForEnd = this.handleChangeForEnd.bind(this);
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.refreshGraph = this.refreshGraph.bind(this);
         this.mixUpdate = this.mixUpdate.bind(this);
@@ -36,12 +38,12 @@ class MixGraphForm extends Component {
         this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
         this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
         this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.onDateRangeSelection = this.onDateRangeSelection.bind(this);
    
       
         this.state = { 
             isRealTime: false,
             refreshRate:"",
-           
               mixGraph:{
                 typeOfGraph:"",
                 metricName:"", 
@@ -50,7 +52,6 @@ class MixGraphForm extends Component {
                 typeOfDimension : "InstanceId",
                 idValue:"",
                 colorSelected:"",
-    
                 typeOfGraph1:"",
                 metricName1:"", 
                 nameSpace1:"",
@@ -58,10 +59,9 @@ class MixGraphForm extends Component {
                 idValue1:"",
                 colorSelected1:"" 
             },
-                startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                startTime:"", //if needed
                 period:120,
-                endTime:new Date(),
-
+                endTime:"",
         
     
     
@@ -91,69 +91,96 @@ class MixGraphForm extends Component {
 }
 
     toggleSwitch (isRealTime){
-        console.log("is it real ? " + isRealTime)
+     //   console.log("is it real ? " + isRealTime)
         this.setState({isRealTime})
     }
     toggleForm = () => {
         this.setState({modalOpen : !this.state.modalOpen})
-        // this.setState({whichNamespace : ""})
         this.setState({namespaceNotSelected : true})
 
 };
-handleChangeForStart = date => {
-    this.setState({
-      startTime: date
-    });
+// handleChangeForStart = date => {
+//     this.setState({
+//       startTime: date
+//     });
    
-  };
-  handleChangeForEnd = date => {
-    this.setState({
-      endTime: date
-    });
-  };
+//   };
+//   handleChangeForEnd = date => {
+//     this.setState({
+//       endTime: date
+//     });
+//   };
+  onDateRangeSelection= (startTime, endTime) => {
+    console.log(startTime + ' - ' + endTime)
+    this.setState({startTime , endTime})
+
+     //   console.log(startTime + " - " + endTime)
+        let start, end;
+        if(startTime != null){
+            start = new Date(startTime);
+        }
+        if(endTime != null){
+            end = new Date(endTime);
+        }
+        if(start!=null && end!=null){
+        let dateDiff = end.getTime() - start.getTime();
+        let days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+        if(days<1){
+            this.setState({period:60});
+        }
+        if(days === 1){
+            this.setState({period:120});
+        }
+        if(days >1 && days <5){
+            this.setState({period: 600});
+        }
+        if(days > 5 && days < 25){
+            this.setState({period: 1800});
+        }
+        if(days > 25 ){
+            this.setState({period: 3600})
+        }
+    }
+}
   
   readMixTimeSelection1(e){
+    this.setState({endTime : new Date()})
     if(e.target.value === "Last Hour"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())})
         this.setState({period : 60})
     
     }
-    if(e.target.value === "Last Day"){
-        this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
-        this.setState({period : 120})
+    if(e.target.value === "Last 15 Minutes"){
+        this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes()-15)})
+        this.setState({period : 60})
   
     
     }
-    if(e.target.value === "Last Week"){
+    if(e.target.value === "Last Two Hours"){
 
-        this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes())})
-        this.setState({period : 600})
+        this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-2,currentDate.getMinutes())})
+        this.setState({period : 60})
     
     
     }
-    if(e.target.value === "Last Month"){
-        this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes())})
-        this.setState({period : 2400})
-        // this.setState(prevState => {
-        //     let mixGraph = Object.assign({}, prevState.mixGraph);  
-        //     mixGraph.startTime = new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes())
-        //     mixGraph.period = 2400;
-        //     return { mixGraph };                                
-        //   })
+    if(e.target.value === "Last Day"){
+        this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
+        this.setState({period : 60})
+
     }
 }
 refreshGraph(e){
-    if(e.target.value === "Thirty Seconds"){
-        this.setState({refreshRate : 30000})
+    if(e.target.value === "Three Seconds"){
+        this.setState({refreshRate : 3000})
+    }
+    if(e.target.value === "Ten Seconds"){
+        this.setState({refreshRate : 10000 })
     }
     if(e.target.value === "One minute"){
-        this.setState({refreshRate : 60000 })
+        this.setState({refreshRate : 60000})
     }
     if(e.target.value === "Ten minutes"){
         this.setState({refreshRate : 600000})
-    }
-    if(e.target.value === "Half an hour"){
-        this.setState({refreshRate : 1800000})
     }
  }
 readMixedSelection1(e){
@@ -192,14 +219,6 @@ handleMixChangeComplete2 = (color) =>{
       })
 }
 
-
-   
-
-
-    
-    
-    
-
     render() {
 
         
@@ -213,11 +232,11 @@ handleMixChangeComplete2 = (color) =>{
                   <Form.Control as="select"  
                  onChange={(e) => this.readMixTimeSelection1(e)}>
                     <option disabled selected>Make Selection</option>
-                     <option value = "Last Hour">Last Hour</option>
-                     <option value = "Last Day">Last Day</option>
-                     <option value = "Last Week">Last Week</option>
-                     <option value = "Last Month">Last Month</option>
-                        </Form.Control>
+                    <option value = "Last 15 Minutes">Last 15 Minutes</option>
+                    <option value = "Last Hour">Last Hour</option>
+                    <option value = "Last Two Hours">Last Two Hours</option>
+                    <option value = "Last Day">Last Day</option>
+                                </Form.Control>
                          <Form.Text className="text-muted">
                              Select the time
                          </Form.Text>
@@ -228,10 +247,10 @@ handleMixChangeComplete2 = (color) =>{
             <Form.Control as="select"  
             onChange={(e) => this.refreshGraph(e)}>
             <option disabled selected>Make Selection</option>
-            <option value = "Thirty Seconds">Thirty Seconds</option>
+            <option value = "Three Seconds">Three Seconds</option>
+            <option value = "Ten Seconds">Ten Seconds</option>
             <option value = "One minute">One minute</option>
             <option value = "Ten minutes">Ten minutes</option>
-            <option value = "Half an hour">Half an hour</option>
             
             </Form.Control>
             <Form.Text className="text-muted">
@@ -245,22 +264,11 @@ handleMixChangeComplete2 = (color) =>{
         else{
             timeSelection = 
             <div>
-            <Form>                        
-            <Row>
-                <Col>
-                     <Form.Label>Start Time</Form.Label>
-                        <DateTimePicker 
-                            value={this.state.startTime}
-                            onChange = {this.handleChangeForStart} />
-                </Col>
-                <Col>
-                        <Form.Label>End Time</Form.Label>
-                                <DateTimePicker 
-                                    value={this.state.endTime}
-                                    onChange = { this.handleChangeForEnd} />
-                </Col>
-            </Row>
-            </Form>
+            
+            <Form.Group>
+                <ReactLightCalendar startDate={this.state.startTime} endDate={this.state.endTime} onChange={this.onDateRangeSelection} range displayTime />
+            </Form.Group>
+           
            
             </div>
         }

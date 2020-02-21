@@ -13,7 +13,6 @@ import { Link } from 'react-router-dom';
 class BarGraph extends Component {
     constructor(){
         super();
-      //  this.myRef = React.createRef();
         this.state = {
             graphColor:"red",
             data:[],

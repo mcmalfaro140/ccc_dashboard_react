@@ -4,18 +4,27 @@ import myKeys from '../keys.json';
 import {Bar} from 'react-chartjs-2';
 import 'chartjs-plugin-zoom';
 
-var currentDate = new Date();
 var options = {
   elements: {
     point:{
         radius: 0,
        
-    },
-}, 
+    }
+  },
+    scales: {
+      xAxes: [{  
+        ticks: {
+           fontSize: 7,
+           maxTicksLimit: 10  
+    }
+}], 
 }
+  }
+
+
 
 class MixGraph extends Component {
-    intervalID;
+
     constructor(){
         super();
         
@@ -40,24 +49,23 @@ class MixGraph extends Component {
     }
       
       getgraph = () =>{
-        if(this.props.graphSettings.realTime === true){
-          // this.setState({data:[]})
-          // this.setState({label:[]})
-          this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
+        // if(this.props.graphSettings.realTime === true){
+        //   // this.setState({data:[]})
+        //   // this.setState({label:[]})
+        //   this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
       
-        }
+        // }
         console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
         var params = {
-            EndTime: currentDate, /* required */
+            EndTime: new Date(this.props.graphSettings.endTime), /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
-            StartTime: this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
-          //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
+            StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
            Dimensions: [
               {
                 Name: typeOfD, /* required */
@@ -143,12 +151,12 @@ class MixGraph extends Component {
         if(typeOfD1 == null){typeOfD1 = "InstanceId"}
         if(idVal1 == null){idVal1 = "i-01e27ec0da2c4d296"}
          var params1 = {
-             EndTime: currentDate, /* required */
+             EndTime: new Date(this.props.graphSettings.endTime), /* required */
              MetricName: this.props.graphSettings.metricName1, /* required */
              Namespace: this.props.graphSettings.nameSpace1, /* required */
              Period: this.props.graphSettings.period, /* required */
-             StartTime: this.props.graphSettings.startTime, /* required **********************************Always change it to a new start time */ 
-           //  StartTime: currentDate.setDate(currentDate.getDate()-5).toISOString(), 
+             StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+          
             Dimensions: [
                {
                  Name: typeOfD1, /* required */
@@ -175,7 +183,7 @@ class MixGraph extends Component {
             console.log(this.state.holder1);
               for (var i = 0; i < this.state.holder1.length; i++) {
 
-                let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+                let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
                 console.log(this.state.label1.includes(newTimestamp))
                //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
                 if(!this.state.label1.includes(newTimestamp)){

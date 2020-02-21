@@ -197,7 +197,7 @@ class graphForm extends Component {
     
 
     render() {
-        let timeSelection;    
+        let timeSelection;
         if(this.state.isRealTime === true ){
             timeSelection = 
              <div>            
@@ -243,6 +243,7 @@ class graphForm extends Component {
          </div>    
         }
         else if(this.state.isRealTime === false){
+            console.log(this.state.isRealTime)
             timeSelection = 
             <div>
             <Form.Group>
@@ -259,7 +260,8 @@ class graphForm extends Component {
                                 Please provide all the inputs to create a chart.
                                 <form>
                                 
-                                 {this.props.graphInfor == null ?
+                                {/* {this.props.graphInfor == null && ( */}
+                                {this.props.graphInfor == null ?
                                 <Form.Group>
                                 <label className="center">
                                 <h5>Real Time</h5>
@@ -279,8 +281,8 @@ class graphForm extends Component {
                                     id="material-switch"
                                 />
                                 </label>
-                            </Form.Group> 
-                             : ""} 
+                            </Form.Group> : null}
+                            {/* )} */}
                             {this.props.graphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>
@@ -367,10 +369,10 @@ class graphForm extends Component {
                                             coordinates: {
                                                 x: 0,
                                                 y: 0,
-                                                w: 10,
-                                                h: 9,
-                                                minW: 6,
-                                                minH: 9
+                                                w: 8,
+                                                h: 2,
+                                                minW: 8,
+                                                minH: 2
                                             },
                                           
                                         },
