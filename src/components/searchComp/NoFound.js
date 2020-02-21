@@ -2,9 +2,6 @@ import React from 'react';
 import not_found_img from '../../assets/images/notfound.png'
 
 class NoFound extends React.Component {
-    constructor (props){
-        super(props);
-    }
 
     render(){
         return(

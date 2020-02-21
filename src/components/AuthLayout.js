@@ -1,16 +1,11 @@
 import React, { Component, Suspense } from "react";
-import { Container, Row, Col, Card, CardBody } from 'reactstrap';
+import { Container} from 'reactstrap';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import {Form} from 'react-bootstrap';
+import { Modal} from 'reactstrap';
 import profilePic from '../assets/images/users/user-1.jpg';
-import { SketchPicker } from 'react-color'
-import DateTimePicker from 'react-datetime-picker';
 import GraphForm from '../components/graphForm';
 
 import MixGraphForm from '../components/MixGraphForm';
-import LineGraph from '../components/LineGraph'
 
 import TableFormPop from '../components/TableFormPop'
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'

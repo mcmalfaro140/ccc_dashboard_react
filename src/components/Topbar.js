@@ -1,12 +1,5 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-
-import NotificationDropdown from './NotificationDropdown';
-import ProfileDropdown from './ProfileDropdown';
-import logoSm from '../assets/images/ccc_Logo_1.png';
-import logo from '../assets/images/logo_ccc.png';
-import profilePic from '../assets/images/users/user-1.jpg';
 
 
 const Notifications = [{
@@ -153,7 +146,7 @@ class Topbar extends Component {
             <ul className="list-unstyled topnav-menu topnav-menu-left m-0">
               <li>
                 <button className="button-menu-mobile waves-effect" onClick={this.handleBack}>
-                  <i class="mdi mdi-arrow-left-bold"></i>
+                  <i className="mdi mdi-arrow-left-bold"></i>
                 </button>
               </li>
 

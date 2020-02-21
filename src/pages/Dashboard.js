@@ -1,8 +1,6 @@
 import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Card, CardBody, Modal } from 'reactstrap';
-
-import ReactTable from 'react-table';
+import { Row, Card, CardBody, Modal } from 'reactstrap';
 import LineGraph from '../components/LineGraph'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
@@ -244,8 +242,6 @@ class DefaultDashboard extends Component {
                     }else{
                         const id = this.state.selectedGraphId;
                         const newDashboard = this.state.userDashboard;   
-                        console.log(nextProps.location.state.newGraph.graphSettings.realTime)
-                        console.log(nextProps.location.state.newGraph.graphSettings.startTime)
                         for(let i = newDashboard.length-1; i>=0; i--){     
                             if(newDashboard[i].id === id){
                                 newDashboard[i].graphSettings.metricName = nextProps.location.state.newGraph.graphSettings.metricName;
