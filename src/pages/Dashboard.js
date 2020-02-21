@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Row, Card, CardBody, Modal } from 'reactstrap';
 import LineGraph from '../components/LineGraph'
@@ -10,13 +10,9 @@ import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
-import { Button } from 'react-bootstrap';
-import GridLayout from 'react-grid-layout';
 import SimpleTable from '../components/MaterialTable.js'
-import Tables from './Tables.js'
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 
 
@@ -28,6 +24,9 @@ import GraphForm from '../components/graphForm';
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
+import { Button } from 'react-bootstrap';
+
+
 
 
 var currentDate = new Date()
@@ -41,134 +40,110 @@ class DefaultDashboard extends Component {
         this.state = {
             user: getLoggedInUser(),
             userDashboard: [
-                {
-                    objectType:"graph", // options: graph or table
-                    id:0,
-                    graphSettings: {
-                            type:"line", //options: line, pie, or bar
-                            realTime:true, //options: true or false
-                            metricName:"CPUCreditUsage", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"Test 1",
-                            typeOfDimension: 'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a3d9f3",
-                        },
-                    coordinates: {
-                        x: (0 %3)*8 ,
-                        y: 0,
-                        w: 8,
-                        h: 3,
-                        minW: 8,
-                        minH: 3
-                    }
-                },
-                {
-                    objectType:"table", // options: graph or table
-                    id:1,
-                    tableSettings:{
-                        master:"false",
-                        chartName:"Master Table",
-                        recordValue:[ "/aws/apigateway/trying","/aws/lambda/ChatRoomConnectFunction","/aws/lambda/ChatRoomDisconnectFunction",
-                        "/aws/lambda/ChatRoomOnMessageFunction","/aws/lambda/LogsToElasticsearch_searchlogs","/aws/lambda/asdvasjhdgja",
-                        "/aws/lambda/dummy", "/aws/lambda/notification", "/aws/rds/instance/database-1/error","App1","notificationsLogs",
-                        "sns","test"
-                            ]
-                       
-                       
-                    },
-                    coordinates: {
-                        x: ((1 %3)*8),
-                        y: 0,
-                        w: 8,
-                        h: 3,
-                        minW: 8,
-                        minH: 3
-                    }
-                    
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:2,
-                    graphSettings: {
-                            type:"bar", //options: line, pie, or bar
-                            realTime:true, //options: true or false
-                            metricName:"CPUUtilization", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"TestBar 2",
-                            typeOfDimension: 'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a6e22e"
-                        },
-                        coordinates: {
-                            x: ((2 %3)*8),
-                            y: 0,
-                            w: 8,
-                            h: 3,
-                            minW: 8,
-                            minH: 3
-                        }
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:3,
-                    graphSettings: {
-                            type:"line", //options: line, pie, or bar
-                            realTime:true, //options: true or false
-                            metricName:"CPUUtilization", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"Test 3",
-                            typeOfDimension:'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#800000"
-                        },
-                    coordinates: {
-                        x: 0,
-                        y: 6,
-                        w: 12,
-                        h: 3,
-                        minW: 8,
-                        minH: 3
-                    }
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:4,
-                    graphSettings: {
-                            type:"line", //options: line, pie, or bar
-                            realTime:false, //options: true or false
-                            metricName:"CPUUtilization", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"Test 4",
-                            typeOfDimension:'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:"2000",
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a3d9f3"
-                        },
-                    coordinates: {
-                        x: 12,
-                        y: 6,
-                        w: 12,
-                        h: 3,
-                        minW: 8,
-                        minH: 3
-                    }
-                },
+                // {
+                //     objectType:"graph", // options: graph or table
+                //     id:0,
+                //     graphSettings: {
+                //             type:"line", //options: line, pie, or bar
+                //             realTime:true, //options: true or false
+                //             metricName:"CPUCreditUsage", 
+                //             nameSpace:"AWS/EC2",
+                //             chartName:"Test 1",
+                //             typeOfDimension: 'InstanceId',
+                //             idValue:"i-01e27ec0da2c4d296",
+                //             refreshRate:"2000",
+                //             period:180,
+                //             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                //             endTime:new Date(), //if needed
+                //             colorSelected:"#a3d9f3",
+                //         },
+                //     coordinates: {
+                //         x: (0 %3)*8 ,
+                //         y: 0,
+                //         w: 8,
+                //         h: 3,
+                //         minW: 8,
+                //         minH: 3
+                //     }
+                // },
+                // {
+                //     objectType:"graph", // options: graph or table
+                //     id:1,
+                //     graphSettings: {
+                //             type:"bar", //options: line, pie, or bar
+                //             realTime:true, //options: true or false
+                //             metricName:"CPUUtilization", 
+                //             nameSpace:"AWS/EC2",
+                //             chartName:"TestBar 2",
+                //             typeOfDimension: 'InstanceId',
+                //             idValue:"i-01e27ec0da2c4d296",
+                //             refreshRate:"2000",
+                //             period:180,
+                //             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                //             endTime:new Date(), //if needed
+                //             colorSelected:"#a6e22e"
+                //         },
+                //         coordinates: {
+                //             x: ((1 %3)*8),
+                //             y: 0,
+                //             w: 8,
+                //             h: 3,
+                //             minW: 8,
+                //             minH: 3
+                //         }
+                // },
+                // {
+                //     objectType:"graph", // options: graph or table
+                //     id:2,
+                //     graphSettings: {
+                //             type:"line", //options: line, pie, or bar
+                //             realTime:true, //options: true or false
+                //             metricName:"CPUUtilization", 
+                //             nameSpace:"AWS/EC2",
+                //             chartName:"Test 3",
+                //             typeOfDimension:'InstanceId',
+                //             idValue:"i-01e27ec0da2c4d296",
+                //             refreshRate:"2000",
+                //             period:180,
+                //             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                //             endTime:new Date(), //if needed
+                //             colorSelected:"#800000"
+                //         },
+                //     coordinates: {
+                //         x: 0,
+                //         y: 6,
+                //         w: 12,
+                //         h: 3,
+                //         minW: 8,
+                //         minH: 3
+                //     }
+                // },
+                // {
+                //     objectType:"graph", // options: graph or table
+                //     id:3,
+                //     graphSettings: {
+                //             type:"line", //options: line, pie, or bar
+                //             realTime:false, //options: true or false
+                //             metricName:"CPUUtilization", 
+                //             nameSpace:"AWS/EC2",
+                //             chartName:"Test 4",
+                //             typeOfDimension:'InstanceId',
+                //             idValue:"i-01e27ec0da2c4d296",
+                //             refreshRate:"2000",
+                //             period:180,
+                //             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                //             endTime:new Date(), //if needed
+                //             colorSelected:"#a3d9f3"
+                //         },
+                //     coordinates: {
+                //         x: 12,
+                //         y: 6,
+                //         w: 12,
+                //         h: 3,
+                //         minW: 8,
+                //         minH: 3
+                //     }
+                // },
             ],
             showOptions: false,
             systemHealth: false,
@@ -180,6 +155,22 @@ class DefaultDashboard extends Component {
         this.showOptions = this.showOptions.bind(this);
         this.systemHealth = this.systemHealth.bind(this);
         this.recordCoordinateChange = this.recordCoordinateChange.bind(this);
+        this.test = this.test.bind(this);
+    }
+
+    componentDidMount(){
+        let savedDashboard = JSON.parse(this.state.user.dashboard)
+        this.setState({userDashboard: savedDashboard})
+    }
+
+    test(id){
+        // let ob = JSON.parse(this.state.user.dashboard)
+        // let str = JSON.stringify(this.state.dashboard)
+        // // console.log(ob);
+        // console.log(this.state.user)
+        // console.log(this.state.userDashboard)
+        // console.log(id)
+
     }
 
     deleteFunction = (childData) => {
@@ -208,8 +199,6 @@ class DefaultDashboard extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-
-        
             let temp = this.state.userDashboard
             if(nextProps.location.state){
                 //only activate adds to the array if the props are the specify ones
@@ -280,39 +269,43 @@ class DefaultDashboard extends Component {
     }
 
     //Gets call when the user resize the dashboard. Saves the new coordinates
-    recordCoordinateChange(newLayout){
-        console.log(newLayout);
-        if(this.props.screenSize > 1200){ //will only save big screen dashboard not mobile or table
-            let temp = this.state.userDashboard
-            console.log(temp)
-            let updatedIndex = [];
-            let chart;
-            newLayout.forEach((element, i) => {
-                // let chart = temp[parseInt(element.i)];
-                temp.some((a) => {
-                    chart = a;
-                    return a.id === parseInt(element.i)
-                })
-                chart.coordinates.y = element.y
-                chart.coordinates.x = element.x
-                updatedIndex.push(chart)
-            });
+    recordCoordinateChange(newLayout, allLayouts){
+        let temp = this.state.userDashboard
+        let updatedDash = [];
+        if(allLayouts.lg.length > 0){
+            allLayouts.lg.map((chart) => {
+                let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
+                newGraph.coordinates.x = chart.y
+                newGraph.coordinates.x = chart.x
+                newGraph.coordinates.w = chart.w
+                newGraph.coordinates.h = chart.h
+
+                updatedDash.push(newGraph);
+            })
             this.setState({
-                userDashboard: updatedIndex
+                userDashboard: updatedDash
+            })
+        }else{
+            newLayout.map((chart) => {
+                let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
+                newGraph.coordinates.x = chart.y
+                newGraph.coordinates.x = chart.x
+                newGraph.coordinates.w = chart.w
+                newGraph.coordinates.h = chart.h
+
+                updatedDash.push(newGraph);
+            })
+            this.setState({
+                userDashboard: updatedDash
             })
         }
         
+        
     }
     
- 
-    
-
     render() {
-        console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
-                console.log(item.tableSettings.chartName)
-
                 return (
                 <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
                     <div style={{width:'100%'}}>
@@ -374,6 +367,7 @@ class DefaultDashboard extends Component {
         return (
             
             <React.Fragment>
+                {/* <Button onClick={this.test}>test</Button> */}
                  <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
                      <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
                     />
@@ -404,14 +398,13 @@ class DefaultDashboard extends Component {
                             </Row>
                         </CardBody>
                     </Card>
-
                     <ResponsiveGridLayout className="layout" 
-                        breakpoints={{lg: 1200, md: 996, sm: 768}}
+                        breakpoints={{lg: 1040, md: 996, sm: 768}}
                         cols={{lg: 24, md: 12, sm: 8}}
                         width={this.props.screenSize} 
-                        onLayoutChange={(layout) => this.recordCoordinateChange(layout)} 
+                        onLayoutChange={(layout,allLayouts) => this.recordCoordinateChange(layout, allLayouts)} 
+                        onResizeStop={(placeholder) => this.test(placeholder)}
                         style={{margin:0}}>
-                            
                         {items}
                     </ResponsiveGridLayout>
                 </div>

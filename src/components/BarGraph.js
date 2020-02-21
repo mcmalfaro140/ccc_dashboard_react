@@ -130,7 +130,7 @@ class BarGraph extends Component {
                  x: new Date(),
                  y: newData
              });
-             console.log(dataset.data)
+            //  console.log(dataset.data)
          });                             
         });
         
