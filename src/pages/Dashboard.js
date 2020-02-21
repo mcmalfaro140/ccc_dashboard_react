@@ -10,7 +10,9 @@ import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
-//import SimpleTable from '../components/MaterialTable.js'
+import { Button } from 'react-bootstrap';
+import GridLayout from 'react-grid-layout';
+import SimpleTable from '../components/MaterialTable.js'
 import Tables from './Tables.js'
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
@@ -328,7 +330,7 @@ class DefaultDashboard extends Component {
                         </div>
                     </div>
                     <CardBody>
-                            <Tables {...item}/>
+                            <SimpleTable {...item}/>
                     </CardBody>
                                         
                 </Card>);
@@ -384,13 +386,13 @@ class DefaultDashboard extends Component {
                         <h3 className="float-left" >System Health Bar</h3>
                             <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
                             <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
-                            { this.state.systemHealth? (
+                            {/* { this.state.systemHealth? (
                             <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
                             <a href="" class="dropdown-item">Last 24 Hours</a>
                             <a href="" class="dropdown-item">Last 48 Hours</a>
                             <a href="" class="dropdown-item">Last 72 Hours</a>
                             </div>
-                            ): null }
+                            ): null } */}
                         </div>
                         </div>
                         <CardBody style={{paddingTop:'0%', margin: '0%'}}>

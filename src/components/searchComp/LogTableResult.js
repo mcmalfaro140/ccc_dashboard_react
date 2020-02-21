@@ -77,7 +77,7 @@ class LogTableResult extends React.Component {
                     </div>
                     <CardBody>
                         <TableContainer >
-                            <Table aria-label="spanning table"  className="table_logs_header">
+                            <Table aria-label="spanning table"  className="table_logs_header" >
                                 <TableHead>
                                     <TableRow>
                                         <TableCell></TableCell>
