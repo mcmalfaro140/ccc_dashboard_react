@@ -30,6 +30,7 @@ import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
 
 
+
 var currentDate = new Date()
 
 
@@ -304,15 +305,9 @@ class DefaultDashboard extends Component {
         
     }
     
- 
-    
-
     render() {
-        console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
-                console.log(item.tableSettings.chartName)
-
                 return (
                 <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
                     <div style={{width:'100%'}}>
@@ -404,7 +399,6 @@ class DefaultDashboard extends Component {
                             </Row>
                         </CardBody>
                     </Card>
-
                     <ResponsiveGridLayout className="layout" 
                         breakpoints={{lg: 1200, md: 996, sm: 768}}
                         cols={{lg: 24, md: 12, sm: 8}}
