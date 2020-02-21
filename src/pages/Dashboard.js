@@ -28,6 +28,7 @@ import { Button } from 'react-bootstrap';
 
 
 
+
 var currentDate = new Date()
 
 
@@ -304,7 +305,6 @@ class DefaultDashboard extends Component {
     
     render() {
         const items = this.state.userDashboard.map((item, i) => {
-<<<<<<< HEAD
             if(item.objectType === "table"){
                 return (
                 <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
@@ -329,9 +329,6 @@ class DefaultDashboard extends Component {
                 </Card>);
             //This part will render the Graph
             }else if(item.objectType === "graph"){
-=======
-            if(item.objectType === "graph"){
->>>>>>> connected dash
                 if(item.graphSettings.type === "line"){
                     return (   
                        <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
