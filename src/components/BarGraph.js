@@ -84,7 +84,7 @@ class BarGraph extends Component {
                  x: new Date(),
                  y: newData
              });
-             console.log(dataset.data)
+            //  console.log(dataset.data)
          });                             
         });
         
@@ -138,7 +138,7 @@ class BarGraph extends Component {
           }
        
         AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
-        AWS.config.logger = console; 
+        // AWS.config.loxgger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
         cloudwatch3.getMetricStatistics(params, function(err, data) {
          // console.log("inside function")
@@ -251,7 +251,7 @@ class BarGraph extends Component {
       }
       componentWillReceiveProps(nextProp){
         const isEqual = this.compareObj(this.state.graphSetting, nextProp.graphSettings)  
-        console.log(isEqual);    
+        // console.log(isEqual);    
         if(nextProp.graphSettings.realTime === false){
           if(this.state.isModify === true && isEqual === false){
               if(this.state.holder.length > 0){

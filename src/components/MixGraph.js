@@ -73,7 +73,7 @@ class MixGraph extends Component {
           }
        
         AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
-        AWS.config.logger = console; 
+        // AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
         cloudwatch3.getMetricStatistics(params, function(err, data) {
          // console.log("inside function")

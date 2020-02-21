@@ -62,30 +62,8 @@ class DefaultDashboard extends Component {
                     }
                 },
                 {
-                    objectType:"table", // options: graph or table
-                    id:1,
-                    tableSettings:{
-                        master:"false",
-                        chartName:"Master Table",
-                        recordValue:[ "/aws/apigateway/trying","/aws/lambda/ChatRoomConnectFunction","/aws/lambda/ChatRoomDisconnectFunction",
-                        "/aws/lambda/ChatRoomOnMessageFunction","/aws/lambda/LogsToElasticsearch_searchlogs","/aws/lambda/asdvasjhdgja",
-                        "/aws/lambda/dummy", "/aws/lambda/notification", "/aws/rds/instance/database-1/error","App1","notificationsLogs",
-                        "sns","test"
-                            ]        
-                    },
-                    coordinates: {
-                        x: ((1 %3)*8),
-                        y: 0,
-                        w: 8,
-                        h: 3,
-                        minW: 8,
-                        minH: 3
-                    }
-                    
-                },
-                {
                     objectType:"graph", // options: graph or table
-                    id:2,
+                    id:1,
                     graphSettings: {
                             type:"bar", //options: line, pie, or bar
                             realTime:true, //options: true or false
@@ -111,7 +89,7 @@ class DefaultDashboard extends Component {
                 },
                 {
                     objectType:"graph", // options: graph or table
-                    id:3,
+                    id:2,
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
                             realTime:true, //options: true or false
@@ -137,7 +115,7 @@ class DefaultDashboard extends Component {
                 },
                 {
                     objectType:"graph", // options: graph or table
-                    id:4,
+                    id:3,
                     graphSettings: {
                             type:"line", //options: line, pie, or bar
                             realTime:false, //options: true or false
@@ -203,60 +181,45 @@ class DefaultDashboard extends Component {
             let temp = this.state.userDashboard
             if(nextProps.location.state){
                 //only activate adds to the array if the props are the specify ones
-                if(nextProps.location.state.newMasterTable){
-                    let newName = nextProps.location.state.newMasterTable.chartName;
-                    let preName = this.state.newUpcomingPropsName;
-                    if(newName !== preName){
-                        nextProps.location.state.newMasterTable["id"] = this.state.userDashboard.length;
-                        temp.push(nextProps.location.state.newMasterTable);
-                        this.setState({
-                            userDashboard: temp,
-                            newUpcomingPropsName: newName
-                        })
-                    }
-                }else if(nextProps.location.state.newGraph){
-                    console.log(this.state.isModify);
+                if(nextProps.location.state.newGraph){
                     if(this.state.isModify === false){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                         let preName = this.state.newUpcomingPropsName;
-                        console.log(temp.includes(nextProps.location.state.newGraph.graphSettings));
                         if(newName !== preName && !temp.includes(nextProps.location.state.newGraph.graphSettings)){
-                        nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
+                            nextProps.location.state.newGraph["id"] = this.state.userDashboard.length;
                             temp.push(nextProps.location.state.newGraph);
                             this.setState({
                                 userDashboard: temp,
                                 newUpcomingPropsName: newName
                             })
                         }
-                        //console.log(this.state.userDashboard);
-                        
                     }else{
-                        const id = this.state.selectedGraphId;
-                        const newDashboard = this.state.userDashboard;   
-                        console.log(nextProps.location.state.newGraph.graphSettings.realTime)
-                        console.log(nextProps.location.state.newGraph.graphSettings.startTime)
-                        for(let i = newDashboard.length-1; i>=0; i--){     
-                            if(newDashboard[i].id === id){
-                                newDashboard[i].graphSettings.metricName = nextProps.location.state.newGraph.graphSettings.metricName;
-                                newDashboard[i].graphSettings.nameSpace = nextProps.location.state.newGraph.graphSettings.nameSpace;
-                                newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
-                                newDashboard[i].graphSettings.chartName = nextProps.location.state.newGraph.graphSettings.chartName;
-                                newDashboard[i].graphSettings.typeOfDimension = nextProps.location.state.newGraph.graphSettings.typeOfDimension;
-                                newDashboard[i].graphSettings.idValue = nextProps.location.state.newGraph.graphSettings.idValue;
-                                newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
-                                if(nextProps.location.state.newGraph.graphSettings.realTime === true){
-                                    newDashboard[i].graphSettings.refreshRate = nextProps.location.state.newGraph.graphSettings.refreshRate;
+                        let newName = nextProps.location.state.newGraph.graphSettings.chartName;
+                        let preName = this.state.newUpcomingPropsName;
+                        if(newName !== preName && !temp.includes(nextProps.location.state.newGraph.graphSettings)){
+                            const id = this.state.selectedGraphId;
+                            const newDashboard = this.state.userDashboard;   
+                            for(let i = newDashboard.length-1; i>=0; i--){     
+                                if(newDashboard[i].id === id){
+                                    newDashboard[i].graphSettings.metricName = nextProps.location.state.newGraph.graphSettings.metricName;
+                                    newDashboard[i].graphSettings.nameSpace = nextProps.location.state.newGraph.graphSettings.nameSpace;
+                                    newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
+                                    newDashboard[i].graphSettings.chartName = nextProps.location.state.newGraph.graphSettings.chartName;
+                                    newDashboard[i].graphSettings.typeOfDimension = nextProps.location.state.newGraph.graphSettings.typeOfDimension;
+                                    newDashboard[i].graphSettings.idValue = nextProps.location.state.newGraph.graphSettings.idValue;
+                                    newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
+                                    if(nextProps.location.state.newGraph.graphSettings.realTime === true){
+                                        newDashboard[i].graphSettings.refreshRate = nextProps.location.state.newGraph.graphSettings.refreshRate;
+                                    }
+                                    newDashboard[i].graphSettings.startTime = nextProps.location.state.newGraph.graphSettings.startTime;
+                                    newDashboard[i].graphSettings.endTime = nextProps.location.state.newGraph.graphSettings.endTime;
+                                    newDashboard[i].graphSettings.colorSelected = nextProps.location.state.newGraph.graphSettings.colorSelected;
+                                    newDashboard[i].graphSettings.period = nextProps.location.state.newGraph.graphSettings.period;
                                 }
-                                newDashboard[i].graphSettings.startTime = nextProps.location.state.newGraph.graphSettings.startTime;
-                                newDashboard[i].graphSettings.endTime = nextProps.location.state.newGraph.graphSettings.endTime;
-                                newDashboard[i].graphSettings.colorSelected = nextProps.location.state.newGraph.graphSettings.colorSelected;
-                                newDashboard[i].graphSettings.period = nextProps.location.state.newGraph.graphSettings.period;
                             }
+                            this.setState({userDashboard : newDashboard});
+                            this.setState({isModify : false, newUpcomingPropsName: newName});
                         }
-                        this.setState({userDashboard : newDashboard});
-                        this.setState({isModify : false});
-                        console.log(this.state.isModify);
-                        console.log(this.state.userDashboard);
                     }
             }   
     }    
@@ -275,10 +238,8 @@ class DefaultDashboard extends Component {
 
     //Gets call when the user resize the dashboard. Saves the new coordinates
     recordCoordinateChange(newLayout){
-        console.log(newLayout);
         if(this.props.screenSize > 1200){ //will only save big screen dashboard not mobile or table
             let temp = this.state.userDashboard
-            console.log(temp)
             let updatedIndex = [];
             let chart;
             newLayout.forEach((element, i) => {
@@ -299,11 +260,8 @@ class DefaultDashboard extends Component {
     }
 
     render() {
-        console.log(this.props)
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
-                console.log(item.tableSettings.chartName)
-
                 return (
                 <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
                     <div style={{width:'100%'}}>

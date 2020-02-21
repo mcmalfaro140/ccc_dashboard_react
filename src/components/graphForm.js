@@ -278,12 +278,8 @@ class graphForm extends Component {
                                 Please provide all the inputs to create a chart.
                                 <form>
                                 
-<<<<<<< HEAD
-                                 {this.props.graphInfor == null ?
-=======
                                 {/* {this.props.graphInfor == null && ( */}
                                 {this.props.graphInfor == null ?
->>>>>>> change
                                 <Form.Group>
                                 <label className="center">
                                 <h5>Real Time</h5>
@@ -303,13 +299,8 @@ class graphForm extends Component {
                                     id="material-switch"
                                 />
                                 </label>
-<<<<<<< HEAD
-                            </Form.Group> 
-                             : ""} 
-=======
                             </Form.Group> : null}
                             {/* )} */}
->>>>>>> change
                             {this.props.graphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>
