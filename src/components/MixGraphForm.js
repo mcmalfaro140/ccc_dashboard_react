@@ -19,17 +19,11 @@ import ReactLightCalendar from '@lls/react-light-calendar'
  */
 
  var value = [];
- var str= "";
  var currentDate = new Date();
 class MixGraphForm extends Component {
 
     constructor(props) {
         super(props);
-        
-        
-        
-        // this.handleChangeForStart = this.handleChangeForStart.bind(this);
-        // this.handleChangeForEnd = this.handleChangeForEnd.bind(this);
         this.toggleSwitch = this.toggleSwitch.bind(this);
         this.refreshGraph = this.refreshGraph.bind(this);
         this.mixUpdate = this.mixUpdate.bind(this);
@@ -62,9 +56,6 @@ class MixGraphForm extends Component {
                 startTime:"", //if needed
                 period:120,
                 endTime:"",
-        
-    
-    
     }}
 
    //Mix form update
@@ -99,17 +90,7 @@ class MixGraphForm extends Component {
         this.setState({namespaceNotSelected : true})
 
 };
-// handleChangeForStart = date => {
-//     this.setState({
-//       startTime: date
-//     });
-   
-//   };
-//   handleChangeForEnd = date => {
-//     this.setState({
-//       endTime: date
-//     });
-//   };
+
   onDateRangeSelection= (startTime, endTime) => {
     console.log(startTime + ' - ' + endTime)
     this.setState({startTime , endTime})
@@ -153,15 +134,10 @@ class MixGraphForm extends Component {
     if(e.target.value === "Last 15 Minutes"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes()-15)})
         this.setState({period : 60})
-  
-    
     }
     if(e.target.value === "Last Two Hours"){
-
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-2,currentDate.getMinutes())})
         this.setState({period : 60})
-    
-    
     }
     if(e.target.value === "Last Day"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
@@ -202,7 +178,6 @@ readMixedSelection2(e){
         return { mixGraph };                               
       })
 }
-  
 
 handleMixChangeComplete1 = (color) =>{
     this.setState(prevState => {

@@ -26,30 +26,26 @@ class LineGraph extends Component {
         graphSetting:"",
         isModify: false,
         checked:false,
+        RTData:[],
+        RTHolder:[]
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
 
   }
-    
-
-      getgraph = () =>{
-     
-     //  console.log(this.props.graphSettings);
+getgraph = () =>{
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
        if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
-
-        var params = {
+       let params = {
             EndTime: new Date(this.props.graphSettings.endTime), /* required */
             MetricName: this.props.graphSettings.metricName, /* required */
             Namespace: this.props.graphSettings.nameSpace, /* required */
             Period: this.props.graphSettings.period, /* required */
             StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
-         
-           Dimensions: [
+            Dimensions: [
               {
                 Name: typeOfD, /* required */
                 // Value: 'i-031339fed44b9fac8' /* required */
@@ -65,9 +61,6 @@ class LineGraph extends Component {
         
           AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
           // AWS.config.logger = console; 
-        
-       
-
   AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
   AWS.config.logger = console; 
   let cloudwatch3 = new AWS.CloudWatch();
@@ -79,6 +72,7 @@ class LineGraph extends Component {
       return dateA - dateB;
         });
       this.setState({holder:sortedData})
+    //  let data1 = [];
       for (var i = 0; i < this.state.holder.length; i++) {
         let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
         if(!this.state.label.includes(newTimestamp)){
@@ -90,11 +84,10 @@ class LineGraph extends Component {
                }
           };     
         }.bind(this));
-      }
+};
 handleCheck(){
   this.setState({checked : !this.state.checked});
-
-}
+};
 onRefresh(chart){
   let typeOfD = this.props.graphSettings.typeOfDimension;
   let idVal = this.props.graphSettings.idValue;
@@ -155,7 +148,8 @@ onRefresh(chart){
                 min: 0, 
             }
           }
-      }
+         // chart.update();
+};
 compareObj(obj1, obj2) {
   for (let p in obj1) {
     if (obj1.hasOwnProperty(p) !== obj2.hasOwnProperty(p)) return false;
@@ -177,18 +171,61 @@ compareObj(obj1, obj2) {
           if (typeof (obj1[p]) == 'undefined') return false;
         }
         return true;
-      };
+};
+oldDataForRealTime(){
+  let cloudwatch = new AWS.CloudWatch();
+  let typeOfD = this.props.graphSettings.typeOfDimension;
+  let idVal = this.props.graphSettings.idValue;
+  if(typeOfD == null){typeOfD = "InstanceId"}
+  if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
+  let params = {
+    EndTime: new Date(this.props.graphSettings.endTime), /* required */
+    MetricName: this.props.graphSettings.metricName, /* required */
+    Namespace: this.props.graphSettings.nameSpace, /* required */
+    Period: this.props.graphSettings.period, /* required */
+    StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+ 
+   Dimensions: [
+      {
+        Name: typeOfD, /* required */
+        // Value: 'i-031339fed44b9fac8' /* required */
+        Value: idVal
+      },
+      /* more items */
+    ],
+    Statistics: [
+      'Average',
+      /* more items */
+    ], 
+  }
+  cloudwatch.getMetricStatistics(params, function(err, data){
+    let temp = [];
+    if (err) console.log(err, err.stack); // an error occurred
+    else {
+      let sortedData =  data.Datapoints.sort(function(a, b) {
+      let dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
+      return dateA - dateB;
+        });
+      this.setState({RTHolder: sortedData});
+      for(let i = 0; i < this.state.RTHolder.length; i++){
+          temp.push({x: new Date(this.state.RTHolder[i].Timestamp), y:this.state.RTHolder[i].Average})
+      }
+      this.setState({RTData: temp});
       
-      componentDidMount() {
+      }
+  }.bind(this))
+};   
+componentDidMount() {
         if(this.props.graphSettings.realTime === false){
-             this.getgraph();
+          this.getgraph();
+        }else{
+          this.oldDataForRealTime();
         }
-       
         if(this.props.graphSettings.colorSelected != null){
          this.setState({graphColor:this.props.graphSettings.colorSelected})
         }
-      }
-      componentWillReceiveProps(nextProp){
+};
+componentWillReceiveProps(nextProp){
         const isEqual = this.compareObj(this.state.graphSetting, nextProp.graphSettings)  
         // console.log(isEqual);    
         if(nextProp.graphSettings.realTime === false){
@@ -201,25 +238,22 @@ compareObj(obj1, obj2) {
                 this.getgraph();
                 this.setState({isModify:false});
             }
-      }
-    
-      }
-      sendDeletionData = () => {
+  }else{
+     this.oldDataForRealTime();
+  } 
+};
+sendDeletionData = () => {
         this.props.parentCallback(this.props.id);
-   }
-      sendModifyData = () => {
+};
+sendModifyData = () => {
         this.setState({isModify:true});
         this.props.callback(this.props.id);
-      }
-    
-
-      showOptions(e){
+};
+showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});
-      }
-
-    
-    render() {
+};  
+render() {
     let optionToSkip;
     if(this.state.unit !== "Percent" || this.props.graphSettings.metricName!=="CPUUtilization"){
         optionToSkip =  {  
@@ -311,8 +345,7 @@ compareObj(obj1, obj2) {
             borderColor: this.props.graphSettings.colorSelected,
             backgroundColor:Color(this.props.graphSettings.colorSelected).alpha(0.5),
             responsive: true,
-            borderWidth:1
-           
+            borderWidth:1,
           }
         ]
       }
@@ -326,7 +359,8 @@ compareObj(obj1, obj2) {
                label: this.props.graphSettings.metricName,
                borderColor: this.props.graphSettings.colorSelected,
                backgroundColor: Color(this.props.graphSettings.colorSelected).alpha(0.5),
-               fill: this.state.checked
+               fill: this.state.checked,
+               data: this.state.RTData,
                }
            ]
        }}
@@ -340,7 +374,7 @@ compareObj(obj1, obj2) {
                xAxes: [{
                    type: 'realtime',
                    realtime: {
-                       duration: this.props.graphSettings.xAxisRange==null?120000:this.props.graphSettings.xAxisRange,    // this would be the length of the graph in this case it display 15 mins
+                       duration: this.props.graphSettings.xAxisRange!=null?this.props.graphSettings.xAxisRange:900000,    // this would be the length of the graph in this case it display 15 mins
                        refresh: this.props.graphSettings.refreshRate,      // onRefresh callback will be called every 1000 ms *** 
                        delay: 1000,        // delay of 1000 ms, so upcoming values are known before plotting a line
                        pause: false,       // chart is not paused
@@ -404,7 +438,7 @@ compareObj(obj1, obj2) {
               
             </div>
         );
-    }
+  }
 }
 
 export default LineGraph;

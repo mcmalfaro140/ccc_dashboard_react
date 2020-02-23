@@ -1,24 +1,19 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Card, CardBody, Modal } from 'reactstrap';
-
-import ReactTable from 'react-table';
 import LineGraph from '../components/LineGraph'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
-
 import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Button } from 'react-bootstrap';
 import GridLayout from 'react-grid-layout';
-//import SimpleTable from '../components/MaterialTable.js'
 import Tables from './Tables.js'
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import Table from './Tables'
 import LogReport from '../components/logRepotComp'
 import GraphForm from '../components/graphForm';
 
@@ -51,6 +46,7 @@ class DefaultDashboard extends Component {
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
                             colorSelected:"#a3d9f3",
+                            xAxisRange:900000,
                             xAxisSelection:'Last 15 Minutes',
                             refreshRateSelection:'Three Seconds'
                         },
@@ -80,6 +76,7 @@ class DefaultDashboard extends Component {
                             endTime:new Date(), //if needed
                             colorSelected:"#a6e22e",
                             xAxisSelection:'Last 15 Minutes',
+                            xAxisRange:900000,
                             refreshRateSelection:'Ten Seconds'
                         },
                         coordinates: {
@@ -108,6 +105,7 @@ class DefaultDashboard extends Component {
                             endTime:new Date(), //if needed
                             colorSelected:"#800000",
                             xAxisSelection:'Last 15 Minutes',
+                            xAxisRange:900000,
                             refreshRateSelection:'Three Seconds'
                         },
                     coordinates: {
@@ -201,12 +199,13 @@ class DefaultDashboard extends Component {
                         }
                     }else{
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
-                        let preName = this.state.newUpcomingPropsName;
-                        if(newName !== preName && !temp.includes(nextProps.location.state.newGraph.graphSettings)){
+                       
                             const id = this.state.selectedGraphId;
                             const newDashboard = this.state.userDashboard;   
                             for(let i = newDashboard.length-1; i>=0; i--){     
                                 if(newDashboard[i].id === id){
+                                    newDashboard[i].graphSettings.xAxisRange = nextProps.location.state.newGraph.graphSettings.xAxisRange;
+                                    newDashboard[i].graphSettings.xAxisSelection = nextProps.location.state.newGraph.graphSettings.xAxisSelection;
                                     newDashboard[i].graphSettings.metricName = nextProps.location.state.newGraph.graphSettings.metricName;
                                     newDashboard[i].graphSettings.nameSpace = nextProps.location.state.newGraph.graphSettings.nameSpace;
                                     newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
@@ -216,13 +215,15 @@ class DefaultDashboard extends Component {
                                     newDashboard[i].graphSettings.realTime = nextProps.location.state.newGraph.graphSettings.realTime;
                                     if(nextProps.location.state.newGraph.graphSettings.realTime === true){
                                         newDashboard[i].graphSettings.refreshRate = nextProps.location.state.newGraph.graphSettings.refreshRate;
+                                        newDashboard[i].graphSettings.refreshRateSelection = nextProps.location.state.newGraph.graphSettings.refreshRateSelection;
+
                                     }
                                     newDashboard[i].graphSettings.startTime = nextProps.location.state.newGraph.graphSettings.startTime;
                                     newDashboard[i].graphSettings.endTime = nextProps.location.state.newGraph.graphSettings.endTime;
                                     newDashboard[i].graphSettings.colorSelected = nextProps.location.state.newGraph.graphSettings.colorSelected;
                                     newDashboard[i].graphSettings.period = nextProps.location.state.newGraph.graphSettings.period;
                                 }
-                            }
+                            
                             this.setState({userDashboard : newDashboard});
                             this.setState({isModify : false, newUpcomingPropsName: newName});
                         }
