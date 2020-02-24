@@ -62,7 +62,7 @@ const setSession = (user) => {
 
 // function* login({ payload: { username, password } }) {
 //     const options = {
-//         body: JSON.stringify({ username, password }),
+//         body: JSON.stringify({ username, password}),
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' }
 //     };
@@ -70,15 +70,17 @@ const setSession = (user) => {
 //     try {
 //         const response = yield call(fetchJSON, 'http://localhost:5050/authenticate', options);
 //         console.log(response)
-//         setSession(response);
-//         yield put(loginUserSuccess(response));
-//     } catch (error) {
-//         let message;
-//         switch (error.status) {
-//             case 500: message = 'Internal Server Error'; break;
-//             case 401: message = 'Invalid credentials'; break;
-//             default: message = error;
+//         if(response.error){
+//             let message = response.error
+//             yield put(loginUserFailed(message));
+//             setSession(null);
+//         }else{
+//             setSession(response);
+//             yield put(loginUserSuccess(response));
 //         }
+//     } catch (error) {
+//         let message = "Internal Server Error";
+//         console.log(error)
 //         yield put(loginUserFailed(message));
 //         setSession(null);
 //     }
@@ -128,7 +130,7 @@ function* logout({ payload: { history } }) {
  */
 function* register({ payload: { fullname, email, password } }) {
     const options = {
-        body: JSON.stringify({ fullname, email, password }),
+        body: JSON.stringify({ fullname, email, password}),
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     };

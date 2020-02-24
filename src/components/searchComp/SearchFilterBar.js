@@ -83,10 +83,8 @@ class SearchFilterBar extends React.Component {
     }
 
     hideBox(){
-        console.log(this.state.isFilterbyName)
         let ele = document.getElementById("logNamesDiv");
         let eleSwitch = document.getElementById("logGroupSwitch");
-        console.log(eleSwitch)
         if(eleSwitch.checked === true){
             if(this.state.filter.length === 0){
                 this.state.logGroupNames.map((ele, i)=> {
