@@ -131,7 +131,6 @@ onRefresh(chart){
                  x: new Date(),
                  y: newData
              });
-            // console.log(dataset.data)
          });                             
         });
         

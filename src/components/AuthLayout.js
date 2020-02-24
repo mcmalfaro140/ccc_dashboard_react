@@ -1,16 +1,11 @@
 import React, { Component, Suspense } from "react";
-import { Container, Row, Col, Card, CardBody } from 'reactstrap';
+import { Container} from 'reactstrap';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import {Form} from 'react-bootstrap';
+import { Modal} from 'reactstrap';
 import profilePic from '../assets/images/users/user-1.jpg';
-import { SketchPicker } from 'react-color'
-import DateTimePicker from 'react-datetime-picker';
 import GraphForm from '../components/graphForm';
 
 import MixGraphForm from '../components/MixGraphForm';
-import LineGraph from '../components/LineGraph'
 
 import TableFormPop from '../components/TableFormPop'
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
@@ -25,18 +20,18 @@ const Sidebar = React.lazy(() => import("./Sidebar"));
 const RightSidebar = React.lazy(() => import("./RightSidebar"));
 const loading = () => <div className="text-center"></div>;
 
-const RightSidebarContent = (props) => {
-    return <div className="user-box">
-        <div className="user-img">
-            <img src={profilePic} alt="user-img" title="Nik Patel"
-                className="rounded-circle img-fluid" />
-            <a href="/" className="user-edit"><i className="mdi mdi-pencil"></i></a>
-        </div>
+// const RightSidebarContent = (props) => {
+//     return <div className="user-box">
+//         <div className="user-img">
+//             <img src={profilePic} alt="user-img" title="Nik Patel"
+//                 className="rounded-circle img-fluid" />
+//             <a href="/" className="user-edit"><i className="mdi mdi-pencil"></i></a>
+//         </div>
 
-        <h5>{props.user && <a href="/">{props.user.username}</a>}</h5>
-        <p className="text-muted mb-0"><small>Founder</small></p>
-    </div>
-}
+//         <h5>{props.user && <a href="/">{props.user.username}</a>}</h5>
+//         <p className="text-muted mb-0"><small>Founder</small></p>
+//     </div>
+// }
 
 
 class AuthLayout extends Component {
@@ -226,6 +221,12 @@ class AuthLayout extends Component {
         this.setState({screenWidth: (window.innerWidth - 40)});
     }
 
+    // componentWillUnmount(){
+    //     this.setState = (state, callback)=>{
+    //         return;
+    //     }
+    // }
+
     handleExitFull(){
         this.setState({isFullScreen: false})
     }
@@ -292,7 +293,7 @@ class AuthLayout extends Component {
                     </div>
                 </div>
                 <RightSidebar title={"Settings"}>
-                    <RightSidebarContent user={this.props.user} />
+                    {/* <RightSidebarContent user={this.props.user} /> */}
                 </RightSidebar>
             </div>
         );

@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect } from "react-router-dom";
 import { Route } from 'react-router-dom';
 
-import { isUserAuthenticated, getLoggedInUser } from './helpers/authUtils';
+import { isUserAuthenticated, getLoggedInUser} from './helpers/authUtils';
 
 
 // lazy load all the views

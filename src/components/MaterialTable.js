@@ -32,69 +32,10 @@ class MaterialTable extends React.Component {
         };
     }
 
-  componentDidMount(){
-    this.getLogGroupName()
-  }
 
-   //Funtion to get all the log group names from AWS
-   getLogGroupName(){
-    cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
-        if (err){
-            console.log(err, err.stack); // an error occurred
-        }else  {
-            let temp = data.logGroups;
-            for (var i = 0; i < temp.length; i++) {
-                this.setState(prevState => ({
-                    logGroupName : [...prevState.logGroupName, temp[i].logGroupName]
-                }));
-            }
-            for (var i = 0; i < temp.length; i++) {
-                this.searchByLogGroupName(this.state.logGroupName[i]);
-            }
-        }
-    }.bind(this))
-}
-
-//Funtion to search on a specific log group name base on the keyword input by the user
-searchByLogGroupName(logName){
-    
-
-    var params = {
-        logGroupName: logName, /* required */
-        filterPattern: ' ' /*keyword pass by the user */
-        // limit: 1000, 
-    };
-    
-    cloudwatchlogs.filterLogEvents(params, function(err, data) {
-        if(err){
-            console.log(err, err.stack); // an error occurred
-        }else{ 
-            if(data.events.length > 0){
-
-                let resultData = {
-                    logGroupName: "",
-                    events: []
-                }
-
-                var new_data = Object.create(resultData);  
-                new_data.logGroupName = logName;
-                new_data.events = data.events
-
-                this.setState(prevState => ({
-                    results : [...prevState.results, new_data]
-                }));
-            }
-        }  
-        setTimeout(() => this.setState({ loading: false }), 10000); 
-    }.bind(this));
-}
-
- 
 
     render() {
-      console.log(this.state.results)
 
-       const { results } = this.state
        const { row } = this.props;
        const { open } = this.state;  
 
@@ -105,7 +46,7 @@ searchByLogGroupName(logName){
             <Button
               onClick={() => this.setState(({ open }) => ({ open: !open }))}
             >
-              Extend / Collapse
+                {row}              
             </Button>
           </TableCell>
           {/* <TableCell>{row.name}</TableCell>
@@ -116,7 +57,7 @@ searchByLogGroupName(logName){
         </TableRow>
         <Collapse in={open} component="tr" style={{ display: "block" }}>
           <td>
-            <div>Expanded data.</div>
+            <div>{row}</div>
           </td>
         </Collapse>
           </>
@@ -175,23 +116,28 @@ function SimpleTable (props) {
         if(err){
             console.log(err, err.stack); // an error occurred
         }else{ 
-            if(data.events.length > 0){
+            // if(data.events.length > 0){
 
-                let resultData = {
-                    logGroupName: "",
-                    events: []
-                }
+            //     let resultData = {
+            //         logGroupName: "",
+            //         //events: []
+            //     }
 
-                var new_data = Object.create(resultData);  
-                new_data.logGroupName = rows[i];
-                new_data.events = data.events
-                rowsObject.push(new_data)
+            //     var new_data = Object.create(resultData);  
+            //     new_data.logGroupName = rows[i];
+            //     //new_data.events = data.events
+            //     rowsObject.push(new_data)
 
-            }
+            // }
+           
         }  
            
       
       }.bind(this))
+
+      rowsObject.push({
+        logGroupName : rows[i]
+      })
       
        
 }//End of for loop
@@ -208,7 +154,7 @@ function SimpleTable (props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rowsObject.map(element => (
+              {rows.map(element => (
                  <MaterialTable row={element}  />
               ))}
             </TableBody>
@@ -223,3 +169,65 @@ function SimpleTable (props) {
     
    export default withStyles(styles)(SimpleTable);
     
+
+
+
+
+//      // componentDidMount(){
+//   //   this.getLogGroupName()
+//   // }
+
+//    //Funtion to get all the log group names from AWS
+//    getLogGroupName(){
+//     cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
+//         if (err){
+//             console.log(err, err.stack); // an error occurred
+//         }else  {
+//             let temp = data.logGroups;
+//             for (var i = 0; i < temp.length; i++) {
+//                 this.setState(prevState => ({
+//                     logGroupName : [...prevState.logGroupName, temp[i].logGroupName]
+//                 }));
+//             }
+//             for (var i = 0; i < temp.length; i++) {
+//                 this.searchByLogGroupName(this.state.logGroupName[i]);
+//             }
+//         }
+//     }.bind(this))
+// }
+
+// //Funtion to search on a specific log group name base on the keyword input by the user
+// searchByLogGroupName(logName){
+    
+
+//     var params = {
+//         logGroupName: logName, /* required */
+//         filterPattern: ' ' /*keyword pass by the user */
+//         // limit: 1000, 
+//     };
+    
+//     cloudwatchlogs.filterLogEvents(params, function(err, data) {
+//         if(err){
+//             console.log(err, err.stack); // an error occurred
+//         }else{ 
+//             if(data.events.length > 0){
+
+//                 let resultData = {
+//                     logGroupName: "",
+//                     events: []
+//                 }
+
+//                 var new_data = Object.create(resultData);  
+//                 new_data.logGroupName = logName;
+//                 new_data.events = data.events
+
+//                 this.setState(prevState => ({
+//                     results : [...prevState.results, new_data]
+//                 }));
+//             }
+//         }  
+//         setTimeout(() => this.setState({ loading: false }), 10000); 
+//     }.bind(this));
+// }
+
+ 
