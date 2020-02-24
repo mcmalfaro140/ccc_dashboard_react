@@ -39,7 +39,7 @@ class graphForm extends Component {
             
             showMenu: false,
             isRealTime: false,
-            refreshRate:0,
+            refreshRate:10000,
             screenWidth: 0,
             whichNamespace: "",
             colorSelected:"",
@@ -54,27 +54,45 @@ class graphForm extends Component {
             typeOfDimension : null,
             idValue:null,
           //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-          startTime:"", 
-          period:120,
-            endTime:"" //if needed
-              ,
-       
-    
-    
+            startTime:"", 
+            period:120,
+            endTime:"", //if needed ,
+            xAxisRange:120000,
+            xAxisSelection:"",
+            refreshRateSelection:""
     }}
-
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps.graphInfor);
+        if(nextProps.graphInfor != null){
+            this.setState({isRealTime : nextProps.graphInfor.realTime})
+        }
+    }
+    componentDidMount(){
+       // console.log(this.props.graphInfor);
+        if(this.props.graphInfor != null){
+            this.setState({isRealTime : this.props.graphInfor.realTime});
+            if(this.props.graphInfor.realTime === false){
+                this.setState({startTime : new Date(this.props.graphInfor.startTime).getTime()});
+                this.setState({endTime : new Date(this.props.graphInfor.endTime).getTime()})
+            } else{
+                this.setState({startTime : new Date(this.props.graphInfor.startTime)});
+                this.setState({endTime : new Date(this.props.graphInfor.endTime)})
+            }      
+            this.setState({colorSelected : this.props.graphInfor.colorSelected});
+        }
+    }
     refreshGraph(e){
-       if(e.target.value === "Thirty Seconds"){
-           this.setState({refreshRate : 30000})
+       if(e.target.value === "Three Seconds"){
+           this.setState({refreshRate : 3000, refreshRateSelection : 'Three Seconds'});
+       }
+       if(e.target.value === "Ten Seconds"){
+           this.setState({refreshRate : 10000,refreshRateSelection : 'Ten Seconds' });
        }
        if(e.target.value === "One minute"){
-           this.setState({refreshRate : 60000 })
+           this.setState({refreshRate : 60000,refreshRateSelection: 'One minute' });
        }
        if(e.target.value === "Ten minutes"){
-           this.setState({refreshRate : 600000})
-       }
-       if(e.target.value === "Half an hour"){
-           this.setState({refreshRate : 1800000})
+           this.setState({refreshRate : 600000, refreshRateSelection:'Ten minutes'});
        }
     }
 
@@ -91,42 +109,46 @@ class graphForm extends Component {
     //Dropdown helper
     readSelection(e){
       this.setState({endTime : new Date()})
+      if(e.target.value === "Last 15 Minutes"){
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes()-15),
+                        period : 60,
+                        xAxisRange: 900000,
+                        xAxisSelection: 'Last 15 Minutes'});
+      }
       if(e.target.value === "Last Hour"){
-          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())})
-          this.setState({period : 60})
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes()),
+                         period : 120,
+                         xAxisSelection : 'Last Hour',
+                         xAxisRange: 3600000});
+        
+      }
+      if(e.target.value === "Last Two Hours"){
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-2,currentDate.getMinutes()),
+                         period : 120,
+                         xAxisSelection : 'Last Two Hours',
+                         xAxisRange: 7200000})
       }
       if(e.target.value === "Last Day"){
-          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
-          this.setState({period : 120})
-      }
-      if(e.target.value === "Last Week"){
-          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-7,currentDate.getHours(),currentDate.getMinutes())})
-          this.setState({period : 600})
-      }
-      if(e.target.value === "Last Month"){
-          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth()-1, currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes())})
-          this.setState({period : 2400})
+          this.setState({})
+          this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()),
+                         period : 120,
+                         xAxisSelection : 'Last Day',
+                         xAxisRange: 86400000})
       }
   }
 
   handleChangeComplete = (color) =>{
     this.setState({colorSelected : color.hex})
 
-
-   
-    
 }
 
-    update(e,i){
+  update(e,i){
       e.preventDefault();
       this.setState({namespaceNotSelected:false})
       value[i] = e.target.value;
       if(value.length > 5){
           value = [];
       }
-    
-      // this.setState({metricName : value[0]})
-      // this.setState({nameSpace : value[1]});
       this.setState({nameSpace : value[0]});
       this.setState({chartName : value[1]});
       this.setState({metricName : value[2]});
@@ -135,65 +157,9 @@ class graphForm extends Component {
 
       
   }
-  
-   
-    submit(e){
 
-
-        e.preventDefault();
-
-        this.props.history.push({
-           // pathname: str,
-            pathname: "/Dashboard",
-            state: {
-                newGraph : this.state.newGraph,
-                // metricName: this.state.metricName,
-                // nameSpace : this.state.nameSpace,
-                // chartName : this.state.chartName,
-                // // accessKeyId : this.state.accessKeyId,
-                // // secretAccessKey : this.state.secretAccessKey,
-                // instanceId : this.state.instanceId,
-                // //region : this.state.region,
-                // // startTime : this.state.startTime,
-                // // endTime : this.state.endTime
-
-
-
-            }
-        })
-
-
-    }
-
-    // submit(e){
-  
-      
-    //     e.preventDefault();
-       
-    //     this.props.history.push({
-    //        // pathname: str,
-    //         pathname: "/Dashboard",
-    //         state: {
-    //             newGraph : this.state.newGraph,
-    //             // metricName: this.state.metricName,
-    //             // nameSpace : this.state.nameSpace,
-    //             // chartName : this.state.chartName,
-    //             // // accessKeyId : this.state.accessKeyId,
-    //             // // secretAccessKey : this.state.secretAccessKey,
-    //             // instanceId : this.state.instanceId,
-    //             // //region : this.state.region,
-    //             // // startTime : this.state.startTime,
-    //             // // endTime : this.state.endTime
-
-
-            
-    //         }  
-    //     })
-        
-       
-    // }
-  
-    onDateRangeSelection = (startTime, endTime) => {
+ onDateRangeSelection = (startTime, endTime) => {
+        console.log(startTime + ' - ' + endTime)
         this.setState({startTime , endTime})
     
          //   console.log(startTime + " - " + endTime)
@@ -226,72 +192,57 @@ class graphForm extends Component {
         
     }
  
-    //  handleChangeForStart(e,i) {
-    //     let holder = [];
-    //     holder[i] = e.target.value;
-    //     if(holder.length>2){
-    //         holder = [];
-    //     }
-    //     this.setState({
-    //       startTime: holder[0],
-    //       endTime:holder[1]
-    //     });
-       
-    //   };
-    //   handleChangeForEnd = date => {
-    //     this.setState({
-    //       endTime: date
-    //     });
-
-        
-    //   };
-
     
     
     
 
     render() {
-        console.log(this.props.graphInfor);
-        var timeSelection;
-        if(this.state.isRealTime === true){
+        let timeSelection;
+        if(this.state.isRealTime === true ){
             timeSelection = 
-         <div>
-             
+             <div>            
             <Form.Group controlId="exampleForm.ControlSelect2">
             <Form.Label>X Axis Time Range</Form.Label>
             <Form.Control as="select"  
             onChange={(e) => this.readSelection(e)}
+            defaultValue = {this.props.graphInfor==null?null:this.props.graphInfor.xAxisSelection}
             >
-            <option disabled selected>Make Selection</option>
+                {this.props.graphInfor==null?
+                    <option disabled selected>Make Selection</option>
+                    :null
+                }
+            <option value = "Last 15 Minutes">Last 15 Minutes</option>
             <option value = "Last Hour">Last Hour</option>
+            <option value = "Last Two Hours">Last Two Hours</option>
             <option value = "Last Day">Last Day</option>
-            <option value = "Last Week">Last Week</option>
             </Form.Control>
             <Form.Text className="text-muted">
                 Select the time
-                </Form.Text>
+            </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="exampleForm.ControlSelect10">
             <Form.Label>Refresh Rate</Form.Label>
             <Form.Control as="select"  
-            onChange={(e) => this.refreshGraph(e)}>
-            <option disabled selected>Make Selection</option>
-            <option value = "Thirty Seconds">Thirty Seconds</option>
+            onChange={(e) => this.refreshGraph(e)}
+            defaultValue = {this.props.graphInfor==null?null:this.props.graphInfor.refreshRateSelection}>
+            {this.props.graphInfor==null?
+                    <option disabled selected>Make Selection</option>
+                    :null
+                }
+            <option value = "Three Seconds">Three Seconds</option>
+            <option value = "Ten Seconds">Ten Seconds</option>
             <option value = "One minute">One minute</option>
             <option value = "Ten minutes">Ten minutes</option>
-            <option value = "Half an hour">Half an hour</option>
             
             </Form.Control>
             <Form.Text className="text-muted">
                 Select the refresh rate
                 </Form.Text>
             </Form.Group>
-         </div>
-           
-            
+         </div>    
         }
-        else{
+        else if(this.state.isRealTime === false){
             timeSelection = 
             <div>
             <Form.Group>
@@ -300,62 +251,47 @@ class graphForm extends Component {
            
             </div>
         }
-
-        var button;
-        
-        if(this.props.graphInfor == null){
-            button = <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
-        }
-        else{
-            button = <Button color="primary" onClick={this.props.toggleForm}>Modify graph</Button>
-        }
-       
-
-      // console.log("the str is " + str);
-      
-        return (
-
-         
+  
+        return (  
                         <div>
                         <ModalHeader toggle={this.props.toggleForm}>New Chart Form</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
                                 <form>
+                                
+                                {/* {this.props.graphInfor == null && ( */}
+                                {this.props.graphInfor == null ?
                                 <Form.Group>
-                                    <label className="center">
-                                    <h5>Real Time</h5>
-                                    <Switch
-                                        checked={this.state.isRealTime}
-                                        onChange={this.toggleSwitch}
-                                        onColor="#86d3ff"
-                                        onHandleColor="#2693e6"
-                                        handleDiameter={20}
-                                        uncheckedIcon={false}
-                                        checkedIcon={false}
-                                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                        height={15}
-                                        width={40}
-                                        className="react-switch"
-                                        id="material-switch"
-                                    />
-                                        
-
-                                    </label>
-                                </Form.Group>
-                               
-
+                                <label className="center">
+                                <h5>Real Time</h5>
+                                <Switch
+                                    checked={this.state.isRealTime}
+                                    onChange={this.toggleSwitch}
+                                    onColor="#86d3ff"
+                                    onHandleColor="#2693e6"
+                                    handleDiameter={20}
+                                    uncheckedIcon={false}
+                                    checkedIcon={false}
+                                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                                    height={15}
+                                    width={40}
+                                    className="react-switch"
+                                    id="material-switch"
+                                />
+                                </label>
+                            </Form.Group> : null}
+                            {/* )} */}
+                            {this.props.graphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>
                                          <Form.Control type="text" placeholder="Enter name space" onChange = {(e) => this.update(e,0)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.nameSpace:"" }/>
                                         <Form.Text className="text-muted">
                                         specify the name space ...
                                         </Form.Text>
-                                    </Form.Group>
+                                    </Form.Group> : null}
 
-                                
-
-                                 
+                            
                                     <Form.Group controlId="chartName">
                                         <Form.Label>Chart Name: </Form.Label>
                                         <Form.Control type="text" placeholder="Enter chart name" onChange = {(e) => this.update(e,1)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.chartName:""}/>
@@ -364,14 +300,16 @@ class graphForm extends Component {
                                         </Form.Text>
                                     </Form.Group>
 
+                                    {this.props.graphInfor == null?
                                     <Form.Group controlId="metricName">
                                         <Form.Label>Metric Name: </Form.Label> 
                                          <Form.Control type="text" placeholder="Enter metric name" onChange = {(e) => this.update(e,2)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.metricName:""}/>
                                         <Form.Text className="text-muted">
                                         specify the metric name that you want...
                                         </Form.Text> 
-                                     </Form.Group> 
+                                     </Form.Group>:null} 
                                     
+                                     {this.props.graphInfor == null?
                                     <Form>
                                         <Row>
                                             <Col>
@@ -390,7 +328,7 @@ class graphForm extends Component {
                                             </Form.Text>
                                             </Col>
                                         </Row>
-                                    </Form>
+                                    </Form> : null}
 
                                     {timeSelection}
                                    
@@ -401,25 +339,18 @@ class graphForm extends Component {
                                        onChange = {this.handleChangeComplete}
                                        />
                                     </Form.Group>
-
-                                    
-
-
-
-                                 
+                              
                                 </form>
                             </ModalBody>
-                            <ModalFooter>
-                              
+                            <ModalFooter>                             
                                 <Link to={{pathname:'/dashboard', 
                                     state:{ 
                                         newGraph:{
                                             id:this.props.selectedGraphId!=null?this.props.selectedGraphId:"",
                                             objectType:"graph", // options: graph or table
                                             graphSettings: {
-                                                type:this.props.whatever, //options: line, pie, or bar
+                                                type:this.props.graphInfor!=null? this.props.graphInfor.type: this.props.whatever, //options: line, pie, or bar
                                                 realTime:this.state.isRealTime, //options: true or false
-                                                // metricName:this.state.metricName!==""? this.state.metricName: (this.props.graphInfor!=null?this.props.graphInfor.metricName:""), 
                                                 metricName : this.state.metricName!=null ? this.state.metricName: (this.props.graphInfor!=null?this.props.graphInfor.metricName:""),
                                                 nameSpace:this.state.nameSpace!=null ? this.state.nameSpace: (this.props.graphInfor!=null?this.props.graphInfor.nameSpace:""),
                                                 chartName:this.state.chartName!=null? this.state.chartName: (this.props.graphInfor!=null?this.props.graphInfor.chartName:""),
@@ -430,16 +361,17 @@ class graphForm extends Component {
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
                                                 endTime:this.state.endTime, //if needed
-                                               
-                                                
+                                                xAxisRange : this.state.xAxisRange,
+                                                xAxisSelection: this.state.xAxisSelection,
+                                                refreshRateSelection : this.state.refreshRateSelection                                        
                                             },
                                             coordinates: {
                                                 x: 0,
                                                 y: 0,
-                                                w: 10,
-                                                h: 9,
-                                                minW: 6,
-                                                minH: 9
+                                                w: 8,
+                                                h: 3,
+                                                minW: 8,
+                                                minH: 3
                                             },
                                           
                                         },
@@ -450,9 +382,9 @@ class graphForm extends Component {
                                
                               
                                 >
-
-                                    {/* <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button> */}
-                                    {button}
+                                    
+                                   <Button color="primary" onClick={this.props.toggleForm}>{this.props.graphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
+                                  
                                 </Link>
                                 <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
                             </ModalFooter>
