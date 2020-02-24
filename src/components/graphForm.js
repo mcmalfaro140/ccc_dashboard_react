@@ -68,7 +68,7 @@ class graphForm extends Component {
         }
     }
     componentDidMount(){
-        console.log(this.props.graphInfor);
+       // console.log(this.props.graphInfor);
         if(this.props.graphInfor != null){
             this.setState({isRealTime : this.props.graphInfor.realTime});
             if(this.props.graphInfor.realTime === false){
@@ -243,7 +243,6 @@ class graphForm extends Component {
          </div>    
         }
         else if(this.state.isRealTime === false){
-            console.log(this.state.isRealTime)
             timeSelection = 
             <div>
             <Form.Group>
@@ -350,7 +349,7 @@ class graphForm extends Component {
                                             id:this.props.selectedGraphId!=null?this.props.selectedGraphId:"",
                                             objectType:"graph", // options: graph or table
                                             graphSettings: {
-                                                type:this.props.whatever, //options: line, pie, or bar
+                                                type:this.props.graphInfor!=null? this.props.graphInfor.type: this.props.whatever, //options: line, pie, or bar
                                                 realTime:this.state.isRealTime, //options: true or false
                                                 metricName : this.state.metricName!=null ? this.state.metricName: (this.props.graphInfor!=null?this.props.graphInfor.metricName:""),
                                                 nameSpace:this.state.nameSpace!=null ? this.state.nameSpace: (this.props.graphInfor!=null?this.props.graphInfor.nameSpace:""),

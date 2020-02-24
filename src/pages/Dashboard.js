@@ -16,6 +16,7 @@ import Tables from './Tables.js'
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import LogReport from '../components/logRepotComp'
 import GraphForm from '../components/graphForm';
+import MixGraphForm from '../components/MixGraphForm';
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
@@ -143,11 +144,49 @@ class DefaultDashboard extends Component {
                         minH: 3
                     }
                 },
+                {
+                    objectType:"graph", // options: graph or table
+                    id:4,
+                    graphSettings: {
+                            type:"mix", //options: line, pie, or mix
+                            typeOfGraph:'line',
+                            typeOfGraph1:'line',
+                            realTime:true, //options: true or false
+                            metricName:"CPUUtilization", 
+                            metricName1 : "CPUCreditUsage",
+                            nameSpace:"AWS/EC2",
+                            nameSpace1: "AWS/EC2",
+                            chartName:"Mix Test",
+                            typeOfDimension:'InstanceId',
+                            typeOfDimension1:'InstanceId',
+                            idValue:"i-01e27ec0da2c4d296",
+                            idValue1:"i-01e27ec0da2c4d296",
+                            refreshRate:10000,
+                            period:180,
+                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                            endTime:new Date(), //if needed
+                            colorSelected:"#a3d9f3",
+                            colorSelected1:"#ff6666",
+                            xAxisRange : 900000,
+                            xAxisSelection : 'Last 15 Minutes',
+                            refreshRateSelection : "Three Seconds"
+                        },
+                    coordinates: {
+                        x: ((1 %3)*8),
+                        y: 6,
+                        w: 8,
+                        h: 3,
+                        minW: 8,
+                        minH: 3
+                    }
+                },
             ],
             showOptions: false,
             systemHealth: false,
             isModify : false,
+            isMixModify: false,
             stickyFormData :{},
+            stickyMixFormData :{},
             selectedGraphId:"",
 
         };
@@ -176,17 +215,29 @@ class DefaultDashboard extends Component {
                 }
             }           
     }
-    
+    modifyMixFunction = (childData) => {
+        this.setState({isMixModify :true});
+        this.setState({selectedGraphId : childData});
+        const newDashboard = this.state.userDashboard;
+        for(let i = newDashboard.length-1; i>=0;--i){
+            if(newDashboard[i].id === childData){
+                this.setState({stickyMixFormData : newDashboard[i].graphSettings});
+            }
+        }           
+}
     toggleForm = () =>{
         this.setState({isModify : !this.state.isModify});
     }
-
+    toggleMixForm = () =>{
+        this.setState({isMixModify : !this.state.isMixModify});
+    }
     componentWillReceiveProps(nextProps){
+            console.log(this.state.selectedGraphId);
             let temp = this.state.userDashboard
             if(nextProps.location.state){
                 //only activate adds to the array if the props are the specify ones
                 if(nextProps.location.state.newGraph){
-                    if(this.state.isModify === false){
+                    if(this.state.isModify === false &&  this.state.isMixModify === false ){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                         let preName = this.state.newUpcomingPropsName;
                         if(newName !== preName && !temp.includes(nextProps.location.state.newGraph.graphSettings)){
@@ -197,10 +248,13 @@ class DefaultDashboard extends Component {
                                 newUpcomingPropsName: newName
                             })
                         }
-                    }else{
+                    }else if(this.state.isModify === true || this.state.isMixModify === true){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
-                       
                             const id = this.state.selectedGraphId;
+                            console.log(nextProps.location.state.newGraph.graphSettings)
+                            console.log(nextProps.location.state.newGraph.graphSettings.type);
+                            console.log(nextProps.location.state.newGraph.graphSettings.typeOfGraph)
+                            console.log(nextProps.location.state.newGraph.graphSettings.typeOfGraph1)
                             const newDashboard = this.state.userDashboard;   
                             for(let i = newDashboard.length-1; i>=0; i--){     
                                 if(newDashboard[i].id === id){
@@ -216,7 +270,15 @@ class DefaultDashboard extends Component {
                                     if(nextProps.location.state.newGraph.graphSettings.realTime === true){
                                         newDashboard[i].graphSettings.refreshRate = nextProps.location.state.newGraph.graphSettings.refreshRate;
                                         newDashboard[i].graphSettings.refreshRateSelection = nextProps.location.state.newGraph.graphSettings.refreshRateSelection;
-
+                                    }
+                                    if(nextProps.location.state.newGraph.graphSettings.type === 'mix'){
+                                        newDashboard[i].graphSettings.metricName1 = nextProps.location.state.newGraph.graphSettings.metricName1;
+                                        newDashboard[i].graphSettings.nameSpace1 = nextProps.location.state.newGraph.graphSettings.nameSpace1;
+                                        newDashboard[i].graphSettings.typeOfDimension1 = nextProps.location.state.newGraph.graphSettings.typeOfDimension1;
+                                        newDashboard[i].graphSettings.idValue1 = nextProps.location.state.newGraph.graphSettings.idValue1;
+                                        newDashboard[i].graphSettings.typeOfGraph = nextProps.location.state.newGraph.graphSettings.typeOfGraph;
+                                        newDashboard[i].graphSettings.typeOfGraph1 = nextProps.location.state.newGraph.graphSettings.typeOfGraph1;
+                                        newDashboard[i].graphSettings.colorSelected1 = nextProps.location.state.newGraph.graphSettings.colorSelected1;
                                     }
                                     newDashboard[i].graphSettings.startTime = nextProps.location.state.newGraph.graphSettings.startTime;
                                     newDashboard[i].graphSettings.endTime = nextProps.location.state.newGraph.graphSettings.endTime;
@@ -225,7 +287,7 @@ class DefaultDashboard extends Component {
                                 }
                             
                             this.setState({userDashboard : newDashboard});
-                            this.setState({isModify : false, newUpcomingPropsName: newName});
+                            this.setState({isModify : false, newUpcomingPropsName: newName, isMixModify : false});
                         }
                     }
             }   
@@ -267,6 +329,7 @@ class DefaultDashboard extends Component {
     }
 
     render() {
+        console.log(this.state.stickyMixFormData);
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
                 return (
@@ -320,7 +383,7 @@ class DefaultDashboard extends Component {
                     return (
                         <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
-                                <MixGraph {...item}></MixGraph>
+                                <MixGraph {...item } parentCallback = {this.deleteFunction} callback = {this.modifyMixFunction}></MixGraph>
                             </CardBody>
                                                 
                         </Card>);
@@ -333,6 +396,9 @@ class DefaultDashboard extends Component {
                  <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
                      <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
                     />
+                </Modal>
+                <Modal isOpen={this.state.isMixModify} toggle = {this.toggleMixForm}>
+                    <MixGraphForm whatever={this.props.location.typeOfGraph} toggleMixForm = {this.toggleMixForm} mixGraphInfor = {this.state.stickyMixFormData} />
                 </Modal>
                 <div id="dashboard" style={{paddingTop:'1%'}}>
                     { /* preloader */}

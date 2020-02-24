@@ -42,9 +42,9 @@ class MixGraphForm extends Component {
                 typeOfGraph:"",
                 metricName:"", 
                 nameSpace:"",
-                chartName:"",
                 typeOfDimension : "InstanceId",
                 idValue:"",
+                chartName:"",
                 colorSelected:"",
                 typeOfGraph1:"",
                 metricName1:"", 
@@ -53,13 +53,34 @@ class MixGraphForm extends Component {
                 idValue1:"",
                 colorSelected1:"" 
             },
+               
                 startTime:"", //if needed
                 period:120,
                 endTime:"",
+                xAxisRange:"",
+                xAxisSelection:"",
+                refreshRateSelection:"",
     }}
-
-   //Mix form update
-   mixUpdate(e,i){
+componentWillReceiveProps(nextProps){
+    if(nextProps.mixGraphInfor != null){
+        this.setState({isRealTime : nextProps.mixGraphInfor.realTime})
+    }
+}
+componentDidMount(){
+    if(this.props.mixGraphInfor != null){
+        this.setState({isRealTime : this.props.mixGraphInfor.realTime});
+        if(this.props.mixGraphInfor.realTime === false){
+            this.setState({startTime : new Date(this.props.mixGraphInfor.startTime).getTime()});
+            this.setState({endTime : new Date(this.props.mixGraphInfor.endTime).getTime()})
+        } else{
+            this.setState({startTime : new Date(this.props.mixGraphInfor.startTime)});
+            this.setState({endTime : new Date(this.props.mixGraphInfor.endTime)})
+        }      
+        this.setState({colorSelected : this.props.mixGraphInfor.colorSelected});
+    }
+}
+//Mix form update
+mixUpdate(e,i){
     e.preventDefault();
     value[i] = e.target.value;
     if(value.length >9){
@@ -80,18 +101,16 @@ class MixGraphForm extends Component {
       })
   
 }
-
-    toggleSwitch (isRealTime){
+toggleSwitch (isRealTime){
      //   console.log("is it real ? " + isRealTime)
         this.setState({isRealTime})
     }
-    toggleForm = () => {
+toggleForm = () => {
         this.setState({modalOpen : !this.state.modalOpen})
         this.setState({namespaceNotSelected : true})
-
 };
 
-  onDateRangeSelection= (startTime, endTime) => {
+onDateRangeSelection= (startTime, endTime) => {
     console.log(startTime + ' - ' + endTime)
     this.setState({startTime , endTime})
 
@@ -124,39 +143,44 @@ class MixGraphForm extends Component {
     }
 }
   
-  readMixTimeSelection1(e){
+readMixTimeSelection1(e){
     this.setState({endTime : new Date()})
     if(e.target.value === "Last Hour"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-1,currentDate.getMinutes())})
-        this.setState({period : 60})
+        this.setState({period : 60,   xAxisSelection : 'Last Hour',
+                      xAxisRange: 3600000})
+        
     
     }
     if(e.target.value === "Last 15 Minutes"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours(),currentDate.getMinutes()-15)})
-        this.setState({period : 60})
+        this.setState({period : 60 ,xAxisRange: 900000,
+                         xAxisSelection: 'Last 15 Minutes'})
     }
     if(e.target.value === "Last Two Hours"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-2,currentDate.getMinutes())})
-        this.setState({period : 60})
+        this.setState({period : 60 , xAxisSelection : 'Last Two Hours',
+                        xAxisRange: 7200000})
     }
     if(e.target.value === "Last Day"){
         this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())})
-        this.setState({period : 60})
+        this.setState({period : 60, xAxisSelection : 'Last Day',
+                         xAxisRange: 86400000})
 
     }
 }
 refreshGraph(e){
     if(e.target.value === "Three Seconds"){
-        this.setState({refreshRate : 3000})
+        this.setState({refreshRate : 3000,refreshRateSelection : 'Three Seconds'})
     }
     if(e.target.value === "Ten Seconds"){
-        this.setState({refreshRate : 10000 })
+        this.setState({refreshRate : 10000,refreshRateSelection : 'Ten Seconds' })
     }
     if(e.target.value === "One minute"){
-        this.setState({refreshRate : 60000})
+        this.setState({refreshRate : 60000,refreshRateSelection: 'One minute'})
     }
     if(e.target.value === "Ten minutes"){
-        this.setState({refreshRate : 600000})
+        this.setState({refreshRate : 600000,refreshRateSelection:'Ten minutes'})
     }
  }
 readMixedSelection1(e){
@@ -205,8 +229,12 @@ handleMixChangeComplete2 = (color) =>{
              <Form.Group controlId="exampleForm.ControlSelect2">
                  <Form.Label>Time Range</Form.Label>
                   <Form.Control as="select"  
-                 onChange={(e) => this.readMixTimeSelection1(e)}>
+                 onChange={(e) => this.readMixTimeSelection1(e)}
+                 defaultValue = {this.props.mixGraphInfor==null?null:this.props.mixGraphInfor.xAxisSelection}>
+                    {this.props.mixGraphInfor==null?
                     <option disabled selected>Make Selection</option>
+                    :null
+                }
                     <option value = "Last 15 Minutes">Last 15 Minutes</option>
                     <option value = "Last Hour">Last Hour</option>
                     <option value = "Last Two Hours">Last Two Hours</option>
@@ -220,8 +248,12 @@ handleMixChangeComplete2 = (color) =>{
             <Form.Group controlId="exampleForm.ControlSelect10">
             <Form.Label>Refresh Rate</Form.Label>
             <Form.Control as="select"  
-            onChange={(e) => this.refreshGraph(e)}>
-            <option disabled selected>Make Selection</option>
+            onChange={(e) => this.refreshGraph(e)}
+            defaultValue = {this.props.mixGraphInfor==null?null:this.props.mixGraphInfor.refreshRateSelection}>
+           {this.props.mixGraphInfor==null?
+                    <option disabled selected>Make Selection</option>
+                    :null
+                }
             <option value = "Three Seconds">Three Seconds</option>
             <option value = "Ten Seconds">Ten Seconds</option>
             <option value = "One minute">One minute</option>
@@ -258,6 +290,7 @@ handleMixChangeComplete2 = (color) =>{
                             <ModalBody>
                                 Please provide all the inputs to create a mix chart.
                                 <form>
+                                {this.props.mixGraphInfor == null ?
                                 < Form.Group>
                                     <label className="center">
                                     <h5>Real Time</h5>
@@ -278,7 +311,7 @@ handleMixChangeComplete2 = (color) =>{
                                     />
 
                                     </label>
-                                </Form.Group>
+                                </Form.Group>: null}
                                 <Form>
                                     <Row>
                                         <Col>
@@ -319,60 +352,61 @@ handleMixChangeComplete2 = (color) =>{
                                         </Row>
                                     </Form.Group>
 
+                                    {this.props.mixGraphInfor == null?
                                     <Form>
                                         <Row>
                                             <Col>
                                             <Form.Label>Name Space: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,0)} />
+                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,0)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace:"" } />
                                             <Form.Text className="text-muted">
                                             specify the name space ...
                                             </Form.Text>
                                             </Col>
                                             <Col>
                                             <Form.Label>Name Space: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,1)} />
+                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,1)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace1:"" }/>
                                             <Form.Text className="text-muted">
                                             specify the name space ...
                                             </Form.Text>
                                             </Col>
                                         </Row>
-                                    </Form>
+                                    </Form>:null}
 
                                     <Form.Group controlId="exampleForm.ControlSelect2">
                                             <Form.Label>Chart name: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the chart name" onChange = {(e) => this.mixUpdate(e,2)} />
+                                            <Form.Control type="text" placeholder="Enter the chart name" onChange = {(e) => this.mixUpdate(e,2)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.chartName:""}/>
                                             <Form.Text className="text-muted">
                                             specify the chart name that you want...                                            
                                             </Form.Text>  
                                    </Form.Group>
 
-
+                                   {this.props.mixGraphInfor == null?
                                     <Form>
                                         <Row>
                                             <Col>
                                             <Form.Label>Metric name: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,3)} />
+                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,3)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName:""}/>
                                             <Form.Text className="text-muted">
                                             specify the metric name that you want...                                        
                                             </Form.Text>
                                             </Col>
                                             <Col>
                                             <Form.Label>Metric name: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,4)} />
+                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,4)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName1:""}/>
                                             <Form.Text className="text-muted">
                                             specify the metric name that you want...                                        
                                             </Form.Text>
                                             </Col>
                                         </Row>
-                                    </Form>
+                                    </Form>:null}
 
                               
-                                    
+                                    {this.props.mixGraphInfor == null?
                                     <Form>
                                         <Row>
                                             <Col>
                                             <Form.Label>Dimension: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,5)} />
+                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,5)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension:""}/>
                                             <Form.Text className="text-muted">
                                             Enter the dimension 
                                             Ex.InstanceId
@@ -380,65 +414,39 @@ handleMixChangeComplete2 = (color) =>{
                                             </Col>
                                             <Col>
                                             <Form.Label>Dimension: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,6)} />
+                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,6)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension1:""}/>
                                             <Form.Text className="text-muted">
                                             Enter the dimension 
                                             Ex.InstanceId
                                             </Form.Text>
                                             </Col>
                                         </Row>
-                                    </Form>
+                                    </Form>:null}
 
+                                    {this.props.mixGraphInfor == null?
                                     <Form>
                                         <Row>
                                             <Col>
                                             <Form.Label>Value: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,7)} />
+                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,7)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue:""} />
                                             <Form.Text className="text-muted">
                                             Enter the value
                                             </Form.Text>
                                             </Col>
                                             <Col>
                                             <Form.Label>Value: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,8)} />
+                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,8)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue1:""}/>
                                             <Form.Text className="text-muted">
                                             Enter the value
                                             </Form.Text>
                                             </Col>
                                         </Row>
-                                    </Form>
+                                    </Form>:null}
 
-                                    {/* <Form.Group controlId="exampleForm.ControlSelect2">
-                                            <Form.Label>Time Range</Form.Label>
-                                        <Form.Control as="select"  
-                                        onChange={(e) => this.readMixTimeSelection1(e)}>
-                                        <option disabled selected>Make Selection</option>
-                                        <option value = "Last Hour">Last Hour</option>
-                                        <option value = "Last Day">Last Day</option>
-                                        <option value = "Last Week">Last Week</option>
-                                        <option value = "Last Month">Last Month</option>
-                                        </Form.Control>
-                                        <Form.Text className="text-muted">
-                                            Select the time
-                                            </Form.Text>
-                                     </Form.Group> */}
+                
                                      {timeSelection}
 
-                                    {/* <Form.Group controlId="exampleForm.ControlSelect2">
-                                        <Form.Label>Time Range</Form.Label>
-                                        <Form.Control as="select"  
-                                        onChange={(e) => this.readSelection(e)}>
-                                        <option disabled selected>Make Selection</option>
-                                        <option value = "Last Hour">Last Hour</option>
-                                        <option value = "Last Day">Last Day</option>
-                                        <option value = "Last Week">Last Week</option>
-                                        <option value = "Last Month">Last Month</option>
-                                        </Form.Control>
-                                        <Form.Text className="text-muted">
-                                            Select the time
-                                            </Form.Text>
-                                    </Form.Group> */}
-
+                            
                                     <Form>
                                         <Row>
                                             <Col>
@@ -458,13 +466,7 @@ handleMixChangeComplete2 = (color) =>{
                                         </Row>
                                     </Form>
 
-                                    {/* <Form.Group controlId="exampleForm.ControlSelect3">
-                                    <Form.Label>Graph Color</Form.Label>
-                                       <SketchPicker
-                                       color = {this.state.colorSelected}
-                                       onChange = {this.handleChangeComplete}
-                                       />
-                                    </Form.Group> */}
+                    
                                    
                                 </form>
                             </ModalBody>
@@ -474,25 +476,28 @@ handleMixChangeComplete2 = (color) =>{
                                         newGraph:{
                                             objectType:"graph", // options: graph or table
                                             graphSettings: {
-                                                type:this.props.whatever, //options: line, pie, or bar
+                                                type:this.props.mixGraphInfor!=null? this.props.mixGraphInfor.type: this.props.whatever, //options: line, pie, or bar
                                                 typeOfGraph: this.state.mixGraph.typeOfGraph,
                                                 typeOfGraph1 : this.state.mixGraph.typeOfGraph1,
-                                                realTime:"false", //options: true or false
-                                                metricName:this.state.mixGraph.metricName, 
-                                                metricName1:this.state.mixGraph.metricName1,
-                                                nameSpace:this.state.mixGraph.nameSpace,
-                                                nameSpace1:this.state.mixGraph.nameSpace1,
-                                                chartName:this.state.mixGraph.chartName,
-                                                typeOfDimension : this.state.mixGraph.typeOfDimension,
-                                                typeOfDimension1 : this.state.mixGraph.typeOfDimension1,
-                                                idValue:this.state.mixGraph.idValue,
-                                                idValue1:this.state.mixGraph.idValue1,
-                                                refreshRate:"",
+                                                realTime:this.state.isRealTime, //options: true or false
+                                                metricName:this.state.mixGraph.metricName!=null ? this.state.mixGraph.metricName: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName:""), 
+                                                metricName1:this.state.mixGraph.metricName1!=null ? this.state.mixGraph.metricName1: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName1:""),
+                                                nameSpace:this.state.mixGraph.nameSpace!=null ? this.state.mixGraph.nameSpace: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace:""),
+                                                nameSpace1:this.state.mixGraph.nameSpace1!=null ? this.state.mixGraph.nameSpace1: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace1:""),
+                                                chartName:this.state.mixGraph.chartName!=null? this.state.mixGraph.chartName: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.chartName:""),
+                                                typeOfDimension : this.state.mixGraph.typeOfDimension!=null? this.state.mixGraph.typeOfDimension: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension:""),
+                                                typeOfDimension1 : this.state.mixGraph.typeOfDimension1!=null? this.state.mixGraph.typeOfDimension1: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension1:""),
+                                                idValue:this.state.mixGraph.idValue!=null? this.state.mixGraph.idValue: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue:""),
+                                                idValue1:this.state.mixGraph.idValue1!=null? this.state.mixGraph.idValue1: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue1:""),
+                                                refreshRate:this.state.refreshRate,
                                                 colorSelected:this.state.mixGraph.colorSelected,
                                                 colorSelected1:this.state.mixGraph.colorSelected1,
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
-                                                endTime:this.state.endTime //if needed
+                                                endTime:this.state.endTime, //if needed
+                                                xAxisRange : this.state.xAxisRange,
+                                                xAxisSelection : this.state.xAxisSelection,
+                                                refreshRateSelection : this.state.refreshRateSelection
                                             },
                                             coordinates: {
                                                 x: 0,
@@ -506,7 +511,7 @@ handleMixChangeComplete2 = (color) =>{
                                         }
                                     }
                                 }}>
-                                     <Button color="primary" onClick={this.props.toggleMixForm}>{this.props.graphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
+                                     <Button color="primary" onClick={this.props.toggleMixForm}>{this.props.mixGraphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
                                 </Link>
                                 <Button color="secondary" onClick={this.props.toggleMixForm}>Cancel</Button>
                             </ModalFooter>

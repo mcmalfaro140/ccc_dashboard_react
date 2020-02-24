@@ -232,6 +232,9 @@ compareObj(obj1, obj2) {
 componentDidMount() {
   if(this.props.graphSettings.realTime === false){
     this.getgraph();
+    this.setState({
+      newUpcomingPropsStartTime: this.props.graphSettings.startTime,
+      newUpcomingPropsEndTime : this.props.graphSettings.endTime});
   }
   else{
     this.oldDataForRealTime();
@@ -241,9 +244,12 @@ componentDidMount() {
   }
 }
 componentWillReceiveProps(nextProp){
-  const isEqual = this.compareObj(this.state.graphSetting, nextProp.graphSettings)    
+  let newStartTime = nextProp.graphSettings.startTime;
+  let oldStartTime = this.state.newUpcomingPropsStartTime; 
+  let newEndTime = nextProp.graphSettings.endTime;
+  let oldEndTime = this.state.newUpcomingPropsEndTime;
   if(nextProp.graphSettings.realTime === false){
-    if(this.state.isModify === true && isEqual === false){
+    if(this.state.isModify === true && (newStartTime !== oldStartTime || newEndTime !== oldEndTime)){
       if(this.state.holder.length > 0){
         this.setState({holder:[]});
         this.setState({label:[]});
@@ -251,6 +257,8 @@ componentWillReceiveProps(nextProp){
       }
       this.getgraph();
       this.setState({isModify:false});
+      this.setState({newUpcomingPropsStartTime: nextProp.graphSettings.startTime,
+        newUpcomingPropsEndTime : nextProp.graphSettings.endTime});
             }
       }else{
         this.oldDataForRealTime();
