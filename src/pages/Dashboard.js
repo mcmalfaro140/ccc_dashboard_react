@@ -19,9 +19,9 @@ import MixGraphForm from '../components/MixGraphForm';
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
 
+var currentDate = new Date()
+const axios = require('axios').default;
 
-
-var currentDate = new Date();
 class DefaultDashboard extends Component {
    
     constructor(props) {
@@ -223,17 +223,35 @@ class DefaultDashboard extends Component {
             stickyFormData :{},
             stickyMixFormData :{},
             selectedGraphId:"",
+            prevDashLayout:{lg:[],md:[],sm:[]}
 
         };
         this.showOptions = this.showOptions.bind(this);
         this.systemHealth = this.systemHealth.bind(this);
         this.recordCoordinateChange = this.recordCoordinateChange.bind(this);
+        this.setLayout = this.setLayout.bind(this)
         this.test = this.test.bind(this);
+        this.saveDashboard = this.saveDashboard.bind(this);
+    }
+
+    saveDashboard(){
+        console.log("updating...")
+        axios.post(
+            'http://localhost:5050/update',
+            {username:this.state.user.username, dashboard: JSON.stringify(this.state.userDashboard)},
+            {header: {'Content-Type':'application/json'}}
+        )
+        .catch((error) => {
+            console.log(error)
+        })
     }
 
     componentDidMount(){
-        // let savedDashboard = JSON.parse(this.state.user.dashboard)
-        // this.setState({userDashboard: savedDashboard})
+        let savedDashboard = JSON.parse(this.state.user.dashboard)
+        this.setState({userDashboard: savedDashboard})
+        setTimeout(()=>{
+            this.saveDashboard()
+        }, 600000)
     }
 
     test(id){
@@ -247,24 +265,26 @@ class DefaultDashboard extends Component {
     }
 
     deleteFunction = (childData) => {
-           let newDashboard = this.state.userDashboard;
-            for(let i = newDashboard.length -1; i>=0;--i){
-                if(newDashboard[i].id === childData){
-                    newDashboard.splice(i,1);
-                    this.setState({userDashboard : newDashboard});
-                }   
+        let newDashboard = this.state.userDashboard;
+        for(let i = newDashboard.length -1; i>=0;--i){
+            if(newDashboard[i].id === childData){
+                newDashboard.splice(i,1);
+                this.setState({userDashboard : newDashboard});
+                //update database
+            }   
         }
-  }
+        this.saveDashboard();
+    }
 
     modifyFunction = (childData) => {
-            this.setState({isModify :true});
-            this.setState({selectedGraphId : childData});
-            const newDashboard = this.state.userDashboard;
-            for(let i = newDashboard.length-1; i>=0;--i){
-                if(newDashboard[i].id === childData){
-                    this.setState({stickyFormData : newDashboard[i].graphSettings});
-                }
-            }           
+        this.setState({isModify :true});
+        this.setState({selectedGraphId : childData});
+        const newDashboard = this.state.userDashboard;
+        for(let i = newDashboard.length-1; i>=0;--i){
+            if(newDashboard[i].id === childData){
+                this.setState({stickyFormData : newDashboard[i].graphSettings});
+            }
+        }
     }
 
     modifyMixFunction = (childData) => {
@@ -298,6 +318,7 @@ class DefaultDashboard extends Component {
                                 userDashboard: temp,
                                 newUpcomingPropsName: newName
                             })
+                            this.saveDashboard();
                         }
                     }else if(this.state.isModify === true || this.state.isMixModify === true){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
@@ -337,11 +358,8 @@ class DefaultDashboard extends Component {
                             this.setState({isModify : false, newUpcomingPropsName: newName, isMixModify : false});
                         }
                     }
-            }   
-    }    
-
-       
-        
+                }   
+        }
     }
     showOptions(e){
         e.preventDefault();
@@ -354,42 +372,46 @@ class DefaultDashboard extends Component {
 
     //Gets call when the user resize the dashboard. Saves the new coordinates
     recordCoordinateChange(newLayout, allLayouts){
+        let prevDash = this.state.prevDashLayout
+        if(allLayouts !== null){
+            if(this.props.screenSize > 1040 && prevDash.lg !== null){
+                this.setLayout(allLayouts.lg)
+                prevDash.lg = allLayouts.lg
+                this.setState({prevDashLayout: prevDash})
+            }else if(this.props.screenSize > 768 && prevDash.md !== null){
+                this.setLayout(allLayouts.md)
+                prevDash.md = allLayouts.md
+                this.setState({prevDashLayout: prevDash})
+            }else{
+                this.setLayout(allLayouts.sm)
+                prevDash.sm = allLayouts.sm
+                this.setState({prevDashLayout: prevDash})
+            }
+        }else{
+            this.setLayout(newLayout)
+        }
+    }
+
+    setLayout(newLay){
         let temp = this.state.userDashboard
         let updatedDash = [];
-        if(allLayouts.lg.length > 0){
-            allLayouts.lg.map((chart) => {
-                let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
-                newGraph.coordinates.x = chart.y
-                newGraph.coordinates.x = chart.x
-                newGraph.coordinates.w = chart.w
-                newGraph.coordinates.h = chart.h
+        newLay.map((chart) => {
+            let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
+            newGraph.coordinates.x = chart.y
+            newGraph.coordinates.x = chart.x
+            newGraph.coordinates.w = chart.w
+            newGraph.coordinates.h = chart.h
 
-                updatedDash.push(newGraph);
-            })
-            this.setState({
-                userDashboard: updatedDash
-            })
-        }else{
-            newLayout.map((chart) => {
-                let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
-                newGraph.coordinates.x = chart.y
-                newGraph.coordinates.x = chart.x
-                newGraph.coordinates.w = chart.w
-                newGraph.coordinates.h = chart.h
-
-                updatedDash.push(newGraph);
-            })
-            this.setState({
-                userDashboard: updatedDash
-            })
-        }
-        
-        
+            updatedDash.push(newGraph);
+        })
+        this.setState({
+            userDashboard: updatedDash
+        })
     }
     
     render() {
         const items = this.state.userDashboard.map((item, i) => {
-           if(item.objectType === "graph"){
+            if(item.objectType === "graph"){
                 if(item.graphSettings.type === "line"){
                     return (   
                        <Card id = "p" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
@@ -428,7 +450,7 @@ class DefaultDashboard extends Component {
         return (
             
             <React.Fragment>
-                {/* <Button onClick={this.test}>test</Button> */}
+                <Button onClick={this.saveDashboard}>test</Button>
                  <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
                      <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
                     />
@@ -444,13 +466,6 @@ class DefaultDashboard extends Component {
                         <h3 className="float-left" >System Health Bar</h3>
                             <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
                             <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
-                            {/* { this.state.systemHealth? (
-                            <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                            <a href="" class="dropdown-item">Last 24 Hours</a>
-                            <a href="" class="dropdown-item">Last 48 Hours</a>
-                            <a href="" class="dropdown-item">Last 72 Hours</a>
-                            </div>
-                            ): null } */}
                         </div>
                         </div>
                         <CardBody style={{paddingTop:'0%', margin: '0%'}}>
@@ -463,7 +478,7 @@ class DefaultDashboard extends Component {
                         </CardBody>
                     </Card>
                     <ResponsiveGridLayout className="layout" 
-                        breakpoints={{lg: 1040, md: 996, sm: 768}}
+                        breakpoints={{lg: 1040, md: 768, sm: 375}}
                         cols={{lg: 24, md: 12, sm: 8}}
                         width={this.props.screenSize} 
                         // onLayoutChange={(layout,allLayouts) => this.recordCoordinateChange(layout, allLayouts)} 

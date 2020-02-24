@@ -123,10 +123,11 @@ class AuthLayout extends Component {
         //makes the table full width instead of a condensed table
         this.setState({isCondesed : !this.state.isCondensed})
 
-};
+    }
+
     toggleMixForm = () =>{
-    this.setState({mixModalOpen : !this.state.mixModalOpen})
-}
+        this.setState({mixModalOpen : !this.state.mixModalOpen})
+    }
 
     toggleTableForm = () =>{
         this.setState({modalTableOpen : !this.state.modalTableOpen})
@@ -167,8 +168,6 @@ class AuthLayout extends Component {
         this.setState({typeOfDimension : value[3]});
         this.setState({idValue : value[4]});
     }
-
-    
 
     handleChangeComplete = (color) =>{
         this.setState({colorSelected : color.hex})
@@ -227,7 +226,9 @@ class AuthLayout extends Component {
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
               screenSize: this.state.screenWidth,
-              isCondensed: this.state.isCondensed
+              isCondensed: this.state.isCondensed,
+              myDahboard: this.state.myDahboard,
+              saveDashboard: this.saveDashboard
             });
           }) || null;
   
