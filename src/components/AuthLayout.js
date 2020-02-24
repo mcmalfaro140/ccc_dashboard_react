@@ -37,27 +37,6 @@ const loading = () => <div className="text-center"></div>;
 class AuthLayout extends Component {
     constructor(props) {
         super(props);
-
-        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
-        this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
-        this.toggleMenu = this.toggleMenu.bind(this);
-        this.readSelection = this.readSelection.bind(this);
-        this.goFullScreen = this.goFullScreen.bind(this);
-        this.handleChangeComplete = this.handleChangeComplete.bind(this);
-        this.changeScreenSize = this.changeScreenSize.bind(this);
-        this.handleExitFull = this.handleExitFull.bind(this);
-        this.toggleMixForm = this.toggleMixForm.bind(this);
-        // this.mixUpdate = this.mixUpdate.bind(this);
-        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
-        this.changeStartDate = this.changeStartDate.bind(this);
-        this.changeEndDate = this.changeEndDate.bind(this);
-        this.toggleSearchModal = this.toggleSearchModal.bind(this);
-
         this.state = {
             mixGraph:{
                 typeOfGraph:"",
@@ -96,11 +75,9 @@ class AuthLayout extends Component {
             chartName:"",
             typeOfDimension : "InstanceId",
             idValue:"",
-          //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-          startTime:new Date(), 
-          period:120,
+            startTime:new Date(), 
+            period:120,
             endTime:new Date() //if needed
-           // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
         }
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
@@ -112,12 +89,19 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.toggleMixForm = this.toggleMixForm.bind(this);
-        // this.mixUpdate = this.mixUpdate.bind(this);
-        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeStartDate = this.changeStartDate.bind(this);
+        this.changeEndDate = this.changeEndDate.bind(this);
+        this.toggleSearchModal = this.toggleSearchModal.bind(this);
+        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
+        this.toggleForm = this.toggleForm.bind(this);
+        this.toggleTableForm = this.toggleTableForm.bind(this);
+        this.toggleMenu = this.toggleMenu.bind(this);
+        this.readSelection = this.readSelection.bind(this);
+        this.goFullScreen = this.goFullScreen.bind(this);
+        this.handleChangeComplete = this.handleChangeComplete.bind(this);
+        this.changeScreenSize = this.changeScreenSize.bind(this);
+        this.handleExitFull = this.handleExitFull.bind(this);
+        this.toggleMixForm = this.toggleMixForm.bind(this);
         this.changeStartDate = this.changeStartDate.bind(this);
         this.changeEndDate = this.changeEndDate.bind(this);
         this.toggleSearchModal = this.toggleSearchModal.bind(this);
@@ -137,10 +121,11 @@ class AuthLayout extends Component {
         //makes the table full width instead of a condensed table
         this.setState({isCondesed : !this.state.isCondensed})
 
-};
+    }
+
     toggleMixForm = () =>{
-    this.setState({mixModalOpen : !this.state.mixModalOpen})
-}
+        this.setState({mixModalOpen : !this.state.mixModalOpen})
+    }
 
     toggleTableForm = () =>{
         this.setState({modalTableOpen : !this.state.modalTableOpen})
@@ -186,8 +171,6 @@ class AuthLayout extends Component {
         this.setState({idValue : value[4]});
     }
 
-    
-
     handleChangeComplete = (color) =>{
         this.setState({colorSelected : color.hex})
     }
@@ -221,12 +204,6 @@ class AuthLayout extends Component {
         this.setState({screenWidth: (window.innerWidth - 40)});
     }
 
-    // componentWillUnmount(){
-    //     this.setState = (state, callback)=>{
-    //         return;
-    //     }
-    // }
-
     handleExitFull(){
         this.setState({isFullScreen: false})
     }
@@ -251,7 +228,9 @@ class AuthLayout extends Component {
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
               screenSize: this.state.screenWidth,
-              isCondensed: this.state.isCondensed
+              isCondensed: this.state.isCondensed,
+              myDahboard: this.state.myDahboard,
+              saveDashboard: this.saveDashboard
             });
           }) || null;
   
