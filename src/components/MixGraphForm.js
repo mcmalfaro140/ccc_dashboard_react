@@ -37,27 +37,27 @@ class MixGraphForm extends Component {
       
         this.state = { 
             isRealTime: false,
-            refreshRate:"",
+            refreshRate:null,
               mixGraph:{
-                typeOfGraph:"",
-                metricName:"", 
-                nameSpace:"",
-                typeOfDimension : "InstanceId",
-                idValue:"",
-                chartName:"",
+                typeOfGraph:null,
+                metricName:null, 
+                nameSpace:null,
+                typeOfDimension : null,
+                idValue:null,
+                chartName:null,
                 colorSelected:"",
-                typeOfGraph1:"",
-                metricName1:"", 
-                nameSpace1:"",
-                typeOfDimension1 : "InstanceId",
-                idValue1:"",
+                typeOfGraph1:null,
+                metricName1:null, 
+                nameSpace1:null,
+                typeOfDimension1 : null,
+                idValue1:null,
                 colorSelected1:"" 
             },
                
                 startTime:"", //if needed
                 period:120,
                 endTime:"",
-                xAxisRange:"",
+                xAxisRange:null,
                 xAxisSelection:"",
                 refreshRateSelection:"",
     }}
@@ -75,8 +75,14 @@ componentDidMount(){
         } else{
             this.setState({startTime : new Date(this.props.mixGraphInfor.startTime)});
             this.setState({endTime : new Date(this.props.mixGraphInfor.endTime)})
-        }      
-        this.setState({colorSelected : this.props.mixGraphInfor.colorSelected});
+        }  
+        this.setState(prevState => {
+            let mixGraph = Object.assign({}, prevState.mixGraph);   
+            mixGraph.colorSelected = this.props.mixGraphInfor.colorSelected;
+            mixGraph.colorSelected1 = this.props.mixGraphInfor.colorSelected1;
+            return { mixGraph };            
+        });   
+        
     }
 }
 //Mix form update
@@ -312,6 +318,7 @@ handleMixChangeComplete2 = (color) =>{
 
                                     </label>
                                 </Form.Group>: null}
+                                {this.props.mixGraphInfor == null?
                                 <Form>
                                     <Row>
                                         <Col>
@@ -321,8 +328,8 @@ handleMixChangeComplete2 = (color) =>{
                                          <Form.Label>Graph 2</Form.Label>
                                         </Col>
                                     </Row>
-                                </Form>
-                               
+                                </Form>:null}
+                                {this.props.mixGraphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect2">
                                         <Row>
                                             <Col>
@@ -350,7 +357,8 @@ handleMixChangeComplete2 = (color) =>{
                                             </Form.Text>
                                             </Col>
                                         </Row>
-                                    </Form.Group>
+                                    </Form.Group>:null}
+
 
                                     {this.props.mixGraphInfor == null?
                                     <Form>
@@ -477,8 +485,8 @@ handleMixChangeComplete2 = (color) =>{
                                             objectType:"graph", // options: graph or table
                                             graphSettings: {
                                                 type:this.props.mixGraphInfor!=null? this.props.mixGraphInfor.type: this.props.whatever, //options: line, pie, or bar
-                                                typeOfGraph: this.state.mixGraph.typeOfGraph,
-                                                typeOfGraph1 : this.state.mixGraph.typeOfGraph1,
+                                                typeOfGraph: this.state.mixGraph.typeOfGraph!=null?this.state.mixGraph.typeOfGraph:(this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfGraph:""),
+                                                typeOfGraph1: this.state.mixGraph.typeOfGraph1!=null?this.state.mixGraph.typeOfGraph1:(this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfGraph1:""),
                                                 realTime:this.state.isRealTime, //options: true or false
                                                 metricName:this.state.mixGraph.metricName!=null ? this.state.mixGraph.metricName: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName:""), 
                                                 metricName1:this.state.mixGraph.metricName1!=null ? this.state.mixGraph.metricName1: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName1:""),
@@ -489,13 +497,13 @@ handleMixChangeComplete2 = (color) =>{
                                                 typeOfDimension1 : this.state.mixGraph.typeOfDimension1!=null? this.state.mixGraph.typeOfDimension1: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension1:""),
                                                 idValue:this.state.mixGraph.idValue!=null? this.state.mixGraph.idValue: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue:""),
                                                 idValue1:this.state.mixGraph.idValue1!=null? this.state.mixGraph.idValue1: (this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue1:""),
-                                                refreshRate:this.state.refreshRate,
+                                                refreshRate: this.state.refreshRate!=null?this.state.refreshRate:(this.props.mixGraphInfor!=null?this.props.mixGraphInfor.refreshRate:""),
                                                 colorSelected:this.state.mixGraph.colorSelected,
                                                 colorSelected1:this.state.mixGraph.colorSelected1,
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
                                                 endTime:this.state.endTime, //if needed
-                                                xAxisRange : this.state.xAxisRange,
+                                                xAxisRange : this.state.xAxisRange!=null? this.state.xAxisRange:(this.props.mixGraphInfor!=null?this.props.mixGraphInfor.xAxisRange:""),
                                                 xAxisSelection : this.state.xAxisSelection,
                                                 refreshRateSelection : this.state.refreshRateSelection
                                             },
@@ -507,7 +515,6 @@ handleMixChangeComplete2 = (color) =>{
                                                 minW: 8,
                                                 minH: 3
                                             },
-                                          
                                         }
                                     }
                                 }}>
