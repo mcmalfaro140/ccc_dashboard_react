@@ -39,7 +39,7 @@ class graphForm extends Component {
             
             showMenu: false,
             isRealTime: false,
-            refreshRate:10000,
+            refreshRate:null,
             screenWidth: 0,
             whichNamespace: "",
             colorSelected:"",
@@ -57,7 +57,7 @@ class graphForm extends Component {
             startTime:"", 
             period:120,
             endTime:"", //if needed ,
-            xAxisRange:120000,
+            xAxisRange:null,
             xAxisSelection:"",
             refreshRateSelection:""
     }}
@@ -356,12 +356,12 @@ class graphForm extends Component {
                                                 chartName:this.state.chartName!=null? this.state.chartName: (this.props.graphInfor!=null?this.props.graphInfor.chartName:""),
                                                 typeOfDimension:this.state.typeOfDimension!=null? this.state.typeOfDimension: (this.props.graphInfor!=null?this.props.graphInfor.typeOfDimension:""),
                                                 idValue:this.state.idValue!=null? this.state.idValue: (this.props.graphInfor!=null?this.props.graphInfor.idValue:""),
-                                                refreshRate: this.state.refreshRate,
+                                                refreshRate: this.state.refreshRate!=null?this.state.refreshRate:(this.props.graphInfor!=null?this.props.graphInfor.refreshRate:""),
                                                 colorSelected:this.state.colorSelected,
                                                 period:this.state.period,
                                                 startTime:this.state.startTime, //if needed
                                                 endTime:this.state.endTime, //if needed
-                                                xAxisRange : this.state.xAxisRange,
+                                                xAxisRange : this.state.xAxisRange!=null? this.state.xAxisRange:(this.props.graphInfor!=null?this.props.graphInfor.xAxisRange:""),
                                                 xAxisSelection: this.state.xAxisSelection,
                                                 refreshRateSelection : this.state.refreshRateSelection                                        
                                             },

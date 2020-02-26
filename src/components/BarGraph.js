@@ -24,7 +24,8 @@ class BarGraph extends Component {
             isModify:false,
             graphSetting:{},
             RTHolder:[],
-            RTData:[]
+            RTData:[],
+            unit:""
 
           };
         this.showOptions = this.showOptions.bind(this);
@@ -185,10 +186,10 @@ getgraph = () =>{
           });
            this.setState({holder:sortedData})
              for (var i = 0; i < this.state.holder.length; i++) {
-              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
+              let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
               console.log(this.state.label.includes(newTimestamp))
               if(!this.state.label.includes(newTimestamp)){
-               this.setState({label: [...this.state.label,newTimestamp]});
+               this.setState({label: [...this.state.label,newTimestamp],unit : this.state.holder[i].Unit});
                this.setState(prevState => ({
                  data : [...prevState.data, this.state.holder[i].Average]
                }));
@@ -350,10 +351,10 @@ render() {
               stepSize: 0.2,
               fontSize: 10,
               min: 0,
-            //  max: 1,// Your absolute max value
-              callback: function (value) {
-                return (value * 100).toFixed(1)+ '%'; // convert it to percentage
-              },
+              max: 1,// Your absolute max value
+            callback: function (value) {
+              return (value * 100).toFixed(1) + '%'; 
+            },
                 //  fontColor: 'black   '
             },
             // scaleLabel:{

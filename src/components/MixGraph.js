@@ -37,13 +37,12 @@ class MixGraph extends Component {
             label1:[],
             holder:[],
             holder1:[],
-            uniqueData:[],
-            uniqueData1:[],
-            uniqueLabel:[],
-            uniqueLabel1:[],
             showOptions: false,
             isModify:false,
-
+            RTData:[],
+            RTData1:[],
+            RTHolder:[],
+            RTHolder1:[]
           };
 
         this.showOptions = this.showOptions.bind(this);
@@ -52,13 +51,6 @@ class MixGraph extends Component {
     }
       
 getgraph = () =>{
-        // if(this.props.graphSettings.realTime === true){
-        //   // this.setState({data:[]})
-        //   // this.setState({label:[]})
-        //   this.intervalID = setTimeout(this.getgraph, this.props.graphSettings.refreshRate);
-      
-        // }
-        console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
@@ -97,9 +89,7 @@ getgraph = () =>{
            this.setState({holder:sortedData})
            console.log(this.state.holder);
              for (var i = 0; i < this.state.holder.length; i++) {
-              let newTimestamp = this.state.holder[i].Timestamp.getFullYear() + "/" + this.state.holder[i].Timestamp.getMonth()+1 + "/"+ this.state.holder[i].Timestamp.getDay() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;
-            //  console.log(this.state.label.includes(newTimestamp))
-             //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+              let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
               if(!this.state.label.includes(newTimestamp)){
                this.setState({label: [...this.state.label,newTimestamp]});
                this.setState(prevState => ({
@@ -113,9 +103,6 @@ getgraph = () =>{
           };          
          
         }.bind(this));
-
-        
-        console.log("id is "+this.props.graphSettings.idValue1);
         var typeOfD1 = this.props.graphSettings.typeOfDimension1;
         var idVal1 = this.props.graphSettings.idValue1;
         if(typeOfD1 == null){typeOfD1 = "InstanceId"}
@@ -171,6 +158,7 @@ getgraph = () =>{
          }.bind(this));
       }
 onRefresh(chart){
+        console.log(this.props.graphSettings)
         let typeOfD = this.props.graphSettings.typeOfDimension;
         let idVal = this.props.graphSettings.idValue;
         let typeOfD1 = this.props.graphSettings.typeOfDimension1;
@@ -227,7 +215,6 @@ onRefresh(chart){
             StartTime:  new Date(this.props.graphSettings.startTime), /* required */
             ScanBy: 'TimestampDescending'
          }
-          // chart.data.datasets.forEach(function(dataset) {
             let cloudwatch = new AWS.CloudWatch();
             let newData;
             let temp;
@@ -258,10 +245,7 @@ onRefresh(chart){
                   x: new Date(),
                   y: newData1
                    });
-
-                 })    
-          
-               
+                 })      
               };
 sendDeletionData = () => {
         this.props.parentCallback(this.props.id);
@@ -270,17 +254,125 @@ sendModifyData = () => {
         this.setState({isModify:true});
         this.props.callback(this.props.id);
 };
-    
+oldDataForRealTime(){
+  let cloudwatch = new AWS.CloudWatch();
+  let typeOfD = this.props.graphSettings.typeOfDimension;
+  let idVal = this.props.graphSettings.idValue;
+  let typeOfD1 = this.props.graphSettings.typeOfDimension1;
+  let idVal1 = this.props.graphSettings.idValue1;
+  if(typeOfD == null){typeOfD = "InstanceId"}
+  if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
+  if(typeOfD1 == null){typeOfD1 = "InstanceId"}
+  if(idVal1 == null){idVal1 = "i-01e27ec0da2c4d296"}
+  let params = {
+    EndTime: new Date(this.props.graphSettings.endTime), /* required */
+    MetricName: this.props.graphSettings.metricName, /* required */
+    Namespace: this.props.graphSettings.nameSpace, /* required */
+    Period: this.props.graphSettings.period, /* required */
+    StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+ 
+   Dimensions: [
+      {
+        Name: typeOfD, /* required */
+        // Value: 'i-031339fed44b9fac8' /* required */
+        Value: idVal
+      },
+      /* more items */
+    ],
+    Statistics: [
+      'Average',
+      /* more items */
+    ], 
+  }
+  let params1 = {
+    EndTime: new Date(this.props.graphSettings.endTime), /* required */
+    MetricName: this.props.graphSettings.metricName1, /* required */
+    Namespace: this.props.graphSettings.nameSpace1, /* required */
+    Period: this.props.graphSettings.period, /* required */
+    StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+ 
+   Dimensions: [
+      {
+        Name: typeOfD1, /* required */
+        // Value: 'i-031339fed44b9fac8' /* required */
+        Value: idVal1
+      },
+      /* more items */
+    ],
+    Statistics: [
+      'Average',
+      /* more items */
+    ], 
+  }
+  cloudwatch.getMetricStatistics(params, function(err, data){
+    let temp = [];
+    if (err) console.log(err, err.stack); // an error occurred
+    else {
+      let sortedData =  data.Datapoints.sort(function(a, b) {
+      let dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
+      return dateA - dateB;
+        });
+      this.setState({RTHolder: sortedData});
+      for(let i = 0; i < this.state.RTHolder.length; i++){
+          temp.push({x: new Date(this.state.RTHolder[i].Timestamp), y:this.state.RTHolder[i].Average})
+      }
+      this.setState({RTData: temp});
+      
+      }
+  }.bind(this));
+  cloudwatch.getMetricStatistics(params1, function(err1, data1){
+    let temp1 = [];
+    if (err1) console.log(err1, err1.stack); // an error occurred
+    else {
+      let sortedData =  data1.Datapoints.sort(function(a, b) {
+      let dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
+      return dateA - dateB;
+        });
+      this.setState({RTHolder1: sortedData});
+      for(let i = 0; i < this.state.RTHolder1.length; i++){
+          temp1.push({x: new Date(this.state.RTHolder1[i].Timestamp), y:this.state.RTHolder1[i].Average})
+      }
+      this.setState({RTData1: temp1});
+      
+      }
+  }.bind(this))
+};  
 componentDidMount() {
         if(this.props.graphSettings.realTime === false){
           this.getgraph();
+          this.setState({
+            newUpcomingPropsStartTime: this.props.graphSettings.startTime,
+            newUpcomingPropsEndTime : this.props.graphSettings.endTime});
+        }else{
+          this.oldDataForRealTime();
         }
         if(this.props.graphSettings.colorSelected != null){
           this.setState({ graphColor : this.props.graphSettings.colorSelected })
         }
       }
+componentWillReceiveProps(nextProp){
+  let newStartTime = nextProp.graphSettings.startTime;
+  let oldStartTime = this.state.newUpcomingPropsStartTime; 
+  let newEndTime = nextProp.graphSettings.endTime;
+  let oldEndTime = this.state.newUpcomingPropsEndTime; 
+  if(nextProp.graphSettings.realTime === false){
+    if(this.state.isModify === true && (newStartTime !== oldStartTime || newEndTime !== oldEndTime)){
+        if(this.state.holder.length > 0){
+            this.setState({holder:[]});
+            this.setState({label:[]});
+            this.setState({data:[]});
+          }
+          this.getgraph();
+          this.setState({isModify:false});
+          this.setState({newUpcomingPropsStartTime: nextProp.graphSettings.startTime,
+                         newUpcomingPropsEndTime : nextProp.graphSettings.endTime});
+      }
+}else{
+      this.oldDataForRealTime();
+} 
+}
 
-      showOptions(e){
+showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});
       }
@@ -327,7 +419,7 @@ componentDidMount() {
                 borderColor: this.props.graphSettings.colorSelected,
                 backgroundColor: Color(this.props.graphSettings.colorSelected).alpha(0.5),
                 fill:false,
-                data: [],
+                data: this.state.RTData,
                 },
                 {
                 type: this.props.graphSettings.typeOfGraph1,
@@ -335,7 +427,7 @@ componentDidMount() {
                 borderColor: this.props.graphSettings.colorSelected1,
                 backgroundColor: Color(this.props.graphSettings.colorSelected1).alpha(0.5),
                 fill:false,
-                data: [],
+                data: this.state.RTData1,
                 }
             ]
         }}

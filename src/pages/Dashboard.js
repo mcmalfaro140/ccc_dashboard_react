@@ -94,8 +94,8 @@ class DefaultDashboard extends Component {
                     objectType:"graph", // options: graph or table
                     id:2,
                     graphSettings: {
-                            type:"line", //options: line, pie, or bar
-                            realTime:true, //options: true or false
+                            type:"bar", //options: line, pie, or bar
+                            realTime:false, //options: true or false
                             metricName:"CPUUtilization", 
                             nameSpace:"AWS/EC2",
                             chartName:"Test 3",
@@ -103,7 +103,7 @@ class DefaultDashboard extends Component {
                             idValue:"i-01e27ec0da2c4d296",
                             refreshRate:3000,
                             period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
+                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-5,currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
                             colorSelected:"#800000",
                             xAxisSelection:'Last 15 Minutes',
@@ -162,7 +162,7 @@ class DefaultDashboard extends Component {
                             typeOfDimension1:'InstanceId',
                             idValue:"i-01e27ec0da2c4d296",
                             idValue1:"i-01e27ec0da2c4d296",
-                            refreshRate:10000,
+                            refreshRate:3000,
                             period:180,
                             startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
                             endTime:new Date(), //if needed
@@ -174,6 +174,42 @@ class DefaultDashboard extends Component {
                         },
                     coordinates: {
                         x: ((1 %3)*8),
+                        y: 6,
+                        w: 8,
+                        h: 3,
+                        minW: 8,
+                        minH: 3
+                    }
+                },
+                {
+                    objectType:"graph", // options: graph or table
+                    id:5,
+                    graphSettings: {
+                            type:"mix", //options: line, pie, or mix
+                            typeOfGraph:'bar',
+                            typeOfGraph1:'bar',
+                            realTime:false, //options: true or false
+                            metricName:"CPUUtilization", 
+                            metricName1 : "CPUCreditUsage",
+                            nameSpace:"AWS/EC2",
+                            nameSpace1: "AWS/EC2",
+                            chartName:"Mix Test 2",
+                            typeOfDimension:'InstanceId',
+                            typeOfDimension1:'InstanceId',
+                            idValue:"i-01e27ec0da2c4d296",
+                            idValue1:"i-01e27ec0da2c4d296",
+                            refreshRate:3000,
+                            period:180,
+                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-5,currentDate.getMinutes()), //if needed
+                            endTime:new Date(), //if needed
+                            colorSelected:"#a3d9f3",
+                            colorSelected1:"#ff6666",
+                            xAxisRange : 900000,
+                            xAxisSelection : 'Last 15 Minutes',
+                            refreshRateSelection : "Three Seconds"
+                        },
+                    coordinates: {
+                        x: ((2 %3)*8),
                         y: 6,
                         w: 8,
                         h: 3,
@@ -358,30 +394,7 @@ class DefaultDashboard extends Component {
     
     render() {
         const items = this.state.userDashboard.map((item, i) => {
-            if(item.objectType === "table"){
-                return (
-                <Card className="card-box" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}} > 
-                    <div style={{width:'100%'}}>
-                <h2 className="float-left" >{item.tableSettings.chartName}</h2>
-                        <div  className="dropdown float-right show" onClick={this.showOptions}>
-                            <a className="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="true">
-                            <i style={{fontSize:'130%'}}className="mdi mdi-dots-vertical"></i>
-                            </a>
-                            { this.state.showOptions? (
-                            <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                            <a href="" class="dropdown-item">Modify</a>
-                            <a href="" class="dropdown-item">Delete</a>
-                            </div>
-                            ): null }
-                        </div>
-                    </div>
-                    <CardBody>
-                            <SimpleTable {...item}/>
-                    </CardBody>
-                                        
-                </Card>);
-            //This part will render the Graph
-            }else if(item.objectType === "graph"){
+           if(item.objectType === "graph"){
                 if(item.graphSettings.type === "line"){
                     return (   
                        <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
@@ -410,7 +423,7 @@ class DefaultDashboard extends Component {
                     return (
                         <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
-                                <MixGraph {...item } parentCallback = {this.deleteFunction} callback = {this.modifyMixFunction}></MixGraph>
+                                <MixGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyMixFunction}></MixGraph>
                             </CardBody>
                                                 
                         </Card>);
