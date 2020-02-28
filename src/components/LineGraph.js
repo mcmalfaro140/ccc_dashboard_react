@@ -249,7 +249,7 @@ componentWillReceiveProps(nextProp){
 
             }
   }else{
-     this.oldDataForRealTime();
+       this.oldDataForRealTime();
   } 
 };
 sendDeletionData = () => {
@@ -299,7 +299,8 @@ render() {
         enabled: true,
         mode: 'x',
       
-      }
+      },
+      maintainAspectRatio: false
 
     }
   }else{
@@ -341,7 +342,8 @@ render() {
         zoom: {
           enabled: true,
           mode: 'x',
-        }
+        },
+        maintainAspectRatio: true
     }
   }
       let Color = require('color');
@@ -397,7 +399,7 @@ render() {
               }
                ],           
            },
-        
+           maintainAspectRatio: true
        }}/>
       }
       else{

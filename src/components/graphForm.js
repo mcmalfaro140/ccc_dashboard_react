@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import {Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Row, Col, CardBody } from 'reactstrap';
+import { Button, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { SketchPicker } from 'react-color'
 import Switch from "react-switch";
 import '../assets/react-grid/styles.css'
@@ -129,7 +129,6 @@ class graphForm extends Component {
                          xAxisRange: 7200000})
       }
       if(e.target.value === "Last Day"){
-          this.setState({})
           this.setState({startTime: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()),
                          period : 120,
                          xAxisSelection : 'Last Day',

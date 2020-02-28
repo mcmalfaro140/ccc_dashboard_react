@@ -428,6 +428,8 @@ render() {
               }
                ],           
            },
+     
+           maintainAspectRatio: true,
          
        }}/>
       }

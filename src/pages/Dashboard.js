@@ -303,10 +303,6 @@ class DefaultDashboard extends Component {
                     }else if(this.state.isModify === true || this.state.isMixModify === true){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                             const id = this.state.selectedGraphId;
-                            console.log(nextProps.location.state.newGraph.graphSettings)
-                            console.log(nextProps.location.state.newGraph.graphSettings.type);
-                            console.log(nextProps.location.state.newGraph.graphSettings.typeOfGraph)
-                            console.log(nextProps.location.state.newGraph.graphSettings.typeOfGraph1)
                             const newDashboard = this.state.userDashboard;   
                             for(let i = newDashboard.length-1; i>=0; i--){     
                                 if(newDashboard[i].id === id){
