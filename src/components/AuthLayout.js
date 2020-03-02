@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Modal} from 'reactstrap';
 import profilePic from '../assets/images/users/user-1.jpg';
 import GraphForm from '../components/graphForm';
-
+import { getLoggedInUser } from '../helpers/authUtils';
 import MixGraphForm from '../components/MixGraphForm';
 
 import TableFormPop from '../components/TableFormPop'
@@ -14,6 +14,7 @@ import AdvSearchModal from '../components/searchComp/AdvSearchModal'
 
 var currentDate = new Date();
 var value = [];
+const axios = require('axios').default;
 // code splitting and lazy loading
 const Topbar = React.lazy(() => import("./Topbar"));
 const Sidebar = React.lazy(() => import("./Sidebar"));
@@ -53,6 +54,8 @@ class AuthLayout extends Component {
         this.toggleSearchModal = this.toggleSearchModal.bind(this);
 
         this.state = {
+            user: getLoggedInUser(),
+            my_dashboard:[],
             mixGraph:{
                 typeOfGraph:"",
                 metricName:"", 
@@ -107,6 +110,23 @@ class AuthLayout extends Component {
         this.changeStartDate = this.changeStartDate.bind(this);
         this.changeEndDate = this.changeEndDate.bind(this);
         this.toggleSearchModal = this.toggleSearchModal.bind(this);
+        this.saveDashboard = this.saveDashboard.bind(this);
+        this.updateDashboard  = this.updateDashboard.bind(this);
+        this.logOut = this.logOut.bind(this) 
+    }
+
+    saveDashboard(dash_to_save){
+        axios.post(
+            'http://localhost:5050/update',
+            {token:this.state.user.token, dashboard: JSON.stringify(dash_to_save)},
+            {header: {'Content-Type':'application/json'}}
+        )
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+    updateDashboard(dash_to_update){
+        this.setState({my_dashboard: dash_to_update})
     }
 
     changeStartDate = startTime =>{
@@ -137,9 +157,9 @@ class AuthLayout extends Component {
         this.setState({modalSearch : !this.state.modalSearch})
     }
 
-    signOut(e) {
-        e.preventDefault();
-        this.props.history.push("/login");
+    logOut() {
+        this.saveDashboard(this.state.my_dashboard);
+        this.props.history.push("/logout");
     }
 
     //toggleMenu
@@ -227,8 +247,8 @@ class AuthLayout extends Component {
             return React.cloneElement(child, {
               screenSize: this.state.screenWidth,
               isCondensed: this.state.isCondensed,
-              myDahboard: this.state.myDahboard,
-              saveDashboard: this.saveDashboard
+              saveDashboard: this.saveDashboard,
+              updateDashboard: this.updateDashboard
             });
           }) || null;
   
@@ -236,10 +256,8 @@ class AuthLayout extends Component {
             <div className="app">
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
-                        <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu}  isCondensed={this.state.isCondensed} toggleForm={this.toggleForm}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu}  logOut={this.logOut}/>
 
                     </Suspense>
                     <div className="content-page">
