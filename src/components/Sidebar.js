@@ -61,7 +61,7 @@ class SideNavContent extends React.Component {
 
             <ul className="list-inline">
                 <li className="list-inline-item">
-                    <Link to="/Logout" className="text-custom">
+                    <Link onClick={this.props.logOut} className="text-custom">
                         <i className="mdi mdi-power"></i>
                         <span> Logout </span>
                     </Link>
@@ -181,7 +181,7 @@ class Sidebar extends Component {
     /**
      * Bind event
      */
-    componentWillMount = () => {
+    UNSAFE_componentWillMount = () => {
         document.addEventListener('mousedown', this.handleOtherClick, false);
     }
 

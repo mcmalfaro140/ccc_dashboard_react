@@ -11,7 +11,6 @@ class Logout extends Component {
     }
 
     render() {
-        console.log(this.props.location)
         return (<React.Fragment>
         </React.Fragment>)
     }
