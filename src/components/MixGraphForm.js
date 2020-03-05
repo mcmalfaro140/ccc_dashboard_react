@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import {Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Row, Col, CardBody } from 'reactstrap';
+import { Button, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { SketchPicker } from 'react-color'
-import DateTimePicker from 'react-datetime-picker';
 import Switch from "react-switch";
 import '../assets/react-grid/styles.css'
 import ReactLightCalendar from '@lls/react-light-calendar'
@@ -30,8 +29,8 @@ class MixGraphForm extends Component {
         this.readMixedSelection1 = this.readMixedSelection1.bind(this);
         this.readMixedSelection2 = this.readMixedSelection2.bind(this);
         this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
+        this.changeColorFirstGraph = this.changeColorFirstGraph.bind(this);
+        this.changeColorSecondGraph = this.changeColorSecondGraph.bind(this);
         this.onDateRangeSelection = this.onDateRangeSelection.bind(this);
    
       
@@ -208,26 +207,22 @@ readMixedSelection2(e){
         return { mixGraph };                               
       })
 }
-
-handleMixChangeComplete1 = (color) =>{
+changeColorFirstGraph = (color) =>{
     this.setState(prevState => {
         let mixGraph = Object.assign({}, prevState.mixGraph);  
         mixGraph.colorSelected = color.hex
         return { mixGraph };                                
       })
 }
-handleMixChangeComplete2 = (color) =>{
+changeColorSecondGraph = (color) =>{
     this.setState(prevState => {
         let mixGraph = Object.assign({}, prevState.mixGraph);  
         mixGraph.colorSelected1 = color.hex
         return { mixGraph };                                
       })
 }
-
-    render() {
-
-        
-        var timeSelection;
+render() {
+        let timeSelection;
         if(this.state.isRealTime === true){
             timeSelection = 
          <div>
@@ -285,8 +280,6 @@ handleMixChangeComplete2 = (color) =>{
            
             </div>
         }
-
-      // console.log("the str is " + str);
       
         return (
 
@@ -461,14 +454,14 @@ handleMixChangeComplete2 = (color) =>{
                                             <Form.Label>Graph Color</Form.Label>
                                                 <SketchPicker
                                                 color = {this.state.mixGraph.colorSelected}
-                                                onChange = {this.handleMixChangeComplete1}
+                                                onChange = {this.changeColorFirstGraph}
                                                 />
                                             </Col>
                                             <Col>
                                             <Form.Label>Graph Color</Form.Label>
                                                 <SketchPicker
                                                 color = {this.state.mixGraph.colorSelected1}
-                                                onChange = {this.handleMixChangeComplete2}
+                                                onChange = {this.changeColorSecondGraph}
                                                 />
                                              </Col>
                                         </Row>
@@ -511,9 +504,9 @@ handleMixChangeComplete2 = (color) =>{
                                                 x: 0,
                                                 y: 0,
                                                 w: 8,
-                                                h: 3,
+                                                h: 2,
                                                 minW: 8,
-                                                minH: 3
+                                                minH: 2
                                             },
                                         }
                                     }

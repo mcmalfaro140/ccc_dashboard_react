@@ -9,17 +9,15 @@ import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
-import SimpleTable from '../components/MaterialTable.js'
-
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import LogReport from '../components/logRepotComp'
 import GraphForm from '../components/graphForm';
 import MixGraphForm from '../components/MixGraphForm';
+//import '../assets/scss/custom/components/gragh.scss';
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
-import { Button } from 'react-bootstrap';
 
 
 
@@ -56,9 +54,9 @@ class DefaultDashboard extends Component {
                         x: (0 %3)*8 ,
                         y: 0,
                         w: 8,
-                        h: 3,
+                        h: 2,
                         minW: 8,
-                        minH: 3
+                        minH: 2
                     }
                 },
                 {
@@ -85,9 +83,9 @@ class DefaultDashboard extends Component {
                             x: ((1 %3)*8),
                             y: 0,
                             w: 8,
-                            h: 3,
+                            h: 2,
                             minW: 8,
-                            minH: 3
+                            minH: 2
                         }
                 },
                 {
@@ -114,9 +112,9 @@ class DefaultDashboard extends Component {
                         x: ((2 %3)*8),
                         y: 0,
                         w: 8,
-                        h: 3,
+                        h: 2,
                         minW: 8,
-                        minH: 3
+                        minH: 2
                     }
                 },
                 {
@@ -140,9 +138,9 @@ class DefaultDashboard extends Component {
                         x: ((0 %3)*8),
                         y: 6,
                         w: 8,
-                        h: 3,
+                        h: 2,
                         minW: 8,
-                        minH: 3
+                        minH: 2
                     }
                 },
                 {
@@ -176,9 +174,9 @@ class DefaultDashboard extends Component {
                         x: ((1 %3)*8),
                         y: 6,
                         w: 8,
-                        h: 3,
+                        h: 2,
                         minW: 8,
-                        minH: 3
+                        minH: 2
                     }
                 },
                 {
@@ -212,9 +210,9 @@ class DefaultDashboard extends Component {
                         x: ((2 %3)*8),
                         y: 6,
                         w: 8,
-                        h: 3,
+                        h: 2,
                         minW: 8,
-                        minH: 3
+                        minH: 2
                     }
                 },
             ],
@@ -268,6 +266,7 @@ class DefaultDashboard extends Component {
                 }
             }           
     }
+
     modifyMixFunction = (childData) => {
         this.setState({isMixModify :true});
         this.setState({selectedGraphId : childData});
@@ -393,7 +392,7 @@ class DefaultDashboard extends Component {
            if(item.objectType === "graph"){
                 if(item.graphSettings.type === "line"){
                     return (   
-                       <Card key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
+                       <Card id = "p" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
                                 <LineGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyFunction}></LineGraph>
                             </CardBody>
@@ -467,8 +466,8 @@ class DefaultDashboard extends Component {
                         breakpoints={{lg: 1040, md: 996, sm: 768}}
                         cols={{lg: 24, md: 12, sm: 8}}
                         width={this.props.screenSize} 
-                        onLayoutChange={(layout,allLayouts) => this.recordCoordinateChange(layout, allLayouts)} 
-                        onResizeStop={(placeholder) => this.test(placeholder)}
+                        // onLayoutChange={(layout,allLayouts) => this.recordCoordinateChange(layout, allLayouts)} 
+                        // onResizeStop={(placeholder) => this.test(placeholder)}
                         style={{margin:0}}>
                         {items}
                     </ResponsiveGridLayout>

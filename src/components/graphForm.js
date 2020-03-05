@@ -11,9 +11,6 @@ import ReactLightCalendar from '@lls/react-light-calendar'
 import '@lls/react-light-calendar/dist/index.css' // Default Style
 
 
-// import DateTimePicker from 'react-datetime-picker';
-
-
 /**
  * Renders the preloader
  */
@@ -27,10 +24,8 @@ class graphForm extends Component {
         this.update = this.update.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
         this.readSelection = this.readSelection.bind(this);
-        this.handleChangeComplete = this.handleChangeComplete.bind(this);
+        this.changeColor = this.changeColor.bind(this);
         this.toggleSwitch = this.toggleSwitch.bind(this);
-        // this.handleChangeForStart = this.handleChangeForStart.bind(this);
-        // this.handleChangeForEnd = this.handleChangeForEnd.bind(this);
         this.refreshGraph = this.refreshGraph.bind(this);
         this.onDateRangeSelection = this.onDateRangeSelection.bind(this);
    
@@ -43,7 +38,6 @@ class graphForm extends Component {
             screenWidth: 0,
             whichNamespace: "",
             colorSelected:"",
-           // namespaceNotSelected : true,
             isCondensed: false,
             isFullScreen: false,
             modalOpen: false,
@@ -53,7 +47,6 @@ class graphForm extends Component {
             chartName:null,
             typeOfDimension : null,
             idValue:null,
-          //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
             startTime:"", 
             period:120,
             endTime:"", //if needed ,
@@ -102,7 +95,6 @@ class graphForm extends Component {
     }
     toggleForm = () => {
         this.setState({modalOpen : !this.state.modalOpen})
-        // this.setState({whichNamespace : ""})
         this.setState({namespaceNotSelected : true})
 
 };
@@ -136,7 +128,7 @@ class graphForm extends Component {
       }
   }
 
-  handleChangeComplete = (color) =>{
+  changeColor = (color) =>{
     this.setState({colorSelected : color.hex})
 
 }
@@ -335,7 +327,7 @@ class graphForm extends Component {
                                     <Form.Label>Graph Color</Form.Label>
                                        <SketchPicker
                                        color = {this.state.colorSelected}
-                                       onChange = {this.handleChangeComplete}
+                                       onChange = {this.changeColor}
                                        />
                                     </Form.Group>
                               
@@ -368,9 +360,9 @@ class graphForm extends Component {
                                                 x: 0,
                                                 y: 0,
                                                 w: 8,
-                                                h: 3,
+                                                h: 2,
                                                 minW: 8,
-                                                minH: 3
+                                                minH: 2
                                             },
                                           
                                         },
