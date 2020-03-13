@@ -57,7 +57,7 @@ class SideNavContent extends React.Component {
         TODO: Update user email dynamically with back end and add logout link. */}
         <div className="user-box text-center ">
             <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
-            <h5>mcmalfaro@hotmail.com</h5>
+            <h5>Hi, {this.props.user.username}.</h5>
 
             <ul className="list-inline">
                 <li className="list-inline-item">
