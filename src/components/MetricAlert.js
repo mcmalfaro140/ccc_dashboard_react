@@ -79,7 +79,7 @@ class MetricAlert extends Component {
         const item = this.state.alerts.map((item,i) =>{
             return(
                 <Col style={{ width: window.innerWidth/4}}>
-                    <Card style = {{ height: window.innerHeight/2,minWidth:'250px',minHeight:'280px'}}>
+                    <Card style = {{ height: window.innerHeight/2,minWidth:'250px',minHeight:'280px',borderColor:'grey',borderWidth:1}}>
                     <MetricAlarmDisplay {...item} id = {i}></MetricAlarmDisplay>
                     </Card> 
                 </Col>         
