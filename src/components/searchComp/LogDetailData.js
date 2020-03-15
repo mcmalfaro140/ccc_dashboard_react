@@ -82,11 +82,11 @@ class LogDetailData extends React.Component {
         let count = 0;
         let ans = [];
 
-        if(arr.length < 25){
+        if(arr.length < 15){
             ans = [...ans, ...arr]
             arr = []
         }else{
-            while(count < 25){
+            while(count < 15){
                 ans.push(arr[0]);
                 arr.splice(0,1);
                 count++;
@@ -120,6 +120,8 @@ class LogDetailData extends React.Component {
     }
 
     render() {
+        var time = new Date(parseInt(this.props.log.timestamp));
+        let UTCtime = time.toGMTString();
         const prev = this.state.currentPrevLogs.map((item, i) => {
             var t = new Date(parseInt(item.timestamp));
             let time = t.toGMTString();
@@ -157,6 +159,8 @@ class LogDetailData extends React.Component {
                         <Collapse isOpen={this.state.showInfo} id="0">
                             <h4>Log Stream Name:</h4>
                             <p>{this.props.log.logStreamName}</p>
+                            <h4>UTC Time:</h4>
+                            <p>{UTCtime}</p>
                             <h4>Time Stamp:</h4>
                             <p>{this.props.log.timestamp}</p>
                             <h4>Ingestion Time:</h4>
