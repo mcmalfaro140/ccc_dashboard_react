@@ -195,7 +195,7 @@ class MetricAlarmDisplay extends Component {
               cloudwatch.putMetricAlarm(params, function(err, data) {
                 if (err) console.log(err, err.stack);
                 else {
-                    this.setState({subscription:true});
+                    // this.setState({subscription:true});
                 }    
               }.bind(this));
 
@@ -272,9 +272,9 @@ class MetricAlarmDisplay extends Component {
     showSubscribedTopicsOfAlarms(){
         this.setState({showSubscribedTopicsOfAlarms: !this.state.showSubscribedTopicsOfAlarms});
     }
-    unsubscribeTopics(index){
+    unsubscribeTopics(i){
         let actionArr = this.state.alert.AlarmActions;
-        actionArr.splice(actionArr[index],1);
+        actionArr.splice(i,1);
         this.setState(prevState => {
             let alert = Object.assign({}, prevState.alert);  
             alert.AlarmActions = actionArr;
@@ -299,7 +299,7 @@ class MetricAlarmDisplay extends Component {
           cloudwatch.putMetricAlarm(params, function(err, data) {
             if (err) console.log(err, err.stack);
             else {
-                this.setState({subscription:false});
+                // this.setState({subscription:false});
             }    
           }.bind(this));
 
@@ -336,13 +336,19 @@ class MetricAlarmDisplay extends Component {
             <p style ={{marginTop:0,marginBottom:0}}><span><h5>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</h5></span></p>
             <p style = {{marginTop:0,lineHeight:'1.5em',height:'3em',overflow:'scroll',color:'black'}}> Description: {this.state.alert.AlarmDescription}</p>
            <div style = {{textAlign: 'center',marginBottom:0}}>
-               {this.state.subscription === false?
+               {/* {this.state.subscription === false?
                <Button style ={{backgroundColor:'blue',color:'white',borderRadius: '12px',width:window.innerWidth/8,maxWidth:'100%'}} onClick = {this.openSubscriptionDetails}>Subscribe</Button>
-               :
-               <Button style ={{backgroundColor:'grey',color:'white',borderRadius: '12px',width:window.innerWidth/8,maxWidth:'100%'}} onClick = {this.showSubscribedTopicsOfAlarms}>Unsubscribe</Button>
-            }    
+               : */}
+               <div class="btn-group btn-group-sm">
+                    <div class="btn-group">
+                        <Button style ={{backgroundColor:'grey',color:'white',borderRadius:'10px 0px 0px 10px'}} onClick = {this.showSubscribedTopicsOfAlarms}>Unsubscribe</Button>
+                    </div>
+                    <div class="btn-group">
+                        <Button style ={{backgroundColor:'blue',color:'white', borderRadius:'0px 10px 10px 0px'}} onClick = {this.openSubscriptionDetails}>Subscribe</Button>
+                    </div>
+                </div>  
             </div>
-            {this.state.isOpen === true?   
+            {/* {this.state.isOpen === true?   
           <Popover placement="right"  isOpen = {this.state.isOpen} target = {this.state.id} toggle = {this.toggle} >
          
             <PopoverHeader style = {{textAlign: 'center'}}>    
@@ -359,7 +365,60 @@ class MetricAlarmDisplay extends Component {
             <h6>TreatMissingData:{this.state.alert.TreatMissingData}</h6>      
          </PopoverBody>
           </Popover> 
-              :null}
+              :null} */}
+              <Modal isOpen = {this.state.isOpen} toggle = {this.toggle}>
+                <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style = {{color : 'white'}}>Alarm Information</span></ModalHeader>
+                    <ModalBody>
+                            <Table striped bordered hover size="sm">
+                                    <tr>
+                                        <th>Alarm Name</th>
+                                        <td>{this.state.alert.AlarmName}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ComparisonOperator</th>
+                                        <td>{this.state.alert.ComparisonOperator}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>AlarmArn</th>
+                                        <td>{this.state.alert.AlarmArn}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>AlarmDescription</th>
+                                        <td>{this.state.alert.AlarmDescription}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>AlarmActions</th>
+                                        <td>{this.state.alert.AlarmActions.map(item =>{
+                                                return(
+                                                    <div>
+                                                        {item} 
+                                                        <hr style = {{borderColor:'#d1d1d1'}}/>
+                                                    </div>
+                                                )
+                                        })}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Namespace</th>
+                                        <td>{this.state.alert.Namespace}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Period</th>
+                                        <td>{this.state.alert.Period}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Statistic</th>
+                                        <td>{this.state.alert.Statistic}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>TreatMissingData</th>
+                                        <td>{this.state.alert.TreatMissingData}</td>
+                                    </tr>
+                            </Table>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button style ={{height : 40}} color="secondary" onClick = {this.toggle}> Close </Button>
+                    </ModalFooter>
+              </Modal>
              
               <Modal isOpen = {this.state.toggleModalAndSubscribe} toggle = {this.toggleModalAndSubscribe}>
                   <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style ={{color:'white'}}>Subscription Detail</span></ModalHeader>
@@ -475,7 +534,7 @@ class MetricAlarmDisplay extends Component {
                                         return(
                                             <tr>
                                                 <td>{item.split(':')[item.split(':').length-1]}</td>
-                                                <td><Button className = 'button_a' onClick = {this.unsubscribeTopics}>Unsubscribe</Button></td>
+                                                <td><Button className = 'button_a' onClick = {()=>this.unsubscribeTopics(i)}>Unsubscribe</Button></td>
                                             </tr>
                                         )
                                     })
