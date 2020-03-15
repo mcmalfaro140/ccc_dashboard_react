@@ -116,7 +116,6 @@ toggleForm = () => {
 };
 
 onDateRangeSelection= (startTime, endTime) => {
-    console.log(startTime + ' - ' + endTime)
     this.setState({startTime , endTime})
 
      //   console.log(startTime + " - " + endTime)
@@ -189,7 +188,6 @@ refreshGraph(e){
     }
  }
 readMixedSelection1(e){
-    console.log(e.target.value);
     var type = e.target.value;
     this.setState(prevState => ({
         mixGraph: {                   // object that we want to update
@@ -199,7 +197,6 @@ readMixedSelection1(e){
     }))
 }
 readMixedSelection2(e){
-    console.log(e.target.value);
     var type = e.target.value;
     this.setState(prevState => {
         let mixGraph = Object.assign({}, prevState.mixGraph);  
@@ -285,7 +282,7 @@ render() {
 
          
                         <div>
-                        <ModalHeader toggle={this.props.toggleMixForm}>New Mix Chart Form</ModalHeader>
+                        <ModalHeader toggle={this.props.toggleMixForm}>{this.props.mixGraphInfor == null ? 'New Mix Chart Form':'Modify Mix Chart Form'}</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a mix chart.
                                 <form>
