@@ -48,12 +48,6 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.toggleMixForm = this.toggleMixForm.bind(this);
-        // this.mixUpdate = this.mixUpdate.bind(this);
-        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
         this.changeStartDate = this.changeStartDate.bind(this);
         this.changeEndDate = this.changeEndDate.bind(this);
         this.toggleSearchModal = this.toggleSearchModal.bind(this);
@@ -96,12 +90,10 @@ class AuthLayout extends Component {
             chartName:"",
             typeOfDimension : "InstanceId",
             idValue:"",
-          //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-          startTime:new Date(), 
-          period:120,
+            startTime:new Date(), 
+            period:120,
             endTime:new Date() //if needed
-           // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
-        }
+                }
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
         this.toggleTableForm = this.toggleTableForm.bind(this);
@@ -112,12 +104,6 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.toggleMixForm = this.toggleMixForm.bind(this);
-        // this.mixUpdate = this.mixUpdate.bind(this);
-        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
         this.changeStartDate = this.changeStartDate.bind(this);
         this.changeEndDate = this.changeEndDate.bind(this);
         this.toggleSearchModal = this.toggleSearchModal.bind(this);
@@ -160,7 +146,6 @@ class AuthLayout extends Component {
         e.preventDefault();
         this.setState({ showMenu: !this.state.showMenu});
         this.setState({ isCondensed: !this.state.isCondensed});
-        // this.changeScreenSize(this.state.isCondensed)
     }
 
     //toggle right side bar
@@ -176,9 +161,6 @@ class AuthLayout extends Component {
         if(value.length > 5){
             value = [];
         }
-      
-        // this.setState({metricName : value[0]})
-        // this.setState({nameSpace : value[1]});
         this.setState({nameSpace : value[0]});
         this.setState({chartName : value[1]});
         this.setState({metricName : value[2]});
@@ -220,12 +202,6 @@ class AuthLayout extends Component {
         window.addEventListener("resize", this.changeScreenSize.bind(this));
         this.setState({screenWidth: (window.innerWidth - 40)});
     }
-
-    // componentWillUnmount(){
-    //     this.setState = (state, callback)=>{
-    //         return;
-    //     }
-    // }
 
     handleExitFull(){
         this.setState({isFullScreen: false})

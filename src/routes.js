@@ -23,6 +23,7 @@ const TableForm = React.lazy(() => import('./components/TableForm.js'));
 const historicForm = React.lazy(() => import('./components/HistoricGraphForm.js'));
 const historicLineGraph = React.lazy(() => import('./components/HistoricLineGraph.js'));
 const SearchResult = React.lazy(() => import('./pages/SearchResult'))
+const MetricAlert = React.lazy(() => import('./components/MetricAlert.js'));
 
 // handle auth and authorization
 
@@ -61,6 +62,7 @@ const routes = [
    { path: '/Tables', name: 'Tables', component: Tables, route: Route },
    { path: '/historicForm', name: 'HistoricGraphForm', component: historicForm, route: Route },
    { path: '/historicLineGraph', name: 'HistoricLineGraph', component: historicLineGraph, route: Route },
+   {path: '/metricAlert', name: 'MetricAlert', component: MetricAlert, route:Route, title:"Metric Alerts"},
   
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },

@@ -61,29 +61,31 @@ getgraph = () =>{
         
           AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
           // AWS.config.logger = console; 
-  AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
-  AWS.config.logger = console; 
-  let cloudwatch3 = new AWS.CloudWatch();
-  cloudwatch3.getMetricStatistics(params, function(err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else {
-      let sortedData =  data.Datapoints.sort(function(a, b) {
-      let dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
-      return dateA - dateB;
-        });
-      this.setState({holder:sortedData})
-    //  let data1 = [];
-      for (var i = 0; i < this.state.holder.length; i++) {
-        let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
-        if(!this.state.label.includes(newTimestamp)){
-          this.setState({label: [...this.state.label,newTimestamp], unit: this.state.holder[i].Unit});
-          this.setState(prevState => ({
-                  data : [...prevState.data, this.state.holder[i].Average]
-                }));
-        }                     
-               }
-          };     
-        }.bind(this));
+          AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
+          AWS.config.logger = console; 
+          let cloudwatch3 = new AWS.CloudWatch();
+          let labelTemp =[], dataTemp = [];
+          cloudwatch3.getMetricStatistics(params, function(err, data) {
+            if (err) console.log(err, err.stack); // an error occurred
+            else {
+              let sortedData =  data.Datapoints.sort(function(a, b) {
+              let dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
+              return dateA - dateB;
+                });
+              this.setState({holder:sortedData})
+            //  let data1 = [];
+              for (var i = 0; i < this.state.holder.length; i++) {
+                let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
+                if(!this.state.label.includes(newTimestamp)){
+                  labelTemp.push(newTimestamp);
+                  dataTemp.push(this.state.holder[i].Average)
+                  this.setState({unit : this.state.holder[i].Unit});
+                }                     
+                      }
+
+               this.setState({label:labelTemp, data:dataTemp});
+                  };     
+                }.bind(this));
 };
 handleCheck(){
   this.setState({checked : !this.state.checked});
@@ -149,28 +151,6 @@ onRefresh(chart){
             }
           }
          // chart.update();
-};
-compareObj(obj1, obj2) {
-  for (let p in obj1) {
-    if (obj1.hasOwnProperty(p) !== obj2.hasOwnProperty(p)) return false;
-      switch (typeof (obj1[p])) {
-        case 'object':
-           if (!this.compareObj(obj1[p], obj2[p])) return false;
-              break;
-        case 'function':
-              if (typeof (obj2[p]) == 'undefined' || (p !== 'compare' && obj1[p].toString() !== obj2[p].toString())) return false;
-              break;
-            //Compare values
-            default:
-              if (obj1[p] !== obj2[p]) return false;
-          }
-        }
-       
-        //Check object 2 for any extra properties
-        for (let p in obj2) {
-          if (typeof (obj1[p]) == 'undefined') return false;
-        }
-        return true;
 };
 oldDataForRealTime(){
   let cloudwatch = new AWS.CloudWatch();
@@ -249,7 +229,7 @@ componentWillReceiveProps(nextProp){
 
             }
   }else{
-     this.oldDataForRealTime();
+       this.oldDataForRealTime();
   } 
 };
 sendDeletionData = () => {
@@ -299,7 +279,8 @@ render() {
         enabled: true,
         mode: 'x',
       
-      }
+      },
+    
 
     }
   }else{
@@ -341,7 +322,8 @@ render() {
         zoom: {
           enabled: true,
           mode: 'x',
-        }
+        },
+      
     }
   }
       let Color = require('color');
@@ -397,7 +379,7 @@ render() {
               }
                ],           
            },
-        
+         
        }}/>
       }
       else{

@@ -19,12 +19,19 @@ class SideNavContent extends React.Component {
             showGrapOptions: false,
             showRealtimeOptions: false,
             showLogTableOptions: false,
+            showNotificationOptions: false,
             realTimeActive: false,
-            logTableActive: false
+            logTableActive: false,
+            notificationActive: false,
           }
         this.showGrapOptions = this.showGrapOptions.bind(this);
         this.showRealtimeOptions = this.showRealtimeOptions.bind(this);
         this.showLogTableOptions = this.showLogTableOptions.bind(this);
+        this.showNotificationOptions = this.showNotificationOptions.bind(this);
+    }
+    showNotificationOptions(e){
+        e.preventDefault();
+        this.setState({showNotificationOptions : !this.state.showNotificationOptions, notificationActive : !this.state.notificationActive});
     }
     showRealtimeOptions(e){
         e.preventDefault();
@@ -144,11 +151,34 @@ class SideNavContent extends React.Component {
 
             
 
-              <li>
-                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
+              <li className = {this.state.notificationActive?("active"):null}>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.showNotificationOptions}>
                       <i className="mdi mdi-bell-ring-outline"></i>
-                      <span> Alerts </span>
+                      <span> Notifications </span>
+                      <span className="menu-arrow"></span>
                   </a>
+                  { this.state.showNotificationOptions ? (
+                         <ul className="nav-second-level nav" aria-expanded="false">
+                             <li>
+                                <Link to = "/metricAlert">
+                                <i class="mdi mdi-alert-box"></i>
+                                    Metrics Alert
+                                </Link>
+                             </li>
+                             <li>
+                                 <Link >
+                                 <i class="mdi mdi-alert-circle"></i>
+                                    Log Alert
+                                 </Link>
+                             </li>
+                         </ul>
+                  ) :null }
+              </li>
+              <li>
+                  <Link to="" className="waves-effect side-nav-link-ref">   
+                    <i class="mdi mdi-key"></i>
+                      <span> Resources IDs </span>
+                  </Link>
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.goFullScreen}>

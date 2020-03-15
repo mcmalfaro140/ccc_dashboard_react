@@ -26,7 +26,7 @@ var options = {
 
 class MixGraph extends Component {
 
-    constructor(){
+constructor(){
         super();
         
         this.state = {
@@ -78,6 +78,7 @@ getgraph = () =>{
         AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
         AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
+        let labelTemp =[], dataTemp = [], labelTemp1 = [], dataTemp1 = [];
         cloudwatch3.getMetricStatistics(params, function(err, data) {
          // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
@@ -91,15 +92,12 @@ getgraph = () =>{
              for (var i = 0; i < this.state.holder.length; i++) {
               let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
               if(!this.state.label.includes(newTimestamp)){
-               this.setState({label: [...this.state.label,newTimestamp]});
-               this.setState(prevState => ({
-                 data : [...prevState.data, this.state.holder[i].Average]
-               }));
-              }else{
-             
+                labelTemp.push(newTimestamp);
+                dataTemp.push(this.state.holder[i].Average)
               }
          
             }
+            this.setState({label:labelTemp, data:dataTemp});
           };          
          
         }.bind(this));
@@ -139,19 +137,14 @@ getgraph = () =>{
             this.setState({holder1:sortedData})
             console.log(this.state.holder1);
               for (var i = 0; i < this.state.holder1.length; i++) {
-                let newTimestamp = (this.state.holder1[i].Timestamp.getMonth()+1) + "/"+ this.state.holder1[i].Timestamp.getDate() + " - "+this.state.holder1[i].Timestamp.getHours() +":"+ this.state.holder1[i].Timestamp.getMinutes() ;        
-               // console.log(this.state.label1.includes(newTimestamp))
-               //console.log(this.state.label.includes(this.state.holder[i].Timestamp))            
+                let newTimestamp = (this.state.holder1[i].Timestamp.getMonth()+1) + "/"+ this.state.holder1[i].Timestamp.getDate() + " - "+this.state.holder1[i].Timestamp.getHours() +":"+ this.state.holder1[i].Timestamp.getMinutes() ;                  
                 if(!this.state.label1.includes(newTimestamp)){
-                 this.setState({label1: [...this.state.label1,newTimestamp]});
-                 this.setState(prevState => ({
-                  data1 : [...prevState.data1, this.state.holder1[i].Average]
-                }));
-                }else{
-               
+                  labelTemp1.push(newTimestamp);
+                  dataTemp1.push(this.state.holder1[i].Average)
                 }
                   
                }
+               this.setState({label1:labelTemp1, data1:dataTemp1});
               
            };          
           
@@ -376,9 +369,7 @@ showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});
       }
-
-    
-    render() {
+render() {
       
 
        const data = {
