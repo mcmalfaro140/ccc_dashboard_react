@@ -192,8 +192,28 @@
                 margin: 2%;
             }
         }
+        >div:nth-child(2){
+            >div{
+                >div{
+                    text-align: center;
+                    cursor: pointer;
+                }
+                >div:hover{
+                    color: #007bff;
+                }
+            }
+        }
         >div:nth-child(3){
             border-bottom: rgb(179, 178, 178) 1px solid;
+            >div{
+                >div{
+                    text-align: center;
+                    cursor: pointer;
+                }
+                >div:hover{
+                    color: #007bff;
+                }
+            }
         }
     }
 }
