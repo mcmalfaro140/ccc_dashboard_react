@@ -21,20 +21,6 @@ const loading = () => <div className="text-center"></div>;
 class AuthLayout extends Component {
     constructor(props) {
         super(props);
-
-        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
-        this.toggleForm = this.toggleForm.bind(this);
-        this.toggleMenu = this.toggleMenu.bind(this);
-        this.readSelection = this.readSelection.bind(this);
-        this.goFullScreen = this.goFullScreen.bind(this);
-        this.handleChangeComplete = this.handleChangeComplete.bind(this);
-        this.changeScreenSize = this.changeScreenSize.bind(this);
-        this.handleExitFull = this.handleExitFull.bind(this);
-        this.toggleMixForm = this.toggleMixForm.bind(this);
-        this.changeStartDate = this.changeStartDate.bind(this);
-        this.changeEndDate = this.changeEndDate.bind(this);
-        this.toggleSearchModal = this.toggleSearchModal.bind(this);
-
         this.state = {
             user: getLoggedInUser(),
             my_dashboard:[],

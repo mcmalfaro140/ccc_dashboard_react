@@ -12,7 +12,7 @@ import Loader from '../components/Loader';
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import LogReport from '../components/logRepotComp'
 import GraphForm from '../components/graphForm';
-import MixGraphForm from '../components/MixGraphForm';
+import MixGraphForm from '../components/MixGraphForm'
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
