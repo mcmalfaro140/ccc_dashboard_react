@@ -12,16 +12,14 @@ import Loader from '../components/Loader';
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import LogReport from '../components/logRepotComp'
 import GraphForm from '../components/graphForm';
-import MixGraphForm from '../components/MixGraphForm';
-//import '../assets/scss/custom/components/gragh.scss';
+import MixGraphForm from '../components/MixGraphForm'
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
 
+const axios = require('axios').default;
 
-
-var currentDate = new Date();
 class DefaultDashboard extends Component {
    
     constructor(props) {
@@ -29,193 +27,7 @@ class DefaultDashboard extends Component {
         super(props);
         this.state = {
             user: getLoggedInUser(),
-            userDashboard: [
-                {
-                    objectType:"graph", // options: graph or table
-                    id:0,
-                    graphSettings: {
-                            type:"line", //options: line, pie, or bar
-                            realTime:true, //options: true or false
-                            metricName:"CPUCreditUsage", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"Test 1",
-                            typeOfDimension: 'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:3000,
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a3d9f3",
-                            xAxisRange:900000,
-                            xAxisSelection:'Last 15 Minutes',
-                            refreshRateSelection:'Three Seconds'
-                        },
-                    coordinates: {
-                        x: (0 %3)*8 ,
-                        y: 0,
-                        w: 8,
-                        h: 2,
-                        minW: 8,
-                        minH: 2
-                    }
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:1,
-                    graphSettings: {
-                            type:"bar", //options: line, pie, or bar
-                            realTime:true, //options: true or false
-                            metricName:"CPUUtilization", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"TestBar 2",
-                            typeOfDimension: 'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:10000,
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a6e22e",
-                            xAxisSelection:'Last 15 Minutes',
-                            xAxisRange:900000,
-                            refreshRateSelection:'Ten Seconds'
-                        },
-                        coordinates: {
-                            x: ((1 %3)*8),
-                            y: 0,
-                            w: 8,
-                            h: 2,
-                            minW: 8,
-                            minH: 2
-                        }
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:2,
-                    graphSettings: {
-                            type:"bar", //options: line, pie, or bar
-                            realTime:false, //options: true or false
-                            metricName:"CPUUtilization", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"Test 3",
-                            typeOfDimension:'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:3000,
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-5,currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#800000",
-                            xAxisSelection:'Last 15 Minutes',
-                            xAxisRange:900000,
-                            refreshRateSelection:'Three Seconds'
-                        },
-                    coordinates: {
-                        x: ((2 %3)*8),
-                        y: 0,
-                        w: 8,
-                        h: 2,
-                        minW: 8,
-                        minH: 2
-                    }
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:3,
-                    graphSettings: {
-                            type:"line", //options: line, pie, or bar
-                            realTime:false, //options: true or false
-                            metricName:"CPUUtilization", 
-                            nameSpace:"AWS/EC2",
-                            chartName:"Test 4",
-                            typeOfDimension:'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            refreshRate:3000,
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a3d9f3"
-                        },
-                    coordinates: {
-                        x: ((0 %3)*8),
-                        y: 6,
-                        w: 8,
-                        h: 2,
-                        minW: 8,
-                        minH: 2
-                    }
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:4,
-                    graphSettings: {
-                            type:"mix", //options: line, pie, or mix
-                            typeOfGraph:'line',
-                            typeOfGraph1:'line',
-                            realTime:true, //options: true or false
-                            metricName:"CPUUtilization", 
-                            metricName1 : "CPUCreditUsage",
-                            nameSpace:"AWS/EC2",
-                            nameSpace1: "AWS/EC2",
-                            chartName:"Mix Test",
-                            typeOfDimension:'InstanceId',
-                            typeOfDimension1:'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            idValue1:"i-01e27ec0da2c4d296",
-                            refreshRate:3000,
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a3d9f3",
-                            colorSelected1:"#ff6666",
-                            xAxisRange : 900000,
-                            xAxisSelection : 'Last 15 Minutes',
-                            refreshRateSelection : "Three Seconds"
-                        },
-                    coordinates: {
-                        x: ((1 %3)*8),
-                        y: 6,
-                        w: 8,
-                        h: 2,
-                        minW: 8,
-                        minH: 2
-                    }
-                },
-                {
-                    objectType:"graph", // options: graph or table
-                    id:5,
-                    graphSettings: {
-                            type:"mix", //options: line, pie, or mix
-                            typeOfGraph:'bar',
-                            typeOfGraph1:'bar',
-                            realTime:false, //options: true or false
-                            metricName:"CPUUtilization", 
-                            metricName1 : "CPUCreditUsage",
-                            nameSpace:"AWS/EC2",
-                            nameSpace1: "AWS/EC2",
-                            chartName:"Mix Test 2",
-                            typeOfDimension:'InstanceId',
-                            typeOfDimension1:'InstanceId',
-                            idValue:"i-01e27ec0da2c4d296",
-                            idValue1:"i-01e27ec0da2c4d296",
-                            refreshRate:3000,
-                            period:180,
-                            startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(),currentDate.getHours()-5,currentDate.getMinutes()), //if needed
-                            endTime:new Date(), //if needed
-                            colorSelected:"#a3d9f3",
-                            colorSelected1:"#ff6666",
-                            xAxisRange : 900000,
-                            xAxisSelection : 'Last 15 Minutes',
-                            refreshRateSelection : "Three Seconds"
-                        },
-                    coordinates: {
-                        x: ((2 %3)*8),
-                        y: 6,
-                        w: 8,
-                        h: 2,
-                        minW: 8,
-                        minH: 2
-                    }
-                },
-            ],
+            userDashboard: [],
             showOptions: false,
             systemHealth: false,
             isModify : false,
@@ -223,17 +35,42 @@ class DefaultDashboard extends Component {
             stickyFormData :{},
             stickyMixFormData :{},
             selectedGraphId:"",
+            prevDashLayout:{lg:[],md:[],sm:[]}
 
         };
         this.showOptions = this.showOptions.bind(this);
         this.systemHealth = this.systemHealth.bind(this);
         this.recordCoordinateChange = this.recordCoordinateChange.bind(this);
+        this.setLayout = this.setLayout.bind(this)
         this.test = this.test.bind(this);
     }
 
     componentDidMount(){
-        // let savedDashboard = JSON.parse(this.state.user.dashboard)
-        // this.setState({userDashboard: savedDashboard})
+        if(this.state.user.token !== null){
+            axios({
+                method: 'get',
+                url: 'http://localhost:5050/get_dashboard',
+                headers: {
+                    'Authorization': this.state.user.token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response)=>{
+                let users_dash = JSON.parse(response.data.dashboard);
+                let new_dash = [];
+                if(users_dash.length > 0){
+                    users_dash.map((item, index) => {
+                        item.id = index;
+                        new_dash.push(item)
+                    })
+                }
+                this.setState({userDashboard: new_dash})
+                this.props.updateDashboard(this.state.userDashboard)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
     }
 
     test(id){
@@ -247,24 +84,26 @@ class DefaultDashboard extends Component {
     }
 
     deleteFunction = (childData) => {
-           let newDashboard = this.state.userDashboard;
-            for(let i = newDashboard.length -1; i>=0;--i){
-                if(newDashboard[i].id === childData){
-                    newDashboard.splice(i,1);
-                    this.setState({userDashboard : newDashboard});
-                }   
+        let newDashboard = this.state.userDashboard;
+        for(let i = newDashboard.length -1; i>=0;--i){
+            if(newDashboard[i].id === childData){
+                newDashboard.splice(i,1);
+                this.setState({userDashboard : newDashboard});
+            }   
         }
-  }
+        this.props.saveDashboard(this.state.userDashboard);
+        this.props.updateDashboard(this.state.userDashboard)
+    }
 
     modifyFunction = (childData) => {
-            this.setState({isModify :true});
-            this.setState({selectedGraphId : childData});
-            const newDashboard = this.state.userDashboard;
-            for(let i = newDashboard.length-1; i>=0;--i){
-                if(newDashboard[i].id === childData){
-                    this.setState({stickyFormData : newDashboard[i].graphSettings});
-                }
-            }           
+        this.setState({isModify :true});
+        this.setState({selectedGraphId : childData});
+        const newDashboard = this.state.userDashboard;
+        for(let i = newDashboard.length-1; i>=0;--i){
+            if(newDashboard[i].id === childData){
+                this.setState({stickyFormData : newDashboard[i].graphSettings});
+            }
+        }
     }
 
     modifyMixFunction = (childData) => {
@@ -298,6 +137,8 @@ class DefaultDashboard extends Component {
                                 userDashboard: temp,
                                 newUpcomingPropsName: newName
                             })
+                            this.props.saveDashboard(this.state.userDashboard);
+                            this.props.updateDashboard(this.state.userDashboard)
                         }
                     }else if(this.state.isModify === true || this.state.isMixModify === true){
                         let newName = nextProps.location.state.newGraph.graphSettings.chartName;
@@ -335,13 +176,12 @@ class DefaultDashboard extends Component {
                             
                             this.setState({userDashboard : newDashboard});
                             this.setState({isModify : false, newUpcomingPropsName: newName, isMixModify : false});
+                            this.props.saveDashboard(this.state.userDashboard);
+                            this.props.updateDashboard(this.state.userDashboard)
                         }
                     }
-            }   
-    }    
-
-       
-        
+                }   
+        }
     }
     showOptions(e){
         e.preventDefault();
@@ -354,42 +194,38 @@ class DefaultDashboard extends Component {
 
     //Gets call when the user resize the dashboard. Saves the new coordinates
     recordCoordinateChange(newLayout, allLayouts){
+        if(allLayouts.lg !== undefined){
+            if(allLayouts.lg.length  > 0)
+                this.setLayout(allLayouts.lg)
+        }else if( allLayouts.md !== undefined){
+            if(allLayouts.md > 0)
+                this.setLayout(allLayouts.md)
+        }else if(newLayout !== undefined){
+            this.setLayout(newLayout)
+        }        
+    }
+
+    setLayout(newLay){
         let temp = this.state.userDashboard
         let updatedDash = [];
-        if(allLayouts.lg.length > 0){
-            allLayouts.lg.map((chart) => {
-                let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
-                newGraph.coordinates.x = chart.y
-                newGraph.coordinates.x = chart.x
-                newGraph.coordinates.w = chart.w
-                newGraph.coordinates.h = chart.h
+        newLay.map((chart) => {
+            let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
+            newGraph.coordinates.x = chart.y
+            newGraph.coordinates.x = chart.x
+            newGraph.coordinates.w = chart.w
+            newGraph.coordinates.h = chart.h
 
-                updatedDash.push(newGraph);
-            })
-            this.setState({
-                userDashboard: updatedDash
-            })
-        }else{
-            newLayout.map((chart) => {
-                let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
-                newGraph.coordinates.x = chart.y
-                newGraph.coordinates.x = chart.x
-                newGraph.coordinates.w = chart.w
-                newGraph.coordinates.h = chart.h
-
-                updatedDash.push(newGraph);
-            })
-            this.setState({
-                userDashboard: updatedDash
-            })
-        }
-        
-        
+            updatedDash.push(newGraph);
+        })
+        this.setState({
+            userDashboard: updatedDash
+        })
+        this.props.updateDashboard(updatedDash)
     }
     
     render() {
         const items = this.state.userDashboard.map((item, i) => {
-           if(item.objectType === "graph"){
+            if(item.objectType === "graph"){
                 if(item.graphSettings.type === "line"){
                     return (   
                        <Card id = "p" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
@@ -428,7 +264,7 @@ class DefaultDashboard extends Component {
         return (
             
             <React.Fragment>
-                {/* <Button onClick={this.test}>test</Button> */}
+                {/* <Button onClick={this.saveDashboard}>test</Button> */}
                  <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
                      <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
                     />
@@ -444,13 +280,6 @@ class DefaultDashboard extends Component {
                         <h3 className="float-left" >System Health Bar</h3>
                             <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
                             <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
-                            {/* { this.state.systemHealth? (
-                            <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                            <a href="" class="dropdown-item">Last 24 Hours</a>
-                            <a href="" class="dropdown-item">Last 48 Hours</a>
-                            <a href="" class="dropdown-item">Last 72 Hours</a>
-                            </div>
-                            ): null } */}
                         </div>
                         </div>
                         <CardBody style={{paddingTop:'0%', margin: '0%'}}>
@@ -463,11 +292,10 @@ class DefaultDashboard extends Component {
                         </CardBody>
                     </Card>
                     <ResponsiveGridLayout className="layout" 
-                        breakpoints={{lg: 1040, md: 996, sm: 768}}
+                        breakpoints={{lg: 1040, md: 868, sm: 375}}
                         cols={{lg: 24, md: 12, sm: 8}}
                         width={this.props.screenSize} 
-                        // onLayoutChange={(layout,allLayouts) => this.recordCoordinateChange(layout, allLayouts)} 
-                        // onResizeStop={(placeholder) => this.test(placeholder)}
+                        onLayoutChange={(layout,allLayouts) => this.recordCoordinateChange(layout, allLayouts)} 
                         style={{margin:0}}>
                         {items}
                     </ResponsiveGridLayout>

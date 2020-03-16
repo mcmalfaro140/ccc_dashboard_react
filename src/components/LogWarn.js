@@ -39,7 +39,7 @@ class LogWarn extends React.Component {
 
  //Funtion to get all the log group names from AWS
  getLogGroupName(){
-    console.log("init search")
+    // console.log("init search")
     cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
         if (err){
             console.log(err, err.stack); // an error occurred
@@ -131,7 +131,7 @@ handleClick(id){
 
 
     render() {
-        console.log(this.state.results)
+        // console.log(this.state.results)
 
         const cell = this.state.results.map((item, i) => {
             let objKeys = Object.keys(item.events)
@@ -141,10 +141,10 @@ handleClick(id){
           let iconid = "iconwarn" + i;
        
             return(
-                <TableBody class="tablesaw tablesaw-stack">
+                <TableBody className="tablesaw tablesaw-stack">
                     <TableRow  id={strid} hover onClick={() => this.handleClick(i)} className="table_logs_cell">
                     <TableCell style={{color:'black', fontSize:'120%', fontWeight:'300', fontFamily : 'sans-Serif'}}>
-                    <i id={iconid} class="mdi mdi-menu-right"></i>{item.logGroupName}</TableCell>
+                    <i id={iconid} className="mdi mdi-menu-right"></i>{item.logGroupName}</TableCell>
                     </TableRow>
                     <TableRow id={i} style={{visibility:'collapse'}}>
                         <TableCell>
@@ -171,7 +171,7 @@ handleClick(id){
 
             <Col style={{ margin:'0%'}} id = "popoverCardSecond" >
                 <Row style={{display: 'flex',  justifyContent:'center', color:'black', fontSize:'140%', fontWeight:'500' , fontFamily : 'sans-Serif'}}>Log Warnings</Row>
-        <Row style={{display: 'flex',  justifyContent:'center',color:'gold', fontSize:'300%' , marginTop:'-7%'}}> <span style={{paddingRight:'1%' , marginTop:'-3%'}}>{this.state.resultCount}</span> <i style={{padding:'2%'}} class="fas fa-exclamation-triangle"></i></Row>
+        <Row style={{display: 'flex',  justifyContent:'center',color:'gold', fontSize:'300%' , marginTop:'-7%'}}> <span style={{paddingRight:'1%' , marginTop:'-3%'}}>{this.state.resultCount}</span> <i style={{padding:'2%'}} className="fas fa-exclamation-triangle"></i></Row>
                 <Row style={{display: 'flex',  justifyContent:'center', color:'gold', fontSize:'100%', marginTop:'-7%', fontFamily : 'sans-Serif' }}>Warnings Found</Row>
                 
             </Col>

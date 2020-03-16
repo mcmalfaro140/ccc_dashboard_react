@@ -76,11 +76,9 @@ getgraph = () =>{
           }
        
         AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
-        AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
         let labelTemp =[], dataTemp = [], labelTemp1 = [], dataTemp1 = [];
         cloudwatch3.getMetricStatistics(params, function(err, data) {
-         // console.log("inside function")
           if (err) console.log(err, err.stack); // an error occurred
           else {
             let sortedData =  data.Datapoints.sort(function(a, b) {
@@ -88,7 +86,6 @@ getgraph = () =>{
               return dateA - dateB;
           });
            this.setState({holder:sortedData})
-           console.log(this.state.holder);
              for (var i = 0; i < this.state.holder.length; i++) {
               let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
               if(!this.state.label.includes(newTimestamp)){
@@ -127,7 +124,6 @@ getgraph = () =>{
            }
         
          cloudwatch3.getMetricStatistics(params1, function(err, data) {
-          // console.log("inside function")
            if (err) console.log(err, err.stack); // an error occurred
            else {
              let sortedData =  data.Datapoints.sort(function(a, b) {
@@ -135,7 +131,6 @@ getgraph = () =>{
                return dateA - dateB;
            });
             this.setState({holder1:sortedData})
-            console.log(this.state.holder1);
               for (var i = 0; i < this.state.holder1.length; i++) {
                 let newTimestamp = (this.state.holder1[i].Timestamp.getMonth()+1) + "/"+ this.state.holder1[i].Timestamp.getDate() + " - "+this.state.holder1[i].Timestamp.getHours() +":"+ this.state.holder1[i].Timestamp.getMinutes() ;                  
                 if(!this.state.label1.includes(newTimestamp)){
@@ -151,7 +146,6 @@ getgraph = () =>{
          }.bind(this));
       }
 onRefresh(chart){
-        console.log(this.props.graphSettings)
         let typeOfD = this.props.graphSettings.typeOfDimension;
         let idVal = this.props.graphSettings.idValue;
         let typeOfD1 = this.props.graphSettings.typeOfDimension1;
@@ -297,6 +291,7 @@ oldDataForRealTime(){
       /* more items */
     ], 
   }
+  
   cloudwatch.getMetricStatistics(params, function(err, data){
     let temp = [];
     if (err) console.log(err, err.stack); // an error occurred

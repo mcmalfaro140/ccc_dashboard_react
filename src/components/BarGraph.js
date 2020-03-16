@@ -147,9 +147,6 @@ onRefresh(chart){
         }
     }
 getgraph = () =>{
-       
-        console.log(this.props.graphSettings.realTime)
-        console.log("id is "+this.props.graphSettings.idValue);
        var typeOfD = this.props.graphSettings.typeOfDimension;
        var idVal = this.props.graphSettings.idValue;
        if(typeOfD == null){typeOfD = "InstanceId"}
@@ -175,7 +172,6 @@ getgraph = () =>{
           }
        
         AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
-        AWS.config.logger = console; 
         let cloudwatch3 = new AWS.CloudWatch();
         let labelTemp =[], dataTemp = [];
         cloudwatch3.getMetricStatistics(params, function(err, data) {
@@ -188,7 +184,6 @@ getgraph = () =>{
            this.setState({holder:sortedData})
              for (var i = 0; i < this.state.holder.length; i++) {
               let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
-              console.log(this.state.label.includes(newTimestamp))
               if(!this.state.label.includes(newTimestamp)){
                labelTemp.push(newTimestamp);
                dataTemp.push(this.state.holder[i].Average)
