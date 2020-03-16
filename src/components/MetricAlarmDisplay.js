@@ -8,6 +8,7 @@ import {Checkmark} from 'react-checkmark';
 import Table from 'react-bootstrap/Table'
 
 
+
 class MetricAlarmDisplay extends Component {
     constructor(props) {
         super(props);
@@ -195,7 +196,7 @@ class MetricAlarmDisplay extends Component {
               cloudwatch.putMetricAlarm(params, function(err, data) {
                 if (err) console.log(err, err.stack);
                 else {
-                    // this.setState({subscription:true});
+                    this.setState({subscription:true});
                 }    
               }.bind(this));
 
@@ -299,7 +300,7 @@ class MetricAlarmDisplay extends Component {
           cloudwatch.putMetricAlarm(params, function(err, data) {
             if (err) console.log(err, err.stack);
             else {
-                // this.setState({subscription:false});
+                this.setState({subscription:false});
             }    
           }.bind(this));
 
@@ -312,6 +313,7 @@ class MetricAlarmDisplay extends Component {
      })  
         return (
           <div>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
             <CardBody style={{overflow:'hidden'}}>
                 <CardTitle>    
                     <h1 style = {{fontSize : window.innerWidth/40}}>{this.state.alert.AlarmName} </h1>
@@ -341,10 +343,10 @@ class MetricAlarmDisplay extends Component {
                : */}
                <div class="btn-group btn-group-sm">
                     <div class="btn-group">
-                        <Button style ={{backgroundColor:'grey',color:'white',borderRadius:'10px 0px 0px 10px'}} onClick = {this.showSubscribedTopicsOfAlarms}>Unsubscribe</Button>
+                        <Button style ={{backgroundColor:'#B0B0B0',color:'white',borderRadius:'10px 0px 0px 10px',borderWidth:0, padding: '5px 10px'}} onClick = {this.showSubscribedTopicsOfAlarms}><i class="far fa-bell-slash"></i>Unsubscribe</Button>
                     </div>
                     <div class="btn-group">
-                        <Button style ={{backgroundColor:'blue',color:'white', borderRadius:'0px 10px 10px 0px'}} onClick = {this.openSubscriptionDetails}>Subscribe</Button>
+                        <Button style ={{backgroundColor:'blue',color:'white', borderRadius:'0px 10px 10px 0px',borderWidth:0,padding: '5px 10px'}} onClick = {this.openSubscriptionDetails}><i class="far fa-bell"></i>Subscribe</Button>
                     </div>
                 </div>  
             </div>
@@ -519,7 +521,7 @@ class MetricAlarmDisplay extends Component {
               </Modal> 
 
               <Modal isOpen = {this.state.showSubscribedTopicsOfAlarms} toggle = {this.showSubscribedTopicsOfAlarms}>
-                  <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style = {{color : 'white'}}>Topic Detail</span></ModalHeader>
+                    <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style = {{color : 'white'}}>Topic Detail Of {this.state.alert.AlarmName}</span></ModalHeader>
                   <ModalBody>
                         <Table striped bordered hover size="sm">
                             <thead>
