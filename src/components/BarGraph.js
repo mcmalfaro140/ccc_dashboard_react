@@ -193,10 +193,6 @@ getgraph = () =>{
                labelTemp.push(newTimestamp);
                dataTemp.push(this.state.holder[i].Average)
                this.setState({unit : this.state.holder[i].Unit});
-              //  this.setState({label: [...this.state.label,newTimestamp],unit : this.state.holder[i].Unit});
-              //  this.setState(prevState => ({
-              //    data : [...prevState.data, this.state.holder[i].Average]
-              //  }));
               }
             }
             this.setState({label:labelTemp, data:dataTemp});

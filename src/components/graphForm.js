@@ -55,7 +55,6 @@ class graphForm extends Component {
             refreshRateSelection:""
     }}
     componentWillReceiveProps(nextProps){
-        console.log(nextProps.graphInfor);
         if(nextProps.graphInfor != null){
             this.setState({isRealTime : nextProps.graphInfor.realTime})
         }
@@ -90,7 +89,6 @@ class graphForm extends Component {
     }
 
     toggleSwitch (isRealTime){
-        console.log("is it real ? " + isRealTime)
         this.setState({isRealTime})
     }
     toggleForm = () => {
@@ -150,7 +148,6 @@ class graphForm extends Component {
   }
 
  onDateRangeSelection = (startTime, endTime) => {
-        console.log(startTime + ' - ' + endTime)
         this.setState({startTime , endTime})
     
          //   console.log(startTime + " - " + endTime)
@@ -245,7 +242,7 @@ class graphForm extends Component {
   
         return (  
                         <div>
-                        <ModalHeader toggle={this.props.toggleForm}>New Chart Form</ModalHeader>
+                        <ModalHeader toggle={this.props.toggleForm}>{this.props.graphInfor == null ? 'New Chart Form':'Modify Chart Form'}</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
                                 <form>
