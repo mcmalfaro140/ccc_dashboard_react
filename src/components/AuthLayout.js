@@ -2,15 +2,11 @@ import React, { Component, Suspense } from "react";
 import { Container} from 'reactstrap';
 import { connect } from 'react-redux';
 import { Modal} from 'reactstrap';
-import profilePic from '../assets/images/users/user-1.jpg';
 import GraphForm from '../components/graphForm';
 import { getLoggedInUser } from '../helpers/authUtils';
 import MixGraphForm from '../components/MixGraphForm';
 
-import TableFormPop from '../components/TableFormPop'
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
-
-//TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
 var currentDate = new Date();
 var value = [];
@@ -21,19 +17,6 @@ const Sidebar = React.lazy(() => import("./Sidebar"));
 const RightSidebar = React.lazy(() => import("./RightSidebar"));
 const loading = () => <div className="text-center"></div>;
 
-// const RightSidebarContent = (props) => {
-//     return <div className="user-box">
-//         <div className="user-img">
-//             <img src={profilePic} alt="user-img" title="Nik Patel"
-//                 className="rounded-circle img-fluid" />
-//             <a href="/" className="user-edit"><i className="mdi mdi-pencil"></i></a>
-//         </div>
-
-//         <h5>{props.user && <a href="/">{props.user.username}</a>}</h5>
-//         <p className="text-muted mb-0"><small>Founder</small></p>
-//     </div>
-// }
-
 
 class AuthLayout extends Component {
     constructor(props) {
@@ -41,7 +24,6 @@ class AuthLayout extends Component {
 
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
         this.readSelection = this.readSelection.bind(this);
         this.goFullScreen = this.goFullScreen.bind(this);
@@ -99,7 +81,6 @@ class AuthLayout extends Component {
                 }
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
         this.readSelection = this.readSelection.bind(this);
         this.goFullScreen = this.goFullScreen.bind(this);
@@ -149,9 +130,6 @@ class AuthLayout extends Component {
         this.setState({mixModalOpen : !this.state.mixModalOpen})
     }
 
-    toggleTableForm = () =>{
-        this.setState({modalTableOpen : !this.state.modalTableOpen})
-    }
 
     toggleSearchModal = () =>{
         this.setState({modalSearch : !this.state.modalSearch})
@@ -257,7 +235,7 @@ class AuthLayout extends Component {
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu}  logOut={this.logOut}/>
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu}  logOut={this.logOut}/>
 
                     </Suspense>
                     <div className="content-page">
@@ -270,10 +248,6 @@ class AuthLayout extends Component {
                                     </Container>
                                 </div>
                             </div>
-
-                        <Modal isOpen={this.state.modalTableOpen} >
-                            <TableFormPop toggle={this.toggleTableForm}/>
-                        </Modal>
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
                         </Modal>
@@ -288,7 +262,6 @@ class AuthLayout extends Component {
                     </div>
                 </div>
                 <RightSidebar title={"Settings"}>
-                    {/* <RightSidebarContent user={this.props.user} /> */}
                 </RightSidebar>
             </div>
         );

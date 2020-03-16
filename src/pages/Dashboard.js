@@ -13,7 +13,6 @@ import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import LogReport from '../components/logRepotComp'
 import GraphForm from '../components/graphForm';
 import MixGraphForm from '../components/MixGraphForm';
-//import '../assets/scss/custom/components/gragh.scss';
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';

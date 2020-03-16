@@ -147,10 +147,6 @@ class SideNavContent extends React.Component {
                   </ul>
                   ): null }
            </li>
-           
-
-            
-
               <li className = {this.state.notificationActive?("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showNotificationOptions}>
                       <i className="mdi mdi-bell-ring-outline"></i>
@@ -161,24 +157,18 @@ class SideNavContent extends React.Component {
                          <ul className="nav-second-level nav" aria-expanded="false">
                              <li>
                                 <Link to = "/metricAlert">
-                                <i class="mdi mdi-alert-box"></i>
+                                <i class="mdi mdi-alert-box">  </i>
                                     Metrics Alert
                                 </Link>
                              </li>
                              <li>
                                  <Link >
-                                 <i class="mdi mdi-alert-circle"></i>
+                                 <i class="mdi mdi-alert-circle">  </i>
                                     Log Alert
                                  </Link>
                              </li>
                          </ul>
                   ) :null }
-              </li>
-              <li>
-                  <Link to="" className="waves-effect side-nav-link-ref">   
-                    <i class="mdi mdi-key"></i>
-                      <span> Resources IDs </span>
-                  </Link>
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.goFullScreen}>

@@ -79,9 +79,6 @@ class MetricAlarmDisplay extends Component {
         else if(this.props.ComparisonOperator === 'LessThanOrEqualToThreshold'){
             this.setState({sign:'≤'});
         } 
-        // else if(this.state.ComparisonOperator.includes('GreaterThanOrEqualTo')) {
-            
-        // }
         this.setState(prevState => {
             let alert = Object.assign({}, prevState.alert);  
             alert.AlarmName = this.props.AlarmName;
@@ -141,7 +138,6 @@ class MetricAlarmDisplay extends Component {
     }
     protocolValue(e,index){
         let arr = this.state.subscriptionProtocol;
-
         arr.map(elem=>{
             if(elem.id === index){
                 elem.value = e.target.value;
@@ -158,8 +154,8 @@ class MetricAlarmDisplay extends Component {
           sns.listTopics(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
-                this.setState({topicArns:data.Topics});
-            }         // successful response
+                this.setState({topicArns:data.Topics}); // successful response
+            }        
           }.bind(this));
     }
     getTopicARN(e){
@@ -221,10 +217,6 @@ class MetricAlarmDisplay extends Component {
             var params = {
                 Protocol: protocols.name, /* required */
                 TopicArn: this.state.subscribedTopicArn, /* required */
-                // Attributes: {
-                //   '<attributeName>': 'STRING_VALUE',
-                //   /* '<attributeName>': ... */
-                // },
                 Endpoint: protocols.value,
                 ReturnSubscriptionArn: true
               };
@@ -247,7 +239,6 @@ class MetricAlarmDisplay extends Component {
           sns.unsubscribe(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else   { 
-                
                  this.listSubscriptions(topicArn);
             }
           }.bind(this));
@@ -350,24 +341,6 @@ class MetricAlarmDisplay extends Component {
                     </div>
                 </div>  
             </div>
-            {/* {this.state.isOpen === true?   
-          <Popover placement="right"  isOpen = {this.state.isOpen} target = {this.state.id} toggle = {this.toggle} >
-         
-            <PopoverHeader style = {{textAlign: 'center'}}>    
-                            <h5>Alarm Information</h5>
-            </PopoverHeader>
-         <PopoverBody>  
-            <h6>ComparisonOperator: {this.state.alert.ComparisonOperator}</h6> 
-            <h6>AlarmArn:{this.state.alert.AlarmArn}</h6>
-            <h6>AlarmDescription: {this.state.alert.AlarmDescription}</h6> 
-            <h6>AlarmActions: {this.state.alert.AlarmActions}</h6>
-            <h6>Namespace: {this.state.alert.Namespace}</h6> 
-            <h6>Period:{this.state.alert.Period}</h6>
-            <h6>Statistic: {this.state.alert.Statistic}</h6>
-            <h6>TreatMissingData:{this.state.alert.TreatMissingData}</h6>      
-         </PopoverBody>
-          </Popover> 
-              :null} */}
               <Modal isOpen = {this.state.isOpen} toggle = {this.toggle}>
                 <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style = {{color : 'white'}}>Alarm Information</span></ModalHeader>
                     <ModalBody>
@@ -549,10 +522,6 @@ class MetricAlarmDisplay extends Component {
                   </ModalFooter>
               </Modal>
              </CardBody>
-           
-           
-
-           
            </div>
    
         )

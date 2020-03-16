@@ -1,0 +1,13 @@
+.metricAlerts_page{
+    background-color: blue;
+    >div:nth-child(1){
+        background-color: red;
+    }
+    >div:nth-child(3){
+        >div{
+            >div{
+                background-color: yellow;
+            }
+        }
+    }
+}

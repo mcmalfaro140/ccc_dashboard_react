@@ -2,7 +2,6 @@ import React from 'react';
 import AWS from 'aws-sdk';
 import mykey from '../keys.json';
 import Loader from 'react-loader-spinner'
-import { Button } from 'react-bootstrap';
 
 //Import componets
 import LogTableResult from '../components/searchComp/LogTableResult'
@@ -62,16 +61,12 @@ class SearchResult extends React.Component {
 
     //Update componets when page is initialize
     componentDidMount() {
-        // console.log("component")
-        // console.log(this.props)
         this.setState({results: [], loading: true, noResults: false, logGroupNames: this.props.location.state.logGroupNames})
         this.filter(this.props.location.state.isFilterbyName)
     }
 
     //will update the components when new keyword is enter
     componentDidUpdate(prevProps) {
-        // console.log("component did update")
-        // console.log(this.props)
         let keyword = this.props.location.state.search_keyword
         let preKeyword = prevProps.location.state.search_keyword
         let range = this.props.location.state.range
@@ -160,7 +155,6 @@ class SearchResult extends React.Component {
                     this.setState(prevState => ({
                         results : [...prevState.results, new_data]
                     }));
-                    // console.log(this.state.results)
                     
                 }                
             }  
