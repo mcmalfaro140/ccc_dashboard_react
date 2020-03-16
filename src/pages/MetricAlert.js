@@ -87,7 +87,7 @@ class MetricAlert extends Component {
         }
     )
         return (
-          <Row> 
+          <Row className="metricAlerts_page"> 
                 {item}
          </Row>
         )

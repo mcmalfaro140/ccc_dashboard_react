@@ -53,6 +53,12 @@ class AdvSearchModal extends React.Component {
 
     componentDidMount(){
         this.getLogGroupName();
+        document.getElementById("log_search_form").onkeypress = function(e) {
+            var key = e.charCode || e.keyCode || 0;     
+            if (key == 13) {
+              e.preventDefault();
+            }
+        }
     }
 
     activateList(){
@@ -134,7 +140,7 @@ class AdvSearchModal extends React.Component {
             <div className="search_modal">
                 <ModalHeader >Advanced Log Search</ModalHeader>
                 <ModalBody>
-                    <Form>
+                    <Form id="log_search_form"> 
                         <FormGroup>
                             <Input type="text" name="keyWord" id="keyWord" placeholder="Enter a keyword" value={this.state.keyword} onChange={this.handleInputChange} />
                         </FormGroup>

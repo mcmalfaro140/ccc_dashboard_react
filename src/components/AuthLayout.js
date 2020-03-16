@@ -2,57 +2,28 @@ import React, { Component, Suspense } from "react";
 import { Container} from 'reactstrap';
 import { connect } from 'react-redux';
 import { Modal} from 'reactstrap';
-import profilePic from '../assets/images/users/user-1.jpg';
 import GraphForm from '../components/graphForm';
-
+import { getLoggedInUser } from '../helpers/authUtils';
 import MixGraphForm from '../components/MixGraphForm';
 
-import TableFormPop from '../components/TableFormPop'
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
-
-//TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
 var currentDate = new Date();
 var value = [];
+const axios = require('axios').default;
 // code splitting and lazy loading
 const Topbar = React.lazy(() => import("./Topbar"));
 const Sidebar = React.lazy(() => import("./Sidebar"));
 const RightSidebar = React.lazy(() => import("./RightSidebar"));
 const loading = () => <div className="text-center"></div>;
 
-// const RightSidebarContent = (props) => {
-//     return <div className="user-box">
-//         <div className="user-img">
-//             <img src={profilePic} alt="user-img" title="Nik Patel"
-//                 className="rounded-circle img-fluid" />
-//             <a href="/" className="user-edit"><i className="mdi mdi-pencil"></i></a>
-//         </div>
-
-//         <h5>{props.user && <a href="/">{props.user.username}</a>}</h5>
-//         <p className="text-muted mb-0"><small>Founder</small></p>
-//     </div>
-// }
-
 
 class AuthLayout extends Component {
     constructor(props) {
         super(props);
-
-        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
-        this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
-        this.toggleMenu = this.toggleMenu.bind(this);
-        this.readSelection = this.readSelection.bind(this);
-        this.goFullScreen = this.goFullScreen.bind(this);
-        this.handleChangeComplete = this.handleChangeComplete.bind(this);
-        this.changeScreenSize = this.changeScreenSize.bind(this);
-        this.handleExitFull = this.handleExitFull.bind(this);
-        this.toggleMixForm = this.toggleMixForm.bind(this);
-        this.changeStartDate = this.changeStartDate.bind(this);
-        this.changeEndDate = this.changeEndDate.bind(this);
-        this.toggleSearchModal = this.toggleSearchModal.bind(this);
-
         this.state = {
+            user: getLoggedInUser(),
+            my_dashboard:[],
             mixGraph:{
                 typeOfGraph:"",
                 metricName:"", 
@@ -96,7 +67,6 @@ class AuthLayout extends Component {
                 }
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
         this.readSelection = this.readSelection.bind(this);
         this.goFullScreen = this.goFullScreen.bind(this);
@@ -107,6 +77,23 @@ class AuthLayout extends Component {
         this.changeStartDate = this.changeStartDate.bind(this);
         this.changeEndDate = this.changeEndDate.bind(this);
         this.toggleSearchModal = this.toggleSearchModal.bind(this);
+        this.saveDashboard = this.saveDashboard.bind(this);
+        this.updateDashboard  = this.updateDashboard.bind(this);
+        this.logOut = this.logOut.bind(this) 
+    }
+
+    saveDashboard(dash_to_save){
+        axios.post(
+            'http://localhost:5050/update',
+            {token:this.state.user.token, dashboard: JSON.stringify(dash_to_save)},
+            {header: {'Content-Type':'application/json'}}
+        )
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+    updateDashboard(dash_to_update){
+        this.setState({my_dashboard: dash_to_update})
     }
 
     changeStartDate = startTime =>{
@@ -123,22 +110,20 @@ class AuthLayout extends Component {
         //makes the table full width instead of a condensed table
         this.setState({isCondesed : !this.state.isCondensed})
 
-};
-    toggleMixForm = () =>{
-    this.setState({mixModalOpen : !this.state.mixModalOpen})
-}
-
-    toggleTableForm = () =>{
-        this.setState({modalTableOpen : !this.state.modalTableOpen})
     }
+
+    toggleMixForm = () =>{
+        this.setState({mixModalOpen : !this.state.mixModalOpen})
+    }
+
 
     toggleSearchModal = () =>{
         this.setState({modalSearch : !this.state.modalSearch})
     }
 
-    signOut(e) {
-        e.preventDefault();
-        this.props.history.push("/login");
+    logOut() {
+        this.saveDashboard(this.state.my_dashboard);
+        this.props.history.push("/logout");
     }
 
     //toggleMenu
@@ -167,8 +152,6 @@ class AuthLayout extends Component {
         this.setState({typeOfDimension : value[3]});
         this.setState({idValue : value[4]});
     }
-
-    
 
     handleChangeComplete = (color) =>{
         this.setState({colorSelected : color.hex})
@@ -227,7 +210,9 @@ class AuthLayout extends Component {
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
               screenSize: this.state.screenWidth,
-              isCondensed: this.state.isCondensed
+              isCondensed: this.state.isCondensed,
+              saveDashboard: this.saveDashboard,
+              updateDashboard: this.updateDashboard
             });
           }) || null;
   
@@ -235,10 +220,8 @@ class AuthLayout extends Component {
             <div className="app">
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
-                        <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu}  isCondensed={this.state.isCondensed} toggleForm={this.toggleForm}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu}  logOut={this.logOut}/>
 
                     </Suspense>
                     <div className="content-page">
@@ -251,10 +234,6 @@ class AuthLayout extends Component {
                                     </Container>
                                 </div>
                             </div>
-
-                        <Modal isOpen={this.state.modalTableOpen} >
-                            <TableFormPop toggle={this.toggleTableForm}/>
-                        </Modal>
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
                         </Modal>
@@ -269,7 +248,6 @@ class AuthLayout extends Component {
                     </div>
                 </div>
                 <RightSidebar title={"Settings"}>
-                    {/* <RightSidebarContent user={this.props.user} /> */}
                 </RightSidebar>
             </div>
         );

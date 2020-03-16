@@ -18,8 +18,6 @@ class Login extends Component {
 
         this.handleValidSubmit = this.handleValidSubmit.bind(this);
         this.state = {
-            username: 'test',
-            password: 'test'
         }
     }
 
@@ -87,29 +85,20 @@ class Login extends Component {
                                             </Alert>}
 
                                             <AvForm onValidSubmit={this.handleValidSubmit}>
-                                                <AvField name="username" label="Username" placeholder="Enter your username" value={this.state.username} required />
+                                                <AvField name="username" label="Username" placeholder="Enter your username"  required />
 
                                                 <AvGroup className="mb-3">
                                                     <Label for="password">Password</Label>
-                                                    <AvInput type="password" name="password" id="password" placeholder="Enter your password" value={this.state.password} required />
+                                                    <AvInput type="password" name="password" id="password" placeholder="Enter your password"  required />
                                                     <AvFeedback>This field is invalid</AvFeedback>
                                                 </AvGroup>
 
                                                 <FormGroup>
                                                     <Button color="primary" className="btn-block">Log In</Button>
                                                 </FormGroup>
-
-                                                <p><strong>Username:</strong> test &nbsp;&nbsp; <strong>Password:</strong> test</p>
                                             </AvForm>
                                         </CardBody>
                                     </Card>
-                                </Col>
-                            </Row>
-
-                            <Row className="mt-1">
-                                <Col className="col-12 text-center" >
-                                    <p ><Link to="/forget-password" className="ml-1" style={{color: 'black',  fontSize:'130%'}}><i className="fa fa-lock mr-1" ></i>Forgot your password?</Link></p>
-                                    <p style={{color: 'black', fontSize:'130%'}}>Don't have an account? <Link to="/register" className="text ml-1" ><b>Register</b></Link></p>
                                 </Col>
                             </Row>
 

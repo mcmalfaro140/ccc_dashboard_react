@@ -42,10 +42,10 @@ class LogTableResult extends React.Component {
             let time = t.toGMTString();
             return(
                 <TableBody class="tablesaw tablesaw-stack">
-                    <TableRow id={strid} hover onClick={() => this.handleClick(i)} className="table_logs_cell">
-                        <TableCell><i id={iconid} class="mdi mdi-menu-right"></i></TableCell>
+                    <TableRow id={strid} hover className="table_logs_cell">
+                        <TableCell><i id={iconid} onClick={() => this.handleClick(i)} class="mdi mdi-menu-right"></i></TableCell>
                         <TableCell className="time_col">{time}</TableCell>
-                        <TableCell>{item.message}</TableCell>
+                        <TableCell onClick={() => this.props.showDetail(i)}>{item.message}</TableCell>
                     </TableRow>
                     <TableRow id={i} style={{visibility:'collapse'}}>
                         <TableCell colSpan={3}>
@@ -90,7 +90,7 @@ class LogTableResult extends React.Component {
                         </TableContainer>
                     </CardBody>
                 </Card>
-            </div>
+            </div> 
             
         )
     }

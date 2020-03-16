@@ -64,11 +64,11 @@ class SideNavContent extends React.Component {
         TODO: Update user email dynamically with back end and add logout link. */}
         <div className="user-box text-center ">
             <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
-            <h5>mcmalfaro@hotmail.com</h5>
+            <h5>Hi, {this.props.user.username}.</h5>
 
             <ul className="list-inline">
                 <li className="list-inline-item">
-                    <Link to="/Logout" className="text-custom">
+                    <Link onClick={this.props.logOut} className="text-custom">
                         <i className="mdi mdi-power"></i>
                         <span> Logout </span>
                     </Link>
@@ -147,10 +147,6 @@ class SideNavContent extends React.Component {
                   </ul>
                   ): null }
            </li>
-           
-
-            
-
               <li className = {this.state.notificationActive?("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showNotificationOptions}>
                       <i className="mdi mdi-bell-ring-outline"></i>
@@ -161,24 +157,18 @@ class SideNavContent extends React.Component {
                          <ul className="nav-second-level nav" aria-expanded="false">
                              <li>
                                 <Link to = "/metricAlert">
-                                <i class="mdi mdi-alert-box"></i>
+                                <i class="mdi mdi-alert-box">  </i>
                                     Metrics Alert
                                 </Link>
                              </li>
                              <li>
                                  <Link >
-                                 <i class="mdi mdi-alert-circle"></i>
+                                 <i class="mdi mdi-alert-circle">  </i>
                                     Log Alert
                                  </Link>
                              </li>
                          </ul>
                   ) :null }
-              </li>
-              <li>
-                  <Link to="" className="waves-effect side-nav-link-ref">   
-                    <i class="mdi mdi-key"></i>
-                      <span> Resources IDs </span>
-                  </Link>
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.goFullScreen}>
@@ -211,7 +201,7 @@ class Sidebar extends Component {
     /**
      * Bind event
      */
-    componentWillMount = () => {
+    UNSAFE_componentWillMount = () => {
         document.addEventListener('mousedown', this.handleOtherClick, false);
     }
 

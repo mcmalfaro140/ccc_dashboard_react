@@ -2,18 +2,16 @@ import React from 'react';
 import AWS from 'aws-sdk';
 import mykey from '../keys.json';
 import Loader from 'react-loader-spinner'
-import { Button } from 'react-bootstrap';
 
 //Import componets
 import LogTableResult from '../components/searchComp/LogTableResult'
 import NoFound from '../components/searchComp/NoFound'
 import LogGroupList from '../components/searchComp/LogGroupList'
 import SearchFilterBar from '../components/searchComp/SearchFilterBar'
+import LogDetilData from '../components/searchComp/LogDetailData'
 
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
-var ec2= new AWS.EC2();
-
 
 class SearchResult extends React.Component {
 
@@ -31,6 +29,8 @@ class SearchResult extends React.Component {
                 limit : '50'
             },
             results: [],
+            showMoreInfo:false,
+            logId: 0
         }
         this.handleChange = this.handleChange.bind(this);
         this.getLogGroupName = this.getLogGroupName.bind(this);
@@ -38,6 +38,8 @@ class SearchResult extends React.Component {
         this.show = this.show.bind(this)
         this.setId = this.setId.bind(this)
         this.filter = this.filter.bind(this);
+        this.showMoreInfoToggle = this.showMoreInfoToggle.bind(this)
+
     }
 
     filter(isFilter){
@@ -59,16 +61,12 @@ class SearchResult extends React.Component {
 
     //Update componets when page is initialize
     componentDidMount() {
-        // console.log("component")
-        // console.log(this.props)
         this.setState({results: [], loading: true, noResults: false, logGroupNames: this.props.location.state.logGroupNames})
         this.filter(this.props.location.state.isFilterbyName)
     }
 
     //will update the components when new keyword is enter
     componentDidUpdate(prevProps) {
-        // console.log("component did update")
-        // console.log(this.props)
         let keyword = this.props.location.state.search_keyword
         let preKeyword = prevProps.location.state.search_keyword
         let range = this.props.location.state.range
@@ -157,7 +155,6 @@ class SearchResult extends React.Component {
                     this.setState(prevState => ({
                         results : [...prevState.results, new_data]
                     }));
-                    // console.log(this.state.results)
                     
                 }                
             }  
@@ -179,6 +176,10 @@ class SearchResult extends React.Component {
         this.setState({id: id, showLogTable: !this.state.showLogTable})
     }
 
+    showMoreInfoToggle(id) {
+        this.setState({showMoreInfo : !this.state.showMoreInfo , logId:id})
+    }
+
     render() {
         var value = this.props.location.state.search_keyword
 
@@ -186,7 +187,7 @@ class SearchResult extends React.Component {
             <div>
                 <SearchFilterBar search_keyword={this.props.location.state.search_keyword} range={this.props.location.state.range} isFilterbyName={this.props.location.state.isFilterbyName} logGroupNames={this.props.location.state.logGroupNames} filterNames={this.props.location.state.filterNames} id={this.props.location.state.id}/>
                 { this.state.loading ? (
-                    <div class="loader">
+                    <div className="loader">
                         <Loader
                             type="Circles"
                             color="#00BFFF"
@@ -201,10 +202,18 @@ class SearchResult extends React.Component {
                             <NoFound value={value}/>
                             : 
                             <div>
-                                {this.state.showLogTable ? 
-                                    <LogTableResult results={this.state.results[this.state.id]} showToggle ={this.show}/>
-                                    : 
+                                {!this.state.showLogTable ? 
                                     <LogGroupList results={this.state.results} setId={this.setId} search_keyword={this.props.location.state.search_keyword}/>
+                                    : 
+                                    <div>
+                                        {!this.state.showMoreInfo ? (
+                                            <LogTableResult results={this.state.results[this.state.id]} showToggle ={this.show} showDetail={this.showMoreInfoToggle}/>
+                                            
+                                        ) : (
+                                            <LogDetilData logGroupName={this.state.results[this.state.id].logGroupName} log={this.state.results[this.state.id].events[this.state.logId]} goBack={this.showMoreInfoToggle}></LogDetilData>
+                                        )}
+                                    </div>
+                                    
                                 }
                             </div>
                         }
