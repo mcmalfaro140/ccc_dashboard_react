@@ -85,7 +85,7 @@ useEffect(() => {
 }, [])
         return(
             <div>
-                <Card className="card-box"> 
+                <Card style = {{overflow: 'hidden', display: 'flex'}}> 
 
                     <CardBody>
                         <TableContainer >
