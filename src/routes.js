@@ -14,6 +14,7 @@ const Login = React.lazy(() => import('./pages/auth/Login'));
 const Logout = React.lazy(() => import('./pages/auth/Logout'));
 const SearchResult = React.lazy(() => import('./pages/SearchResult'))
 const MetricAlert = React.lazy(() => import('./pages/MetricAlert.js'));
+const LogAlerts = React.lazy(() => import('./pages/LogAlerts.js'));
 
 // handle auth and authorization
 
@@ -35,7 +36,8 @@ const routes = [
   { path: '/login', name: 'Login', component: Login, route: Route },
   { path: '/logout', name: 'Logout', component: Logout, route: Route },
   { path: '/search_results', name: 'SearchResult', component: SearchResult,route: PrivateRoute, title: "Search Results" },
-   {path: '/metricAlert', name: 'MetricAlert', component: MetricAlert, route:Route, title:"Metric Alerts"},
+  {path: '/metricAlert', name: 'MetricAlert', component: MetricAlert, route:Route, title:"Metric Alerts"},
+  {path: '/logAlert', name: 'LogAlerts', component: LogAlerts, route:Route, title:"Log Alerts"},
   
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },

@@ -131,13 +131,6 @@ class SideNavContent extends React.Component {
                   </a>
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
-                       {/* <li onClick = {this.props.toggleTableForm}>
-                        <Link 
-                                className="waves-effect side-nav-link-ref">
-                                <i class="mdi mdi-table-large"></i>
-                                <span> New Log Table </span>
-                            </Link>
-                      </li> */}
                       <li onClick = {this.props.toggleSearchModal}>
                           <Link className="waves-effect side-nav-link-ref">
                               <i className="fe-search"></i>
@@ -162,7 +155,7 @@ class SideNavContent extends React.Component {
                                 </Link>
                              </li>
                              <li>
-                                 <Link >
+                                 <Link to="/logAlert" >
                                  <i class="mdi mdi-alert-circle">  </i>
                                     Log Alert
                                  </Link>
@@ -308,6 +301,8 @@ class Sidebar extends Component {
                         <SideNavContent {...this.props}/>
                     </PerfectScrollbar>
                 </div>
+                <div className={showMenu ? "sidebar-overlay" : ""} onClick={this.props.menuToggle}></div>
+                {/* <div className="sidebar-overlay"></div> */}
             </React.Fragment>
         );
     }
