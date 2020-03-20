@@ -1,35 +1,32 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import { Row, Card, CardBody, Modal } from 'reactstrap';
+import { Row, Card, CardBody, Modal , Col} from 'reactstrap';
 import LineGraph from '../components/LineGraph'
-import LogWarn from '../components/LogWarn'
-import NightlyTasks from '../components/NightlyTask'
-import ServerStatus from '../components/ServerStatus'
 
 import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
-import SimpleTable from '../components/MaterialTable.js'
+import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
+
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import LogReport from '../components/logRepotComp'
-
-
 
 import GraphForm from '../components/graphForm';
-
 
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
-import { Button } from 'react-bootstrap';
+import SystemHealthContext from '../components/SystemHealthContext';
+import LogReportContext from '../components/LogErrorContext';
+import LogWarningContext from '../components/LogWarningContext';
+import ServerStatusContext from '../components/ServerStatusContext';
+import NightlyScriptContext from '../components/NightlyScriptContext';
+import LogErrorSystemHealth from '../components/LogErrorSystemHealth';
+import LogWarningSystemHealth from '../components/LogWarningSystemHealth';
+import EC2SystemHealth from '../components/EC2SystemHealth';
 
-
-
-
-var currentDate = new Date()
 
 
 class DefaultDashboard extends Component {
@@ -39,6 +36,7 @@ class DefaultDashboard extends Component {
         super(props);
         this.state = {
             user: getLoggedInUser(),
+            systemHealthComponentid: "",
             userDashboard: [
                 // {
                 //     objectType:"graph", // options: graph or table
@@ -150,7 +148,8 @@ class DefaultDashboard extends Component {
             isModify : false,
             stickyFormData :{},
             selectedGraphId:"",
-
+            isSystemHealthdefault: false,
+            results:[]
         };
         this.showOptions = this.showOptions.bind(this);
         this.systemHealth = this.systemHealth.bind(this);
@@ -163,15 +162,6 @@ class DefaultDashboard extends Component {
         // this.setState({userDashboard: savedDashboard})
     }
 
-    test(id){
-        // let ob = JSON.parse(this.state.user.dashboard)
-        // let str = JSON.stringify(this.state.dashboard)
-        // // console.log(ob);
-        // console.log(this.state.user)
-        // console.log(this.state.userDashboard)
-        // console.log(id)
-
-    }
 
     deleteFunction = (childData) => {
            let newDashboard = this.state.userDashboard;
@@ -302,8 +292,30 @@ class DefaultDashboard extends Component {
         
         
     }
+
+   
+    test(id){
+        // let ob = JSON.parse(this.state.user.dashboard)
+        // let str = JSON.stringify(this.state.dashboard)
+        // // console.log(ob);
+        // console.log(this.state.user)
+        // console.log(this.state.userDashboard)
+        // console.log(id)
+        if(id === 'errorComponent'){
+            console.log('Error component is being clicked')
+
+        }
+        else if(id === 'warningComponent')
+        {
+            console.log("warning component is being clicked")
+        }
+
+    }
+
     
     render() {
+
+    
         const items = this.state.userDashboard.map((item, i) => {
             if(item.objectType === "table"){
                 return (
@@ -323,7 +335,6 @@ class DefaultDashboard extends Component {
                         </div>
                     </div>
                     <CardBody>
-                            <SimpleTable {...item}/>
                     </CardBody>
                                         
                 </Card>);
@@ -364,6 +375,9 @@ class DefaultDashboard extends Component {
                 }
             }
         });
+
+        
+   
         return (
             
             <React.Fragment>
@@ -375,29 +389,57 @@ class DefaultDashboard extends Component {
                 <div id="dashboard" style={{paddingTop:'1%'}}>
                     { /* preloader */}
                     {this.props.loading && <Loader />}
-                    <Card style={{boxShadow: '0 0 15px 0 rgba(30,144,255, 0.486)'}}>
-                        <div style={{paddingBottom:'1%'}}className="card-body">
-                        <h3 className="float-left" >System Health Bar</h3>
-                            <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
-                            <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
-                            {/* { this.state.systemHealth? (
-                            <div className="dropdown-menu dropdown-menu-right show" x-placement="bottom-end">
-                            <a href="" class="dropdown-item">Last 24 Hours</a>
-                            <a href="" class="dropdown-item">Last 48 Hours</a>
-                            <a href="" class="dropdown-item">Last 72 Hours</a>
+
+               
+                    <SystemHealthContext >
+                        <Card style={{boxShadow: '0 0 15px 0 rgba(30,144,255, 0.486)'}}>
+                            <div style={{paddingBottom:'1%'}}className="card-body">
+                            <h3 className="float-left" >System Health Bar</h3>
+                                <div style={{paddingTop:'20px'}} className="dropdown float-right show" onClick={this.systemHealth}>
+                                <div style={{paddingTop:'-15px'}} className="float-left">Last 24 Hours</div>
                             </div>
-                            ): null } */}
-                        </div>
-                        </div>
-                        <CardBody style={{paddingTop:'0%', margin: '0%'}}>
-                            <Row>
-                                <LogReport/>
-                                <LogWarn/>
-                                <NightlyTasks/>
-                                <ServerStatus/>
-                            </Row>
-                        </CardBody>
-                    </Card>
+                            </div>
+                            
+                                <CardBody className="healthBar" style={{paddingTop:'0%', margin: '0%'}}>
+                                    <Row onClick={() => this.setState({isSystemHealthdefault : !this.state.isSystemHealthdefault})} >
+                                                           
+                                               
+
+                                        <Col id="col-0" onClick = {() => this.setState({systemHealthComponentid: "col-0"})}> <LogReportContext /></Col>
+                                        <Col id="col-1" onClick = {() => this.setState({systemHealthComponentid: "col-1"})}> <LogWarningContext /></Col>
+                                        <Col id="col-2" onClick = {() => this.setState({systemHealthComponentid: "col-2"})}><NightlyScriptContext /></Col>
+                                        <Col id="col-3" onClick = {() => this.setState({systemHealthComponentid: "col-3"})}> <ServerStatusContext /></Col>
+                                        
+                                    </Row>
+
+                                    <Row>
+                                   { 
+                    this.state.isSystemHealthdefault &&
+                    
+                    <div>
+
+                        {
+                            this.state.systemHealthComponentid === "col-0" ?  <Col >< LogErrorSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "col-1" ? <Col >< LogWarningSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "col-2" ? <p>This is inside Nightly scripts</p>
+                            : <EC2SystemHealth />
+                        }
+
+                    </div>
+                   
+                }   
+
+                                    </Row>
+
+                                </CardBody>
+                           
+
+                        </Card>
+                    </SystemHealthContext>
+                 {/* If one of the system health components is clicked 
+                expand the card and show an expanded card */}
+
+ 
                     <ResponsiveGridLayout className="layout" 
                         breakpoints={{lg: 1040, md: 996, sm: 768}}
                         cols={{lg: 24, md: 12, sm: 8}}
@@ -415,3 +457,9 @@ class DefaultDashboard extends Component {
 
 
 export default connect()(DefaultDashboard);
+
+
+
+
+         
+            

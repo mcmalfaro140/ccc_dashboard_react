@@ -7,7 +7,7 @@ import GraphForm from '../components/graphForm';
 
 import MixGraphForm from '../components/MixGraphForm';
 
-import TableFormPop from '../components/TableFormPop'
+
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
 
 //TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
@@ -276,9 +276,7 @@ class AuthLayout extends Component {
                                 </div>
                             </div>
 
-                        <Modal isOpen={this.state.modalTableOpen} >
-                            <TableFormPop toggle={this.toggleTableForm}/>
-                        </Modal>
+                       
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
                         </Modal>

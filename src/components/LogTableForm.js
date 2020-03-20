@@ -1,9 +1,7 @@
 import React, { Component,useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { Form, Checkbox ,Modal, Col,Row} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-// import DateTimePicker from 'react-datetime-picker';
+
 
 function LogTableForm(props) {
     const [show, setShow] = useState(false);
