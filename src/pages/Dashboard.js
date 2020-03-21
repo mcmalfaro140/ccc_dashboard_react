@@ -6,6 +6,7 @@ import BarGraph from '../components/BarGraph';
 import MixGraph from '../components/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
+import MixGraphForm from '../components/MixGraphForm';
 
 import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
