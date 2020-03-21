@@ -18,6 +18,7 @@ class AlarmForm extends Component {
             topicArns:[],
             isSelectAll:false,
             subscriptionProtocol:[],
+            listSubscriptions:null,
             showobj:false,
             logAlarmInput:{
                 AlarmName:null,
@@ -36,10 +37,28 @@ class AlarmForm extends Component {
         this.isSelectAll = this.isSelectAll.bind(this);
         this.logGroupSelection = this.logGroupSelection.bind(this);
         this.addProtocol = this.addProtocol.bind(this);
+        this.deleteProtocol = this.deleteProtocol.bind(this);
+        this.attachEndpointsToSNSTopic = this.attachEndpointsToSNSTopic.bind(this);
     }
     componentWillMount(){
         this.getLogGroupName();
         this.getSNSTopics();
+    }
+    getTopicARN(e){
+        this.setState({subscribedTopicArn:e.target.value});
+        this.listSubscriptions(e.target.value);
+    }
+    listSubscriptions(arn){
+        let sns = new AWS.SNS();
+        var params = {
+            TopicArn: arn, /* required */
+          };
+          sns.listSubscriptionsByTopic(params, function(err, data) {
+            if (err) console.log(err, err.stack); // an error occurred
+            else {
+                this.setState({listSubscriptions:data.Subscriptions});
+            }   
+          }.bind(this));
     }
     signSelection(e){
         let v = e.target.value;
@@ -84,6 +103,10 @@ class AlarmForm extends Component {
             }
         }.bind(this))
     }
+    deleteProtocol(index){
+        this.state.subscriptionProtocol.splice(index,1);
+        this.setState({subscriptionProtocol:this.state.subscriptionProtocol});
+     }
     update(e,i){
         e.preventDefault();
         value[i] = e.target.value;
@@ -111,6 +134,8 @@ class AlarmForm extends Component {
             logAlarmInput.SNS_Selection = v;
             return { logAlarmInput };                                
           })
+          this.setState({subscribedTopicArn:e.target.value});
+          this.listSubscriptions(e.target.value);
     }
     logGroupSelection(i){
         if(this.state.isSelectAll === true){
@@ -147,8 +172,44 @@ class AlarmForm extends Component {
               })
         }
     }
+    attachEndpointsToSNSTopic(e){
+        e.preventDefault();
+        let sns = new AWS.SNS();
+        this.state.subscriptionProtocol.forEach(protocols =>{
+            var params = {
+                Protocol: protocols.name, /* required */
+                TopicArn: this.state.subscribedTopicArn, /* required */
+                Endpoint: protocols.value,
+                ReturnSubscriptionArn: true
+              };
+              sns.subscribe(params, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else{
+                    this.listSubscriptions(this.state.subscribedTopicArn);
+                    this.setState({attachedEndpoints:true});
+                }   
+              }.bind(this));
+        })
+    }
     addProtocol(){
         this.setState({subscriptionProtocol:[...this.state.subscriptionProtocol,{name:'',id:'',value:''}]})
+    }
+    protocolOption(e,index){
+        let arr = this.state.subscriptionProtocol;
+        let obj = {name: e.target.value, id : index, value:""};
+        arr[index] = obj;
+        this.setState({subscriptionProtocol:arr});
+      
+    }
+    protocolValue(e,index){
+        let arr = this.state.subscriptionProtocol;
+        arr.map(elem=>{
+            if(elem.id === index){
+                elem.value = e.target.value;
+            }
+            return arr;
+        })
+        this.setState({subscriptionProtocol:arr});
     }
     showObj(){
         this.setState({showobj:!this.state.showobj})
@@ -277,6 +338,55 @@ class AlarmForm extends Component {
                 <Form.Group>
                     <Button className = 'button_a' style = {{float:'right'}} onClick = {this.addProtocol}>Add Subscription Endpoint</Button>
                 </Form.Group>
+                <form onSubmit = {(e)=>this.attachEndpointsToSNSTopic(e)}>
+                {
+                this.state.subscriptionProtocol.map(({name, value},index)=>{
+                              return(
+                                <>
+                                <hr style = {{borderColor:'#d1d1d1'}}/>
+                                        <Row className = 'rows'>  
+                                       
+                                            <Col>
+                                                <div>
+                                                    <label>Protocol</label>
+                                                </div>
+                                                <div>
+                                                    <select className = 'selection' value = {name} onChange={(e) => this.protocolOption(e,index)}>
+                                                        <option value="http">http</option>
+                                                        <option value="https">https</option>
+                                                        <option value="email">email</option>
+                                                        <option value="sms">sms</option>
+                                                        <option value="lambda">lambda</option>
+                                                    </select>
+                                                </div>
+                                            </Col>
+                                            <Col>
+                                                <div>
+                                                    <label>Value</label>
+                                                </div>
+                                                <div>
+                                                    <input value = {value} className = 'inputs' onChange = {(e) => this.protocolValue(e,index)}/>
+                                                </div>  
+                                            </Col>
+                                            <Col xs={2}>
+                                                <div>
+                                                    <label>Remove</label>
+                                                </div>
+                                                <div>
+                                                    {/* <i class = "mdi mdi-delete-circle" onClick = {() =>this.deleteProtocol(index)}></i> */}
+                                                   <Button className = 'removes' onClick = {() =>this.deleteProtocol(index)}> <i class = "mdi mdi-delete-forever"></i></Button>
+                                                </div>   
+                                            </Col>
+                                        </Row>
+                                    </>
+                              )
+                            })
+                            }
+                             {
+                            this.state.subscriptionProtocol.length > 0?
+                                 <input type="submit" value="Add" className = 'submitButton'/>:null
+                        }
+                        </form>
 
                 {
                     this.state.showobj === true?
