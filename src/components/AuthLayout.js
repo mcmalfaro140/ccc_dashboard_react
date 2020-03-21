@@ -105,20 +105,16 @@ class AuthLayout extends Component {
 
     //toggle form
     toggleForm = () => {
-        this.setState({modalOpen : !this.state.modalOpen})
-        
-        //makes the table full width instead of a condensed table
-        this.setState({isCondesed : !this.state.isCondensed})
-
+        this.setState({modalOpen : !this.state.modalOpen, isCondensed: false, showMenu: false})
     }
 
     toggleMixForm = () =>{
-        this.setState({mixModalOpen : !this.state.mixModalOpen})
+        this.setState({mixModalOpen : !this.state.mixModalOpen, isCondensed: false, showMenu: false})
     }
 
 
     toggleSearchModal = () =>{
-        this.setState({modalSearch : !this.state.modalSearch})
+        this.setState({modalSearch : !this.state.modalSearch, isCondensed: false, showMenu: false})
     }
 
     logOut() {
