@@ -3,7 +3,6 @@ import AWS from 'aws-sdk';
 import { Row,CardBody,CardTitle,CardSubtitle,Button, Col,PopoverBody,Popover, PopoverHeader,Modal,ModalHeader,ModalBody,ModalFooter } from 'reactstrap';
 import {Form} from 'react-bootstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import '../assets/metricAlarm.css';
 import {Checkmark} from 'react-checkmark';
 import Table from 'react-bootstrap/Table';
 
