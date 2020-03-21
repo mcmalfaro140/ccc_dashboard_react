@@ -22,8 +22,8 @@ const SystemHealthContext = (props) => {
     const [EC2InstanceStatusAlert , setEC2InstanceStatusAlert] = useState(0)
 
 
-    
-const date = new Date();
+//Date to query every hour  
+//const date = new Date();
 
 const getLogGroupName = () => {
 
@@ -49,7 +49,7 @@ const getLogGroupName = () => {
                 searchByLogGroupName(LogGroupName.logGroupName , 'WARN')
                 ))
         }
-    }.bind(this))
+    })
 
 
 }
@@ -128,7 +128,7 @@ const searchByLogGroupName =  (logName , filterPattern) => {
                 }              
             }  
          
-        }.bind(this));
+        });
   }
 
  const getEC2InstanceStatus =  ()  => {
@@ -158,7 +158,7 @@ const searchByLogGroupName =  (logName , filterPattern) => {
             
                                 
         }
-      }.bind(this));
+      });
 
 }
 

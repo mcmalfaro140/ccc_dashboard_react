@@ -314,10 +314,10 @@ class DefaultDashboard extends Component {
                                                            
                                                
 
-                                        <Col id="col-0" onClick = {() => this.setState({systemHealthComponentid: "col-0"})}> <LogReportContext /></Col>
-                                        <Col id="col-1" onClick = {() => this.setState({systemHealthComponentid: "col-1"})}> <LogWarningContext /></Col>
-                                        <Col id="col-2" onClick = {() => this.setState({systemHealthComponentid: "col-2"})}><NightlyScriptContext /></Col>
-                                        <Col id="col-3" onClick = {() => this.setState({systemHealthComponentid: "col-3"})}> <ServerStatusContext /></Col>
+                                        <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogReportContext /></Col>
+                                        <Col id="Column-1" onClick = {() => this.setState({systemHealthComponentid: "Column-1"})}> <LogWarningContext /></Col>
+                                        <Col id="Column-2" onClick = {() => this.setState({systemHealthComponentid: "Column-2"})}><NightlyScriptContext /></Col>
+                                        <Col id="Column-3" onClick = {() => this.setState({systemHealthComponentid: "Column-3"})}> <ServerStatusContext /></Col>
                                         
                                     </Row>
 
@@ -328,9 +328,9 @@ class DefaultDashboard extends Component {
                     <div>
 
                         {
-                            this.state.systemHealthComponentid === "col-0" ?  <Col >< LogErrorSystemHealth /></Col>
-                            : this.state.systemHealthComponentid === "col-1" ? <Col >< LogWarningSystemHealth /></Col>
-                            : this.state.systemHealthComponentid === "col-2" ? <p>This is inside Nightly scripts</p>
+                            this.state.systemHealthComponentid === "Column-0" ?  <Col >< LogErrorSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "Column-1" ? <Col >< LogWarningSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "Column-2" ? <p>This is inside Nightly scripts</p>
                             : <EC2SystemHealth />
                         }
 
