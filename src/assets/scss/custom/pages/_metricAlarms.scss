@@ -1,0 +1,100 @@
+.metricAlerts_page{
+    //background-color: blue;
+    // >div:nth-child(2){
+    //     background-color: red;
+    // }
+    // >div:nth-child(3){
+    //     >div{
+    //         >div{
+                
+    //         }
+    //     }
+    // }
+}
+.button_a {
+    background:none;
+    border:none; 
+    padding:0;
+   
+   /*optional*/
+    font-family:arial,sans-serif; /*input has OS specific font-family*/
+    color:#069;
+    cursor:pointer;
+}
+.button_b {
+   background:'white';
+   border:none; 
+   padding:0;
+}
+.button_a:hover{
+   text-decoration:underline;
+   background: #069;
+}
+.margin{
+    margin:0px 0px -6px 0px;
+}
+.fontSize{
+    font-size : 1vw;
+}
+.h1Size{
+    font-size : 2.5vw;
+}
+.description{
+    margin-top:0px;
+    line-height:1.5em;
+    height:3em;
+    overflow:scroll;
+    color:black;
+}
+.button_align{
+    text-align: center;
+    margin-bottom:0px;
+}
+.modalHeader{
+    background-color:#5388FF;
+}
+.modalInfor{
+    color : white;
+}
+.hr{
+   border-color:#d1d1d1;
+}
+.button_size{
+    height : 40px;
+}
+.scrolling{
+    overflow:scroll;
+}
+.submitButton{
+    float:right;
+    background-color:#5388FF;
+    color:white;
+    border:0;
+}
+.addEndpoint{
+    background-color:green;
+    color:white;
+}
+.subscribe{
+    background-color:#5388FF;
+    color:white;
+    border:0;
+    height:40px;
+}
+.modalku{
+    width: 80%;
+    max-width: none!important;
+}
+.selection{
+    width: 60%;
+    height: 30px;
+}
+.inputs{
+    width: 60%;
+    height: 30px;
+}
+.removes{
+    width: 40%;
+    // height: 40px;
+    cursor: pointer;
+}

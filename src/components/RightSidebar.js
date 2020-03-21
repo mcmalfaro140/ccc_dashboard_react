@@ -68,7 +68,7 @@ class RightSideBar extends Component {
                         <Link to="#" className="right-bar-toggle float-right" onClick={this.handleClose}>
                             <i className="dripicons-cross noti-icon"></i>
                         </Link>
-                        <h5 className="m-0 text-white">Misael </h5>
+                        <h5 className="m-0 text-white">Settings </h5>
                     </div>
                     <PerfectScrollbar>
                         {component}

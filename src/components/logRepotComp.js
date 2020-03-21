@@ -43,7 +43,7 @@ class logReportComp extends React.Component {
 
  //Funtion to get all the log group names from AWS
  getLogGroupName(){
-    console.log("init search")
+    // console.log("init search")
     cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
         if (err){
             console.log(err, err.stack); // an error occurred
@@ -162,8 +162,6 @@ displayLogGroupCard = () => {
 }
 
     render() {
-       
-        console.log(this.state.results)
 
         const cell = this.state.results.map((item, i) => {
             let objKeys = Object.keys(item.events)
@@ -195,7 +193,6 @@ displayLogGroupCard = () => {
 
             <div style={{ marginLeft:'10%'}} >
            
-
                 { this.state.logErrorOpener ? (
 
                     this.defaultIcon()

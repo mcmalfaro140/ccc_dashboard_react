@@ -86,7 +86,7 @@ class ServerStatus extends Component {
     render() {
 
 
-        console.log(this.state.results)
+        // console.log(this.state.results)
         const cell = this.state.results.map((item, i) => {
         
           let strid = "rowServer" + i;
