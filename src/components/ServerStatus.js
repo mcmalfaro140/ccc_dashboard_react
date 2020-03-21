@@ -123,7 +123,7 @@ class ServerStatus extends Component {
             
     <div style={{ marginLeft:'10%'}}>
             <Col style={{ margin:'0%'}} id = "toggler">
-                <Row style={{display: 'flex',  justifyContent:'center', color:'black', fontSize:'140%', fontWeight:'500' , fontFamily : 'sans-Serif' }}>Resources Status</Row>
+                <Row style={{display: 'flex',  justifyContent:'center', color:'black', fontSize:'140%', fontWeight:'500' , fontFamily : 'sans-Serif' }}>EC2 Status</Row>
                 <Row style={{display: 'flex',  justifyContent:'center',color:'gold', fontSize:'350%', marginTop:'-7%'}}> <span style={{paddingRight:'2%' , marginTop:'-3%'}}>1</span> <i class="mdi mdi-server"></i></Row>
                 <Row style={{display: 'flex',  justifyContent:'center', color:'gold', fontSize:'100%', marginTop:'-7%'}}>Server is {this.state.statusResult}</Row>
                 
@@ -136,7 +136,7 @@ class ServerStatus extends Component {
 
                     <TableHead>
                         <TableRow>
-                            <TableCell style = {{ fontFamily : 'sans-Serif' }}> Available Servers status </TableCell>
+                            <TableCell style = {{ fontFamily : 'sans-Serif' }}> EC2 status </TableCell>
                         </TableRow>
                     </TableHead>
 

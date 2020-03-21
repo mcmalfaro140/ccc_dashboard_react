@@ -36,8 +36,10 @@ const routes = [
   { path: '/login', name: 'Login', component: Login, route: Route },
   { path: '/logout', name: 'Logout', component: Logout, route: Route },
   { path: '/search_results', name: 'SearchResult', component: SearchResult,route: PrivateRoute, title: "Search Results" },
+
   {path: '/metricAlert', name: 'MetricAlert', component: MetricAlert, route:Route, title:"Metric Alerts"},
   {path: '/logAlert', name: 'LogAlerts', component: LogAlerts, route:Route, title:"Log Alerts"},
+
   
   // other pages
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, route: PrivateRoute, roles: ['Admin'], title: 'Dashboard' },
