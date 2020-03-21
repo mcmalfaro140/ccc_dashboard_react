@@ -17,11 +17,12 @@ class AlarmForm extends Component {
             logGroupNames:[],
             topicArns:[],
             isSelectAll:false,
+            subscriptionProtocol:[],
             logAlarmInput:{
                 AlarmName:null,
-                LogLevelSign:'>',
-                LogLevel:'ERROR',
-                Keywords:'',
+                LogLevelSign:null,
+                LogLevel:null,
+                Keywords:[],
                 LogGroupNameSelection:[],
                 SNS_Selection:null
             }
@@ -32,6 +33,8 @@ class AlarmForm extends Component {
         this.snsSelection = this.snsSelection.bind(this);
         this.showObj = this.showObj.bind(this);
         this.isSelectAll = this.isSelectAll.bind(this);
+        this.logGroupSelection = this.logGroupSelection.bind(this);
+        this.addProtocol = this.addProtocol.bind(this);
     }
     componentWillMount(){
         this.getLogGroupName();
@@ -86,21 +89,35 @@ class AlarmForm extends Component {
         if(value.length > 2){
             value = [];
         }
+        let keywords;
+        keywords = value[1].split(' ');
         this.setState(prevState => {
             let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
             logAlarmInput.AlarmName = value[0];
-            logAlarmInput.Keywords = value[1];
+            logAlarmInput.Keywords = keywords;
             return { logAlarmInput };                                
           })
   
     }
-    snsSelection(i){
+    snsSelection(e){
+        let v = e.target.value;
+        this.setState(prevState => {
+            let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
+            logAlarmInput.SNS_Selection = v;
+            return { logAlarmInput };                                
+          })
+    }
+    logGroupSelection(i){
         if(this.state.isSelectAll === true){
             newArr = this.state.logGroupNames;
         }else{
             newArr.push(this.state.logGroupNames[i]);
         }
-        newArr = newArr.filter((a, b) => newArr.indexOf(a) === b)
+        
+        let count = newArr.reduce((n, x) => n + (x === this.state.logGroupNames[i]), 0);
+        if(count === 2){
+            newArr = newArr.filter(a => a !== this.state.logGroupNames[i])
+        }
         console.log(newArr);
         this.setState(prevState => {
             let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
@@ -111,9 +128,24 @@ class AlarmForm extends Component {
     }
     isSelectAll(){
         this.setState({isSelectAll:!this.state.isSelectAll});
+        if(this.state.isSelectAll === false){
+            this.setState(prevState => {
+                let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
+                logAlarmInput.LogGroupNameSelection = this.state.logGroupNames;
+                return { logAlarmInput };                                
+              })
+        }else{
+            this.setState(prevState => {
+                let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
+                logAlarmInput.LogGroupNameSelection = [];
+                return { logAlarmInput };                                
+              })
+        }
+    }
+    addProtocol(){
+        this.setState({subscriptionProtocol:[...this.state.subscriptionProtocol,{name:'',id:'',value:''}]})
     }
     showObj(){
-        
         console.log(this.state.logAlarmInput);
     }
     render() {
@@ -141,7 +173,7 @@ class AlarmForm extends Component {
                        </Col>
                         
                        <Col>
-                            <Form.Control as="select" value = {this.state.logAlarmInput.LogLevelSign} onChange={this.signSelection}>
+                            <Form.Control as="select" onChange={this.signSelection}>
                                 <option value ="<">&lt;</option>
                                 <option value = '>'>&gt;</option>
                                 <option value = '≤'>≤</option>
@@ -149,7 +181,7 @@ class AlarmForm extends Component {
                             </Form.Control>    
                        </Col> 
                        <Col>
-                            <Form.Control as="select" value = {this.state.logAlarmInput.LogLevel} onChange={this.levelSelection}>
+                            <Form.Control as="select" onChange={this.levelSelection}>
                                 <option value = 'ERROR'>ERROR</option>
                                 <option value = 'WARN'>WARN</option>
                                 <option value = 'INFO'>INFO</option>
@@ -198,10 +230,23 @@ class AlarmForm extends Component {
                         this.state.logGroupNames.map((item,i)=>{
                             return(
                                 <div>
-                                    <input type="checkbox" value="" onChange = {(e) => this.snsSelection(i)}/>
-                                    <label className = 'checkss'>
-                                            {item}
-                                    </label>
+                                    {
+                                        this.state.isSelectAll === true?
+                                        <div>
+                                        <input type="checkbox" checked = {this.state.isSelectAll} disabled/>
+                                            <label className = 'checkss'>
+                                                    {item}
+                                            </label>
+                                        </div>
+                                        :
+                                        <div>
+                                        <input type="checkbox" onChange = {(e) => this.logGroupSelection(i)}/>
+                                            <label className = 'checkss'>
+                                                    {item}
+                                            </label>
+                                        </div>
+                                    }
+                                    
                                 </div>
                             )  
                         })
@@ -211,11 +256,11 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <Form.Label>Pick an SNS: </Form.Label>
-                    <Form.Control as="select" className = 'form_input'>
+                    <Form.Control as="select" className = 'form_input' onChange = {this.snsSelection}>
                         {
                             this.state.topicArns.map(item=>{
                                 return(
-                                <option>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
+                                <option value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
                                 )
                             })
                         }
@@ -226,6 +271,14 @@ class AlarmForm extends Component {
                 <Form.Group>
                     <Button className = 'button_a' style = {{float:'right'}} onClick = {this.addProtocol}>Add Subscription Endpoint</Button>
                 </Form.Group>
+
+                {
+                    this.state.showEndPoint === true?
+                    <Form.Group>
+                        
+                    </Form.Group>
+                 :null
+                }
 
                 <Form.Group>
                     <div className = 'subscribe_div'>
