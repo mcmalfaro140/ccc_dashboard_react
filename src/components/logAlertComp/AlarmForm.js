@@ -18,6 +18,7 @@ class AlarmForm extends Component {
             topicArns:[],
             isSelectAll:false,
             subscriptionProtocol:[],
+            showobj:false,
             logAlarmInput:{
                 AlarmName:null,
                 LogLevelSign:null,
@@ -90,7 +91,11 @@ class AlarmForm extends Component {
             value = [];
         }
         let keywords;
-        keywords = value[1].split(' ');
+        if(value[1] === undefined){
+            keywords = '';
+        }else{
+            keywords = value[1].split(' ');
+        }
         this.setState(prevState => {
             let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
             logAlarmInput.AlarmName = value[0];
@@ -146,6 +151,7 @@ class AlarmForm extends Component {
         this.setState({subscriptionProtocol:[...this.state.subscriptionProtocol,{name:'',id:'',value:''}]})
     }
     showObj(){
+        this.setState({showobj:!this.state.showobj})
         console.log(this.state.logAlarmInput);
     }
     render() {
@@ -273,9 +279,9 @@ class AlarmForm extends Component {
                 </Form.Group>
 
                 {
-                    this.state.showEndPoint === true?
+                    this.state.showobj === true?
                     <Form.Group>
-                        
+                        {JSON.stringify(this.state.logAlarmInput)}
                     </Form.Group>
                  :null
                 }
