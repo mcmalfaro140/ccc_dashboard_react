@@ -234,6 +234,7 @@ class AuthLayout extends Component {
                                     </Container>
                                 </div>
                             </div>
+
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
                         </Modal>
