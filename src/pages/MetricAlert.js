@@ -33,7 +33,7 @@ class MetricAlert extends Component {
     }
     returnMetricAlarms(){
         let alertsArr = this.state.alerts;
-        var params = {
+        let params = {
             // ActionPrefix: 'STRING_VALUE',
             // AlarmNamePrefix: 'STRING_VALUE',
             // AlarmNames: [
@@ -87,9 +87,9 @@ class MetricAlert extends Component {
         }
     )
         return (
-          <Row className="metricAlerts_page"> 
-                {item}
-         </Row>
+            <Row className="metricAlerts_page"> 
+                    {item}
+            </Row>
         )
     }
 }

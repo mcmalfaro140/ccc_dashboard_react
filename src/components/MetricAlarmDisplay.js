@@ -3,9 +3,8 @@ import AWS from 'aws-sdk';
 import { Row,CardBody,CardTitle,CardSubtitle,Button, Col,PopoverBody,Popover, PopoverHeader,Modal,ModalHeader,ModalBody,ModalFooter } from 'reactstrap';
 import {Form} from 'react-bootstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import '../assets/metricAlarm.css';
 import {Checkmark} from 'react-checkmark';
-import Table from 'react-bootstrap/Table'
+import Table from 'react-bootstrap/Table';
 
 
 
@@ -239,7 +238,7 @@ class MetricAlarmDisplay extends Component {
           sns.unsubscribe(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else   { 
-                 this.listSubscriptions(topicArn);
+                this.listSubscriptions(topicArn);
             }
           }.bind(this));
     }
@@ -307,28 +306,27 @@ class MetricAlarmDisplay extends Component {
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
             <CardBody style={{overflow:'hidden'}}>
                 <CardTitle>    
-                    <h1 style = {{fontSize : window.innerWidth/40}}>{this.state.alert.AlarmName} </h1>
+                    <h1 className = 'h1Size'>{this.state.alert.AlarmName} </h1>
                 </CardTitle>
                 <Row>
                     <Col>
                         <CardSubtitle>
-                            <p style ={{marginTop:0,marginBottom:-6}}><span style ={{backgroundColor:this.state.color, color: 'white',fontSize : window.innerWidth/100,paddingLeft:5, paddingRight:5}}>Status: {this.state.alert.StateValue}</span></p>
-                            <p style ={{marginTop:0,marginBottom:-6}}><span style = {{fontSize : window.innerWidth/100}}>{this.state.alert.Namespace}</span></p>
-                            <p style ={{marginTop:0,marginBottom:-6}}><span style = {{fontSize : window.innerWidth/100}}>{this.state.alert.MetricName}</span></p>
-                            <p style ={{marginTop:0,marginBottom:-6}}><Button className = 'button_a' onClick = {this.showSubscribedTopicsOfAlarms}><span style = {{fontSize : window.innerWidth/100}}>Subscribed Topics</span></Button></p>
-                            <a className="waves-effect side-nav-link-ref" onClick={this.toggle} >
-                            <p style ={{marginTop:0,marginBottom:-6}}><span style = {{fontSize : window.innerWidth/100}} id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
-                            </a> 
-                            
+                            <p className = 'margin'><span style ={{backgroundColor:this.state.color, color: 'white',fontSize : window.innerWidth/100,paddingLeft:5, paddingRight:5}}>Status: {this.state.alert.StateValue}</span></p>
+                            <p className = 'margin'><span className = 'fontSize'>{this.state.alert.Namespace}</span></p>
+                            <p className = 'margin'><span className = 'fontSize'>{this.state.alert.MetricName}</span></p>
+                            <p className = 'margin'><Button className = 'button_a' onClick = {this.showSubscribedTopicsOfAlarms}><span className = 'fontSize'>Subscribed Topics</span></Button></p>
+                            <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
+                            <p className = 'margin'><span className = 'fontSize' id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
+                            </a>           
                         </CardSubtitle>
                      </Col>
                      <Col>
                      <div >{this.state.subscription === true? <Checkmark size = 'large' />:null}</div> 
                      </Col>
                 </Row>
-            <p style ={{marginTop:0,marginBottom:0}}><span><h5>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</h5></span></p>
-            <p style = {{marginTop:0,lineHeight:'1.5em',height:'3em',overflow:'scroll',color:'black'}}> Description: {this.state.alert.AlarmDescription}</p>
-           <div style = {{textAlign: 'center',marginBottom:0}}>
+            <p className = 'margin'><span><h5>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</h5></span></p>
+            <p className = 'description'> Description: {this.state.alert.AlarmDescription}</p>
+           <div className = 'button_align'>
                {/* {this.state.subscription === false?
                <Button style ={{backgroundColor:'blue',color:'white',borderRadius: '12px',width:window.innerWidth/8,maxWidth:'100%'}} onClick = {this.openSubscriptionDetails}>Subscribe</Button>
                : */}
@@ -342,7 +340,7 @@ class MetricAlarmDisplay extends Component {
                 </div>  
             </div>
               <Modal isOpen = {this.state.isOpen} toggle = {this.toggle}>
-                <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style = {{color : 'white'}}>Alarm Information</span></ModalHeader>
+                <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Alarm Information</span></ModalHeader>
                     <ModalBody>
                             <Table striped bordered hover size="sm">
                                     <tr>
@@ -367,7 +365,7 @@ class MetricAlarmDisplay extends Component {
                                                 return(
                                                     <div>
                                                         {item} 
-                                                        <hr style = {{borderColor:'#d1d1d1'}}/>
+                                                        <hr/>
                                                     </div>
                                                 )
                                         })}</td>
@@ -391,12 +389,11 @@ class MetricAlarmDisplay extends Component {
                             </Table>
                     </ModalBody>
                     <ModalFooter>
-                        <Button style ={{height : 40}} color="secondary" onClick = {this.toggle}> Close </Button>
+                        <Button className = 'button_size' color="secondary" onClick = {this.toggle}> Close </Button>
                     </ModalFooter>
               </Modal>
-             
-              <Modal isOpen = {this.state.toggleModalAndSubscribe} toggle = {this.toggleModalAndSubscribe}>
-                  <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style ={{color:'white'}}>Subscription Detail</span></ModalHeader>
+              <Modal isOpen = {this.state.toggleModalAndSubscribe} toggle = {this.toggleModalAndSubscribe} className = 'modalku'>
+                  <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscription Detail</span></ModalHeader>
                   <ModalBody>
                         <Form>
                             <Form.Group>
@@ -410,7 +407,7 @@ class MetricAlarmDisplay extends Component {
                             <fieldset disabled = {this.state.subscribedTopicArn == null}>
                           {
                             this.state.listSubscriptions != null&& this.state.listSubscriptions.length > 0?  
-                              <div style = {{overflow:'scroll'}}>
+                              <div className = 'scrolling'>
                                     <Form.Label>Subscribed Endpoints of the topic: {this.state.subscribedTopicArn.split(':')[this.state.subscribedTopicArn.split(':').length-1]}</Form.Label>
                                     <Table striped bordered hover size="sm">
                                          <thead>
@@ -434,9 +431,9 @@ class MetricAlarmDisplay extends Component {
                                                         <td>{item.TopicArn}</td>
                                                         <td><Button className = 'button_a' onClick = {(e) => this.unsubscribe(e,item.SubscriptionArn,item.TopicArn)}>Remove</Button></td>
                                                     </tr>
-                                    )
-                                })
-                        }
+                                                )
+                                                     })
+                                                 }
                            </tbody>
                             </Table> 
                             </div> 
@@ -449,25 +446,38 @@ class MetricAlarmDisplay extends Component {
                               return(
                                 <>
                                 <hr style = {{borderColor:'#d1d1d1'}}/>
-                                   
                                         <Row>  
+                                       
                                             <Col>
-                                            <label>Protocol</label>
-                                                <select style = {{width:window.innerWidth/8,height:window.innerHeight/25}} value = {name} onChange={(e) => this.protocolOption(e,index)}>
-                                                    <option value="http">http</option>
-                                                    <option value="https">https</option>
-                                                    <option value="email">email</option>
-                                                    <option value="sms">sms</option>
-                                                    <option value="lambda">lambda</option>
-                                                </select>
+                                                <div>
+                                                    <label>Protocol</label>
+                                                </div>
+                                                <div>
+                                                    <select className = 'selection' value = {name} onChange={(e) => this.protocolOption(e,index)}>
+                                                        <option value="http">http</option>
+                                                        <option value="https">https</option>
+                                                        <option value="email">email</option>
+                                                        <option value="sms">sms</option>
+                                                        <option value="lambda">lambda</option>
+                                                    </select>
+                                                </div>
                                             </Col>
                                             <Col>
-                                                <label>Value</label>
-                                                <input value = {value} onChange = {(e) => this.protocolValue(e,index)}/>
+                                                <div>
+                                                    <label>Value</label>
+                                                </div>
+                                                <div>
+                                                    <input value = {value} className = 'inputs' onChange = {(e) => this.protocolValue(e,index)}/>
+                                                </div>  
                                             </Col>
                                             <Col xs={2}>
-                                                <label>Remove</label>
-                                                <i class = "mdi mdi-delete" onClick = {() =>this.deleteProtocol(index)}></i>
+                                                <div>
+                                                    <label>Remove</label>
+                                                </div>
+                                                <div>
+                                                    {/* <i class = "mdi mdi-delete-circle" onClick = {() =>this.deleteProtocol(index)}></i> */}
+                                                   <Button className = 'removes' onClick = {() =>this.deleteProtocol(index)}> <i class = "mdi mdi-delete-forever"></i></Button>
+                                                </div>   
                                             </Col>
                                         </Row>
                                     </>
@@ -476,11 +486,11 @@ class MetricAlarmDisplay extends Component {
                         }
                         {
                             this.state.subscriptionProtocol.length > 0?
-                                 <input type="submit" value="Add" style = {{float:'right',backgroundColor:"#5388FF",color:'white',border:0}}/>:null
+                                 <input type="submit" value="Add" className = 'submitButton'/>:null
                         }
                         {
                             this.state.attachedEndpoints === true?
-                                <div><span style = {{backgroundColor:'green', color:'white'}}>Add Endpoints successfully</span></div>: null
+                                <div><span className = 'addEndpoint'>Add Endpoints successfully</span></div>: null
                         }
                             
                           </form>
@@ -488,14 +498,13 @@ class MetricAlarmDisplay extends Component {
                           </Form>
                   </ModalBody>
                   <ModalFooter>
-                      <Button style = {{backgroundColor:"#5388FF",color:'white',border:0,height:40}} onClick = {(e) => this.toggleModalAndSubscribe(e,1)}>Subscribe</Button>
+                      <Button className = 'subscribe' onClick = {(e) => this.toggleModalAndSubscribe(e,1)}>Subscribe</Button>
                       <Button style ={{height : 40}} color="secondary" onClick = {(e) => this.toggleModalAndSubscribe(e,0)}> Cancel </Button>
                   </ModalFooter>
               </Modal> 
-
               <Modal isOpen = {this.state.showSubscribedTopicsOfAlarms} toggle = {this.showSubscribedTopicsOfAlarms}>
-                    <ModalHeader style = {{backgroundColor:'#5388FF'}}><span style = {{color : 'white'}}>Topic Detail Of {this.state.alert.AlarmName}</span></ModalHeader>
-                  <ModalBody>
+                    <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Topic Detail Of {this.state.alert.AlarmName}</span></ModalHeader>
+                    <ModalBody>
                         <Table striped bordered hover size="sm">
                             <thead>
                                 <tr>
@@ -509,7 +518,7 @@ class MetricAlarmDisplay extends Component {
                                         return(
                                             <tr>
                                                 <td>{item.split(':')[item.split(':').length-1]}</td>
-                                                <td><Button className = 'button_a' onClick = {()=>this.unsubscribeTopics(i)}>Unsubscribe</Button></td>
+                                                <td><Button className = 'button_a' onClick = {() => this.unsubscribeTopics(i)}>Unsubscribe</Button></td>
                                             </tr>
                                         )
                                     })

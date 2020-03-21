@@ -10,7 +10,9 @@ class MyAlarms extends Component {
     }
     render() {
         return (
-            <Card>My Alarm comp</Card>
+            <Card>My Alarm comp
+                
+            </Card>
         )
     }
 }
