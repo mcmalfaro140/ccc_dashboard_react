@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
 import {Line} from 'react-chartjs-2';
-import myKeys from '../keys.json';
-import '../assets/react-grid/styles.css'
+import myKeys from '../../keys.json';
+import '../../assets/react-grid/styles.css'
 import 'chartjs-plugin-zoom';
 import 'chartjs-plugin-streaming';
 import { Link } from 'react-router-dom';

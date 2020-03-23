@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Card, Col } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import {Form,Button} from 'react-bootstrap';
+import {Form,Button,Table} from 'react-bootstrap';
 import AWS from 'aws-sdk';
 import mykey from '../../keys.json';
 
@@ -20,6 +20,7 @@ class AlarmForm extends Component {
             subscriptionProtocol:[],
             listSubscriptions:null,
             showobj:false,
+            subscribedTopicArn:null,
             logAlarmInput:{
                 AlarmName:null,
                 LogLevelSign:null,
@@ -39,14 +40,12 @@ class AlarmForm extends Component {
         this.addProtocol = this.addProtocol.bind(this);
         this.deleteProtocol = this.deleteProtocol.bind(this);
         this.attachEndpointsToSNSTopic = this.attachEndpointsToSNSTopic.bind(this);
+        
+       
     }
     componentWillMount(){
         this.getLogGroupName();
         this.getSNSTopics();
-    }
-    getTopicARN(e){
-        this.setState({subscribedTopicArn:e.target.value});
-        this.listSubscriptions(e.target.value);
     }
     listSubscriptions(arn){
         let sns = new AWS.SNS();
@@ -56,6 +55,7 @@ class AlarmForm extends Component {
           sns.listSubscriptionsByTopic(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
+                console.log(data);
                 this.setState({listSubscriptions:data.Subscriptions});
             }   
           }.bind(this));
@@ -67,6 +67,7 @@ class AlarmForm extends Component {
             logAlarmInput.LogLevelSign = v;
             return { logAlarmInput };                                
           })
+         
     }
     levelSelection(e){
         let v = e.target.value;
@@ -134,9 +135,61 @@ class AlarmForm extends Component {
             logAlarmInput.SNS_Selection = v;
             return { logAlarmInput };                                
           })
-          this.setState({subscribedTopicArn:e.target.value});
-          this.listSubscriptions(e.target.value);
+          this.setState({subscribedTopicArn:v});
+          this.listSubscriptions(v);
     }
+    attachEndpointsToSNSTopic(e){
+        e.preventDefault();
+        let sns = new AWS.SNS();
+        this.state.subscriptionProtocol.forEach(protocols =>{
+            var params = {
+                Protocol: protocols.name, /* required */
+                TopicArn: this.state.subscribedTopicArn, /* required */
+                Endpoint: protocols.value,
+                ReturnSubscriptionArn: true
+              };
+              sns.subscribe(params, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else{
+                    this.listSubscriptions(this.state.subscribedTopicArn);
+                }   
+              }.bind(this));
+        })
+    }
+    addProtocol(){
+        this.setState({subscriptionProtocol:[...this.state.subscriptionProtocol,{name:'',id:'',value:''}]})
+    }
+    protocolOption(e,index){
+        let arr = this.state.subscriptionProtocol;
+        let obj = {name: e.target.value, id : index, value:""};
+        arr[index] = obj;
+        this.setState({subscriptionProtocol:arr});
+      
+    }
+    protocolValue(e,index){
+        let arr = this.state.subscriptionProtocol;
+        arr.map(elem=>{
+            if(elem.id === index){
+                elem.value = e.target.value;
+            }
+            return arr;
+        })
+        this.setState({subscriptionProtocol:arr});
+    }
+    unsubscribe(e,subscribedTopicArn,topicArn){
+        //  this.setState({subscription: false});
+          e.preventDefault();
+          let sns = new AWS.SNS();
+          var params = {
+              SubscriptionArn: subscribedTopicArn /* required */
+            };
+            sns.unsubscribe(params, function(err, data) {
+              if (err) console.log(err, err.stack); // an error occurred
+              else   { 
+                  this.listSubscriptions(topicArn);
+              }
+            }.bind(this));
+      }
     logGroupSelection(i){
         if(this.state.isSelectAll === true){
             newArr = this.state.logGroupNames;
@@ -172,45 +225,7 @@ class AlarmForm extends Component {
               })
         }
     }
-    attachEndpointsToSNSTopic(e){
-        e.preventDefault();
-        let sns = new AWS.SNS();
-        this.state.subscriptionProtocol.forEach(protocols =>{
-            var params = {
-                Protocol: protocols.name, /* required */
-                TopicArn: this.state.subscribedTopicArn, /* required */
-                Endpoint: protocols.value,
-                ReturnSubscriptionArn: true
-              };
-              sns.subscribe(params, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
-                else{
-                    this.listSubscriptions(this.state.subscribedTopicArn);
-                    this.setState({attachedEndpoints:true});
-                }   
-              }.bind(this));
-        })
-    }
-    addProtocol(){
-        this.setState({subscriptionProtocol:[...this.state.subscriptionProtocol,{name:'',id:'',value:''}]})
-    }
-    protocolOption(e,index){
-        let arr = this.state.subscriptionProtocol;
-        let obj = {name: e.target.value, id : index, value:""};
-        arr[index] = obj;
-        this.setState({subscriptionProtocol:arr});
-      
-    }
-    protocolValue(e,index){
-        let arr = this.state.subscriptionProtocol;
-        arr.map(elem=>{
-            if(elem.id === index){
-                elem.value = e.target.value;
-            }
-            return arr;
-        })
-        this.setState({subscriptionProtocol:arr});
-    }
+   
     showObj(){
         this.setState({showobj:!this.state.showobj})
         console.log(this.state.logAlarmInput);
@@ -241,6 +256,7 @@ class AlarmForm extends Component {
                         
                        <Col>
                             <Form.Control as="select" onChange={this.signSelection}>
+                                <option disabled selected>Select</option>
                                 <option value ="<">&lt;</option>
                                 <option value = '>'>&gt;</option>
                                 <option value = '≤'>≤</option>
@@ -249,6 +265,7 @@ class AlarmForm extends Component {
                        </Col> 
                        <Col>
                             <Form.Control as="select" onChange={this.levelSelection}>
+                                <option disabled selected>Select</option>
                                 <option value = 'ERROR'>ERROR</option>
                                 <option value = 'WARN'>WARN</option>
                                 <option value = 'INFO'>INFO</option>
@@ -323,18 +340,54 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <Form.Label>Pick an SNS: </Form.Label>
-                    <Form.Control as="select" className = 'form_input' onChange = {this.snsSelection}>
+                    <Form.Control as="select" className = 'form_input' onChange = {(e) => this.snsSelection(e)}>
+                        <option disabled selected>Make Selection</option>
                         {
                             this.state.topicArns.map(item=>{
                                 return(
-                                <option value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
+                                    <option value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
                                 )
                             })
                         }
                                
                     </Form.Control>    
                 </Form.Group>
+                <Form.Group>
+                {
+                            this.state.listSubscriptions != null&& this.state.listSubscriptions.length > 0?  
+                              <div className = 'scrolling'>
+                                    <Form.Label>Subscribed Endpoints of the topic: {this.state.subscribedTopicArn.split(':')[this.state.subscribedTopicArn.split(':').length-1]}</Form.Label>
+                                    <Table striped bordered hover size="sm">
+                                         <thead>
+                                            <tr>
+                                                <th>Protocol</th>
+                                                <th>Endpoint</th>
+                                                <th>Owner</th>
+                                                <th>SubscriptionArn</th>
+                                                <th>TopicArn</th>
+                                                <th>Action</th>
+                                            </tr> 
+                                        </thead>
+                                        <tbody>
+                                            { this.state.listSubscriptions.map((item,i)=>{
+                                                return(
+                                                    <tr>
+                                                        <td>{item.Protocol}</td>
+                                                        <td>{item.Endpoint}</td>
+                                                        <td>{item.Owner}</td>
+                                                        <td>{item.SubscriptionArn}</td>
+                                                        <td>{item.TopicArn}</td>
+                                                        <td><Button className = 'button_a' onClick = {(e) => this.unsubscribe(e,item.SubscriptionArn,item.TopicArn)}>Remove</Button></td>
+                                                    </tr>
+                                                )
+                                                     })
+                                                 }
+                           </tbody>
+                            </Table> 
+                            </div> 
+                            :null}
 
+                </Form.Group>
                 <Form.Group>
                     <Button className = 'button_a' style = {{float:'right'}} onClick = {this.addProtocol}>Add Subscription Endpoint</Button>
                 </Form.Group>

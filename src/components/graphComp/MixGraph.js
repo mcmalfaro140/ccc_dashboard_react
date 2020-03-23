@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import myKeys from '../keys.json';
+import myKeys from '../../keys.json';
 import {Bar} from 'react-chartjs-2';
 import 'chartjs-plugin-zoom';
 import { Link } from 'react-router-dom';

@@ -1,18 +1,18 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Row, Card, CardBody, Modal } from 'reactstrap';
-import LineGraph from '../components/LineGraph'
+import LineGraph from '../components/graphComp/LineGraph'
 import LogWarn from '../components/LogWarn'
 import NightlyTasks from '../components/NightlyTask'
 import ServerStatus from '../components/ServerStatus'
-import BarGraph from '../components/BarGraph';
-import MixGraph from '../components/MixGraph';
+import BarGraph from '../components/graphComp/BarGraph';
+import MixGraph from '../components/graphComp/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import LogReport from '../components/logRepotComp'
-import GraphForm from '../components/graphForm';
-import MixGraphForm from '../components/MixGraphForm'
+import GraphForm from '../components/graphComp/graphForm';
+import MixGraphForm from '../components/graphComp/MixGraphForm'
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
