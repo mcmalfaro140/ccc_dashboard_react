@@ -6,74 +6,136 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
-
-
-
 class LogAlerts extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMyAlarms : true,
-            isAlarms : false,
-            isCreateAlarm : false
+            myAlarms_Set: [],
+            dummy_alerts : [
+                {
+                    name: "My Alarm Name",
+                    filter: "Logs > WARN",
+                    isSubscribe: true,
+                    sns_topic: [
+                        "SNS Topic 1",
+                        "SNS Topic 2",
+                        "SNS Topic 3",
+                        "SNS Topic 4",
+                    ],
+                    log_groups: [
+                        "LogGroupName 1",
+                        "LogGroupName 2",
+                        "LogGroupName 3",
+                        "LogGroupName 4",
+                        "LogGroupName 5",
+                        "LogGroupName 6",
+                        "LogGroupName 7",
+                    ]
+                },
+                {
+                    name: "My Alarm Name 2",
+                    filter: "Logs > WARN",
+                    isSubscribe: false,
+                    sns_topic: [
+                        "SNS Topic 1",
+                        "SNS Topic 2",
+                        "SNS Topic 3",
+                        "SNS Topic 4",
+                    ],
+                    log_groups: [
+                        "LogGroupName 1",
+                        "LogGroupName 2",
+                        "LogGroupName 3",
+                        "LogGroupName 4",
+                        "LogGroupName 5",
+                        "LogGroupName 6",
+                        "LogGroupName 7",
+                    ]
+                },
+                {
+                    name: "My Alarm Name 3",
+                    filter: "Logs > WARN",
+                    isSubscribe: true,
+                    sns_topic: [
+                        "SNS Topic 1",
+                        "SNS Topic 2",
+                        "SNS Topic 3",
+                        "SNS Topic 4",
+                    ],
+                    log_groups: [
+                        "LogGroupName 1",
+                        "LogGroupName 2",
+                        "LogGroupName 3",
+                        "LogGroupName 4",
+                        "LogGroupName 5",
+                        "LogGroupName 6",
+                        "LogGroupName 7",
+                    ]
+                },
+                {
+                    name: "My Alarm Name 4",
+                    filter: "Logs > WARN",
+                    isSubscribe: false,
+                    sns_topic: [
+                        "SNS Topic 1",
+                        "SNS Topic 2",
+                        "SNS Topic 3",
+                        "SNS Topic 4",
+                    ],
+                    log_groups: [
+                        "LogGroupName 1",
+                        "LogGroupName 2",
+                        "LogGroupName 3",
+                        "LogGroupName 4",
+                        "LogGroupName 5",
+                        "LogGroupName 6",
+                        "LogGroupName 7",
+                    ]
+                }
+            ]
         }
-        this.setComp = this.setComp.bind(this);
     }
 
-    setComp(id){
-        if(id === '0'){
-            this.setState({isMyAlarms: true, isAlarms: false, isCreateAlarm: false})
-        }else if(id === '1'){
-            this.setState({isMyAlarms: false, isAlarms: true, isCreateAlarm: false})
-        }else{
-            this.setState({isMyAlarms: false, isAlarms: false, isCreateAlarm: true})
-        }
+    componentDidMount(){
+        let temp = this.state.dummy_alerts
+        let temp2 = []
+        temp.forEach(element => {
+            if(element.isSubscribe){
+                temp2.push(element)
+            }
+        });
+        this.setState({myAlarms_Set:temp2})
     }
+
     render() {
         return (
           <div >
               <div className="log_alerts">
-                  {/* <ul>
-                      <li onClick={()=> this.setComp(0)}>My Alarms | </li>
-                      <li onClick={()=> this.setComp(1)}>Existing Alarms | </li>
-                      <li onClick={()=> this.setComp(2)}>Create New Alarm</li>
-                  </ul> */}
                  <Tabs >
-                    <TabList className = 'log_tab'>
+                    <TabList>
                     <Tab >My Alarms</Tab>
                     <Tab >Existing Alarms</Tab>
                     <Tab> Create New Alarm</Tab>
                     </TabList>
                 
                     <TabPanel>
-                        <div className = 'innerM'>
-                            <MyAlarms/>
+                        <div>
+                            <MyAlarms alarms={this.state.myAlarms_Set}/>
                         </div>
                     </TabPanel>
                     <TabPanel>
-                        <div className = 'innerM'>
-                            <ExistingAlarms/>
+                        <div>
+                            <ExistingAlarms alarms={this.state.dummy_alerts}/>
                         </div>
                     </TabPanel>
                     <TabPanel>
-                        <div className = 'innerM'>
+                        <div>
                             <AlarmForm/>
                         </div>    
                     </TabPanel>
                 </Tabs>
 
               </div>
-              {/* { this.state.isMyAlarms ? (
-                <div>
-                    <MyAlarms/>
-                </div>
-              ) : (
-                <div>
-                    {this.state.isAlarms ? (<ExistingAlarms/>) : (<AlarmForm/>)}
-                </div>
-              )} */}
-              
-              
           </div>
         )
     }

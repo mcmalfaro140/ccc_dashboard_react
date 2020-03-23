@@ -6,7 +6,6 @@ import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow} from 
 
 
 
-
 const LogWarningSystemHealth = () => {
     
     const {WarningReport} = useContext (LogContext)
