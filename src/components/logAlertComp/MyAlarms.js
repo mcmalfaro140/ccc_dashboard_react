@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Card, Col } from 'reactstrap';
+import Items from '../logAlertComp/Items'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
 class MyAlarms extends Component {
@@ -8,11 +8,10 @@ class MyAlarms extends Component {
         this.state = {
         }
     }
+
     render() {
         return (
-            <Card>My Alarm comp
-                
-            </Card>
+            <Items alarms={this.props.alarms}/>
         )
     }
 }
