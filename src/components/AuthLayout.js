@@ -2,9 +2,9 @@ import React, { Component, Suspense } from "react";
 import { Container} from 'reactstrap';
 import { connect } from 'react-redux';
 import { Modal} from 'reactstrap';
-import GraphForm from '../components/graphForm';
+import GraphForm from '../components/graphComp/graphForm';
 import { getLoggedInUser } from '../helpers/authUtils';
-import MixGraphForm from '../components/MixGraphForm';
+import MixGraphForm from '../components/graphComp/MixGraphForm';
 
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
 

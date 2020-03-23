@@ -6,7 +6,7 @@ import { Button, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Row, Col } from 'reactstrap';
 import { SketchPicker } from 'react-color'
 import Switch from "react-switch";
-import '../assets/react-grid/styles.css'
+import '../../assets/react-grid/styles.css'
 import ReactLightCalendar from '@lls/react-light-calendar'
 import '@lls/react-light-calendar/dist/index.css' // Default Style
 

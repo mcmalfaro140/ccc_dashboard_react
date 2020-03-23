@@ -1,18 +1,18 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Row, Card, CardBody, Modal , Col} from 'reactstrap';
-import LineGraph from '../components/LineGraph'
-import BarGraph from '../components/BarGraph';
-import MixGraph from '../components/MixGraph';
+import LineGraph from '../components/graphComp/LineGraph'
+import BarGraph from '../components/graphComp/BarGraph';
+import MixGraph from '../components/graphComp/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
-import MixGraphForm from '../components/MixGraphForm';
+import MixGraphForm from '../components/graphComp/MixGraphForm';
 
 import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 
-import GraphForm from '../components/graphForm';
+import GraphForm from '../components/graphComp/graphForm';
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';

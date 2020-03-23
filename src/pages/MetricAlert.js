@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import AWS from 'aws-sdk';
 import { Row, Card, Col } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import MetricAlarmDisplay from '../components/MetricAlarmDisplay';
+import MetricAlarmDisplay from '../components/metricAlarmComp/MetricAlarmDisplay';
 
 class MetricAlert extends Component {
     constructor(props) {
