@@ -1,14 +1,73 @@
 .log_alerts{
     background-color: white;
+    margin: 2%;
+    >div{
+        box-shadow: 0 0 15px 0 rgba(111, 113, 116, 0.486);
+        padding-bottom: 2%;
+        >ul{
+            margin-left: 0%;
+            background-color: #ebeff2;
+            color:black;
+            border:none;
+            >li{
+                border: none;
+                font-size: 130%;
+                font-weight: 500;
+                padding-left: 3%;
+                padding-right: 3%;
+                padding-top: 1%;
+            }
+        }
+        >div{
+            margin: 3%;
+        }
+    }
    
 }
+<<<<<<< HEAD
 .log_tab{
     background-color: blue;
     color:white;
+=======
+
+.my_alarms{
+    >div{
+        border: 1px solid rgb(184, 181, 181);
+        border-radius: 20px;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        padding: 3%;
+        >div:nth-child(1){
+            >div:nth-child(1){
+                color: blue;
+                font-size: 320%;
+            }
+            >div{
+                >div:nth-child(1){
+                    padding-top: 3%;
+                    font-size: 150%;
+                    font-weight: 650%;
+                    color: black;
+                }
+                >div:nth-child(2){
+                    font-size: 120%
+                }
+            }
+            >div:nth-child(5){
+                >button{
+                    margin-top: 8%;
+                    float: right;
+                }
+            }
+        }
+    }
+>>>>>>> log alerts items comp
 }
-.innerM{
-    padding: 0px 10px 10px 10px;
+.alarm_off{
+    color: grey;
 }
+
+
 .log_tab_width{
    
     display: inline;
