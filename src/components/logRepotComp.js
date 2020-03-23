@@ -2,7 +2,7 @@ import React from 'react';
 import AWS from 'aws-sdk';
 import ReactDOM from 'react-dom';
 import mykey from '../keys.json';
-import { Row, Col, Popover,PopoverBody,PopoverHeader} from 'reactstrap';
+import { Row, Col, Popover,PopoverBody,PopoverHeader, Card , Button, ListGroup,ListGroupItem} from 'reactstrap';
 import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow} from '@material-ui/core';
 
 
@@ -16,6 +16,7 @@ class logReportComp extends React.Component {
         this.state = {
             id: 0,
             isOpen : false,
+            logErrorOpener : true,
             loading: true,
             showLogTable: false,
             keyword : "",
@@ -31,7 +32,8 @@ class logReportComp extends React.Component {
         this.searchByLogGroupName = this.searchByLogGroupName.bind(this);
         this.toggle = this.toggle.bind(this);
         this.handleClick = this.handleClick.bind(this);
-
+       this.defaultIcon = this.defaultIcon.bind(this);
+       this.displayLogGroupCard = this.displayLogGroupCard.bind(this);
     }
 
     componentDidMount() {
@@ -118,22 +120,48 @@ handleClick(id){
     let iconid = "iconerror" + id;
     let row = document.getElementById(rowid);
     let icon = document.getElementById(iconid);
-    if(ReactDOM.findDOMNode(element).style.visibility === "collapse"){
-        ReactDOM.findDOMNode(row).classList.add("color")
-        ReactDOM.findDOMNode(element).classList.add("color")
-        ReactDOM.findDOMNode(element).style.visibility = "visible"
-        ReactDOM.findDOMNode(icon).classList.add("down")
-    }else{
-        ReactDOM.findDOMNode(element).style.visibility = "collapse"
-        ReactDOM.findDOMNode(row).classList.remove("color")
-        ReactDOM.findDOMNode(icon).classList.remove("down")
-    }
+    // if(ReactDOM.findDOMNode(element).style.visibility === "collapse"){
+    //     ReactDOM.findDOMNode(row).classList.add("color")
+    //     ReactDOM.findDOMNode(element).classList.add("color")
+    //     ReactDOM.findDOMNode(element).style.visibility = "visible"
+    //     ReactDOM.findDOMNode(icon).classList.add("down")
+    // }else{
+    //     ReactDOM.findDOMNode(element).style.visibility = "collapse"
+    //     ReactDOM.findDOMNode(row).classList.remove("color")
+    //     ReactDOM.findDOMNode(icon).classList.remove("down")
+    // }
 }
 
+defaultIcon = () => {
 
+    return (
+        <Col style={{ margin:'0%'}} id = "popoverCard"  onClick = {() => this.setState({logErrorOpener: !this.state.logErrorOpener})}>
+
+                <Row  style={{display: 'flex',  justifyContent:'center', color:'black', fontSize:'140%', fontWeight: '500', fontFamily : 'sans-Serif' }}>Log Errors</Row>
+                <Row style={{display: 'flex',  justifyContent:'center',color:'red', fontSize:'250%' }}> <span style={{padding:'-1%' }}>{this.state.resultCount}</span> <i style={{padding:'1%'}} class="fas fa-exclamation-triangle"></i></Row>
+                <Row style={{display: 'flex',  justifyContent:'center', color:'red', fontSize:'100%'}}>Errors Found</Row>
+        </Col>
+    )
+
+}
+
+displayLogGroupCard = () => {
+
+    return (
+        <div>
+           
+           <p>This is expanded data from log group name</p>
+
+        </div>
+
+
+
+
+    )
+
+}
 
     render() {
-        // console.log(this.state.results)
 
         const cell = this.state.results.map((item, i) => {
             let objKeys = Object.keys(item.events)
@@ -143,55 +171,85 @@ handleClick(id){
           let iconid = "iconerror" + i;
        
             return(
-                <TableBody className="tablesaw tablesaw-stack">
-                    <TableRow  id={strid} hover onClick={() => this.handleClick(i)} className="table_logs_cell">
-                    <TableCell><i id={iconid} className="mdi mdi-menu-right"></i></TableCell>
-                    <TableCell style={{align : 'right', color:'black', fontFamily : 'sans-Serif'}}>
+            <TableBody class="tablesaw tablesaw-stack">
+                <TableRow  id={strid} hover onClick={() => this.handleClick(i)} className="table_logs_cell">
+                    
+                    <TableCell style={{color:'black', fontFamily : 'sans-Serif'}} ><i id={iconid} class="mdi mdi-menu-right" ></i>
                      {item.logGroupName}
+                    </TableCell>
+
+                    <TableCell style={{color:'black',fontFamily : 'sans-Serif'}}> {this.state.results[i].events.length}
                     </TableCell>
                     
                     </TableRow>
-                    <TableRow id={i} style={{visibility:'collapse'}}>
-                        {/* <TableCell> */}
-                            <TableBody>
-                               <TableRow>
-                                    <TableCell className="hid_cell" style={{color:'black',fontFamily : 'sans-Serif'}}> {this.state.results[i].events.length}
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        {/* </TableCell> */}
-                    </TableRow>
-                </TableBody>
+                   
+            </TableBody>
             )
         })
+    
 
         return(
            
 
-            <div style={{ marginLeft:'10%'}}>
+            <div style={{ marginLeft:'10%'}} >
            
-                <Col style={{ margin:'0%'}} id = "popoverCard" >
+                { this.state.logErrorOpener ? (
 
-                <Row style={{display: 'flex',  justifyContent:'center', color:'black', fontSize:'140%', fontWeight: '500', fontFamily : 'sans-Serif' }}>Log Errors</Row>
-                <Row style={{display: 'flex',  justifyContent:'center',color:'red', fontSize:'250%' , marginTop:'-7%'}}> <span style={{padding:'1%' , marginTop:'-5%'}}>{this.state.resultCount}</span> <i style={{padding:'1%'}} className="fas fa-exclamation-triangle"></i></Row>
-                <Row style={{display: 'flex',  justifyContent:'center', color:'red', fontSize:'100%', marginTop:'-7%'}}>Errors Found</Row>
-                </Col>
+                    this.defaultIcon()
+
+                ):  (
+
+                       
+
+                        <div style={{ marginLeft:'-10%'}} id = "expandedLogErrorCard">
+                            {/* Displays the error number with a card dropping down for errors in the log group */}
+                            <div style={{ marginLeft:'0%'}} >
+
+                            <Col style={{ marginLeft:'-10%'}} id = "popoverCard"  onClick = {() => this.setState({logErrorOpener: !this.state.logErrorOpener})}>
+
+                            <Row  style={{display: 'flex',  justifyContent:'left', color:'black', fontSize:'140%', fontWeight: '500', fontFamily : 'sans-Serif' }}>Log Errors</Row>
+                            <Row style={{display: 'flex',  justifyContent:'left',color:'red', fontSize:'250%' }}> <span style={{padding:'-1%'}}>{this.state.resultCount}</span> <i style={{padding:'1%'}} class="fas fa-exclamation-triangle"></i></Row>
+                            <Row style={{display: 'flex',  justifyContent:'left', color:'red', fontSize:'100%'}}>Errors Found</Row>
+                            </Col>                    
+                            </div>
+                            
+
+                        
+                            <div style={{ marginLeft:'-10%'}}>
+                                <Card>
+                                
+                                    <TableContainer >
+
+                                <Table className="table_logs_header" aria-label="spanning table"> 
+                                        <TableHead onClick = {() => this.setState({logErrorOpener : !this.state.logErrorOpener})}>
+                                        <TableRow >
+
+                                    <TableCell style = {{fontFamily : 'sans-Serif'}}>Errors Found In</TableCell>
+                                        <TableCell></TableCell>
+
+                                        </TableRow>
+                                    </TableHead>
+                                        {cell}
+                                </Table>
+                                    
+                                </TableContainer >
+
+                                </Card>
+
+                            </div>
+                                        
+
+                            </div>
+
+                    )
+
+                }
+               
+                {/* <Popover placement="right" isOpen={this.state.isOpen} target="popoverCard" id = "popoverCard"> */}
+
                 
-                <Popover placement="right" isOpen={this.state.isOpen} target="popoverCard" toggle={this.toggle}>
-                <TableContainer >
-
-                    <Table className="table_logs_header" aria-label="spanning table"> 
-                        <TableHead>
-                            <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell style = {{align : "right" ,fontFamily : 'sans-Serif'}}>Errors Found In</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        {cell}
-                    </Table>
-                    </TableContainer >
-
-                </Popover>
+       
+                {/* </Popover> */}
 
 
             </div>
