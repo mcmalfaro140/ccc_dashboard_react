@@ -17,8 +17,6 @@ class MetricAlert extends Component {
            alerts:[],
           }
         this.returnMetricAlarms = this.returnMetricAlarms.bind(this);
-        this.showAlertDetails = this.showAlertDetails.bind(this);
-        this.toggle = this.toggle.bind(this);
        
     }
     componentDidMount(){
