@@ -15,27 +15,14 @@ class MetricAlert extends Component {
         super(props);
         this.state = {
            alerts:[],
-           showAlertDetails:false,
-           isOpen:false,
-           subscription: false,
           }
         this.returnMetricAlarms = this.returnMetricAlarms.bind(this);
         this.showAlertDetails = this.showAlertDetails.bind(this);
         this.toggle = this.toggle.bind(this);
-        this.subscribe = this.subscribe.bind(this);
        
     }
     componentDidMount(){
         this.returnMetricAlarms();
-    }
-    subscribe(){
-        this.setState({subscription: !this.state.subscription});
-    }
-    showAlertDetails(){
-        this.setState({showAlertDetails:!this.state.showAlertDetails});
-    }
-    toggle(){
-        this.setState({isOpen: !this.state.isOpen});
     }
     returnMetricAlarms(){
         let alertsArr = this.state.alerts;
