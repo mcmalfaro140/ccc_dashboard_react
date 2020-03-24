@@ -521,7 +521,7 @@ class MetricAlarmDisplay extends Component {
                   </ModalFooter>
               </Modal> 
               <Modal isOpen = {this.state.showSubscribedTopicsOfAlarms} toggle = {this.showSubscribedTopicsOfAlarms}>
-                    <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Topic Detail Of {this.state.alert.AlarmName}</span></ModalHeader>
+                    <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscribed Topic/s of {this.state.alert.AlarmName}</span></ModalHeader>
                     <ModalBody>
                         <Table striped bordered hover size="sm">
                             <thead>
