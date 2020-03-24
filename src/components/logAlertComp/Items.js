@@ -34,9 +34,9 @@ class Items extends Component {
                         </Col>
                         <Col xs="2">
                             {element.isSubscribe ? 
-                                <Button color="danger" block>Unsubscribe</Button>
+                                <Button color="danger" block><i class="far fa-bell-slash"></i>Unsubscribe</Button>
                                 :
-                                <Button color="primary" block>Subscribe</Button>}
+                                <Button color="primary" block><i class="far fa-bell"></i>Subscribe</Button>}
                             
                         </Col>
                     </Row>
