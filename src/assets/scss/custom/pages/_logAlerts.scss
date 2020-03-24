@@ -57,6 +57,7 @@
         }
     }
 }
+
 .alarm_off{
     color: grey;
 }
@@ -79,12 +80,19 @@
     font-size: small;
     padding-left: 5px;
 }
-.form_input{
-   
+.remove_div{
+    float:right;
+}
+.remove_label{
+    margin-bottom: -10px;
+}
+.remove_icon_div{
+    margin-left: 10px;
 }
 .subscribe_but{
     background-color: rgb(215, 100, 139);
     border-radius: 20px;
+    width: 30%;
 }
 .subscribe_div{
     justify-content: center;

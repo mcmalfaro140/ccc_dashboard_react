@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import { Row,CardBody,CardTitle,CardSubtitle,Button, Col,PopoverBody,Popover, PopoverHeader,Modal,ModalHeader,ModalBody,ModalFooter } from 'reactstrap';
+import { Row,Button, Col,Modal,ModalHeader,ModalBody,ModalFooter } from 'reactstrap';
 import {Form} from 'react-bootstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import {Checkmark} from 'react-checkmark';
@@ -304,41 +304,58 @@ class MetricAlarmDisplay extends Component {
         return (
           <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-            <CardBody style={{overflow:'hidden'}}>
-                <CardTitle>    
-                    <h1 className = 'h1Size'>{this.state.alert.AlarmName} </h1>
-                </CardTitle>
+            
+                  
+                   
+                
                 <Row>
-                    <Col>
-                        <CardSubtitle>
-                            <p className = 'margin'><span style ={{backgroundColor:this.state.color, color: 'white',fontSize : window.innerWidth/100,paddingLeft:5, paddingRight:5}}>Status: {this.state.alert.StateValue}</span></p>
-                            <p className = 'margin'><span className = 'fontSize'>{this.state.alert.Namespace}</span></p>
-                            <p className = 'margin'><span className = 'fontSize'>{this.state.alert.MetricName}</span></p>
-                            <p className = 'margin'><Button className = 'button_a' onClick = {this.showSubscribedTopicsOfAlarms}><span className = 'fontSize'>Subscribed Topics</span></Button></p>
-                            <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
+                    <Col xs = "1">
+                        {this.state.subscription === true?
+                        <Checkmark size = 'large' />
+                         :
+                         <i className="mdi mdi-alarm-check alarm_off" style = {{fontSize:'400%'}}></i>}
+                    </Col>
+                    <Col xs = "3">
+                        <Row><h2>{this.state.alert.AlarmName}</h2></Row>
+                        <Row><span style ={{backgroundColor:this.state.color, color: 'white',fontSize : window.innerWidth/100,paddingLeft:5, paddingRight:5}}>Status: {this.state.alert.StateValue}</span></Row>
+                        <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.Namespace}</span></p></Row>
+                        <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.MetricName}</span></p></Row>
+                        <Row><p className = 'margin'>
+                            <a className= "waves-effect side-nav-link-ref" onClick={this.showSubscribedTopicsOfAlarms} >
+                            <p className = 'margin'><span className = 'fontSize'>Subscribed Topics {this.state.showSubscribedTopicsOfAlarms === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
+                            </a>
+                            </p>
+                        </Row>    
+                        <Row> <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
                             <p className = 'margin'><span className = 'fontSize' id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
-                            </a>           
-                        </CardSubtitle>
-                     </Col>
-                     <Col>
-                     <div >{this.state.subscription === true? <Checkmark size = 'large' />:null}</div> 
-                     </Col>
+                            </a></Row>    
+                    </Col>
+             <Col xs = "3">
+                <Row>
+                   <h3>Pattern:</h3>
                 </Row>
-            <p className = 'margin'><span><h5>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</h5></span></p>
-            <p className = 'description'> Description: {this.state.alert.AlarmDescription}</p>
-           <div className = 'button_align'>
-               {/* {this.state.subscription === false?
-               <Button style ={{backgroundColor:'blue',color:'white',borderRadius: '12px',width:window.innerWidth/8,maxWidth:'100%'}} onClick = {this.openSubscriptionDetails}>Subscribe</Button>
-               : */}
-               <div class="btn-group btn-group-sm">
-                    <div class="btn-group">
-                        <Button style ={{backgroundColor:'#B0B0B0',color:'white',borderRadius:'10px 0px 0px 10px',borderWidth:0, padding: '5px 10px'}} onClick = {this.showSubscribedTopicsOfAlarms}><i class="far fa-bell-slash"></i>Unsubscribe</Button>
+                <Row>
+                    <span>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</span>
+                </Row>
+             </Col> 
+             <Col>
+                <Row><h3>Description: </h3></Row>
+                <Row>{this.state.alert.AlarmDescription}</Row>
+             </Col> 
+             <Col>
+             <div>
+                    <div className = 'div_margin' >
+                        <Button color = "danger" onClick = {this.showSubscribedTopicsOfAlarms} block><i class="far fa-bell-slash"></i>Unsubscribe</Button>
                     </div>
-                    <div class="btn-group">
-                        <Button style ={{backgroundColor:'blue',color:'white', borderRadius:'0px 10px 10px 0px',borderWidth:0,padding: '5px 10px'}} onClick = {this.openSubscriptionDetails}><i class="far fa-bell"></i>Subscribe</Button>
+                    <div>
+                        <Button color = "primary"onClick = {this.openSubscriptionDetails} block><i class="far fa-bell"></i>Subscribe</Button>
                     </div>
                 </div>  
-            </div>
+         
+             </Col>
+         
+
+            </Row>
               <Modal isOpen = {this.state.isOpen} toggle = {this.toggle}>
                 <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Alarm Information</span></ModalHeader>
                     <ModalBody>
@@ -471,13 +488,14 @@ class MetricAlarmDisplay extends Component {
                                                 </div>  
                                             </Col>
                                             <Col xs={2}>
-                                                <div>
-                                                    <label>Remove</label>
-                                                </div>
-                                                <div>
-                                                    {/* <i class = "mdi mdi-delete-circle" onClick = {() =>this.deleteProtocol(index)}></i> */}
-                                                   <Button className = 'removes' onClick = {() =>this.deleteProtocol(index)}> <i class = "mdi mdi-delete-forever"></i></Button>
-                                                </div>   
+                                                <div className = 'remove_div'>
+                                                    <div className = 'remove_label'>
+                                                        <label>Remove</label>
+                                                    </div>
+                                                    <div className = 'remove_icon_div'>
+                                                    <i class = "mdi mdi-delete-variant" style = {{fontSize:'200%',color:'black'}} onClick = {() =>this.deleteProtocol(index)}></i>
+                                                    </div> 
+                                                </div>  
                                             </Col>
                                         </Row>
                                     </>
@@ -486,7 +504,7 @@ class MetricAlarmDisplay extends Component {
                         }
                         {
                             this.state.subscriptionProtocol.length > 0?
-                                 <input type="submit" value="Add" className = 'submitButton'/>:null
+                                 <input type="submit" value="Add Endpoint/s" className = 'submitButton1'/>:null
                         }
                         {
                             this.state.attachedEndpoints === true?
@@ -530,7 +548,7 @@ class MetricAlarmDisplay extends Component {
                       <Button style ={{height : 40}} color="secondary" onClick = {this.showSubscribedTopicsOfAlarms}> Close </Button>
                   </ModalFooter>
               </Modal>
-             </CardBody>
+             
            </div>
    
         )

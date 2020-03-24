@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import { Row, Card, Col } from 'reactstrap';
+import { Row, Card, Col,CardDeck } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetricAlarmDisplay from '../components/metricAlarmComp/MetricAlarmDisplay';
+import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
+
+
 
 class MetricAlert extends Component {
     constructor(props) {
@@ -78,18 +84,44 @@ class MetricAlert extends Component {
 
         const item = this.state.alerts.map((item,i) =>{
             return(
-                <Col style={{ width: window.innerWidth/4}}>
-                    <Card style = {{ height: window.innerHeight/2,minWidth:'250px',minHeight:'280px',borderColor:'grey',borderWidth:1}}>
-                    <MetricAlarmDisplay {...item} id = {i}></MetricAlarmDisplay>
-                    </Card> 
-                </Col>         
+
+                      <MetricAlarmDisplay {...item} id = {i}></MetricAlarmDisplay>
+
             )
         }
     )
         return (
-            <Row className="metricAlerts_page"> 
-                    {item}
-            </Row>
+            
+         <div>
+            <div className="log_alerts">
+               <Tabs >
+                  <TabList>
+                  <Tab >My Metric Alarms</Tab>
+                  
+                  </TabList>
+              
+                  <TabPanel>
+                      <div>
+                      <Card className = 'my_alarms'>
+                        {item}
+                    </Card>
+                      </div>
+                  </TabPanel>  
+              </Tabs>
+
+            </div>
+        </div>
+              
+             
+                      
+                          
+                     
+                     
+         
+     
+
+       
+          
         )
     }
 }
