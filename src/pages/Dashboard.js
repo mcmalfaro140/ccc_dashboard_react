@@ -81,6 +81,10 @@ class DefaultDashboard extends Component {
         }
     }
 
+    componentWillUnmount(){
+        this.props.saveDashboard(this.state.userDashboard);
+    }
+
 
     deleteFunction = (childData) => {
         let newDashboard = this.state.userDashboard;
@@ -224,12 +228,6 @@ class DefaultDashboard extends Component {
 
    
     test(id){
-        // let ob = JSON.parse(this.state.user.dashboard)
-        // let str = JSON.stringify(this.state.dashboard)
-        // // console.log(ob);
-        // console.log(this.state.user)
-        // console.log(this.state.userDashboard)
-        // console.log(id)
         if(id === 'errorComponent'){
             console.log('Error component is being clicked')
 

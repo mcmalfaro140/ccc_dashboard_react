@@ -307,12 +307,14 @@ class MetricAlarmDisplay extends Component {
      })  
         return (
           <div>
+
             <Row>
                 <Col xs = "1">
                     {this.state.subscription === true?
                         <Checkmark size = 'large' />
                          :
-                         <i className="mdi mdi-alarm-check alarm_off" style = {{fontSize:'100%'}}></i>}
+                         <i className="mdi mdi-alarm-check alarm_off" ></i>}
+
                 </Col>
                 <Col xs = "3">
                     <Row><h2>{this.state.alert.AlarmName}</h2></Row>

@@ -55,11 +55,23 @@
                 }
             }
         }
+        >div:nth-child(2){
+            margin-top: 2%;
+            margin-left: 7.5%;
+            margin-bottom: 2%;
+        }
     }
 }
 
 .alarm_off{
     color: grey;
+}
+.pointer{
+    cursor: pointer;
+}
+.pointer:hover{
+    color: red;
+    text-decoration: underline;
 }
 
 

@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { Row, Card, Col, Button } from 'reactstrap';
+import React, { Component, createRef } from 'react';
+import ReactDOM from 'react-dom';
+import { Row, Card, Col, Button, Collapse } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
 class Items extends Component {
@@ -7,12 +8,46 @@ class Items extends Component {
         super(props);
         this.state = {
         }
+        this.handleInfoClick = this.handleInfoClick.bind(this)
     }
+
+    handleInfoClick(id){
+        let build_strid = "alarm-id-" + id
+        let element = document.getElementById(build_strid);
+        let react_ele = ReactDOM.findDOMNode(element);
+        if(react_ele.classList.contains("show")){
+            react_ele.classList.remove("show")
+        }else{
+            react_ele.classList.add("show")
+        }
+       
+    }
+    createSns = (snsArr) => {
+        let sns = [] 
+        snsArr.map((e,i) => {
+            sns.push(
+                <li>{e}</li>
+            )
+        })
+        return sns
+    }
+
+    createLogGroupName = (logNamesArr) => {
+        let logName = [] 
+        logNamesArr.map((e,i) => {
+            logName.push(
+                <li>{e}</li>
+            )
+        })
+        return logName
+    }
+
     createAlarms = () => {
         let alarm = []
-        this.props.alarms.forEach(element => {
+        this.props.alarms.map((element, i) => {
+            let alarm_id = "alarm-id-" + i;
             alarm.push(
-                <div>
+                <div key={i}>
                     <Row>
                         <Col xs="1">
                             {element.isSubscribe ?
@@ -22,7 +57,7 @@ class Items extends Component {
                         </Col>
                         <Col xs="4">
                             <Row>{element.name}</Row>
-                            <Row>> See More Details</Row>
+                            <Row className="pointer" onClick={() => this.handleInfoClick(i)} ><i className="mdi mdi-menu-right"></i> See More Details</Row>
                         </Col>
                         <Col>
                             <Row>Filter Pattern:</Row>
@@ -40,9 +75,22 @@ class Items extends Component {
                             
                         </Col>
                     </Row>
-                    <Row style={{display:'none'}}>
-
-                    </Row>
+                    <Collapse id={alarm_id} isOpen={false}>
+                        <Row>
+                            <Col>
+                                <h3>Log Group Names Attached:</h3>
+                                <ul>
+                                    {this.createLogGroupName(element.log_groups)}
+                                </ul>
+                            </Col>
+                            <Col>
+                                <h3>SNS Topic Attached:</h3>
+                                <ul>
+                                    {this.createSns(element.sns_topic)}
+                                </ul>
+                            </Col>
+                        </Row>
+                    </Collapse>
 
                     
                 </div>
