@@ -330,19 +330,19 @@ class MetricAlarmDisplay extends Component {
                             <p className = 'margin'><span className = 'fontSize' id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
                             </a></Row>    
                     </Col>
-             <Col xs = "3">
+             <Col xs = "5">
                 <Row>
-                   <h3>Pattern:</h3>
+                   <h2>Pattern:</h2>
                 </Row>
                 <Row>
                     <h4><span>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</span></h4>
                 </Row>
              </Col> 
-             <Col>
+             {/* <Col>
                 <Row><h3>Description: </h3></Row>
                 <Row>{this.state.alert.AlarmDescription}</Row>
-             </Col> 
-             <Col>
+             </Col>  */}
+             <Col xs = "3">
              <div>
                     <div className = 'div_margin' >
                         <Button color = "danger" onClick = {this.showSubscribedTopicsOfAlarms} block><i class="far fa-bell-slash"></i>Unsubscribe</Button>
