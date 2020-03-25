@@ -268,7 +268,6 @@ class AlarmForm extends Component {
                                 <option disabled selected>Select</option>
                                 <option value = 'ERROR'>ERROR</option>
                                 <option value = 'WARN'>WARN</option>
-                                <option value = 'INFO'>INFO</option>
                             </Form.Control>   
                        </Col>
                        <Col>
@@ -389,7 +388,9 @@ class AlarmForm extends Component {
 
                 </Form.Group>
                 <Form.Group>
+                <fieldset disabled = {this.state.subscribedTopicArn == null}>
                     <Button className = 'button_a' style = {{float:'right'}} onClick = {this.addProtocol}>Add Subscription Endpoint</Button>
+                </fieldset>
                 </Form.Group>
                 <form onSubmit = {(e)=>this.attachEndpointsToSNSTopic(e)}>
                 {
@@ -422,13 +423,14 @@ class AlarmForm extends Component {
                                                 </div>  
                                             </Col>
                                             <Col xs={2}>
-                                                <div>
-                                                    <label>Remove</label>
-                                                </div>
-                                                <div>
-                                                    {/* <i class = "mdi mdi-delete-circle" onClick = {() =>this.deleteProtocol(index)}></i> */}
-                                                   <Button className = 'removes' onClick = {() =>this.deleteProtocol(index)}> <i class = "mdi mdi-delete-forever"></i></Button>
-                                                </div>   
+                                                <div className = 'remove_div'>
+                                                    <div className = 'remove_label'>
+                                                        <label>Remove</label>
+                                                    </div>
+                                                    <div className = 'remove_icon_div'>
+                                                    <i class = "mdi mdi-delete-variant" style = {{fontSize:'200%',color:'black'}} onClick = {() =>this.deleteProtocol(index)}></i>
+                                                    </div> 
+                                                </div>  
                                             </Col>
                                         </Row>
                                     </>
@@ -437,7 +439,7 @@ class AlarmForm extends Component {
                             }
                              {
                             this.state.subscriptionProtocol.length > 0?
-                                 <input type="submit" value="Add" className = 'submitButton'/>:null
+                                 <input type="submit" value="Add Endpoint/s" className = 'submitButton'/>:null
                         }
                         </form>
 
@@ -454,11 +456,7 @@ class AlarmForm extends Component {
                         <Button className = 'subscribe_but' onClick = {this.showObj}>Create & Subscribe to New Alarm</Button>
                     </div>
                 </Form.Group>
-                
-
-        
-                              
-                        
+                       
 
             </Card>
         )

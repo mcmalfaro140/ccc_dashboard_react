@@ -70,6 +70,17 @@
     background-color:#5388FF;
     color:white;
     border:0;
+    border-radius: 2em;
+    width: 20%;
+    height:35px;
+}
+.submitButton1{
+    float:right;
+    background-color:#5388FF;
+    color:white;
+    border:0;
+    width: 20%;
+    height:35px;
 }
 .addEndpoint{
     background-color:green;
@@ -92,9 +103,15 @@
 .inputs{
     width: 60%;
     height: 30px;
+  
 }
 .removes{
     width: 40%;
     // height: 40px;
     cursor: pointer;
+    
+  
+}
+.div_margin{
+    margin-bottom:10%
 }
