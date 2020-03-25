@@ -25,7 +25,7 @@ class LineGraph extends Component {
         unit:"",
         oldGraphSetting:"",
         isModify: false,
-        checked:false,
+        fillChecked:false,
         RTData:[],
         RTHolder:[]
     };
@@ -88,7 +88,7 @@ getgraph = () =>{
                 }.bind(this));
 };
 handleCheck(){
-  this.setState({checked : !this.state.checked});
+  this.setState({fillChecked : !this.state.fillChecked});
 };
 onRefresh(chart){
   let typeOfD = this.props.graphSettings.typeOfDimension;
@@ -333,7 +333,7 @@ render() {
           {
             label: this.props.graphSettings.metricName,
             data: this.state.data,
-            fill: this.state.checked,       
+            fill: this.state.fillChecked,       
             borderColor: this.props.graphSettings.colorSelected,
             backgroundColor:Color(this.props.graphSettings.colorSelected).alpha(0.5),
             responsive: true,
@@ -351,7 +351,7 @@ render() {
                label: this.props.graphSettings.metricName,
                borderColor: this.props.graphSettings.colorSelected,
                backgroundColor: Color(this.props.graphSettings.colorSelected).alpha(0.5),
-               fill: this.state.checked,
+               fill: this.state.fillChecked,
                data: this.state.RTData,
                }
            ]
@@ -416,7 +416,7 @@ render() {
                <FormControlLabel
                 control={
                   <Checkbox color = 'primary'
-                            checked={this.state.checked}
+                            checked={this.state.fillChecked}
                             onChange={this.handleCheck}
                             value="checkedF"
                   />
