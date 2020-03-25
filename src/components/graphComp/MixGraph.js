@@ -19,7 +19,16 @@ var options = {
            maxTicksLimit: 10  
     }
 }], 
-}
+},
+pan: {
+  enabled: true,
+  mode: 'x',
+},   
+zoom: {
+  enabled: true,
+  mode: 'x',
+
+},
   }
 
 
