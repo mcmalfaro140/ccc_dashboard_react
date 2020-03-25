@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Row, Card, Col } from 'reactstrap';
+import { Row, Card, Col, Button } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import {Form,Button,Table} from 'react-bootstrap';
+import {Form,Table} from 'react-bootstrap';
 import AWS from 'aws-sdk';
 import mykey from '../../keys.json';
 
@@ -376,7 +376,7 @@ class AlarmForm extends Component {
                                                         <td>{item.Owner}</td>
                                                         <td>{item.SubscriptionArn}</td>
                                                         <td>{item.TopicArn}</td>
-                                                        <td><Button className = 'button_a' onClick = {(e) => this.unsubscribe(e,item.SubscriptionArn,item.TopicArn)}>Remove</Button></td>
+                                                        <td><Button onClick = {(e) => this.unsubscribe(e,item.SubscriptionArn,item.TopicArn)}>Remove</Button></td>
                                                     </tr>
                                                 )
                                                      })
@@ -389,7 +389,7 @@ class AlarmForm extends Component {
                 </Form.Group>
                 <Form.Group>
                 <fieldset disabled = {this.state.subscribedTopicArn == null}>
-                    <Button className = 'button_a' style = {{float:'right'}} onClick = {this.addProtocol}>Add Subscription Endpoint</Button>
+                    <Button style = {{float:'right'}} onClick = {this.addProtocol}>Add Subscription Endpoint</Button>
                 </fieldset>
                 </Form.Group>
                 <form onSubmit = {(e)=>this.attachEndpointsToSNSTopic(e)}>
@@ -439,7 +439,7 @@ class AlarmForm extends Component {
                             }
                              {
                             this.state.subscriptionProtocol.length > 0?
-                                 <input type="submit" value="Add Endpoint/s" className = 'submitButton'/>:null
+                                 <Button color="primary" type="submit" className="add_end">Add Endpoint/s</Button>:null
                         }
                         </form>
 
@@ -453,7 +453,7 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <div className = 'subscribe_div'>
-                        <Button className = 'subscribe_but' onClick = {this.showObj}>Create & Subscribe to New Alarm</Button>
+                        <Button color="danger" onClick = {this.showObj}>Create & Subscribe to New Alarm</Button>
                     </div>
                 </Form.Group>
                        
