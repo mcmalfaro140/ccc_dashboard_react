@@ -31,7 +31,7 @@ class LineGraph extends Component {
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
-    this.handleCheck = this.handleCheck.bind(this);
+    this.sendFillData = this.sendFillData.bind(this);
 
   }
 getgraph = () =>{
@@ -86,9 +86,6 @@ getgraph = () =>{
                this.setState({label:labelTemp, data:dataTemp});
                   };     
                 }.bind(this));
-};
-handleCheck(){
-  this.setState({fillChecked : !this.state.fillChecked});
 };
 onRefresh(chart){
   let typeOfD = this.props.graphSettings.typeOfDimension;
@@ -205,8 +202,11 @@ componentDidMount() {
           this.oldDataForRealTime();
         }
         if(this.props.graphSettings.colorSelected != null){
-         this.setState({graphColor:this.props.graphSettings.colorSelected})
+         this.setState({graphColor:this.props.graphSettings.colorSelected});
         }
+        if(this.props.graphSettings.isFill != null){
+          this.setState({fillChecked:this.props.graphSettings.isFill});
+         }
 };
 componentWillReceiveProps(nextProp){
        // const isEqual = this.compareObj(this.state.oldGraphSetting, nextProp.graphSettings) 
@@ -239,6 +239,11 @@ sendModifyData = () => {
         this.setState({isModify:true});
         this.props.callback(this.props.id);
 };
+sendFillData = () =>{
+        this.setState({fillChecked : !this.state.fillChecked});
+        let holder = [!this.state.fillChecked,this.props.id];
+        this.props.fillCallback(holder);
+}
 showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});
@@ -417,9 +422,11 @@ render() {
                 control={
                   <Checkbox color = 'primary'
                             checked={this.state.fillChecked}
-                            onChange={this.handleCheck}
+                            onChange={this.sendFillData}
                             value="checkedF"
-                  />
+                  >
+                     <Link to={{pathname:'/dashboard'}} onClick ={this.sendFillData}></Link>
+                    </Checkbox>
                           }
                 label = 'Fill'
                />
