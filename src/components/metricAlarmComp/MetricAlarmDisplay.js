@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import { Row,Button, Col,Modal,ModalHeader,ModalBody,ModalFooter } from 'reactstrap';
+import { Row,Button, Col,Modal,ModalHeader,ModalBody,ModalFooter,Collapse } from 'reactstrap';
 import {Form} from 'react-bootstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import {Checkmark} from 'react-checkmark';
@@ -328,7 +328,7 @@ class MetricAlarmDisplay extends Component {
                             </p>
                         </Row>     */}
                     <Row> <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
-                            <p className = 'margin'><span className = 'fontSize' id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
+                            <p className = 'margin'><span className = 'fontSize' id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-right'/>:<i class="mdi mdi-menu-down"></i>}</span></p>
                             </a></Row>    
                     </Col>
              <Col xs = "5">
@@ -357,59 +357,59 @@ class MetricAlarmDisplay extends Component {
          
 
             </Row>
-              <Modal isOpen = {this.state.isOpen} toggle = {this.toggle}>
-                <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Alarm Information</span></ModalHeader>
-                    <ModalBody>
-                            <Table striped bordered hover size="sm">
-                                    <tr>
-                                        <th>Alarm Name</th>
-                                        <td>{this.state.alert.AlarmName}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>ComparisonOperator</th>
-                                        <td>{this.state.alert.ComparisonOperator}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>AlarmArn</th>
-                                        <td>{this.state.alert.AlarmArn}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>AlarmDescription</th>
-                                        <td>{this.state.alert.AlarmDescription}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>AlarmActions</th>
-                                        <td>{this.state.alert.AlarmActions.map(item =>{
-                                                return(
-                                                    <div>
-                                                        {item} 
-                                                        <hr/>
-                                                    </div>
-                                                )
-                                        })}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Namespace</th>
-                                        <td>{this.state.alert.Namespace}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Period</th>
-                                        <td>{this.state.alert.Period}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Statistic</th>
-                                        <td>{this.state.alert.Statistic}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>TreatMissingData</th>
-                                        <td>{this.state.alert.TreatMissingData}</td>
-                                    </tr>
-                            </Table>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button className = 'button_size' color="secondary" onClick = {this.toggle}> Close </Button>
-                    </ModalFooter>
-              </Modal>
+              <Collapse isOpen = {this.state.isOpen}>
+                  <Row>
+                      <Col>
+                            <h3>AlarmDescription</h3>
+                            <div className = 'description'>{this.state.alert.AlarmDescription}</div>
+                      </Col>
+                      <Col>
+                          <h3>Period</h3>  
+                          {this.state.alert.Period}  
+                      </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                            <h3>Namespace</h3>
+                            <div className = 'description'>{this.state.alert.Namespace}</div>
+                        </Col>
+                    <Col>
+                         <h3>Statistic</h3>
+                         {this.state.alert.Statistic}
+                    </Col>
+                  </Row>
+                  <Row>
+                    
+                    <Col>
+                        <h3>SNS Attached</h3>
+                        <ul>{
+                                this.state.alert.AlarmActions.map(item=>{
+                                    return(
+                                        <li>
+                                            {item}
+                                        </li>
+                                    )
+                                })
+                                
+                                }</ul>
+                      </Col>
+                    <Col>
+                        <h3>AlarmArn</h3>
+                        <div className = 'description'>{this.state.alert.AlarmArn}</div>
+                    </Col>
+                  </Row>
+                  <Row>
+                      <Col>
+                            <h3>ComparisonOperator</h3>
+                            <div className = 'description'>{this.state.alert.ComparisonOperator}</div>
+                      </Col>
+                      <Col>
+                          <h3>TreatMissingData</h3>
+                          {this.state.alert.TreatMissingData}
+                      </Col>
+                  </Row>
+              </Collapse>
+              
               <Modal isOpen = {this.state.toggleModalAndSubscribe} toggle = {this.toggleModalAndSubscribe} className = 'modalku'>
                   <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscription Detail</span></ModalHeader>
                   <ModalBody>

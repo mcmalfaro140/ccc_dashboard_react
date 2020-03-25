@@ -85,7 +85,20 @@ class DefaultDashboard extends Component {
         this.props.saveDashboard(this.state.userDashboard);
     }
 
-
+    fillBoxListener = (childData) =>{
+        console.log(childData);
+        let id = childData[1];
+        let isFill = childData[0];
+        let newDashboard = this.state.userDashboard;
+        for(let i = newDashboard.length -1; i>=0;--i){
+            if(newDashboard[i].id === id){
+                newDashboard[i].graphSettings.isFill = isFill;
+                this.setState({userDashboard : newDashboard});
+            }   
+        }
+        this.props.saveDashboard(this.state.userDashboard);
+        this.props.updateDashboard(this.state.userDashboard)
+    }
     deleteFunction = (childData) => {
         let newDashboard = this.state.userDashboard;
         for(let i = newDashboard.length -1; i>=0;--i){
@@ -250,7 +263,7 @@ class DefaultDashboard extends Component {
                     return (   
                        <Card id = "p" key={item.id} data-grid={{x:item.coordinates.x, y:item.coordinates.y, w: item.coordinates.w, h: item.coordinates.h, minW: item.coordinates.minW, minH: item.coordinates.minH}}>
                             <CardBody style={{overflow:'hidden'}}>
-                                <LineGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyFunction}></LineGraph>
+                                <LineGraph {...item} parentCallback = {this.deleteFunction} callback = {this.modifyFunction} fillCallback = {this.fillBoxListener}></LineGraph>
                             </CardBody>
                         </Card>
                        );
