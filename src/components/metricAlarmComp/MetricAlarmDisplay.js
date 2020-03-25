@@ -133,7 +133,6 @@ class MetricAlarmDisplay extends Component {
         let obj = {name: e.target.value, id : index, value:""};
         arr[index] = obj;
         this.setState({subscriptionProtocol:arr});
-      
     }
     protocolValue(e,index){
         let arr = this.state.subscriptionProtocol;
@@ -297,36 +296,37 @@ class MetricAlarmDisplay extends Component {
     }
     render() { 
         let dropdown = [];
+        console.log(this.state.alert.AlarmActions);
+        console.log( this.state.topicArns)
         this.state.topicArns.map(item =>{
-           let selection = item.TopicArn.split(':');             
-           dropdown.push(<option value = {item.TopicArn}>{selection[selection.length-1]}</option>)
+            if(this.state.alert.AlarmActions.includes(item.TopicArn)){
+                dropdown.push(<option disabled value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>)
+            }else{
+                dropdown.push(<option value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>)
+            }       
      })  
         return (
           <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-            
-                  
-                   
-                
-                <Row>
-                    <Col xs = "1">
-                        {this.state.subscription === true?
+            <Row>
+                <Col xs = "1">
+                    {this.state.subscription === true?
                         <Checkmark size = 'large' />
                          :
                          <i className="mdi mdi-alarm-check alarm_off" style = {{fontSize:'400%'}}></i>}
-                    </Col>
-                    <Col xs = "3">
-                        <Row><h2>{this.state.alert.AlarmName}</h2></Row>
-                        <Row><span style ={{backgroundColor:this.state.color, color: 'white',fontSize : window.innerWidth/100,paddingLeft:5, paddingRight:5}}>Status: {this.state.alert.StateValue}</span></Row>
-                        <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.Namespace}</span></p></Row>
-                        <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.MetricName}</span></p></Row>
-                        <Row><p className = 'margin'>
+                </Col>
+                <Col xs = "3">
+                    <Row><h2>{this.state.alert.AlarmName}</h2></Row>
+                    <Row><span style ={{backgroundColor:this.state.color, color: 'white',fontSize : window.innerWidth/100,paddingLeft:5, paddingRight:5}}>Status: {this.state.alert.StateValue}</span></Row>
+                    <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.Namespace}</span></p></Row>
+                    <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.MetricName}</span></p></Row>
+                        {/* <Row><p className = 'margin'>
                             <a className= "waves-effect side-nav-link-ref" onClick={this.showSubscribedTopicsOfAlarms} >
                             <p className = 'margin'><span className = 'fontSize'>Subscribed Topics {this.state.showSubscribedTopicsOfAlarms === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
                             </a>
                             </p>
-                        </Row>    
-                        <Row> <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
+                        </Row>     */}
+                    <Row> <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
                             <p className = 'margin'><span className = 'fontSize' id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
                             </a></Row>    
                     </Col>
@@ -335,7 +335,7 @@ class MetricAlarmDisplay extends Component {
                    <h3>Pattern:</h3>
                 </Row>
                 <Row>
-                    <span>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</span>
+                    <h4><span>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</span></h4>
                 </Row>
              </Col> 
              <Col>
@@ -413,6 +413,14 @@ class MetricAlarmDisplay extends Component {
                   <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscription Detail</span></ModalHeader>
                   <ModalBody>
                         <Form>
+                            <Form.Group>
+                                <Form.Label>Already Subscribed Topics: </Form.Label>
+                                    {
+                                        this.state.alert.AlarmActions.map((item,i) =>{
+                                            return (<div>{i+1}.{item.split(':')[item.split(':').length-1]}</div>)
+                                        })
+                                    }
+                            </Form.Group>
                             <Form.Group>
                                 <Form.Label>Topic Name</Form.Label>
                                 <Form.Control as="select"  
@@ -504,7 +512,7 @@ class MetricAlarmDisplay extends Component {
                         }
                         {
                             this.state.subscriptionProtocol.length > 0?
-                                 <input type="submit" value="Add Endpoint/s" className = 'submitButton1'/>:null
+                                <input type="submit" value="Add Endpoint/s" className = 'submitButton1'/>:null
                         }
                         {
                             this.state.attachedEndpoints === true?
