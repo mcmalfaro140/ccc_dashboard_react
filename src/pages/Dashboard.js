@@ -360,8 +360,8 @@ class DefaultDashboard extends Component {
                 expand the card and show an expanded card */}
 
  
-
-                    <ResponsiveGridLayout className="layout" 
+                    <div id="graphs_layout">
+                    <ResponsiveGridLayout  className="layout" 
                         breakpoints={{lg: 1040, md: 868, sm: 375}}
                         cols={{lg: 24, md: 12, sm: 8}}
                         width={this.props.screenSize} 
@@ -369,6 +369,7 @@ class DefaultDashboard extends Component {
                         style={{margin:0}}>
                         {items}
                     </ResponsiveGridLayout>
+                    </div>
                 </div>
             </React.Fragment>
         )
