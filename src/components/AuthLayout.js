@@ -5,6 +5,7 @@ import { Modal} from 'reactstrap';
 import GraphForm from '../components/graphComp/graphForm';
 import { getLoggedInUser } from '../helpers/authUtils';
 import MixGraphForm from '../components/graphComp/MixGraphForm';
+import mykey from '../keys.json';
 
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
 
@@ -85,7 +86,7 @@ class AuthLayout extends Component {
 
     saveDashboard(dash_to_save){
         axios.post(
-            'http://localhost:5050/update',
+            `${mykey.backend}/update`,
             {token:this.state.user.token, dashboard: JSON.stringify(dash_to_save)},
             {header: {'Content-Type':'application/json'}}
         )
