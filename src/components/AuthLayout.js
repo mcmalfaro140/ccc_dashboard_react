@@ -5,6 +5,7 @@ import { Modal} from 'reactstrap';
 import GraphForm from '../components/graphComp/graphForm';
 import { getLoggedInUser } from '../helpers/authUtils';
 import MixGraphForm from '../components/graphComp/MixGraphForm';
+import mykey from '../keys.json';
 
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
 
@@ -56,6 +57,7 @@ class AuthLayout extends Component {
             modalSearch: false,
             modalTableOpen: false,
             mixModalOpen: false,
+            count: 0,
             metricName:"", 
             nameSpace:"",
             chartName:"",
@@ -84,7 +86,7 @@ class AuthLayout extends Component {
 
     saveDashboard(dash_to_save){
         axios.post(
-            'http://localhost:5050/update',
+            `${mykey.backend}/update`,
             {token:this.state.user.token, dashboard: JSON.stringify(dash_to_save)},
             {header: {'Content-Type':'application/json'}}
         )
@@ -183,7 +185,12 @@ class AuthLayout extends Component {
     }
 
     handleExitFull(){
-        this.setState({isFullScreen: false})
+        if(this.state.count === 1){
+            this.setState({ isFullScreen: false, count: 0})
+            this.changeScreenSize()
+        }else{
+            this.setState({count: 1})
+        }
     }
     //updates react-grid size when resize
     changeScreenSize(){
@@ -196,8 +203,8 @@ class AuthLayout extends Component {
 
     //toggle fullscreen
     goFullScreen(){
-        let div = document.getElementById("dashboard")
-        this.setState({isCondensed : true, isFullScreen: !this.state.isFullScreen})
+        let div = document.getElementById("graphs_layout")
+        this.setState({isCondensed : true, isFullScreen: true})
         div.requestFullscreen()
     }
   

@@ -7,6 +7,7 @@ import MixGraph from '../components/graphComp/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import MixGraphForm from '../components/graphComp/MixGraphForm';
+import mykey from '../keys.json';
 
 import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
@@ -57,7 +58,7 @@ class DefaultDashboard extends Component {
         if(this.state.user.token !== null){
             axios({
                 method: 'get',
-                url: 'http://localhost:5050/get_dashboard',
+                url: `${mykey.backend}/get_dashboard`,
                 headers: {
                     'Authorization': this.state.user.token,
                     'Content-Type': 'application/json'
@@ -360,8 +361,8 @@ class DefaultDashboard extends Component {
                 expand the card and show an expanded card */}
 
  
-
-                    <ResponsiveGridLayout className="layout" 
+                    <div id="graphs_layout">
+                    <ResponsiveGridLayout  className="layout" 
                         breakpoints={{lg: 1040, md: 868, sm: 375}}
                         cols={{lg: 24, md: 12, sm: 8}}
                         width={this.props.screenSize} 
@@ -369,6 +370,7 @@ class DefaultDashboard extends Component {
                         style={{margin:0}}>
                         {items}
                     </ResponsiveGridLayout>
+                    </div>
                 </div>
             </React.Fragment>
         )
