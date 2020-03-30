@@ -94,6 +94,7 @@ class LogAlerts extends Component {
                 }
             ]
         }
+        this.updateState = this.updateState.bind(this);
     }
 
     componentDidMount(){
@@ -107,6 +108,9 @@ class LogAlerts extends Component {
         this.setState({myAlarms_Set:temp2})
     }
 
+    updateState(newState){
+        this.setState({dummy_alerts: newState})
+    }
     render() {
         return (
           <div >
