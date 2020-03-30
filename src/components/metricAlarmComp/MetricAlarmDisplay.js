@@ -5,6 +5,7 @@ import {Form} from 'react-bootstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import {Checkmark} from 'react-checkmark';
 import Table from 'react-bootstrap/Table';
+import MetricAlert from '../../pages/MetricAlert';
 
 
 
@@ -51,7 +52,7 @@ class MetricAlarmDisplay extends Component {
         this.openSubscriptionDetails = this.openSubscriptionDetails.bind(this);
         this.getTopicARN = this.getTopicARN.bind(this);
         this.toggleModalAndSubscribe = this.toggleModalAndSubscribe.bind(this);
-        this.unsubscribe = this.unsubscribe.bind(this);
+        this.unsubscribeEndpoints = this.unsubscribeEndpoints.bind(this);
         this.addProtocol = this.addProtocol.bind(this);
         this.deleteProtocol = this.deleteProtocol.bind(this);
         this.protocolOption = this.protocolOption.bind(this);
@@ -120,6 +121,7 @@ class MetricAlarmDisplay extends Component {
             return { alert };                                
           })
     }
+  
     addProtocol(){
         this.setState({addProtocol:true, attachedEndpoints:false});
         this.setState({subscriptionProtocol:[...this.state.subscriptionProtocol,{name:'',id:'',value:''}]})
@@ -191,6 +193,7 @@ class MetricAlarmDisplay extends Component {
                 if (err) console.log(err, err.stack);
                 else {
                     this.setState({subscription:true});
+                    this.props.updateState(this.state.alert);
                 }    
               }.bind(this));
 
@@ -227,7 +230,7 @@ class MetricAlarmDisplay extends Component {
               }.bind(this));
         })
     }
-    unsubscribe(e,subscribedTopicArn,topicArn){
+    unsubscribeEndpoints(e,subscribedTopicArn,topicArn){
       //  this.setState({subscription: false});
         e.preventDefault();
         let sns = new AWS.SNS();
@@ -290,14 +293,14 @@ class MetricAlarmDisplay extends Component {
             if (err) console.log(err, err.stack);
             else {
                 this.setState({subscription:false});
+                this.props.updateState(this.state.alert);
             }    
           }.bind(this));
+
 
     }
     render() { 
         let dropdown = [];
-        console.log(this.state.alert.AlarmActions);
-        console.log( this.state.topicArns)
         this.state.topicArns.map(item =>{
             if(this.state.alert.AlarmActions.includes(item.TopicArn)){
                 dropdown.push(<option disabled value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>)
@@ -310,11 +313,12 @@ class MetricAlarmDisplay extends Component {
 
             <Row>
                 <Col xs = "1">
-                    {this.state.subscription === true?
-                        <Checkmark size = 'large' />
-                         :
-                         <i className="mdi mdi-alarm-check alarm_off" ></i>}
-
+                    
+                    {this.props.AlarmActions.length > 0?
+                       <i className="mdi mdi-checkbox-marked-circle" style = {{fontSize:'120%'}}></i>
+                       :
+                       <i className="mdi mdi-alarm-check alarm_off" style = {{fontSize:'120%'}}></i>}
+                    
                 </Col>
                 <Col xs = "3">
                     <Row><h2>{this.state.alert.AlarmName}</h2></Row>
@@ -344,14 +348,27 @@ class MetricAlarmDisplay extends Component {
                 <Row>{this.state.alert.AlarmDescription}</Row>
              </Col>  */}
              <Col xs = "3">
-             <div>
-                    <div className = 'div_margin' >
+                    {
+                        this.props.AlarmActions.length > 0?
+                        <div>
+                        <div className = 'btn-group' role = 'group' block>
+                            <Button  class="btn btn-secondary" color = "danger" onClick = {this.showSubscribedTopicsOfAlarms}><i class="far fa-bell-slash"></i>Unsubscribe</Button>
+                            <Button  class="btn btn-secondary" color = "primary"onClick = {this.openSubscriptionDetails}><i class="far fa-bell"></i>Add Topic</Button>
+
+                         </div>
+                       
+                        </div>  : 
+                        <div className = 'div_center'>
+                                <Button color = "primary" onClick = {this.openSubscriptionDetails} block><i class="far fa-bell"></i>Subscribe</Button>
+                        </div>
+                    }
+                    {/* <div className = 'div_margin' >
                         <Button color = "danger" onClick = {this.showSubscribedTopicsOfAlarms} block><i class="far fa-bell-slash"></i>Unsubscribe</Button>
                     </div>
                     <div>
                         <Button color = "primary"onClick = {this.openSubscriptionDetails} block><i class="far fa-bell"></i>Subscribe</Button>
-                    </div>
-                </div>  
+                    </div> */}
+               
          
              </Col>
          
@@ -415,13 +432,18 @@ class MetricAlarmDisplay extends Component {
                   <ModalBody>
                         <Form>
                             <Form.Group>
-                                <Form.Label>Already Subscribed Topics: </Form.Label>
-                                    {
-                                        this.state.alert.AlarmActions.map((item,i) =>{
+                                {
+                                   
+                                    this.props.AlarmActions.length>0?
+                                    <div>
+                                        <Form.Label>Already Subscribed Topics: </Form.Label>
+                                        {this.state.alert.AlarmActions.map((item,i) =>{
                                             return (<div>{i+1}.{item.split(':')[item.split(':').length-1]}</div>)
-                                        })
-                                    }
+                                        })}
+                                    </div> :null
+                                }
                             </Form.Group>
+                               
                             <Form.Group>
                                 <Form.Label>Topic Name</Form.Label>
                                 <Form.Control as="select"  
@@ -455,7 +477,7 @@ class MetricAlarmDisplay extends Component {
                                                         <td>{item.Owner}</td>
                                                         <td>{item.SubscriptionArn}</td>
                                                         <td>{item.TopicArn}</td>
-                                                        <td><Button className = 'button_a' onClick = {(e) => this.unsubscribe(e,item.SubscriptionArn,item.TopicArn)}>Remove</Button></td>
+                                                        <td><Button className = 'button_a' onClick = {(e) => this.unsubscribeEndpoints(e,item.SubscriptionArn,item.TopicArn)}>Remove</Button></td>
                                                     </tr>
                                                 )
                                                      })
