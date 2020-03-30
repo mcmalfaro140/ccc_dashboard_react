@@ -149,15 +149,15 @@ class SideNavContent extends React.Component {
                   { this.state.showNotificationOptions ? (
                          <ul className="nav-second-level nav" aria-expanded="false">
                              <li>
-                                <Link to = "/metricAlert">
+                                <Link to = "/metricAlarms">
                                 <i class="mdi mdi-alert-box">  </i>
-                                    Metrics Alert
+                                    Metric Alarms
                                 </Link>
                              </li>
                              <li>
-                                 <Link to="/logAlert" >
+                                 <Link to="/logAlarms" >
                                  <i class="mdi mdi-alert-circle">  </i>
-                                    Log Alert
+                                    Log Alarms
                                  </Link>
                              </li>
                          </ul>

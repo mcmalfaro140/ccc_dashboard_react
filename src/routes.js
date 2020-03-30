@@ -37,8 +37,8 @@ const routes = [
   { path: '/logout', name: 'Logout', component: Logout, route: Route },
   { path: '/search_results', name: 'SearchResult', component: SearchResult,route: PrivateRoute, title: "Search Results" },
 
-  {path: '/metricAlert', name: 'MetricAlert', component: MetricAlert, route:Route, title:"Metric Alerts"},
-  {path: '/logAlert', name: 'LogAlerts', component: LogAlerts, route:Route, title:"Log Alerts"},
+  {path: '/metricAlarms', name: 'MetricAlert', component: MetricAlert, route:Route, title:"Metric Alarms"},
+  {path: '/logAlarms', name: 'LogAlerts', component: LogAlerts, route:Route, title:"Log Alarms"},
 
   
   // other pages

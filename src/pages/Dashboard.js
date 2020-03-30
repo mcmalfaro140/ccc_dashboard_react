@@ -7,6 +7,7 @@ import MixGraph from '../components/graphComp/MixGraph';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import MixGraphForm from '../components/graphComp/MixGraphForm';
+import mykey from '../keys.json';
 
 import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
@@ -57,7 +58,7 @@ class DefaultDashboard extends Component {
         if(this.state.user.token !== null){
             axios({
                 method: 'get',
-                url: 'http://localhost:5050/get_dashboard',
+                url: `${mykey.backend}/get_dashboard`,
                 headers: {
                     'Authorization': this.state.user.token,
                     'Content-Type': 'application/json'

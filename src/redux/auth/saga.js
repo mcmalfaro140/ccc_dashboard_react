@@ -1,6 +1,7 @@
 // @flow
 import { Cookies } from "react-cookie";
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
+import myKey from '../../keys.json'
 
 import {
     LOGIN_USER,
@@ -67,7 +68,7 @@ function* login({ payload: { username, password } }) {
         headers: { 'Content-Type': 'application/json' }
     };
     try {
-        const response = yield call(fetchJSON, 'http://localhost:5050/authenticate', options);
+        const response = yield call(fetchJSON, `${myKey.backend}/authenticate`, options);
         if(response.error){
             let message = response.error
             yield put(loginUserFailed(message));
