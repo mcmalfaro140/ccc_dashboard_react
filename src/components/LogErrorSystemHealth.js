@@ -89,7 +89,12 @@ const LogErrorSystemHealth = () => {
 
 useEffect(() => {
 
+// const refreshRate = setInterval(() => {
 
+
+// }, 10000)
+
+// return () => clearInterval(refreshRate)
 
 }, [])
         return(
