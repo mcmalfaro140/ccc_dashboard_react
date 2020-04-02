@@ -36,6 +36,10 @@ const EC2SystemHealth = () => {
        
              let strid = "row" + i;
              let iconid = "icon" + i;
+             const expandableData = Object.entries(Object.values(item))[0][1]
+
+             console.log(Object.keys(expandableData))
+
           
             return(
                
@@ -45,31 +49,34 @@ const EC2SystemHealth = () => {
                 <TableCell className="time_col" 
                 style = {{ color :'black', paddingRight:'-5%', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}><i id={iconid} className="mdi mdi-menu-right"></i>
                 {Object.keys(item)}</TableCell>
-                <TableCell className="hid_cell" >
-                        { Object.values(item)}
-                </TableCell>
                 
+            
                 </TableRow>
                 <TableRow id={i} style={{visibility:'collapse'}}>
                    
                         <TableBody >
-                            
-                            {/* {Object.values(item).map((logItem, index) => {
+                        <TableRow key = {i}>
+                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
+                                            Instance state
+                                        </TableCell>
+                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
+                                           Availability zone
+                                        </TableCell>
+                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue' }}>
+                                           Instance status
+                                        </TableCell>
+                            </TableRow>
+
+                             { Object.keys(expandableData).map((itemkey, index) => {
                                        
                                     return (
-                                        <TableRow key = {index}>
-                                            <TableCell className="hid_cell" >
-                                                { logItem.InstanceId}
-                                            </TableCell>
-                                             <TableCell className="hid_cell" >
-                                                {Object.values(logItem.InstanceStatus).Status}
-                                            </TableCell> */}
-                                            {/* <TableCell className="hid_cell" >
-                                                {logItem.message}
-                                            </TableCell>  */}
-                                        {/* </TableRow>
+
+                                             
+                                                <TableCell className="hid_cell" > { expandableData[itemkey]} </TableCell>
+                                             
                                     );
-                            })}  */}
+                            })}   
+
                          </TableBody> 
                       
                 </TableRow>
