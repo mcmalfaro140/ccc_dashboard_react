@@ -1,6 +1,6 @@
 import React, {useState, createContext, useEffect} from 'react';
 import AWS from 'aws-sdk';
-import mykey from '../keys.json';
+import mykey from '../../keys.json';
 
 export const LogContext = createContext({});
 
@@ -8,8 +8,6 @@ export const LogContext = createContext({});
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
 var ec2 = new AWS.EC2();
-//Date to query every hour  
-
 
 
 const SystemHealthContext = (props) => {
@@ -76,24 +74,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
                     setErrorResultCount ( prevCount => 
                         prevCount + data.events.length
                     )                
-
-                    // data.events.forEach(event => {
-                    
-
-                    //         // setErrorObject(prevState => ({
-                    //         //     ...prevState , 
-                    //         //     [logName] : { ...prevState[logName] , 
-        
-                    //         //         [event.logStreamName] : [  event.message]
-
-                    //         //     }
-                    //         // }))
-
-                    //     setErrorObject (prevState => {
-
-                            
-                    //     })
-                    // });
                                             
 
                     setLogReportError(prevState => 
@@ -103,9 +83,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
                         ]
                      )
 
-                
-                
-                
                 }  
 
                 //checks for warning logs in the log group name
