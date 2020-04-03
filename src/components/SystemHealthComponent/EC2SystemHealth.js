@@ -38,12 +38,10 @@ const EC2SystemHealth = () => {
              let iconid = "icon" + i;
              const expandableData = Object.entries(Object.values(item))[0][1]
 
-             console.log(Object.keys(expandableData))
-
-          
+             
             return(
                
-                <TableBody className = "tablesaw tablesaw-stack">
+                <TableBody className = "tablesaw tablesaw-stack" key ={i}>
                 <TableRow id={strid} hover onClick={() => handleClick(i)} className = "table_logs_cell">
     
                 <TableCell className="time_col" 
@@ -72,7 +70,7 @@ const EC2SystemHealth = () => {
                                     return (
 
                                              
-                                                <TableCell className="hid_cell" > { expandableData[itemkey]} </TableCell>
+                                                <TableCell className="hid_cell" key = {index}> { expandableData[itemkey]} </TableCell>
                                              
                                     );
                             })}   
@@ -97,10 +95,12 @@ useEffect(() => {
                     <CardBody>
                         <TableContainer >
                             <Table aria-label="spanning table"  className="table_logs_header" >
+                                <TableHead>
                                     <TableRow>
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
                                             EC2 Instance</TableCell>
                                     </TableRow>
+                                </TableHead>
                                 {cell}
                             </Table>
                         </TableContainer>
