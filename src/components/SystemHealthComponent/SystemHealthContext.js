@@ -1,6 +1,6 @@
 import React, {useState, createContext, useEffect} from 'react';
 import AWS from 'aws-sdk';
-import mykey from '../keys.json';
+import mykey from '../../keys.json';
 
 export const LogContext = createContext({});
 
@@ -8,7 +8,6 @@ export const LogContext = createContext({});
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 var cloudwatchlogs = new AWS.CloudWatchLogs();
 var ec2 = new AWS.EC2();
-
 
 
 const SystemHealthContext = (props) => {
@@ -21,9 +20,6 @@ const SystemHealthContext = (props) => {
     const [EC2InstanceStatus , setEC2InstanceStatus] = useState([])
     const [EC2InstanceStatusAlert , setEC2InstanceStatusAlert] = useState(0)
 
-
-//Date to query every hour  
-//const date = new Date();
 
 const getLogGroupName = () => {
 
@@ -44,10 +40,12 @@ const getLogGroupName = () => {
                       LogGroupName.logGroupName
             )))
 
-            temp.map((LogGroupName , index) => (
-                searchByLogGroupName(LogGroupName.logGroupName , 'ERROR'),
-                searchByLogGroupName(LogGroupName.logGroupName , 'WARN')
-                ))
+                temp.map((LogGroupName , index) => (
+                    searchByLogGroupName(LogGroupName.logGroupName , 'ERROR'),
+                    searchByLogGroupName(LogGroupName.logGroupName , 'WARN')
+                    ))
+
+        
         }
     })
 
@@ -59,9 +57,9 @@ const searchByLogGroupName =  (logName , filterPattern) => {
 
     var params = {
         logGroupName: logName, /* required */
-       // endTime: date.getTime() - 86400,
+        endTime: new Date().getTime() ,
         filterPattern: filterPattern, 
-        //startTime: date.getTime()
+        startTime: new Date().getTime() - 86400
 
     }
   
@@ -76,24 +74,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
                     setErrorResultCount ( prevCount => 
                         prevCount + data.events.length
                     )                
-
-                    // data.events.forEach(event => {
-                    
-
-                    //         // setErrorObject(prevState => ({
-                    //         //     ...prevState , 
-                    //         //     [logName] : { ...prevState[logName] , 
-        
-                    //         //         [event.logStreamName] : [  event.message]
-
-                    //         //     }
-                    //         // }))
-
-                    //     setErrorObject (prevState => {
-
-                            
-                    //     })
-                    // });
                                             
 
                     setLogReportError(prevState => 
@@ -103,9 +83,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
                         ]
                      )
 
-                
-                
-                
                 }  
 
                 //checks for warning logs in the log group name
@@ -141,13 +118,18 @@ const searchByLogGroupName =  (logName , filterPattern) => {
         if (err) console.log(err, err.stack); // an error occurred
         else {
             
-           
+           console.log(data.InstanceStatuses)
               data.InstanceStatuses.forEach((element) => {
                 setEC2InstanceStatus(prevState => 
                     [
                         ...prevState , 
                          {
-                             [element.InstanceId] : element.InstanceStatus.Status
+                              [element.InstanceId] : {
+
+                                "InstanceState" : element.InstanceState.Name,
+                                "AvailabilityZone" : element.AvailabilityZone , 
+                                "InstanceStatus" : element.InstanceStatus.Status
+                             }
                          }
                     ]
                     )
@@ -166,8 +148,8 @@ const searchByLogGroupName =  (logName , filterPattern) => {
 
   useEffect (() => {
 
-     getLogGroupName()
-     getEC2InstanceStatus()
+    getLogGroupName()
+    getEC2InstanceStatus()
 
     },[])
 

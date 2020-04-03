@@ -1,16 +1,16 @@
-import React , { useContext, useEffect} from 'react';
+import React , {useState , useContext, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import { Card, CardBody } from 'reactstrap'
 import {LogContext} from './SystemHealthContext.js'
-import {Table , TableCell, TableBody, TableContainer, TableRow} from '@material-ui/core';
+import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow} from '@material-ui/core';
 
 
 
 
-const LogErrorSystemHealth = () => {
+const EC2SystemHealth = () => {
     
-    const {ErrorReport} = useContext (LogContext)
-    const [LogReportError , setLogReportError ] = ErrorReport
+    const {EC2Status} = useContext (LogContext)
+    const [EC2InstanceStatus , setEC2InstanceStatus]= EC2Status
 
     const handleClick = (id) => {
         let element = document.getElementById(id);
@@ -32,53 +32,49 @@ const LogErrorSystemHealth = () => {
 
     
 
-    const cell = LogReportError.map((item, i) => {
+    const cell = EC2InstanceStatus.map((item, i) => {
        
              let strid = "row" + i;
              let iconid = "icon" + i;
-          
+             const expandableData = Object.entries(Object.values(item))[0][1]
+
+             
             return(
                
-                <TableBody className = "tablesaw tablesaw-stack">
+                <TableBody className = "tablesaw tablesaw-stack" key ={i}>
                 <TableRow id={strid} hover onClick={() => handleClick(i)} className = "table_logs_cell">
     
                 <TableCell className="time_col" 
-                style = {{ color :'black', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}><i id={iconid} className="mdi mdi-menu-right"></i>
+                style = {{ color :'black', paddingRight:'-5%', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}><i id={iconid} className="mdi mdi-menu-right"></i>
                 {Object.keys(item)}</TableCell>
-
                 
+            
                 </TableRow>
-                <TableRow id={i} style={{visibility:'collapse' }}>
+                <TableRow id={i} style={{visibility:'collapse'}}>
                    
-                        <TableBody>
-                            <TableRow key = {i}>
+                        <TableBody >
+                        <TableRow key = {i}>
                                         <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
-                                            Time Stamp
+                                            Instance state
                                         </TableCell>
                                         <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
-                                           Log Stream Name
+                                           Availability zone
                                         </TableCell>
                                         <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue' }}>
-                                           Log Message
+                                           Instance status
                                         </TableCell>
                             </TableRow>
 
-                            {item[Object.keys(item)].map((logItem, index) => {
+                             { Object.keys(expandableData).map((itemkey, index) => {
                                        
                                     return (
-                                        <TableRow key = {index}>
-                                            <TableCell className="hid_cell" >
-                                                { new Date(parseInt(logItem.timestamp)).toGMTString()+ ":"}
-                                            </TableCell>
-                                            <TableCell className="hid_cell" >
-                                                {logItem.logStreamName}
-                                            </TableCell>
-                                            <TableCell className="hid_cell" >
-                                                {logItem.message}
-                                            </TableCell>
-                                        </TableRow>
+
+                                             
+                                                <TableCell className="hid_cell" key = {index}> { expandableData[itemkey]} </TableCell>
+                                             
                                     );
-                            })} 
+                            })}   
+
                          </TableBody> 
                       
                 </TableRow>
@@ -99,10 +95,12 @@ useEffect(() => {
                     <CardBody>
                         <TableContainer >
                             <Table aria-label="spanning table"  className="table_logs_header" >
+                                <TableHead>
                                     <TableRow>
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
-                                            Log Group Names with Errors</TableCell>
+                                            EC2 Instance</TableCell>
                                     </TableRow>
+                                </TableHead>
                                 {cell}
                             </Table>
                         </TableContainer>
@@ -115,4 +113,4 @@ useEffect(() => {
     
 }
 
-export default LogErrorSystemHealth;
+export default EC2SystemHealth;
