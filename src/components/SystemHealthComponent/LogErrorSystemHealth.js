@@ -1,16 +1,16 @@
-import React , {useState , useContext, useEffect} from 'react';
+import React , { useContext, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import { Card, CardBody } from 'reactstrap'
 import {LogContext} from './SystemHealthContext.js'
-import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow} from '@material-ui/core';
+import {Table , TableCell, TableBody, TableContainer, TableRow} from '@material-ui/core';
 
 
 
 
-const EC2SystemHealth = () => {
+const LogErrorSystemHealth = () => {
     
-    const {EC2Status} = useContext (LogContext)
-    const [EC2InstanceStatus , setEC2InstanceStatus]= EC2Status
+    const {ErrorReport} = useContext (LogContext)
+    const [LogReportError , setLogReportError ] = ErrorReport
 
     const handleClick = (id) => {
         let element = document.getElementById(id);
@@ -32,7 +32,7 @@ const EC2SystemHealth = () => {
 
     
 
-    const cell = EC2InstanceStatus.map((item, i) => {
+    const cell = LogReportError.map((item, i) => {
        
              let strid = "row" + i;
              let iconid = "icon" + i;
@@ -43,33 +43,42 @@ const EC2SystemHealth = () => {
                 <TableRow id={strid} hover onClick={() => handleClick(i)} className = "table_logs_cell">
     
                 <TableCell className="time_col" 
-                style = {{ color :'black', paddingRight:'-5%', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}><i id={iconid} className="mdi mdi-menu-right"></i>
+                style = {{ color :'black', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}><i id={iconid} className="mdi mdi-menu-right"></i>
                 {Object.keys(item)}</TableCell>
-                <TableCell className="hid_cell" >
-                        { Object.values(item)}
-                </TableCell>
+
                 
                 </TableRow>
-                <TableRow id={i} style={{visibility:'collapse'}}>
+                <TableRow id={i} style={{visibility:'collapse' }}>
                    
-                        <TableBody >
-                            
-                            {/* {Object.values(item).map((logItem, index) => {
+                        <TableBody>
+                            <TableRow key = {i}>
+                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
+                                            Time Stamp
+                                        </TableCell>
+                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
+                                           Log Stream Name
+                                        </TableCell>
+                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue' }}>
+                                           Log Message
+                                        </TableCell>
+                            </TableRow>
+
+                            {item[Object.keys(item)].map((logItem, index) => {
                                        
                                     return (
                                         <TableRow key = {index}>
                                             <TableCell className="hid_cell" >
-                                                { logItem.InstanceId}
+                                                { new Date(parseInt(logItem.timestamp)).toGMTString()+ ":"}
                                             </TableCell>
-                                             <TableCell className="hid_cell" >
-                                                {Object.values(logItem.InstanceStatus).Status}
-                                            </TableCell> */}
-                                            {/* <TableCell className="hid_cell" >
+                                            <TableCell className="hid_cell" >
+                                                {logItem.logStreamName}
+                                            </TableCell>
+                                            <TableCell className="hid_cell" >
                                                 {logItem.message}
-                                            </TableCell>  */}
-                                        {/* </TableRow>
+                                            </TableCell>
+                                        </TableRow>
                                     );
-                            })}  */}
+                            })} 
                          </TableBody> 
                       
                 </TableRow>
@@ -80,7 +89,12 @@ const EC2SystemHealth = () => {
 
 useEffect(() => {
 
+// const refreshRate = setInterval(() => {
 
+
+// }, 10000)
+
+// return () => clearInterval(refreshRate)
 
 }, [])
         return(
@@ -92,7 +106,7 @@ useEffect(() => {
                             <Table aria-label="spanning table"  className="table_logs_header" >
                                     <TableRow>
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
-                                            EC2 Instance</TableCell>
+                                            Log Group Names with Errors</TableCell>
                                     </TableRow>
                                 {cell}
                             </Table>
@@ -106,4 +120,4 @@ useEffect(() => {
     
 }
 
-export default EC2SystemHealth;
+export default LogErrorSystemHealth;

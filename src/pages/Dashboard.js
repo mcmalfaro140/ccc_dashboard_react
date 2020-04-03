@@ -18,14 +18,14 @@ import GraphForm from '../components/graphComp/graphForm';
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
-import SystemHealthContext from '../components/SystemHealthContext';
-import LogReportContext from '../components/LogErrorContext';
-import LogWarningContext from '../components/LogWarningContext';
-import ServerStatusContext from '../components/ServerStatusContext';
-import NightlyScriptContext from '../components/NightlyScriptContext';
-import LogErrorSystemHealth from '../components/LogErrorSystemHealth';
-import LogWarningSystemHealth from '../components/LogWarningSystemHealth';
-import EC2SystemHealth from '../components/EC2SystemHealth';
+import SystemHealthContext from '../components/SystemHealthComponent/SystemHealthContext';
+import LogReportContext from '../components/SystemHealthComponent/LogErrorContext';
+import LogWarningContext from '../components/SystemHealthComponent/LogWarningContext';
+import ServerStatusContext from '../components/SystemHealthComponent/ServerStatusContext';
+import NightlyScriptContext from '../components/SystemHealthComponent/NightlyScriptContext';
+import LogErrorSystemHealth from '../components/SystemHealthComponent/LogErrorSystemHealth';
+import LogWarningSystemHealth from '../components/SystemHealthComponent/LogWarningSystemHealth';
+import EC2SystemHealth from '../components/SystemHealthComponent/EC2SystemHealth';
 
 const axios = require('axios').default;
 
@@ -340,10 +340,10 @@ class DefaultDashboard extends Component {
                     <div>
 
                         {
-                            this.state.systemHealthComponentid === "Column-0" ?  <Col >< LogErrorSystemHealth /></Col>
-                            : this.state.systemHealthComponentid === "Column-1" ? <Col >< LogWarningSystemHealth /></Col>
-                            : this.state.systemHealthComponentid === "Column-2" ? <p>This is inside Nightly scripts</p>
-                            : <EC2SystemHealth />
+                            this.state.systemHealthComponentid === "Column-0" ?  <Col id ={"Column-0"}>< LogErrorSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "Column-1" ? <Col id ={"Column-1"}>< LogWarningSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "Column-2" ? <p id ={"Column-2"}>This is inside Nightly scripts</p>
+                            : <Col id ={"Column-3"}><EC2SystemHealth /></Col>
                         }
 
                     </div>

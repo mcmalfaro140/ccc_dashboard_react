@@ -3,9 +3,10 @@ import AWS from 'aws-sdk';
 import { Row, Card, Col,CardDeck } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetricAlarmDisplay from '../components/metricAlarmComp/MetricAlarmDisplay';
-import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import ExistingMetricAlarms from '../components/metricAlarmComp/ExistingMetricAlarms';
+import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms'
 
 
 
@@ -15,15 +16,37 @@ class MetricAlert extends Component {
         super(props);
         this.state = {
            alerts:[],
+           subscribedAlerts:[],
           }
         this.returnMetricAlarms = this.returnMetricAlarms.bind(this);
+        this.updateState = this.updateState.bind(this);
        
     }
     componentDidMount(){
         this.returnMetricAlarms();
     }
+    updateState(newState){
+      let subscribedArr = [];
+      let stateAlerts = this.state.alerts;
+      stateAlerts.map(alert=>{
+         if(alert.AlarmArn === newState.AlarmArn){
+           alert = newState;
+         }
+         return stateAlerts;
+      })
+      this.setState({alerts:stateAlerts});
+      console.log(stateAlerts);
+      this.state.alerts.forEach(elem=>{
+        if(elem.AlarmActions.length > 0){
+          subscribedArr.push(elem);
+        }
+     })
+     this.setState({subscribedAlerts:subscribedArr});
+
+  }
     returnMetricAlarms(){
         let alertsArr = this.state.alerts;
+        let subscribedArr = [];
         let params = {
             // ActionPrefix: 'STRING_VALUE',
             // AlarmNamePrefix: 'STRING_VALUE',
@@ -60,52 +83,48 @@ class MetricAlert extends Component {
                    alert['AlarmActions'] = data.MetricAlarms[i].AlarmActions;
                    alertsArr.push(alert);
                 }
-                this.setState({alerts: alertsArr});   
+                this.setState({alerts: alertsArr}); 
+                this.state.alerts.forEach(elem=>{
+                   if(elem.AlarmActions.length > 0){
+                     subscribedArr.push(elem);
+                   }
+                })
+                this.setState({subscribedAlerts:subscribedArr});
+
             }
           }.bind(this))
     }
 
     render() {
-
-        const item = this.state.alerts.map((item,i) =>{
-            return(
-
-                      <MetricAlarmDisplay {...item} id = {i}></MetricAlarmDisplay>
-
-            )
-        }
-    )
+    
         return (
             
          <div>
             <div className="log_alerts">
                <Tabs >
                   <TabList>
-                  <Tab >My Metric Alarms</Tab>
-                  
+                  <Tab >My Alarms</Tab>
+                  <Tab>Existing Alarms</Tab>
                   </TabList>
-              
+                
+                  <TabPanel>
+                    <div>
+                        <MyMetricAlarms updateState = {this.updateState} alarms = {this.state.subscribedAlerts}/>
+                    </div>
+                  </TabPanel>
                   <TabPanel>
                       <div>
-                      <Card className = 'my_alarms'>
-                        {item}
-                    </Card>
+                        <ExistingMetricAlarms updateState = {this.updateState} alarms = {this.state.alerts}/>
                       </div>
+                      {/* <Card className = 'my_alarms'>
+                        {item}
+                    </Card> */}                     
                   </TabPanel>  
               </Tabs>
 
             </div>
         </div>
               
-             
-                      
-                          
-                     
-                     
-         
-     
-
-       
           
         )
     }
