@@ -207,8 +207,8 @@ class MetricAlarmDisplay extends Component {
                             'Authorization': this.state.user.token,
                             'Content-Type': 'application/json'
                         },
-                        body:{
-                            'alarmArn':this.state.alert.AlarmArn
+                        data:{
+                            'alarmArn':"misael"
                         }
                         // , body:{
                         //   'ids':
