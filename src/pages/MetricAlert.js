@@ -32,7 +32,7 @@ class MetricAlert extends Component {
         if(this.state.user.token !== null){
           axios({
               method: 'get',
-              url: `${mykey.backend}/getMetricAlarm`,
+              url: `${mykey.backend}/getMetricAlarms`,
               headers: {
                   'Authorization': this.state.user.token,
                   'Content-Type': 'application/json'
