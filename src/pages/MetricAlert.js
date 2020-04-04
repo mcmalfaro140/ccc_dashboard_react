@@ -21,12 +21,15 @@ class MetricAlert extends Component {
         this.state = {
            user: getLoggedInUser(),
            alerts:[],
+           usersAlerts:[],
+           allAlerts:[],
            subscribedAlerts:[],
           }
         this.returnMetricAlarms = this.returnMetricAlarms.bind(this);
         this.updateState = this.updateState.bind(this);
        
     }
+    
     componentDidMount(){
         this.returnMetricAlarms();
         if(this.state.user.token !== null){
@@ -37,9 +40,15 @@ class MetricAlert extends Component {
                   'Authorization': this.state.user.token,
                   'Content-Type': 'application/json'
               }
+              // , body:{
+              //   'ids':
+              // }
           })
           .then((response)=>{
-             console.log(response);
+             console.log(response.data.Data.user);
+             this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+            
+            
           })
           .catch((err)=>{
               console.log(err)
@@ -47,27 +56,48 @@ class MetricAlert extends Component {
       }
     }
     updateState(newState){
-      let subscribedArr = [];
-      let stateAlerts = this.state.alerts;
-      stateAlerts.map(alert=>{
-         if(alert.AlarmArn === newState.AlarmArn){
-           alert = newState;
-         }
-         return stateAlerts;
-      })
-      this.setState({alerts:stateAlerts});
-      console.log(stateAlerts);
-      this.state.alerts.forEach(elem=>{
-        if(elem.AlarmActions.length > 0){
-          subscribedArr.push(elem);
-        }
-     })
-     this.setState({subscribedAlerts:subscribedArr});
-
+       if(this.state.user.token !== null){
+        axios({
+            method: 'get',
+            url: `${mykey.backend}/getMetricAlarms`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            }
+            // , body:{
+            //   'ids':
+            // }
+        })
+        .then((response)=>{
+           console.log(response.data.Data.user);
+           this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+          
+          
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+    //   let stateAlerts = this.state.alerts;
+    //   stateAlerts.map(alert=>{
+    //      if(alert.AlarmArn === newState.AlarmArn){
+    //        alert = newState;
+    //      }
+    //      return stateAlerts;
+    //   })
+    //   this.setState({alerts:stateAlerts});
+    //   console.log(stateAlerts);
+    //   this.state.alerts.forEach(elem=>{
+    //     if(elem.AlarmActions.length > 0){
+    //       subscribedArr.push(elem);
+    //     }
+    //  })
+    //  this.setState({subscribedAlerts:subscribedArr});
+    this.returnMetricAlarms();
   }
     returnMetricAlarms(){
-        let alertsArr = this.state.alerts;
         let subscribedArr = [];
+        let alertsArr = this.state.alerts;
         let params = {
             // ActionPrefix: 'STRING_VALUE',
             // AlarmNamePrefix: 'STRING_VALUE',
@@ -105,10 +135,19 @@ class MetricAlert extends Component {
                    alertsArr.push(alert);
                 }
                 this.setState({alerts: alertsArr}); 
-                this.state.alerts.forEach(elem=>{
-                   if(elem.AlarmActions.length > 0){
-                     subscribedArr.push(elem);
-                   }
+                // this.state.alerts.forEach(elem=>{
+                //    if(elem.AlarmActions.length > 0){
+                //      subscribedArr.push(elem);
+                //    }
+                // })
+                // this.setState({subscribedAlerts:subscribedArr});
+                this.state.alerts.forEach(elem =>{
+                  this.state.usersAlerts.forEach(userAlert=>{
+                    if(elem.AlarmArn === userAlert.alarmArn){
+                      elem['isSubscribed'] = true;
+                      subscribedArr.push(elem);
+                    }
+                  })
                 })
                 this.setState({subscribedAlerts:subscribedArr});
 
