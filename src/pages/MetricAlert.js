@@ -6,7 +6,11 @@ import MetricAlarmDisplay from '../components/metricAlarmComp/MetricAlarmDisplay
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import ExistingMetricAlarms from '../components/metricAlarmComp/ExistingMetricAlarms';
-import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms'
+import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms';
+import mykey from '../keys.json';
+import { getLoggedInUser } from '../helpers/authUtils';
+
+const axios = require('axios').default;
 
 
 
@@ -15,6 +19,7 @@ class MetricAlert extends Component {
     constructor(props) {
         super(props);
         this.state = {
+           user: getLoggedInUser(),
            alerts:[],
            subscribedAlerts:[],
           }
@@ -24,6 +29,22 @@ class MetricAlert extends Component {
     }
     componentDidMount(){
         this.returnMetricAlarms();
+        if(this.state.user.token !== null){
+          axios({
+              method: 'get',
+              url: `${mykey.backend}/getMetricAlarm`,
+              headers: {
+                  'Authorization': this.state.user.token,
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then((response)=>{
+             console.log(response);
+          })
+          .catch((err)=>{
+              console.log(err)
+          })
+      }
     }
     updateState(newState){
       let subscribedArr = [];
