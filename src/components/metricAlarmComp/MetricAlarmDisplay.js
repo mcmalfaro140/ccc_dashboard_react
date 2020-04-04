@@ -3,9 +3,11 @@ import AWS from 'aws-sdk';
 import { Row,Button, Col,Modal,ModalHeader,ModalBody,ModalFooter,Collapse } from 'reactstrap';
 import {Form} from 'react-bootstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import {Checkmark} from 'react-checkmark';
 import Table from 'react-bootstrap/Table';
-import MetricAlert from '../../pages/MetricAlert';
+import { getLoggedInUser } from '../../helpers/authUtils';
+import mykey from '../../keys.json';
+const axios = require('axios').default;
+
 
 
 
@@ -13,6 +15,7 @@ class MetricAlarmDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
+           user: getLoggedInUser(),
            alert:{
             AlarmName:null,
             MetricName:null,
@@ -193,7 +196,41 @@ class MetricAlarmDisplay extends Component {
                 if (err) console.log(err, err.stack);
                 else {
                     this.setState({subscription:true});
+                    let alert = this.state.alert;
+                    alert['isSubscribed'] = true;
+                    this.setState({alert: alert});
                     this.props.updateState(this.state.alert);
+                    axios({
+                        method: 'post',
+                        url: `${mykey.backend}/subscribeToMetricAlarm`,
+                        headers: {
+                            'Authorization': this.state.user.token,
+                            'Content-Type': 'application/json'
+                        },
+                        body:{
+                            'alarmArn':this.state.alert.AlarmArn
+                        }
+                        // , body:{
+                        //   'ids':
+                        // }
+                    })
+                    .then((response)=>{
+                       console.log(response.data.Data.user);
+                       this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+                      
+                      
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                    })
+                    // axios.post(
+                    //     `${mykey.backend}/subscribeToMetricAlarm`,
+                    //     {alarmArn:this.state.alert.AlarmArn},
+                    //     {header: {'Content-Type':'application/json', 'Authorization': this.state.user.token}}
+                    // )
+                    // .catch((error) => {
+                    //     console.log(error)
+                    // })
                 }    
               }.bind(this));
 
@@ -314,7 +351,7 @@ class MetricAlarmDisplay extends Component {
             <Row>
                 <Col xs = "1">
                     
-                    {this.props.AlarmActions.length > 0?
+                    {this.props.isSubscribed === true?
                        <i className="mdi mdi-checkbox-marked-circle" style = {{fontSize:'120%'}}></i>
                        :
                        <i className="mdi mdi-alarm-check alarm_off" style = {{fontSize:'120%'}}></i>}
@@ -349,7 +386,7 @@ class MetricAlarmDisplay extends Component {
              </Col>  */}
              <Col xs = "3">
                     {
-                        this.props.AlarmActions.length > 0?
+                        this.props.isSubscribed === true?
                         <div>
                         <div className = 'btn-group' role = 'group' block>
                             <Button  class="btn btn-secondary" color = "danger" onClick = {this.showSubscribedTopicsOfAlarms}><i class="far fa-bell-slash"></i>Unsubscribe</Button>
