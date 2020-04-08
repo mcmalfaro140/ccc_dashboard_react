@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import { Row, Card, Col,CardDeck } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import MetricAlarmDisplay from '../components/metricAlarmComp/MetricAlarmDisplay';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import ExistingMetricAlarms from '../components/metricAlarmComp/ExistingMetricAlarms';
-import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms'
+import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms';
+import mykey from '../keys.json';
+import { getLoggedInUser } from '../helpers/authUtils';
+const axios = require('axios').default;
 
 
 
@@ -15,38 +16,76 @@ class MetricAlert extends Component {
     constructor(props) {
         super(props);
         this.state = {
+           user: getLoggedInUser(),
            alerts:[],
+           usersAlerts:[],
+           allAlerts:[],
            subscribedAlerts:[],
           }
         this.returnMetricAlarms = this.returnMetricAlarms.bind(this);
         this.updateState = this.updateState.bind(this);
        
     }
+    
     componentDidMount(){
         this.returnMetricAlarms();
+        if(this.state.user.token !== null){
+          axios({
+              method: 'get',
+              url: `${mykey.backend}/getMetricAlarms`,
+              headers: {
+                  'Authorization': this.state.user.token,
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then((response)=>{
+             this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+          })
+          .catch((err)=>{
+              console.log(err)
+          })
+      }
     }
-    updateState(newState){
-      let subscribedArr = [];
-      let stateAlerts = this.state.alerts;
-      stateAlerts.map(alert=>{
-         if(alert.AlarmArn === newState.AlarmArn){
-           alert = newState;
-         }
-         return stateAlerts;
-      })
-      this.setState({alerts:stateAlerts});
-      console.log(stateAlerts);
-      this.state.alerts.forEach(elem=>{
-        if(elem.AlarmActions.length > 0){
-          subscribedArr.push(elem);
-        }
-     })
-     this.setState({subscribedAlerts:subscribedArr});
-
+    updateState(){
+       if(this.state.user.token !== null){
+        axios({
+            method: 'get',
+            url: `${mykey.backend}/getMetricAlarms`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+          let subscribedArr = [];
+          let userArnArr = [];
+           console.log(response.data.Data.all);
+           console.log(response.data.Data.user);
+           console.log(this.state.alerts);
+           this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+           this.state.alerts.forEach(elem =>{
+            response.data.Data.user.forEach(userAlert=>{
+              if(elem.AlarmArn === userAlert.alarmArn){
+                elem['isSubscribed'] = true;
+                subscribedArr.push(elem);
+                userArnArr.push(userAlert.alarmArn);
+              }
+              if(!userArnArr.includes(elem.AlarmArn)){
+                elem['isSubscribed'] = false;
+              }
+            })
+           
+          })
+          this.setState({subscribedAlerts:subscribedArr});
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
   }
     returnMetricAlarms(){
-        let alertsArr = this.state.alerts;
         let subscribedArr = [];
+        let alertsArr = this.state.alerts;
         let params = {
             // ActionPrefix: 'STRING_VALUE',
             // AlarmNamePrefix: 'STRING_VALUE',
@@ -84,13 +123,38 @@ class MetricAlert extends Component {
                    alertsArr.push(alert);
                 }
                 this.setState({alerts: alertsArr}); 
-                this.state.alerts.forEach(elem=>{
-                   if(elem.AlarmActions.length > 0){
-                     subscribedArr.push(elem);
-                   }
+                this.state.alerts.forEach(alert =>{
+                  this.state.usersAlerts.forEach(userAlert=>{
+                    if(alert.AlarmArn === userAlert.alarmArn){
+                      alert['isSubscribed'] = true;
+                      subscribedArr.push(alert);
+                    }
+                  })
                 })
                 this.setState({subscribedAlerts:subscribedArr});
-
+                
+               //checks for the deleted aws metric alarm in all array
+               let awsAlertsArr = [];
+               this.state.alerts.forEach(alert =>{
+                  awsAlertsArr.push(alert.AlarmArn);
+               })
+               this.state.allAlerts.forEach(allAlert=>{
+                 if(!awsAlertsArr.includes(allAlert.alarmArn)){
+                  axios({
+                      method: 'post',
+                      url: `${mykey.backend}/deleteMetricAlarms`,
+                      headers: {
+                          'Authorization': this.state.user.token,
+                          'Content-Type': 'application/json'
+                      },
+                      data:{
+                          'ids': allAlert.metricAlarmId,
+                      }
+                  }).then((response) =>{
+                      console.log(response);
+                  })
+                 }
+               })
             }
           }.bind(this))
     }

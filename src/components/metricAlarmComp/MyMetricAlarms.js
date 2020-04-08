@@ -14,7 +14,7 @@ class MyMetricAlarms extends Component {
     render() {
         const item = this.props.alarms.map((item,i) =>{
             return(
-                <MetricAlarmDisplay updateState = {this.props.updateState} {...item}></MetricAlarmDisplay>
+                <MetricAlarmDisplay key = {i} updateState = {this.props.updateState} {...item}></MetricAlarmDisplay>
             )
         }
     )
