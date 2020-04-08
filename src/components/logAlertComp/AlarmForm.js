@@ -130,9 +130,10 @@ class AlarmForm extends Component {
     }
     snsSelection(e){
         let v = e.target.value;
+        let v_trimmed = v.split(":")[v.split(":").length-1];
         this.setState(prevState => {
             let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
-            logAlarmInput.SNS_Selection = v;
+            logAlarmInput.SNS_Selection = v_trimmed;
             return { logAlarmInput };                                
           })
           this.setState({subscribedTopicArn:v});
