@@ -305,7 +305,7 @@ class AlarmForm extends Component {
                         <Col>
                             <Form.Label className = 'log_level'>Keywords(optional): </Form.Label>   
                         </Col>
-                        <Col xs={2}>
+                        <Col xs={2.5}>
                             <Form.Control as="select" onChange={this.keywordRelationshipSelection}>
                                     <option disabled selected>Keyword Relationship</option>
                                     <option value = 'ANY'>ANY</option>
@@ -426,7 +426,8 @@ class AlarmForm extends Component {
                                                     <label>Protocol</label>
                                                 </div>
                                                 <div>
-                                                    <select className = 'selection' value = {name} onChange={(e) => this.protocolOption(e,index)}>
+                                                    <select className = 'selection' onChange={(e) => this.protocolOption(e,index)}>
+                                                        <option disabled selected>Select</option>
                                                         <option value="http">http</option>
                                                         <option value="https">https</option>
                                                         <option value="email">email</option>
