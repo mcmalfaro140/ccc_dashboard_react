@@ -82,6 +82,7 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
+                console.log(response)
                 if(response.data.Result == "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
