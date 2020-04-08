@@ -9,8 +9,6 @@ import mykey from '../../keys.json';
 const axios = require('axios').default;
 
 
-
-
 class MetricAlarmDisplay extends Component {
     constructor(props) {
         super(props);
@@ -42,7 +40,7 @@ class MetricAlarmDisplay extends Component {
            sign:null,
            topicArns:[],
            subscribedTopicArn:null,
-           topicArnToAttachEndpoints:null,
+           topicArnToAttachEndpoints:[],
            topicName:'',
            toggleModalAndSubscribe:false,
            subscriptionProtocol : [],
@@ -518,7 +516,7 @@ class MetricAlarmDisplay extends Component {
                       </Col>
                   </Row>
               </Collapse>
-              <Modal isOpen = {this.state.addProtocol} toggle = {this.openProtocolModal} className = 'modalku'>
+              <Modal isOpen = {this.state.addProtocol} toggle = {(e)=>this.openProtocolModal(e,1)} className = 'modalku'>
               <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Add Endpoints</span></ModalHeader>
               <ModalBody>
                           {
@@ -569,7 +567,8 @@ class MetricAlarmDisplay extends Component {
                                                     <label>Protocol</label>
                                                 </div>
                                                 <div>
-                                                    <select className = 'selection' value = {name} onChange={(e) => this.protocolOption(e,index)}>
+                                                    <select className = 'selection' onChange={(e) => this.protocolOption(e,index)}>
+                                                        <option disabled selected>Select</option>
                                                         <option value="http">http</option>
                                                         <option value="https">https</option>
                                                         <option value="email">email</option>
@@ -641,98 +640,6 @@ class MetricAlarmDisplay extends Component {
                                     {dropdown}                              
                              </Form.Control>
                             </Form.Group>
-                            {/* <fieldset disabled = {this.state.subscribedTopicArn == null}>
-                          {
-                            this.state.listSubscriptions != null&& this.state.listSubscriptions.length > 0?  
-                              <div className = 'scrolling'>
-                                    <Form.Label>Subscribed Endpoints of the topic: {this.state.subscribedTopicArn.split(':')[this.state.subscribedTopicArn.split(':').length-1]}</Form.Label>
-                                    <Table striped bordered hover size="sm">
-                                         <thead>
-                                            <tr>
-                                                <th>Protocol</th>
-                                                <th>Endpoint</th>
-                                                <th>Owner</th>
-                                                <th>SubscriptionArn</th>
-                                                <th>TopicArn</th>
-                                                <th>Action</th>
-                                            </tr> 
-                                        </thead>
-                                        <tbody>
-                                            { this.state.listSubscriptions.map((item,i)=>{
-                                                return(
-                                                    <tr>
-                                                        <td>{item.Protocol}</td>
-                                                        <td>{item.Endpoint}</td>
-                                                        <td>{item.Owner}</td>
-                                                        <td>{item.SubscriptionArn}</td>
-                                                        <td>{item.TopicArn}</td>
-                                                        <td><Button className = 'button_a' onClick = {(e) => this.unsubscribeEndpoints(e,item.SubscriptionArn,item.TopicArn)}>Remove</Button></td>
-                                                    </tr>
-                                                )
-                                                     })
-                                                 }
-                           </tbody>
-                            </Table> 
-                            </div> 
-                            :null}
-                        <Button className = 'button_a' style = {{float:'right'}} onClick = {this.addProtocol}>Add Subscription Endpoint</Button>
-                        <br></br><br></br>
-                        <form onSubmit = {(e)=>this.attachEndpointsToSNSTopic(e)}>
-                        {
-                            this.state.subscriptionProtocol.map(({name, value},index)=>{
-                              return(
-                                <>
-                                <hr style = {{borderColor:'#d1d1d1'}}/>
-                                        <Row>  
-                                       
-                                            <Col>
-                                                <div>
-                                                    <label>Protocol</label>
-                                                </div>
-                                                <div>
-                                                    <select className = 'selection' value = {name} onChange={(e) => this.protocolOption(e,index)}>
-                                                        <option value="http">http</option>
-                                                        <option value="https">https</option>
-                                                        <option value="email">email</option>
-                                                        <option value="sms">sms</option>
-                                                        <option value="lambda">lambda</option>
-                                                    </select>
-                                                </div>
-                                            </Col>
-                                            <Col>
-                                                <div>
-                                                    <label>Value</label>
-                                                </div>
-                                                <div>
-                                                    <input value = {value} className = 'inputs' onChange = {(e) => this.protocolValue(e,index)}/>
-                                                </div>  
-                                            </Col>
-                                            <Col xs={2}>
-                                                <div className = 'remove_div'>
-                                                    <div className = 'remove_label'>
-                                                        <label>Remove</label>
-                                                    </div>
-                                                    <div className = 'remove_icon_div'>
-                                                    <i class = "mdi mdi-delete-variant" style = {{fontSize:'200%',color:'black'}} onClick = {() =>this.deleteProtocol(index)}></i>
-                                                    </div> 
-                                                </div>  
-                                            </Col>
-                                        </Row>
-                                    </>
-                              )
-                            })
-                        }
-                        {
-                            this.state.subscriptionProtocol.length > 0?
-                                <input type="submit" value="Add Endpoint/s" className = 'submitButton1'/>:null
-                        }
-                        {
-                            this.state.attachedEndpoints === true?
-                                <div><span className = 'addEndpoint'>Add Endpoints successfully</span></div>: null
-                        }
-                            
-                          </form>
-                          </fieldset> */}
                           </Form>
                   </ModalBody>
                   <ModalFooter>
