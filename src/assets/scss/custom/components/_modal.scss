@@ -59,6 +59,26 @@
     }
 }
 
+.Loading_modal{
+    
+}
+
+.Loading_spinner{
+    text-align: center;
+    margin: 10%;
+}
+
+.Loading_message{
+    text-align: center;
+    margin: 10%;
+    >img{
+        width: 50%
+    }
+    >div{
+        margin: 5%
+    }
+}
+
 .collapse_cal{
     display: none;
 }
