@@ -7,6 +7,7 @@ import ExistingMetricAlarms from '../components/metricAlarmComp/ExistingMetricAl
 import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms';
 import mykey from '../keys.json';
 import { getLoggedInUser } from '../helpers/authUtils';
+import Loading from '../components/logAlertComp/Loading'
 const axios = require('axios').default;
 
 
@@ -21,13 +22,18 @@ class MetricAlert extends Component {
            usersAlerts:[],
            allAlerts:[],
            subscribedAlerts:[],
+           isLoading: true,
+           isComplete: true,
+           isSuccessful: true
           }
         this.returnMetricAlarms = this.returnMetricAlarms.bind(this);
         this.updateState = this.updateState.bind(this);
+        this.close = this.close.bind(this);
        
     }
     
     componentDidMount(){
+        //called deleteMetricAlarm endpoint in returnMetricAlarms function.
         this.returnMetricAlarms();
         if(this.state.user.token !== null){
           axios({
@@ -46,7 +52,11 @@ class MetricAlert extends Component {
           })
       }
     }
-    updateState(){
+    close(){
+      this.setState({isComplete:true});
+    }
+    updateState(isLoading, isSuccessful){
+      this.setState({isComplete : false});
        if(this.state.user.token !== null){
         axios({
             method: 'get',
@@ -76,7 +86,8 @@ class MetricAlert extends Component {
             })
            
           })
-          this.setState({subscribedAlerts:subscribedArr});
+          this.setState({subscribedAlerts:subscribedArr, isLoading:isLoading, isSuccessful: isSuccessful});
+
         })
         .catch((err)=>{
             console.log(err)
@@ -185,8 +196,9 @@ class MetricAlert extends Component {
                     </Card> */}                     
                   </TabPanel>  
               </Tabs>
-
             </div>
+            <Loading isLoading={this.state.isLoading} isComplete={this.state.isComplete} isSuccessful={this.state.isSuccessful} close={this.close} />
+
         </div>
               
           
