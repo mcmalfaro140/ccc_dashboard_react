@@ -54,12 +54,29 @@
                     float: right;
                 }
             }
+            >div:nth-child(6){
+                text-align: center;
+                font-size:300%;
+                margin-left: 0%;
+                :hover{
+                    color: red;
+                    cursor: pointer;
+                }
+            }
         }
         >div:nth-child(2){
             margin-top: 2%;
             margin-left: 7.5%;
             margin-bottom: 2%;
         }
+    }
+}
+
+.no_alarms{
+    text-align: center;
+    margin: 20%;
+    >img{
+        width: 30%;
     }
 }
 
