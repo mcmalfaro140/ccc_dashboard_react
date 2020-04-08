@@ -199,7 +199,7 @@ class MetricAlarmDisplay extends Component {
                     let alert = this.state.alert;
                     alert['isSubscribed'] = true;
                     this.setState({alert: alert});
-                    this.props.updateState(this.state.alert);
+                   
                     axios({
                         method: 'post',
                         url: `${mykey.backend}/subscribeToMetricAlarm`,
@@ -208,21 +208,24 @@ class MetricAlarmDisplay extends Component {
                             'Content-Type': 'application/json'
                         },
                         data:{
-                            'alarmArn':"misael"
+                            'alarmArn': this.state.alert.AlarmArn
                         }
                         // , body:{
                         //   'ids':
                         // }
+                    }).then((response) =>{
+                        this.props.updateState();
                     })
-                    .then((response)=>{
-                       console.log(response.data.Data.user);
-                       this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+                  
+                    // .then((response)=>{
+                    //    console.log(response.data.Data.user);
+                    //    this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
                       
                       
-                    })
-                    .catch((err)=>{
-                        console.log(err)
-                    })
+                    // })
+                    // .catch((err)=>{
+                    //     console.log(err)
+                    // })
                     // axios.post(
                     //     `${mykey.backend}/subscribeToMetricAlarm`,
                     //     {alarmArn:this.state.alert.AlarmArn},
@@ -329,8 +332,25 @@ class MetricAlarmDisplay extends Component {
           cloudwatch.putMetricAlarm(params, function(err, data) {
             if (err) console.log(err, err.stack);
             else {
-                this.setState({subscription:false});
-                this.props.updateState(this.state.alert);
+               // this.setState({subscription:false});
+               if(actionArr.length === 1){
+                axios({
+                    method: 'post',
+                    url: `${mykey.backend}/unsubscribeToMetricAlarm`,
+                    headers: {
+                        'Authorization': this.state.user.token,
+                        'Content-Type': 'application/json'
+                    },
+                    data:{
+                        'alarmArn': this.state.alert.AlarmArn
+                    }
+                    // , body:{
+                    //   'ids':
+                    // }
+                }).then((response) =>{
+                    this.props.updateState();
+                })
+               }   
             }    
           }.bind(this));
 
