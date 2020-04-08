@@ -46,6 +46,7 @@ class Items extends Component {
         }
        
     }
+    
     getTopicARN(e){
         this.setState({subscribingTopicArn:e.target.value});
     }
@@ -122,6 +123,8 @@ class Items extends Component {
             this.setState({listSubscriptions:null,subscriptionProtocol:[], attachedEndpoints:false});
         }
     }
+
+    //retrieves all the endpoints subscribed to the specific topic arn 
     listSubscriptions(arn){
         let sns = new AWS.SNS();
         var params = {
@@ -147,6 +150,8 @@ class Items extends Component {
         }
 
     }
+
+    //retrieves all the SNS Topics from aws
     getSNSTopics(){
         let sns = new AWS.SNS();
         var params = {
