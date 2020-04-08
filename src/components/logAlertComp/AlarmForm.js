@@ -27,7 +27,8 @@ class AlarmForm extends Component {
                 LogLevel:null,
                 Keywords:[],
                 LogGroupNameSelection:[],
-                SNS_Selection:null
+                SNS_Selection:null,
+                KeywordRelationship:null,
             }
            
         }
@@ -40,7 +41,7 @@ class AlarmForm extends Component {
         this.addProtocol = this.addProtocol.bind(this);
         this.deleteProtocol = this.deleteProtocol.bind(this);
         this.attachEndpointsToSNSTopic = this.attachEndpointsToSNSTopic.bind(this);
-        
+        this.keywordRelationshipSelection = this.keywordRelationshipSelection.bind(this);
        
     }
     componentWillMount(){
@@ -127,6 +128,14 @@ class AlarmForm extends Component {
             return { logAlarmInput };                                
           })
   
+    }
+    keywordRelationshipSelection(e){
+        let v = e.target.value;
+        this.setState(prevState => {
+            let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
+            logAlarmInput.KeywordRelationship = v;
+            return { logAlarmInput };                                
+          })
     }
     snsSelection(e){
         let v = e.target.value;
@@ -240,7 +249,7 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <Form.Label>Alarm Name: </Form.Label>
-                    <Form.Control type="text" className = 'form_input' onChange = {(e) => this.update(e,0)}/>
+                    <Form.Control type="text" placeholder="Enter alarm name here" className = 'form_input' onChange = {(e) => this.update(e,0)}/>
                 </Form.Group> 
 
                             
@@ -260,15 +269,19 @@ class AlarmForm extends Component {
                                 <option disabled selected>Select</option>
                                 <option value ="<">&lt;</option>
                                 <option value = '>'>&gt;</option>
-                                <option value = '≤'>≤</option>
-                                <option value = '≥'>≥</option>
+                                <option value = '=='>=</option>
+                                <option value = '<='>≤</option>
+                                <option value = '>='>≥</option>
                             </Form.Control>    
                        </Col> 
                        <Col>
                             <Form.Control as="select" onChange={this.levelSelection}>
                                 <option disabled selected>Select</option>
+                                <option value = 'TRACE'>TRACE</option>
                                 <option value = 'ERROR'>ERROR</option>
                                 <option value = 'WARN'>WARN</option>
+                                <option value = 'INFO'>INFO</option>
+                                <option value = 'DEBUG'>DEBUG</option>
                             </Form.Control>   
                        </Col>
                        <Col>
@@ -292,8 +305,15 @@ class AlarmForm extends Component {
                         <Col>
                             <Form.Label className = 'log_level'>Keywords(optional): </Form.Label>   
                         </Col>
-                        <Col xs = {10}>
-                            <Form.Control type="text" onChange = {(e) => this.update(e,1)} />
+                        <Col xs={2}>
+                            <Form.Control as="select" onChange={this.keywordRelationshipSelection}>
+                                    <option disabled selected>Keyword Relationship</option>
+                                    <option value = 'ANY'>ANY</option>
+                                    <option value = 'ALL'>ALL</option>
+                                </Form.Control>   
+                        </Col>
+                        <Col xs = {8}>
+                            <Form.Control type="text" placeholder="Enter keywords here" onChange = {(e) => this.update(e,1)} />
                         </Col>
                     </Row>
                     
