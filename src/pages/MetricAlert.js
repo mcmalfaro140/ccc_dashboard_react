@@ -35,22 +35,60 @@ class MetricAlert extends Component {
     componentDidMount(){
         //called deleteMetricAlarm endpoint in returnMetricAlarms function.
         this.returnMetricAlarms();
-        if(this.state.user.token !== null){
-          axios({
-              method: 'get',
-              url: `${mykey.backend}/getMetricAlarms`,
-              headers: {
-                  'Authorization': this.state.user.token,
-                  'Content-Type': 'application/json'
-              }
-          })
-          .then((response)=>{
-             this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
-          })
-          .catch((err)=>{
-              console.log(err)
-          })
-      }
+        
+    }
+    getAlerts(){
+      let subscribedArr = [];
+      if(this.state.user.token !== null){
+        axios({
+            method: 'get',
+            url: `${mykey.backend}/getMetricAlarms`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+           this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+           console.log(this.state.usersAlerts);
+           this.state.alerts.forEach(alert =>{
+            response.data.Data.user.forEach(userAlert=>{
+               if(alert.AlarmArn === userAlert.alarmArn){
+                 alert['isSubscribed'] = true;
+                 subscribedArr.push(alert);
+               }
+             })
+           })
+           this.setState({subscribedAlerts:subscribedArr});
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+    }
+    deleteAlerts(){
+     //checks for the deleted aws metric alarm in all array
+     let awsAlertsArr = [];
+     this.state.alerts.forEach(alert =>{
+        awsAlertsArr.push(alert.AlarmArn);
+     })
+     this.state.allAlerts.forEach(allAlert=>{
+       if(!awsAlertsArr.includes(allAlert.alarmArn)){
+        axios({
+            method: 'post',
+            url: `${mykey.backend}/deleteMetricAlarms`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            },
+            data:{
+                'ids': allAlert.metricAlarmId,
+            }
+        }).then((response) =>{
+            console.log(response);
+        })
+       }
+     })
     }
     close(){
       this.setState({isComplete:true});
@@ -95,7 +133,6 @@ class MetricAlert extends Component {
     }
   }
     returnMetricAlarms(){
-        let subscribedArr = [];
         let alertsArr = this.state.alerts;
         let params = {
             // ActionPrefix: 'STRING_VALUE',
@@ -133,39 +170,11 @@ class MetricAlert extends Component {
                    alert['AlarmActions'] = data.MetricAlarms[i].AlarmActions;
                    alertsArr.push(alert);
                 }
-                this.setState({alerts: alertsArr}); 
-                this.state.alerts.forEach(alert =>{
-                  this.state.usersAlerts.forEach(userAlert=>{
-                    if(alert.AlarmArn === userAlert.alarmArn){
-                      alert['isSubscribed'] = true;
-                      subscribedArr.push(alert);
-                    }
-                  })
-                })
-                this.setState({subscribedAlerts:subscribedArr});
+                this.getAlerts();
+              
+                this.deleteAlerts();
                 
-               //checks for the deleted aws metric alarm in all array
-               let awsAlertsArr = [];
-               this.state.alerts.forEach(alert =>{
-                  awsAlertsArr.push(alert.AlarmArn);
-               })
-               this.state.allAlerts.forEach(allAlert=>{
-                 if(!awsAlertsArr.includes(allAlert.alarmArn)){
-                  axios({
-                      method: 'post',
-                      url: `${mykey.backend}/deleteMetricAlarms`,
-                      headers: {
-                          'Authorization': this.state.user.token,
-                          'Content-Type': 'application/json'
-                      },
-                      data:{
-                          'ids': allAlert.metricAlarmId,
-                      }
-                  }).then((response) =>{
-                      console.log(response);
-                  })
-                 }
-               })
+          
             }
           }.bind(this))
     }
