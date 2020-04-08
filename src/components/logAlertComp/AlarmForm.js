@@ -5,6 +5,7 @@ import {Form,Table} from 'react-bootstrap';
 import AWS from 'aws-sdk';
 import mykey from '../../keys.json';
 
+const axios = require('axios').default;
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 let cloudwatchlogs = new AWS.CloudWatchLogs();
 let value = [];
@@ -42,12 +43,87 @@ class AlarmForm extends Component {
         this.deleteProtocol = this.deleteProtocol.bind(this);
         this.attachEndpointsToSNSTopic = this.attachEndpointsToSNSTopic.bind(this);
         this.keywordRelationshipSelection = this.keywordRelationshipSelection.bind(this);
+        this.onSubmitForm = this.onSubmitForm.bind(this);
+        this.checkObj = this.checkObj.bind(this);
+        
        
     }
+    
     componentWillMount(){
         this.getLogGroupName();
         this.getSNSTopics();
     }
+
+    checkObj(obj){
+        if(obj.AlarmName != null || ""){
+            if(obj.LogLevelSign != null && obj.LogLevel != null){
+                if(obj.LogGroupNameSelection.length > 0){
+                    if(obj.SNS_Selection != null){
+                        return true
+                    }else{
+                        return false
+                    }
+                }else{
+                    return false
+                }
+            }else{
+                return false
+            }
+        }else{
+            return false
+        }
+    }
+
+    onSubmitForm(){
+        let info = this.state.logAlarmInput;
+        let key_str = null;
+        this.showObj();
+        if(info.Keywords.length > 0){
+            info.Keywords.forEach((element,i) => {
+                if(info.Keywords.length == i+1){
+                    key_str += element
+                }else{
+                    key_str += element+','
+                }
+                
+            });
+        }
+        if(this.checkObj(info)){
+            this.setState({isComplete:false})
+            axios({
+                method: 'post',
+                url: `${mykey.backend}/createLogAlarm`,
+                headers: {
+                    'Authorization': this.props.user.token,
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                data: {
+                    'AlarmName' : info.AlarmName,
+                    'KeywordRelationship': info.KeywordRelationship,
+                    'LogLevel' : info.LogLevel ,
+                    'Comparison' : info.LogLevelSign,
+                    'LogGroups' : info.LogGroupNameSelection,
+                    'Keywords' : key_str,
+                    'SNSTopicNames' : info.SNS_Selection
+                }
+            })
+            .then((response)=>{
+                if(response.data.Result == "Success"){
+                    this.setState({isLoading: false, isSuccessful:true})
+                    this.getAlerts();
+                }else{
+                    this.setState({isLoading: false, isSuccessful:false})
+                }
+            })
+            .catch((err)=>{
+                this.setState({isLoading: false,isSuccessful:false})
+                console.log(err)
+            })
+        }else{
+            console.log("dont sub")
+        }
+    }
+
     listSubscriptions(arn){
         let sns = new AWS.SNS();
         var params = {
@@ -56,7 +132,6 @@ class AlarmForm extends Component {
           sns.listSubscriptionsByTopic(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
-                console.log(data);
                 this.setState({listSubscriptions:data.Subscriptions});
             }   
           }.bind(this));
@@ -86,7 +161,6 @@ class AlarmForm extends Component {
           sns.listTopics(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
-                console.log(data.Topics);
                 this.setState({topicArns:data.Topics}); // successful response
             }        
           }.bind(this));
@@ -211,7 +285,6 @@ class AlarmForm extends Component {
         if(count === 2){
             newArr = newArr.filter(a => a !== this.state.logGroupNames[i])
         }
-        console.log(newArr);
         this.setState(prevState => {
             let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
             logAlarmInput.LogGroupNameSelection = newArr;
@@ -303,7 +376,7 @@ class AlarmForm extends Component {
                 <Form.Group>
                     <Row>
                         <Col>
-                            <Form.Label className = 'log_level'>Keywords(optional): </Form.Label>   
+                            <Form.Label className= 'log_level'>Keywords(optional): </Form.Label>   
                         </Col>
                         <Col xs={2.5}>
                             <Form.Control as="select" onChange={this.keywordRelationshipSelection}>
@@ -475,7 +548,7 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <div className = 'subscribe_div'>
-                        <Button color="danger" onClick = {this.showObj}>Create & Subscribe to New Alarm</Button>
+                        <Button color="danger" onClick = {this.onSubmitForm}>Create & Subscribe to New Alarm</Button>
                     </div>
                 </Form.Group>
                        
