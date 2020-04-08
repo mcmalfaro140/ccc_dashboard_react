@@ -61,7 +61,7 @@ class DefaultDashboard extends Component {
                 url: `${mykey.backend}/get_dashboard`,
                 headers: {
                     'Authorization': this.state.user.token,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json; charset=UTF-8'
                 }
             })
             .then((response)=>{

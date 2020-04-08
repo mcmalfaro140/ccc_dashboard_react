@@ -44,7 +44,17 @@ class Items extends Component {
 
     createAlarms = () => {
         let alarm = []
-        this.props.alarms.map((element, i) => {
+        this.props.alerts.map((element, i) => {
+            let key_str = "";
+            element.Keywords.forEach(e => {
+                console.log(e);
+                key_str += e + ' ';
+            });
+            let str_key = "."
+            if(element.KeywordRelationship != null){
+                str_key = `, and if they contain ${element.KeywordRelationship} of the keywords.`
+            }
+            let desc_srt = `The user will be notify when logs are " ${element.Comparison}  ${element.LogLevel} " ${str_key}`
             let alarm_id = "alarm-id-" + i;
             alarm.push(
                 <div key={i}>
@@ -55,38 +65,47 @@ class Items extends Component {
                             :
                             <i className="mdi mdi-alarm-check alarm_off"></i>}
                         </Col>
-                        <Col xs="4">
-                            <Row>{element.name}</Row>
+                        <Col xs="3">
+                            <Row>{element.AlarmName}</Row>
                             <Row className="pointer" onClick={() => this.handleInfoClick(i)} ><i className="mdi mdi-menu-right"></i> See More Details</Row>
                         </Col>
                         <Col>
                             <Row>Filter Pattern:</Row>
-                            <Row>{element.filter}</Row>
+                            <Row>Logs {element.Comparison} {element.LogLevel}</Row>
                         </Col>
                         <Col>
-                            <Row>Filter Pattern:</Row>
-                            <Row>{element.sns_topic[0]}</Row>
+                            <Row>Keywords:</Row>
+                            <Row>{key_str}</Row>
                         </Col>
                         <Col xs="2">
                             {element.isSubscribe ? 
-                                <Button color="danger" block><i class="far fa-bell-slash"></i>Unsubscribe</Button>
+                                <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId)}><i class="far fa-bell-slash"></i>Unsubscribe</Button>
                                 :
-                                <Button color="primary" block><i class="far fa-bell"></i>Subscribe</Button>}
+                                <Button color="primary" block onClick={() => this.props.handleSubscribe(element.LogAlarmId)}><i class="far fa-bell"></i>Subscribe</Button>}
                             
+                        </Col>
+                        <Col xs='1'>
+                            <i class="mdi mdi-delete-variant"></i>
                         </Col>
                     </Row>
                     <Collapse id={alarm_id} isOpen={false}>
                         <Row>
                             <Col>
+                                <h3>Alarm Description:</h3>
+                                <p>{desc_srt}</p>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
                                 <h3>Log Group Names Attached:</h3>
                                 <ul>
-                                    {this.createLogGroupName(element.log_groups)}
+                                    {this.createLogGroupName(element.LogGroups)}
                                 </ul>
                             </Col>
                             <Col>
                                 <h3>SNS Topic Attached:</h3>
                                 <ul>
-                                    {this.createSns(element.sns_topic)}
+                                    {this.createSns(element.SNSTopics)}
                                 </ul>
                             </Col>
                         </Row>
@@ -95,7 +114,6 @@ class Items extends Component {
                     
                 </div>
             )
-            
         });
         return alarm
     }
