@@ -461,7 +461,7 @@ class AlarmForm extends Component {
                             }
                              {
                             this.state.subscriptionProtocol.length > 0?
-                                 <Button color="primary" type="submit" className="add_end">Add Endpoint/s</Button>:null
+                                 <Button color="primary" type="submit" className="add_end">Attach Endpoint/s</Button>:null
                         }
                         </form>
 
