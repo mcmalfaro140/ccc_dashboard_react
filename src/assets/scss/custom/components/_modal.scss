@@ -59,7 +59,20 @@
     }
 }
 
-.Loading_modal{
+.delete_modal{
+    text-align: center;
+    >div{
+        padding: 10%;
+        font-size: 150%;
+        color: red;
+        >img{
+            margin: auto;
+            width: 50%
+        }
+        >button{
+            margin: 5%
+        }
+    }
     
 }
 

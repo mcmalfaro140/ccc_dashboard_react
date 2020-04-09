@@ -8,6 +8,8 @@ import 'react-tabs/style/react-tabs.css';
 import mykey from '../keys.json';
 import { getLoggedInUser } from '../helpers/authUtils';
 import Loading from '../components/logAlertComp/Loading'
+import { Button, Modal } from 'reactstrap';
+import Incomplete from '../assets/images/incomplete.png'
 
 
 
@@ -23,12 +25,28 @@ class LogAlerts extends Component {
             logAlerts_Set:[],
             isLoading: true,
             isComplete: true,
-            isSuccessful: true
+            isSuccessful: true,
+            isErrorOpen: false
         }
         this.getAlerts = this.getAlerts.bind(this);
         this.subscribe = this.subscribe.bind(this);
         this.unsubscribe = this.unsubscribe.bind(this);
         this.close = this.close.bind(this)
+        this.deleteAlert = this.deleteAlert.bind(this);
+        this.deleteReq = this.deleteReq.bind(this);
+        this.setSuccess = this.setSuccess.bind(this);
+        this.setFail = this.setFail.bind(this);
+        this.setComplete = this.setComplete.bind(this);
+    }
+
+    setSuccess(){
+        this.setState({isLoading: false,isSuccessful: true })
+    }
+    setFail(){
+        this.setState({isLoading: false,isSuccessful: false })
+    }
+    setComplete(){
+        this.setState({isComplete: !this.state.isComplete})
     }
 
     componentDidMount(){
@@ -36,7 +54,49 @@ class LogAlerts extends Component {
     }
 
     close(){
-        this.setState({isComplete: true})
+        this.setState({isComplete: true, isErrorOpen: false})
+    }
+
+    deleteReq(id){
+        this.setState({isComplete:false})
+        axios({
+            method: 'post',
+            url: `${mykey.backend}/deleteLogAlarm`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            data: {
+                'LogAlarmId' : id
+            }
+        })
+        .then((response)=>{
+            if(response.data.Result == "Success"){
+                this.setState({isLoading: false, isSuccessful:true})
+                this.getAlerts();
+            }else{
+                this.setState({isLoading: false, isSuccessful:false})
+            }
+        })
+        .catch((err)=>{
+            this.setState({isLoading: false,isSuccessful:false})
+            console.log(err)
+        })
+    }
+
+    deleteAlert(id){
+        let alarm = this.state.logAlerts_Set[id]
+        if(alarm.Users.length == 1){
+            if(alarm.Users[0] == this.state.user.username){
+                this.deleteReq(alarm.LogAlarmId)
+            }else{
+                this.setState({isErrorOpen: true})
+            }
+        }else if(alarm.Users.length == 0){
+            this.deleteReq(alarm.LogAlarmId)
+        }else{
+            this.setState({isErrorOpen: true})
+        }
     }
 
     subscribe(id){
@@ -54,7 +114,7 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
-                if(response.data.Result === "Success"){
+                if(response.data.Result == "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
                 }else{
@@ -82,6 +142,7 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
+                console.log(response)
                 if(response.data.Result == "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
@@ -144,22 +205,28 @@ class LogAlerts extends Component {
                 
                     <TabPanel>
                         <div>
-                            <MyAlarms handleSubscribe={this.subscribe} handleUnubscribe={this.unsubscribe} alerts={this.state.myAlerts_Set}/>
+                            <MyAlarms handleDelete={this.deleteAlert} handleSubscribe={this.subscribe} handleUnubscribe={this.unsubscribe} alerts={this.state.myAlerts_Set}/>
                         </div>
                     </TabPanel>
                     <TabPanel>
                         <div>
-                            <ExistingAlarms handleSubscribe={this.subscribe} handleUnubscribe={this.unsubscribe} alerts={this.state.logAlerts_Set}/>
+                            <ExistingAlarms handleDelete={this.deleteAlert} handleSubscribe={this.subscribe} handleUnubscribe={this.unsubscribe} alerts={this.state.logAlerts_Set}/>
                         </div>
                     </TabPanel>
                     <TabPanel>
                         <div>
-                            <AlarmForm/>
+                            <AlarmForm getAlerts={this.getAlerts} success={this.setSuccess} fail={this.setFail} complete={this.setComplete} user={this.state.user}/>
                         </div>    
                     </TabPanel>
                 </Tabs>
               </div>
               <Loading isLoading={this.state.isLoading} isComplete={this.state.isComplete} isSuccessful={this.state.isSuccessful} close={this.close} />
+              <Modal isOpen={this.state.isErrorOpen} className="delete_modal">
+                    <img src={Incomplete}/>
+                    <div>Can't delete alarm. There are more users subscribed to it.</div>
+                    <Button onClick={() => this.close()}>Close</Button>
+                </Modal>
+              
           </div>
         )
     }
