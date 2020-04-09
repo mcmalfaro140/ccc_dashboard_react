@@ -35,7 +35,6 @@ class MetricAlarmDisplay extends Component {
             Dimensions: null,
            },
            id:null,
-           showAlertDetails:false,
            isOpen:false,
            subscription: false,
            color:null,
@@ -50,7 +49,6 @@ class MetricAlarmDisplay extends Component {
            listSubscriptions:null,
            showSubscribedTopicsOfAlarms:false,
           }
-        this.showAlertDetails = this.showAlertDetails.bind(this);
         this.toggle = this.toggle.bind(this);
         this.openSubscriptionDetails = this.openSubscriptionDetails.bind(this);
         this.getTopicARN = this.getTopicARN.bind(this);
@@ -113,6 +111,7 @@ class MetricAlarmDisplay extends Component {
           this.setState({id : 'Pop' + this.props.id});
     }
     componentWillReceiveProps(nextProps){
+        this.setState({isOpen:false});
         if(nextProps.StateValue === 'OK')
         this.setState({color:'green'});
         else if(nextProps.StateValue === 'ALARM')
@@ -484,7 +483,7 @@ class MetricAlarmDisplay extends Component {
                   <Row>
                       <Col>
                             <h3>Alarm Description</h3>
-                            <div className = 'description'>{this.state.alert.AlarmDescription}</div>
+                            <div className = 'descriptionss'>{this.state.alert.AlarmDescription}</div>
                       </Col>
                       <Col>
                           <h3>Period</h3>  
@@ -494,7 +493,7 @@ class MetricAlarmDisplay extends Component {
                   <Row>
                     <Col>
                             <h3>Namespace</h3>
-                            <div className = 'description'>{this.state.alert.Namespace}</div>
+                            <div className = 'descriptionss'>{this.state.alert.Namespace}</div>
                         </Col>
                     <Col>
                          <h3>Statistic</h3>
@@ -542,13 +541,13 @@ class MetricAlarmDisplay extends Component {
                       </Col>
                     <Col>
                         <h3>AlarmArn</h3>
-                        <div className = 'description'>{this.state.alert.AlarmArn}</div>
+                        <div className = 'descriptionss'>{this.state.alert.AlarmArn}</div>
                     </Col>
                   </Row>
                   <Row>
                       <Col>
                             <h3>ComparisonOperator</h3>
-                            <div className = 'description'>{this.state.alert.ComparisonOperator}</div>
+                            <div className = 'descriptionss'>{this.state.alert.ComparisonOperator}</div>
                       </Col>
                       <Col>
                           <h3>TreatMissingData</h3>
@@ -561,7 +560,7 @@ class MetricAlarmDisplay extends Component {
               <ModalBody>
                           {
                             this.state.listSubscriptions != null&& this.state.listSubscriptions.length > 0?  
-                              <div className = 'scrolling'>
+                              <div className = 'scrollingss'>
                                     <Form.Label>Subscribed Endpoints of the topic: {this.state.topicArnToAttachEndpoints.split(':')[this.state.topicArnToAttachEndpoints.split(':').length-1]}</Form.Label>
                                     <Table striped bordered hover size="sm">
                                          <thead>

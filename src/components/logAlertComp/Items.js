@@ -184,11 +184,7 @@ class Items extends Component {
                         <li key={i}>{elem}</li>
                     </Col>
                     <Col>
-                        <span>
-                        <span className = "myClickableThingy" onClick = {(e)=>this.openProtocolModal(e,elem)}>Add Endpoint</span>
-                        <span>/</span>
-                        <span className = "myClickableThingy">Delete Topic</span>
-                        </span>
+                        <span className = {element.isSubscribe===true?"myClickableThingy":"addTopic_non"} onClick = {(e)=>this.openProtocolModal(e,elem)}>Add Endpoint</span>
                     </Col>
                 </Row>
                 
@@ -318,7 +314,7 @@ class Items extends Component {
                 <ModalBody>
                 {
                             this.state.listSubscriptions != null&& this.state.listSubscriptions.length > 0?  
-                              <div className = 'scrolling'>
+                              <div className = 'scrollingss'>
                                     <Form.Label>Subscribed Endpoints of the topic: {this.state.topicArnToAttachEndpoints.split(':')[this.state.topicArnToAttachEndpoints.split(':').length-1]}</Form.Label>
                                     <Table striped bordered hover size="sm">
                                          <thead>
