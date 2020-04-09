@@ -206,6 +206,7 @@ class Items extends Component {
     createAlarms = () => {
         let alarm = []
         this.props.alerts.map((element, i) => {
+            console.log(element)
             let key_str = "";
             element.Keywords.forEach(e => {
                 key_str += e + ' ';
