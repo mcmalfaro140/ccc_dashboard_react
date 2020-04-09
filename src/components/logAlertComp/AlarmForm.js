@@ -4,6 +4,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import {Form,Table} from 'react-bootstrap';
 import AWS from 'aws-sdk';
 import mykey from '../../keys.json';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const axios = require('axios').default;
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
@@ -247,9 +249,16 @@ class AlarmForm extends Component {
                 ReturnSubscriptionArn: true
               };
               sns.subscribe(params, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
+                if (err){
+                    toast.error("Please Enter Proper Value for Endpoints.",{
+                        position: toast.POSITION.BOTTOM_LEFT
+                    })
+                }
                 else{
                     this.listSubscriptions(this.state.subscribedTopicArn);
+                    toast.success("Attach endpoints successfully.",{
+                        position: toast.POSITION.BOTTOM_LEFT
+                    })
                 }   
               }.bind(this));
         })
@@ -282,7 +291,9 @@ class AlarmForm extends Component {
               SubscriptionArn: subscribedTopicArn /* required */
             };
             sns.unsubscribe(params, function(err, data) {
-              if (err) console.log(err, err.stack); // an error occurred
+              if (err){
+                toast.error("You must confirm subscription in order to remove it.");
+              }
               else   { 
                   this.listSubscriptions(topicArn);
               }
@@ -562,7 +573,7 @@ class AlarmForm extends Component {
                         <Button color="danger" onClick = {this.onSubmitForm}>Create & Subscribe to New Alarm</Button>
                     </div>
                 </Form.Group>
-                       
+                 <ToastContainer autoClose={2000}/>      
 
             </Card>
         )

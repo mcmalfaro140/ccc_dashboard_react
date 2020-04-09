@@ -107,25 +107,25 @@ class MetricAlert extends Component {
         .then((response)=>{
           let subscribedArr = [];
           let userArnArr = [];
-           console.log(response.data.Data.all);
-           console.log(response.data.Data.user);
-           console.log(this.state.alerts);
+          let stateAlert = this.state.alerts;
            this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
-           this.state.alerts.forEach(elem =>{
+           response.data.Data.user.forEach(userAlert=>{
+              userArnArr.push(userAlert.alarmArn);
+           })
+           stateAlert.forEach(elem =>{
+            if(!userArnArr.includes(elem.AlarmArn)){
+              elem['isSubscribed'] = false;
+            }
             response.data.Data.user.forEach(userAlert=>{
               if(elem.AlarmArn === userAlert.alarmArn){
                 elem['isSubscribed'] = true;
                 subscribedArr.push(elem);
-                userArnArr.push(userAlert.alarmArn);
               }
-              if(!userArnArr.includes(elem.AlarmArn)){
-                elem['isSubscribed'] = false;
-              }
+              
             })
            
           })
-          this.setState({subscribedAlerts:subscribedArr, isLoading:isLoading, isSuccessful: isSuccessful});
-
+          this.setState({alerts:stateAlert,subscribedAlerts:subscribedArr, isLoading:isLoading, isSuccessful: isSuccessful});
         })
         .catch((err)=>{
             console.log(err)
@@ -171,7 +171,6 @@ class MetricAlert extends Component {
                    alertsArr.push(alert);
                 }
                 this.getAlerts();
-              
                 this.deleteAlerts();
                 
           

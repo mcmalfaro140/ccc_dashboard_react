@@ -85,8 +85,7 @@
     height:35px;
 }
 .addEndpoint{
-    background-color:green;
-    color:white;
+   color: green;
 }
 .subscribe{
     background-color:#5388FF;
@@ -140,7 +139,6 @@
     cursor: pointer;
     font-weight: lighter;
     font-size: smaller;
-    padding-left: 5px;
     color:rgb(47, 47, 222);
     text-decoration: underline;
 }
@@ -149,5 +147,8 @@
 }
 .subscribeIcon{
     padding-left: 7px;
+}
+.ErrorEndpoint{
+    color:red;
 }
 
