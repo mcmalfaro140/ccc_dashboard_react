@@ -68,10 +68,10 @@ class SideNavContent extends React.Component {
 
             <ul className="list-inline">
                 <li className="list-inline-item">
-                    <Link onClick={this.props.logOut} className="text-custom">
+                    <a onClick={this.props.logOut} className="text-custom log_out">
                         <i className="mdi mdi-power"></i>
                         <span> Logout </span>
-                    </Link>
+                    </a>
                 </li>
             </ul>
         </div>

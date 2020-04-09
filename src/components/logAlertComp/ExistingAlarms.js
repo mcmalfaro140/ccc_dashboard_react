@@ -12,7 +12,7 @@ class ExistingAlarms extends Component {
     render() {
         return (
             <>
-                {this.props.alerts.length > 0 ? (<Items handleSubscribe={this.props.handleSubscribe} handleUnubscribe={this.props.handleUnubscribe} alerts={this.props.alerts}/>) : (
+                {this.props.alerts.length > 0 ? (<Items handleDelete={this.props.handleDelete} handleSubscribe={this.props.handleSubscribe} handleUnubscribe={this.props.handleUnubscribe} alerts={this.props.alerts}/>) : (
                     <div className="no_alarms">
                         <img src={page}></img>
                         <div>No Alarms found.</div>

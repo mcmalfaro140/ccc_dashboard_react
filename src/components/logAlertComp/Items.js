@@ -171,7 +171,7 @@ class Items extends Component {
             sns.push(
                 <Row>
                     <Col xs = '3'>
-                        <li>{elem}</li>
+                        <li key={i}>{elem}</li>
                     </Col>
                     <Col>
                         <span className = {element.isSubscribe===true?"myClickableThingy":"addTopic_non"} onClick = {(e)=>this.openProtocolModal(e,elem)}>Add Endpoint</span>
@@ -187,7 +187,7 @@ class Items extends Component {
         let logName = [] 
         logNamesArr.map((e,i) => {
             logName.push(
-                <li>{e}</li>
+                <li key={i}>{e}</li>
             )
         })
         return logName
@@ -198,7 +198,6 @@ class Items extends Component {
         this.props.alerts.map((element, i) => {
             let key_str = "";
             element.Keywords.forEach(e => {
-                console.log(e);
                 key_str += e + ' ';
             });
             let str_key = "."
@@ -230,13 +229,13 @@ class Items extends Component {
                         </Col>
                         <Col xs="2">
                             {element.isSubscribe ? 
-                                <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId)}><i class="far fa-bell-slash"></i>Unsubscribe</Button>
+                                <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
                                 :
-                                <Button color="primary" block onClick={() => this.props.handleSubscribe(element.LogAlarmId)}><i class="far fa-bell"></i>Subscribe</Button>}
+                                <Button color="primary" block onClick={() => this.props.handleSubscribe(element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
                             
                         </Col>
                         <Col xs='1'>
-                            <i class="mdi mdi-delete-variant"></i>
+                            <i className="mdi mdi-delete-variant" onClick={() => this.props.handleDelete(i)}></i>
                         </Col>
                     </Row>
                     <Collapse id={alarm_id} isOpen={false}>
