@@ -59,7 +59,7 @@ useEffect(() => {
                 <Card style = {{overflow: 'hidden', display: 'flex'}}> 
 
                     <CardBody>
-                        <TableContainer >
+                        <TableContainer className="my_table" >
                             <Table aria-label="spanning table"  className="table_logs_header" >
                                 <TableHead>
                                     <TableRow>

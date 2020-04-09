@@ -110,7 +110,8 @@ class LogAlerts extends Component {
                     'Content-Type': 'application/json; charset=UTF-8'
                 },
                 data: {
-                    'LogAlarmId' : id
+                    'LogAlarmId' : id,
+                    'SNSTopicName' : "Misael_SNS"
                 }
             })
             .then((response)=>{
