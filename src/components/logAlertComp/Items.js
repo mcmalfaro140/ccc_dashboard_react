@@ -314,7 +314,7 @@ class Items extends Component {
                 <ModalBody>
                 {
                             this.state.listSubscriptions != null&& this.state.listSubscriptions.length > 0?  
-                              <div className = 'scrolling'>
+                              <div className = 'scrollingss'>
                                     <Form.Label>Subscribed Endpoints of the topic: {this.state.topicArnToAttachEndpoints.split(':')[this.state.topicArnToAttachEndpoints.split(':').length-1]}</Form.Label>
                                     <Table striped bordered hover size="sm">
                                          <thead>
