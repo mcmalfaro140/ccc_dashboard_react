@@ -127,8 +127,14 @@
     width: 30%;
 }
 .subscribe_div{
-    justify-content: center;
-    display: flex;
+    // justify-content: center;
+    // display: flex;
+    text-align: center;
+    >div{
+        color: red;
+        // display: inline-block;
+        font-size: 200%
+    }
 }
 .rows{
     padding-bottom: 20px;

@@ -34,6 +34,19 @@ class LogAlerts extends Component {
         this.close = this.close.bind(this)
         this.deleteAlert = this.deleteAlert.bind(this);
         this.deleteReq = this.deleteReq.bind(this);
+        this.setSuccess = this.setSuccess.bind(this);
+        this.setFail = this.setFail.bind(this);
+        this.setComplete = this.setComplete.bind(this);
+    }
+
+    setSuccess(){
+        this.setState({isLoading: false,isSuccessful: true })
+    }
+    setFail(){
+        this.setState({isLoading: false,isSuccessful: false })
+    }
+    setComplete(){
+        this.setState({isComplete: !this.state.isComplete})
     }
 
     componentDidMount(){
@@ -202,7 +215,7 @@ class LogAlerts extends Component {
                     </TabPanel>
                     <TabPanel>
                         <div>
-                            <AlarmForm user={this.state.user}/>
+                            <AlarmForm getAlerts={this.getAlerts} success={this.setSuccess} fail={this.setFail} complete={this.setComplete} user={this.state.user}/>
                         </div>    
                     </TabPanel>
                 </Tabs>

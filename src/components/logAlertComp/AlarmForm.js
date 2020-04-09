@@ -15,6 +15,7 @@ class AlarmForm extends Component {
         newArr = [];
         super(props);
         this.state = {
+            error:"",
             logGroupNames:[],
             topicArns:[],
             isSelectAll:false,
@@ -36,7 +37,6 @@ class AlarmForm extends Component {
         this.signSelection = this.signSelection.bind(this);
         this.levelSelection = this.levelSelection.bind(this);
         this.snsSelection = this.snsSelection.bind(this);
-        this.showObj = this.showObj.bind(this);
         this.isSelectAll = this.isSelectAll.bind(this);
         this.logGroupSelection = this.logGroupSelection.bind(this);
         this.addProtocol = this.addProtocol.bind(this);
@@ -59,25 +59,31 @@ class AlarmForm extends Component {
             if(obj.LogLevelSign != null && obj.LogLevel != null){
                 if(obj.LogGroupNameSelection.length > 0){
                     if(obj.SNS_Selection != null){
+                        this.setState({error:""})
                         return true
                     }else{
+                        this.setState({error:"Missing SNS Topic"})
                         return false
                     }
                 }else{
+                    this.setState({error:"Missing Log Group Name"})
                     return false
                 }
             }else{
+                this.setState({error:"Missing Log level or Sign"})
                 return false
             }
         }else{
+            this.setState({error:"Missing Alarm Name"})
             return false
         }
     }
 
     onSubmitForm(){
+        this.props.complete();
         let info = this.state.logAlarmInput;
         let key_str = null;
-        this.showObj();
+        let group_str = ""
         if(info.Keywords.length > 0){
             info.Keywords.forEach((element,i) => {
                 if(info.Keywords.length == i+1){
@@ -89,7 +95,14 @@ class AlarmForm extends Component {
             });
         }
         if(this.checkObj(info)){
-            this.setState({isComplete:false})
+            info.LogGroupNameSelection.forEach((element,i) => {
+                if(info.LogGroupNameSelection.length == i+1){
+                    group_str += element
+                }else{
+                    group_str += element+','
+                }
+                
+            });
             axios({
                 method: 'post',
                 url: `${mykey.backend}/createLogAlarm`,
@@ -102,25 +115,26 @@ class AlarmForm extends Component {
                     'KeywordRelationship': info.KeywordRelationship,
                     'LogLevel' : info.LogLevel ,
                     'Comparison' : info.LogLevelSign,
-                    'LogGroups' : info.LogGroupNameSelection,
+                    'LogGroups' : group_str,
                     'Keywords' : key_str,
                     'SNSTopicNames' : info.SNS_Selection
                 }
             })
             .then((response)=>{
-                if(response.data.Result == "Success"){
-                    this.setState({isLoading: false, isSuccessful:true})
-                    this.getAlerts();
+                console.log(response)
+                if(response.data.Result.includes("created")){
+                    this.props.success()
+                    this.props.getAlerts();
                 }else{
-                    this.setState({isLoading: false, isSuccessful:false})
+                    this.props.fail()
                 }
             })
             .catch((err)=>{
-                this.setState({isLoading: false,isSuccessful:false})
+                this.props.fail()
                 console.log(err)
             })
         }else{
-            console.log("dont sub")
+            this.props.fail()
         }
     }
 
@@ -309,10 +323,6 @@ class AlarmForm extends Component {
         }
     }
    
-    showObj(){
-        this.setState({showobj:!this.state.showobj})
-        console.log(this.state.logAlarmInput);
-    }
     render() {
         return (
             <Card>
@@ -548,6 +558,7 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <div className = 'subscribe_div'>
+                        <div>{this.state.error}</div>
                         <Button color="danger" onClick = {this.onSubmitForm}>Create & Subscribe to New Alarm</Button>
                     </div>
                 </Form.Group>
