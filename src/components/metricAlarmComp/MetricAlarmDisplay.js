@@ -448,7 +448,7 @@ class MetricAlarmDisplay extends Component {
               <Collapse isOpen = {this.state.isOpen}>
                   <Row>
                       <Col>
-                            <h3>AlarmDescription</h3>
+                            <h3>Alarm Description</h3>
                             <div className = 'description'>{this.state.alert.AlarmDescription}</div>
                       </Col>
                       <Col>
