@@ -5,6 +5,8 @@ import { Row, Card, Col, Button, Collapse,Modal,ModalHeader,ModalBody,ModalFoote
 import {Form} from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class Items extends Component {
     constructor(props) {
@@ -16,8 +18,8 @@ class Items extends Component {
             topicArnToAttachEndpoints:null,
             addProtocol:false,
             listSubscriptions:null,
-            attachedEndpoints:false,
             subscriptionProtocol : [],
+            logAlarmId:null,
         }
         this.handleInfoClick = this.handleInfoClick.bind(this);
         this.openSubscriptionModal = this.openSubscriptionModal.bind(this);
@@ -85,10 +87,16 @@ class Items extends Component {
                 ReturnSubscriptionArn: true
               };
               sns.subscribe(params, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
+                if (err){
+                    toast.error("Please Enter Proper Value for Endpoints.",{
+                        position: toast.POSITION.TOP_LEFT
+                    })
+                }
                 else{
                     this.listSubscriptions(this.state.topicArnToAttachEndpoints);
-                    this.setState({attachedEndpoints:true});
+                    toast.success("Attach endpoints successfully.",{
+                        position: toast.POSITION.TOP_LEFT
+                    })
                 }   
               }.bind(this));
         })
@@ -101,14 +109,16 @@ class Items extends Component {
               SubscriptionArn: subscribedTopicArn /* required */
             };
             sns.unsubscribe(params, function(err, data) {
-              if (err) console.log(err, err.stack); // an error occurred
+              if (err){
+                toast.error("You must confirm subscription in order to remove it.");
+              }
               else   { 
                   this.listSubscriptions(topicArn);
               }
             }.bind(this));
       }
-    openSubscriptionModal(){
-        this.setState({toggleModal:!this.state.toggleModal});
+    openSubscriptionModal(e,id){
+        this.setState({toggleModal:!this.state.toggleModal,logAlarmId:id});
     }
     openProtocolModal(e,item){
         this.setState({addProtocol:!this.state.addProtocol});
@@ -141,8 +151,8 @@ class Items extends Component {
     toggleModalAndSubscribe(e,i){
         this.setState({toggleModal:!this.state.toggleModal})
         //if i = 1 then we put subscribe the topic to alarms functions inside
-        if(this.state.subscribedTopicArn!=null && i === 1){
-
+        if(this.state.subscribingTopicArn!=null && i === 1){
+            this.props.handleSubscribe(this.state.logAlarmId)
         }
         //if i = 0 then it is closing the modal only
         else if(i === 0){
@@ -170,11 +180,15 @@ class Items extends Component {
             console.log(elem);
             sns.push(
                 <Row>
-                    <Col xs = '3'>
+                    <Col xs = '2.5'>
                         <li key={i}>{elem}</li>
                     </Col>
                     <Col>
-                        <span className = {element.isSubscribe===true?"myClickableThingy":"addTopic_non"} onClick = {(e)=>this.openProtocolModal(e,elem)}>Add Endpoint</span>
+                        <span>
+                        <span className = "myClickableThingy" onClick = {(e)=>this.openProtocolModal(e,elem)}>Add Endpoint</span>
+                        <span>/</span>
+                        <span className = "myClickableThingy">Delete Topic</span>
+                        </span>
                     </Col>
                 </Row>
                 
@@ -231,7 +245,8 @@ class Items extends Component {
                             {element.isSubscribe ? 
                                 <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
                                 :
-                                <Button color="primary" block onClick={() => this.props.handleSubscribe(element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
+                                <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
+                                {/* this.props.handleSubscribe(element.LogAlarmId) */}
                             
                         </Col>
                         <Col xs='1'>
@@ -255,11 +270,6 @@ class Items extends Component {
                             <Col>
                                 <h3> 
                                     <span>SNS Attached </span>
-                                        <a className= "waves-effect side-nav-link-ref" onClick = {this.openSubscriptionModal}>
-                                        <span className = {element.isSubscribe === true?"addTopic":"addTopic_non"}>
-                                        Add Topics
-                                        </span>  
-                                        </a>
                                 </h3>
                                 <ul>
                                     {this.createSns(element.SNSTopics,element)}
@@ -299,8 +309,8 @@ class Items extends Component {
 
                 </ModalBody>
                 <ModalFooter>
-                    <Button className = 'subscribe' onClick = {(e) => this.toggleModalAndSubscribe(e,1)}>Subscribe</Button>
-                    <Button style ={{height : 40}} color="secondary" onClick = {(e) => this.toggleModalAndSubscribe(e,0)}> Cancel </Button>
+                    <Button className = 'subscribe' onClick = {(e) => this.toggleModalAndSubscribe(e,1,null)}>Subscribe</Button>
+                    <Button style ={{height : 40}} color="secondary" onClick = {(e) => this.toggleModalAndSubscribe(e,0,null)}> Cancel </Button>
                 </ModalFooter>
             </Modal>
             <Modal isOpen = {this.state.addProtocol} toggle = {(e)=>this.openProtocolModal(e,1)} className = 'modalku'>
@@ -391,10 +401,6 @@ class Items extends Component {
                             this.state.subscriptionProtocol.length > 0?
                                 <input type="submit" value="Add Endpoint/s" className = 'submitButton1'/>:null
                         }
-                        {
-                            this.state.attachedEndpoints === true?
-                                <div><span className = 'addEndpoint'>Add Endpoints successfully</span></div>: null
-                        }
                             
                           </form>
                 </ModalBody>
@@ -402,6 +408,7 @@ class Items extends Component {
                      <Button style ={{height : 40}} color="secondary" onClick = {(e)=>this.openProtocolModal(e,1)}> Close </Button>
                 </ModalFooter>
             </Modal>
+            <ToastContainer autoClose={2000}/>
             </>
         )
     }

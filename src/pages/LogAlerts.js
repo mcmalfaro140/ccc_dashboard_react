@@ -71,7 +71,7 @@ class LogAlerts extends Component {
             }
         })
         .then((response)=>{
-            if(response.data.Result == "Success"){
+            if(response.data.Result === "Success"){
                 this.setState({isLoading: false, isSuccessful:true})
                 this.getAlerts();
             }else{
@@ -86,8 +86,8 @@ class LogAlerts extends Component {
 
     deleteAlert(id){
         let alarm = this.state.logAlerts_Set[id]
-        if(alarm.Users.length == 1){
-            if(alarm.Users[0] == this.state.user.username){
+        if(alarm.Users.length === 1){
+            if(alarm.Users[0] === this.state.user.username){
                 this.deleteReq(alarm.LogAlarmId)
             }else{
                 this.setState({isErrorOpen: true})
