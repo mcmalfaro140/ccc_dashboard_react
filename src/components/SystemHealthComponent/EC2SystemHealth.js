@@ -5,44 +5,21 @@ import {LogContext} from './SystemHealthContext.js'
 import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow} from '@material-ui/core';
 
 
-
-
 const EC2SystemHealth = () => {
     
     const {EC2Status} = useContext (LogContext)
     const [EC2InstanceStatus , setEC2InstanceStatus]= EC2Status
 
-    const handleClick = (id) => {
-        let element = document.getElementById(id);
-        let rowid = "row" + id;
-        let iconid = "icon" + id;
-        let row = document.getElementById(rowid);
-        let icon = document.getElementById(iconid);
-        if(ReactDOM.findDOMNode(element).style.visibility === "collapse"){
-            ReactDOM.findDOMNode(row).classList.add("color")
-            ReactDOM.findDOMNode(element).classList.add("color")
-            ReactDOM.findDOMNode(element).style.visibility = "visible"
-            ReactDOM.findDOMNode(icon).classList.add("down")
-        }else{
-            ReactDOM.findDOMNode(element).style.visibility = "collapse"
-            ReactDOM.findDOMNode(row).classList.remove("color")
-            ReactDOM.findDOMNode(icon).classList.remove("down")
-        }
-    }
-
-    
 
     const cell = EC2InstanceStatus.map((item, i) => {
        
-             let strid = "row" + i;
-             let iconid = "icon" + i;
              const expandableData = Object.entries(Object.values(item))[0][1]
 
              
             return(
                
                 <TableBody className = "tablesaw tablesaw-stack" key ={i}>
-                <TableRow id={strid} hover onClick={() => handleClick(i)} className = "table_logs_cell">
+                <TableRow id={i} hover  className = "table_logs_cell">
     
                 <TableCell style = {{ color :'black', paddingRight:'-5%', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}>
                 
@@ -94,11 +71,11 @@ useEffect(() => {
                                         </TableCell>
 
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
-                                           Availability zone
+                                            Availability zone
                                         </TableCell>
 
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
-                                           Instance status
+                                            Instance status
                                         </TableCell>
 
                                     </TableRow>
