@@ -4,7 +4,10 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import {Form,Table} from 'react-bootstrap';
 import AWS from 'aws-sdk';
 import mykey from '../../keys.json';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+const axios = require('axios').default;
 AWS.config.update({secretAccessKey:mykey.secretAccessKey, accessKeyId:mykey.accessKeyId, region:mykey.region});
 let cloudwatchlogs = new AWS.CloudWatchLogs();
 let value = [];
@@ -14,6 +17,7 @@ class AlarmForm extends Component {
         newArr = [];
         super(props);
         this.state = {
+            error:"",
             logGroupNames:[],
             topicArns:[],
             isSelectAll:false,
@@ -27,26 +31,115 @@ class AlarmForm extends Component {
                 LogLevel:null,
                 Keywords:[],
                 LogGroupNameSelection:[],
-                SNS_Selection:null
+                SNS_Selection:null,
+                KeywordRelationship:null,
             }
            
         }
         this.signSelection = this.signSelection.bind(this);
         this.levelSelection = this.levelSelection.bind(this);
         this.snsSelection = this.snsSelection.bind(this);
-        this.showObj = this.showObj.bind(this);
         this.isSelectAll = this.isSelectAll.bind(this);
         this.logGroupSelection = this.logGroupSelection.bind(this);
         this.addProtocol = this.addProtocol.bind(this);
         this.deleteProtocol = this.deleteProtocol.bind(this);
         this.attachEndpointsToSNSTopic = this.attachEndpointsToSNSTopic.bind(this);
+        this.keywordRelationshipSelection = this.keywordRelationshipSelection.bind(this);
+        this.onSubmitForm = this.onSubmitForm.bind(this);
+        this.checkObj = this.checkObj.bind(this);
         
        
     }
+    
     componentWillMount(){
         this.getLogGroupName();
         this.getSNSTopics();
     }
+
+    checkObj(obj){
+        if(obj.AlarmName != null || ""){
+            if(obj.LogLevelSign != null && obj.LogLevel != null){
+                if(obj.LogGroupNameSelection.length > 0){
+                    if(obj.SNS_Selection != null){
+                        this.setState({error:""})
+                        return true
+                    }else{
+                        this.setState({error:"Missing SNS Topic"})
+                        return false
+                    }
+                }else{
+                    this.setState({error:"Missing Log Group Name"})
+                    return false
+                }
+            }else{
+                this.setState({error:"Missing Log level or Sign"})
+                return false
+            }
+        }else{
+            this.setState({error:"Missing Alarm Name"})
+            return false
+        }
+    }
+
+    onSubmitForm(){
+        this.props.complete();
+        let info = this.state.logAlarmInput;
+        let key_str = null;
+        let group_str = ""
+        if(info.Keywords.length > 0){
+            info.Keywords.forEach((element,i) => {
+                if(info.Keywords.length == i+1){
+                    key_str += element
+                }else{
+                    key_str += element+','
+                }
+                
+            });
+        }
+        if(this.checkObj(info)){
+            info.LogGroupNameSelection.forEach((element,i) => {
+                if(info.LogGroupNameSelection.length == i+1){
+                    group_str += element
+                }else{
+                    group_str += element+','
+                }
+                
+            });
+            axios({
+                method: 'post',
+                url: `${mykey.backend}/createLogAlarm`,
+                headers: {
+                    'Authorization': this.props.user.token,
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                data: {
+                    'AlarmName' : info.AlarmName,
+                    'KeywordRelationship': info.KeywordRelationship,
+                    'LogLevel' : info.LogLevel ,
+                    'Comparison' : info.LogLevelSign,
+                    'LogGroups' : group_str,
+                    'Keywords' : key_str,
+                    'SNSTopicNames' : info.SNS_Selection
+                }
+            })
+            .then((response)=>{
+                console.log(response)
+                if(response.data.Result.includes("created")){
+                    this.props.success()
+                    this.props.getAlerts();
+                }else{
+                    this.props.fail()
+                }
+            })
+            .catch((err)=>{
+                this.props.fail()
+                console.log(err)
+            })
+        }else{
+            this.props.fail()
+        }
+    }
+
     listSubscriptions(arn){
         let sns = new AWS.SNS();
         var params = {
@@ -55,7 +148,6 @@ class AlarmForm extends Component {
           sns.listSubscriptionsByTopic(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
-                console.log(data);
                 this.setState({listSubscriptions:data.Subscriptions});
             }   
           }.bind(this));
@@ -85,7 +177,6 @@ class AlarmForm extends Component {
           sns.listTopics(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
-                console.log(data.Topics);
                 this.setState({topicArns:data.Topics}); // successful response
             }        
           }.bind(this));
@@ -128,11 +219,20 @@ class AlarmForm extends Component {
           })
   
     }
-    snsSelection(e){
+    keywordRelationshipSelection(e){
         let v = e.target.value;
         this.setState(prevState => {
             let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
-            logAlarmInput.SNS_Selection = v;
+            logAlarmInput.KeywordRelationship = v;
+            return { logAlarmInput };                                
+          })
+    }
+    snsSelection(e){
+        let v = e.target.value;
+        let v_trimmed = v.split(":")[v.split(":").length-1];
+        this.setState(prevState => {
+            let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
+            logAlarmInput.SNS_Selection = v_trimmed;
             return { logAlarmInput };                                
           })
           this.setState({subscribedTopicArn:v});
@@ -149,9 +249,16 @@ class AlarmForm extends Component {
                 ReturnSubscriptionArn: true
               };
               sns.subscribe(params, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
+                if (err){
+                    toast.error("Please Enter Proper Value for Endpoints.",{
+                        position: toast.POSITION.BOTTOM_LEFT
+                    })
+                }
                 else{
                     this.listSubscriptions(this.state.subscribedTopicArn);
+                    toast.success("Attach endpoints successfully.",{
+                        position: toast.POSITION.BOTTOM_LEFT
+                    })
                 }   
               }.bind(this));
         })
@@ -184,7 +291,9 @@ class AlarmForm extends Component {
               SubscriptionArn: subscribedTopicArn /* required */
             };
             sns.unsubscribe(params, function(err, data) {
-              if (err) console.log(err, err.stack); // an error occurred
+              if (err){
+                toast.error("You must confirm subscription in order to remove it.");
+              }
               else   { 
                   this.listSubscriptions(topicArn);
               }
@@ -201,7 +310,6 @@ class AlarmForm extends Component {
         if(count === 2){
             newArr = newArr.filter(a => a !== this.state.logGroupNames[i])
         }
-        console.log(newArr);
         this.setState(prevState => {
             let logAlarmInput = Object.assign({}, prevState.logAlarmInput);  
             logAlarmInput.LogGroupNameSelection = newArr;
@@ -226,10 +334,6 @@ class AlarmForm extends Component {
         }
     }
    
-    showObj(){
-        this.setState({showobj:!this.state.showobj})
-        console.log(this.state.logAlarmInput);
-    }
     render() {
         return (
             <Card>
@@ -239,7 +343,7 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <Form.Label>Alarm Name: </Form.Label>
-                    <Form.Control type="text" className = 'form_input' onChange = {(e) => this.update(e,0)}/>
+                    <Form.Control type="text" placeholder="Enter alarm name here" className = 'form_input' onChange = {(e) => this.update(e,0)}/>
                 </Form.Group> 
 
                             
@@ -259,15 +363,19 @@ class AlarmForm extends Component {
                                 <option disabled selected>Select</option>
                                 <option value ="<">&lt;</option>
                                 <option value = '>'>&gt;</option>
-                                <option value = '≤'>≤</option>
-                                <option value = '≥'>≥</option>
+                                <option value = '=='>=</option>
+                                <option value = '<='>≤</option>
+                                <option value = '>='>≥</option>
                             </Form.Control>    
                        </Col> 
                        <Col>
                             <Form.Control as="select" onChange={this.levelSelection}>
                                 <option disabled selected>Select</option>
+                                <option value = 'TRACE'>TRACE</option>
                                 <option value = 'ERROR'>ERROR</option>
                                 <option value = 'WARN'>WARN</option>
+                                <option value = 'INFO'>INFO</option>
+                                <option value = 'DEBUG'>DEBUG</option>
                             </Form.Control>   
                        </Col>
                        <Col>
@@ -289,10 +397,17 @@ class AlarmForm extends Component {
                 <Form.Group>
                     <Row>
                         <Col>
-                            <Form.Label className = 'log_level'>Keywords(optional): </Form.Label>   
+                            <Form.Label className= 'log_level'>Keywords(optional): </Form.Label>   
                         </Col>
-                        <Col xs = {10}>
-                            <Form.Control type="text" onChange = {(e) => this.update(e,1)} />
+                        <Col xs={2.5}>
+                            <Form.Control as="select" onChange={this.keywordRelationshipSelection}>
+                                    <option disabled selected>Keyword Relationship</option>
+                                    <option value = 'ANY'>ANY</option>
+                                    <option value = 'ALL'>ALL</option>
+                                </Form.Control>   
+                        </Col>
+                        <Col xs = {8}>
+                            <Form.Control type="text" placeholder="Keywords will be separated by space." onChange = {(e) => this.update(e,1)} />
                         </Col>
                     </Row>
                     
@@ -405,7 +520,8 @@ class AlarmForm extends Component {
                                                     <label>Protocol</label>
                                                 </div>
                                                 <div>
-                                                    <select className = 'selection' value = {name} onChange={(e) => this.protocolOption(e,index)}>
+                                                    <select className = 'selection' onChange={(e) => this.protocolOption(e,index)}>
+                                                        <option disabled selected>Select</option>
                                                         <option value="http">http</option>
                                                         <option value="https">https</option>
                                                         <option value="email">email</option>
@@ -439,7 +555,7 @@ class AlarmForm extends Component {
                             }
                              {
                             this.state.subscriptionProtocol.length > 0?
-                                 <Button color="primary" type="submit" className="add_end">Add Endpoint/s</Button>:null
+                                 <Button color="primary" type="submit" className="add_end">Attach Endpoint/s</Button>:null
                         }
                         </form>
 
@@ -453,10 +569,11 @@ class AlarmForm extends Component {
 
                 <Form.Group>
                     <div className = 'subscribe_div'>
-                        <Button color="danger" onClick = {this.showObj}>Create & Subscribe to New Alarm</Button>
+                        <div>{this.state.error}</div>
+                        <Button color="danger" onClick = {this.onSubmitForm}>Create & Subscribe to New Alarm</Button>
                     </div>
                 </Form.Group>
-                       
+                 <ToastContainer autoClose={2000}/>      
 
             </Card>
         )

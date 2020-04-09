@@ -36,6 +36,9 @@
 .fontSize{
     font-size : 1vw;
 }
+.moreInfor:hover{
+    color:red;
+}
 .h1Size{
     font-size : 2.5vw;
 }
@@ -82,8 +85,7 @@
     height:35px;
 }
 .addEndpoint{
-    background-color:green;
-    color:white;
+   color: green;
 }
 .subscribe{
     background-color:#5388FF;
@@ -120,3 +122,33 @@
 .btn-group{
     margin-top: 10%;
 }
+.addTopic{
+    font-weight: normal;
+    font-size: medium;
+    padding-left: 10px;
+    color:rgb(47, 47, 222);
+    text-decoration: underline;
+}
+.addTopic_non{
+    display: none;
+}
+.addTopic:hover{
+    color:red;
+}
+.myClickableThingy{
+    cursor: pointer;
+    font-weight: lighter;
+    font-size: smaller;
+    color:rgb(47, 47, 222);
+    text-decoration: underline;
+}
+.myClickableThingy:hover{
+    color:red;
+}
+.subscribeIcon{
+    padding-left: 7px;
+}
+.ErrorEndpoint{
+    color:red;
+}
+

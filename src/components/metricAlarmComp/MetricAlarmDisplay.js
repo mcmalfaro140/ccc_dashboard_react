@@ -3,16 +3,19 @@ import AWS from 'aws-sdk';
 import { Row,Button, Col,Modal,ModalHeader,ModalBody,ModalFooter,Collapse } from 'reactstrap';
 import {Form} from 'react-bootstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import {Checkmark} from 'react-checkmark';
 import Table from 'react-bootstrap/Table';
-import MetricAlert from '../../pages/MetricAlert';
+import { getLoggedInUser } from '../../helpers/authUtils';
+import mykey from '../../keys.json';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
+const axios = require('axios').default;
 
 class MetricAlarmDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
+           user: getLoggedInUser(),
            alert:{
             AlarmName:null,
             MetricName:null,
@@ -20,7 +23,7 @@ class MetricAlarmDisplay extends Component {
             AlarmArn:null,
             AlarmDescription:null,
             AlarmConfigurationUpdatedTimestamp:null,
-            AlarmActions:null,
+            AlarmActions:[],
             Namespace:null,
             Period:null,
             Statistic:null,
@@ -39,12 +42,12 @@ class MetricAlarmDisplay extends Component {
            sign:null,
            topicArns:[],
            subscribedTopicArn:null,
+           topicArnToAttachEndpoints:[],
            topicName:'',
            toggleModalAndSubscribe:false,
            subscriptionProtocol : [],
            addProtocol:false,
            listSubscriptions:null,
-           attachedEndpoints:false,
            showSubscribedTopicsOfAlarms:false,
           }
         this.showAlertDetails = this.showAlertDetails.bind(this);
@@ -60,13 +63,21 @@ class MetricAlarmDisplay extends Component {
         this.listSubscriptions = this.listSubscriptions.bind(this);
         this.showSubscribedTopicsOfAlarms = this.showSubscribedTopicsOfAlarms.bind(this);
         this.unsubscribeTopics = this.unsubscribeTopics.bind(this);
+        this.openProtocolModal = this.openProtocolModal.bind(this);
+        this.follow = this.follow.bind(this);
+        this.unfollow = this.unfollow.bind(this);
+        
+
+       
     }
-    componentWillMount(){
+    componentDidMount(){
         this.getSNSTopics();
         if(this.props.StateValue === 'OK')
            this.setState({color:'green'});
         else if(this.props.StateValue === 'ALARM')
            this.setState({color:'red'});
+        else if(this.props.StateValue === 'INSUFFICIENT_DATA')
+           this.setState({color:'orange'});
         if(this.props.ComparisonOperator === 'GreaterThanThreshold'){
             this.setState({sign:'>'});
         }
@@ -102,6 +113,24 @@ class MetricAlarmDisplay extends Component {
           this.setState({id : 'Pop' + this.props.id});
     }
     componentWillReceiveProps(nextProps){
+        if(nextProps.StateValue === 'OK')
+        this.setState({color:'green'});
+        else if(nextProps.StateValue === 'ALARM')
+            this.setState({color:'red'});
+        else if(nextProps.StateValue === 'INSUFFICIENT_DATA')
+            this.setState({color:'orange'});
+        if(nextProps.ComparisonOperator === 'GreaterThanThreshold'){
+            this.setState({sign:'>'});
+        }
+        else if(nextProps.ComparisonOperator === 'GreaterThanOrEqualToThreshold'){
+            this.setState({sign:'≥'});
+        } 
+        else if(nextProps.ComparisonOperator === 'LessThanThreshold'){
+            this.setState({sign:'<'});
+        } 
+        else if(nextProps.ComparisonOperator === 'LessThanOrEqualToThreshold'){
+            this.setState({sign:'≤'});
+        } 
         this.setState(prevState => {
             let alert = Object.assign({}, prevState.alert);  
             alert.AlarmName = nextProps.AlarmName;
@@ -121,10 +150,26 @@ class MetricAlarmDisplay extends Component {
             return { alert };                                
           })
     }
-  
     addProtocol(){
-        this.setState({addProtocol:true, attachedEndpoints:false});
+        this.setState({attachedEndpoints:false});
         this.setState({subscriptionProtocol:[...this.state.subscriptionProtocol,{name:'',id:'',value:''}]})
+    }
+    openProtocolModal(e,item){
+        this.setState({addProtocol:!this.state.addProtocol});
+        if(item !== 1){
+            this.setState({topicArnToAttachEndpoints:item})
+            if(this.state.addProtocol === false){
+                this.listSubscriptions(item);
+            }
+        }else{
+            this.setState({listSubscriptions:null,
+                subscriptionProtocol:[],
+                subscribedTopicArn: null,
+                subscription:false,
+                attachedEndpoints:false,
+            })
+        }
+       
     }
     deleteProtocol(index){
        this.state.subscriptionProtocol.splice(index,1);
@@ -160,7 +205,6 @@ class MetricAlarmDisplay extends Component {
     }
     getTopicARN(e){
         this.setState({subscribedTopicArn:e.target.value});
-        this.listSubscriptions(e.target.value);
     }
     toggleModalAndSubscribe(e,i){
         this.setState({toggleModalAndSubscribe:!this.state.toggleModalAndSubscribe})
@@ -193,7 +237,9 @@ class MetricAlarmDisplay extends Component {
                 if (err) console.log(err, err.stack);
                 else {
                     this.setState({subscription:true});
-                    this.props.updateState(this.state.alert);
+                    
+                    
+                  
                 }    
               }.bind(this));
 
@@ -217,15 +263,22 @@ class MetricAlarmDisplay extends Component {
         this.state.subscriptionProtocol.forEach(protocols =>{
             var params = {
                 Protocol: protocols.name, /* required */
-                TopicArn: this.state.subscribedTopicArn, /* required */
+                TopicArn: this.state.topicArnToAttachEndpoints, /* required */
                 Endpoint: protocols.value,
                 ReturnSubscriptionArn: true
               };
               sns.subscribe(params, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
+                if(err){
+                    toast.error("Please Enter Proper Value for Endpoints.",{
+                        position: toast.POSITION.TOP_LEFT
+                    })
+                }
                 else{
-                    this.listSubscriptions(this.state.subscribedTopicArn);
-                    this.setState({attachedEndpoints:true});
+                    this.listSubscriptions(this.state.topicArnToAttachEndpoints);
+                    toast.success("Attach endpoints successfully.",{
+                        position: toast.POSITION.TOP_LEFT
+                    })
+
                 }   
               }.bind(this));
         })
@@ -238,8 +291,10 @@ class MetricAlarmDisplay extends Component {
             SubscriptionArn: subscribedTopicArn /* required */
           };
           sns.unsubscribe(params, function(err, data) {
-            if (err) console.log(err, err.stack); // an error occurred
-            else   { 
+            if (err){
+                toast.error("You must confirm subscription in order to remove it.")
+            }
+            else{ 
                 this.listSubscriptions(topicArn);
             }
           }.bind(this));
@@ -258,6 +313,7 @@ class MetricAlarmDisplay extends Component {
           sns.listSubscriptionsByTopic(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
+                console.log(data);
                 this.setState({listSubscriptions:data.Subscriptions});
             }   
           }.bind(this));
@@ -265,9 +321,74 @@ class MetricAlarmDisplay extends Component {
     showSubscribedTopicsOfAlarms(){
         this.setState({showSubscribedTopicsOfAlarms: !this.state.showSubscribedTopicsOfAlarms});
     }
-    unsubscribeTopics(i){
+    follow(){
+        let alert = this.state.alert;
+        alert['isSubscribed'] = true;
+        this.setState({alert: alert});
+            axios({
+                method: 'get',
+                url: `${mykey.backend}/getMetricAlarms`,
+                headers: {
+                    'Authorization': this.state.user.token,
+                    'Content-Type': 'application/json'
+                    }
+                }).then((response)=>{
+                        let userArr = [];
+                        response.data.Data.user.forEach(elem=>{
+                            userArr.push(elem.alarmArn);
+                        })
+                        if(!userArr.includes(this.state.alert.AlarmArn)){
+                            axios({
+                                method: 'post',
+                                url: `${mykey.backend}/subscribeToMetricAlarm`,
+                                headers: {
+                                    'Authorization': this.state.user.token,
+                                    'Content-Type': 'application/json'
+                                },
+                                data:{
+                                    'alarmArn': this.state.alert.AlarmArn
+                                }
+                            }).then((response) =>{
+                                if(Object.keys(response.data)[0] === "Success"){
+                                    this.props.updateState(false, true);
+                                }else{
+                                    this.props.updateState(false, false);
+                                }
+                            })
+                            .catch((err)=>{
+                                this.props.updateState(false,false);
+                                console.log(err);
+                            })
+                        }
+                    })
+    }
+    unfollow(){
+        axios({
+            method: 'post',
+            url: `${mykey.backend}/unsubscribeToMetricAlarm`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            },
+            data:{
+                'alarmArn': this.state.alert.AlarmArn
+            }
+        }).then((response) =>{
+            if(Object.keys(response.data)[0] === "Success"){
+                this.props.updateState(false, true);
+            }else{
+                this.props.updateState(false, false);
+            }
+        })
+        .catch((err)=>{
+            this.props.updateState(false,false);
+            console.log(err);
+        })
+    }
+    unsubscribeTopics(e,i){
         let actionArr = this.state.alert.AlarmActions;
         actionArr.splice(i,1);
+        this.setState({showSubscribedTopicsOfAlarms:false});
         this.setState(prevState => {
             let alert = Object.assign({}, prevState.alert);  
             alert.AlarmActions = actionArr;
@@ -292,14 +413,16 @@ class MetricAlarmDisplay extends Component {
           cloudwatch.putMetricAlarm(params, function(err, data) {
             if (err) console.log(err, err.stack);
             else {
-                this.setState({subscription:false});
-                this.props.updateState(this.state.alert);
+               if(actionArr.length === 1){
+            
+               }   
             }    
           }.bind(this));
 
 
     }
     render() { 
+       
         let dropdown = [];
         this.state.topicArns.map(item =>{
             if(this.state.alert.AlarmActions.includes(item.TopicArn)){
@@ -310,15 +433,12 @@ class MetricAlarmDisplay extends Component {
      })  
         return (
           <div>
-
             <Row>
                 <Col xs = "1">
-                    
-                    {this.props.AlarmActions.length > 0?
+                    {this.props.isSubscribed === true?
                        <i className="mdi mdi-checkbox-marked-circle" style = {{fontSize:'120%'}}></i>
                        :
-                       <i className="mdi mdi-alarm-check alarm_off" style = {{fontSize:'120%'}}></i>}
-                    
+                       <i className="mdi mdi-alarm-check alarm_off" style = {{fontSize:'120%'}}></i>}  
                 </Col>
                 <Col xs = "3">
                     <Row><h2>{this.state.alert.AlarmName}</h2></Row>
@@ -332,7 +452,7 @@ class MetricAlarmDisplay extends Component {
                             </p>
                         </Row>     */}
                     <Row> <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
-                            <p className = 'margin'><span className = 'fontSize' id = {this.state.id}>More Infor {this.state.isOpen === false? <i class = 'mdi mdi-menu-right'/>:<i class="mdi mdi-menu-down"></i>}</span></p>
+                            <p className = 'margin'><span className = 'fontSize' id = {this.state.id}><span className = "moreInfor">More Infor {this.state.isOpen === false? <i className = 'mdi mdi-menu-right'/>:<i className="mdi mdi-menu-down"></i>}</span></span></p>
                             </a></Row>    
                     </Col>
              <Col xs = "5">
@@ -343,32 +463,18 @@ class MetricAlarmDisplay extends Component {
                     <h4><span>{this.state.alert.MetricName} {this.state.sign} {this.state.alert.Threshold} for {this.state.alert.DatapointsToAlarm} datapoint</span></h4>
                 </Row>
              </Col> 
-             {/* <Col>
-                <Row><h3>Description: </h3></Row>
-                <Row>{this.state.alert.AlarmDescription}</Row>
-             </Col>  */}
              <Col xs = "3">
                     {
-                        this.props.AlarmActions.length > 0?
-                        <div>
-                        <div className = 'btn-group' role = 'group' block>
-                            <Button  class="btn btn-secondary" color = "danger" onClick = {this.showSubscribedTopicsOfAlarms}><i class="far fa-bell-slash"></i>Unsubscribe</Button>
-                            <Button  class="btn btn-secondary" color = "primary"onClick = {this.openSubscriptionDetails}><i class="far fa-bell"></i>Add Topic</Button>
-
-                         </div>
-                       
+                        this.props.isSubscribed === true?
+                        <div className = 'div_center'>
+                            <Button color = "danger" onClick = {this.unfollow} block><i className="far fa-bell-slash"></i><span className = "subscribeIcon">Unfollow</span></Button>
                         </div>  : 
                         <div className = 'div_center'>
-                                <Button color = "primary" onClick = {this.openSubscriptionDetails} block><i class="far fa-bell"></i>Subscribe</Button>
+                                <Button color = "primary" onClick = {this.follow} block><i className="far fa-bell"></i><span className = "subscribeIcon">Follow</span></Button>
                         </div>
                     }
-                    {/* <div className = 'div_margin' >
-                        <Button color = "danger" onClick = {this.showSubscribedTopicsOfAlarms} block><i class="far fa-bell-slash"></i>Unsubscribe</Button>
-                    </div>
-                    <div>
-                        <Button color = "primary"onClick = {this.openSubscriptionDetails} block><i class="far fa-bell"></i>Subscribe</Button>
-                    </div> */}
-               
+                    {/* openSubscriptionDetails */}
+                    {/* showSubscribedTopicsOfAlarms */}
          
              </Col>
          
@@ -377,7 +483,7 @@ class MetricAlarmDisplay extends Component {
               <Collapse isOpen = {this.state.isOpen}>
                   <Row>
                       <Col>
-                            <h3>AlarmDescription</h3>
+                            <h3>Alarm Description</h3>
                             <div className = 'description'>{this.state.alert.AlarmDescription}</div>
                       </Col>
                       <Col>
@@ -398,17 +504,41 @@ class MetricAlarmDisplay extends Component {
                   <Row>
                     
                     <Col>
-                        <h3>SNS Attached</h3>
+                        
+                        <h3>
+                            <span>SNS Attached </span>
+                            <a className= "waves-effect side-nav-link-ref" onClick = {this.openSubscriptionDetails}>
+                            <span className = "addTopic">
+                            Add Topics
+                            </span>  
+                            </a>
+                        </h3>
+                        
                         <ul>{
-                                this.state.alert.AlarmActions.map(item=>{
+                                this.state.alert.AlarmActions.map((item,i)=>{
                                     return(
-                                        <li>
-                                            {item}
+                                        <>
+                                        <Row>
+                                        <Col xs = '2.5'>
+                                        <li> 
+                                            {item.split(":")[item.split(":").length-1]}
                                         </li>
+                                        </Col>
+                                         <Col xs = '5'>
+                                             <span>
+                                             <span className = "myClickableThingy" onClick = {(e)=>this.openProtocolModal(e,item)}>Add Endpoint</span>
+                                             <span>/</span>
+                                             <span className = "myClickableThingy" onClick = {(e)=>this.unsubscribeTopics(e,i)}>Delete Topic</span>
+                                             </span>
+                                         </Col>
+                                
+                                         </Row>
+                                         </>
                                     )
                                 })
                                 
                                 }</ul>
+                            
                       </Col>
                     <Col>
                         <h3>AlarmArn</h3>
@@ -426,37 +556,13 @@ class MetricAlarmDisplay extends Component {
                       </Col>
                   </Row>
               </Collapse>
-              
-              <Modal isOpen = {this.state.toggleModalAndSubscribe} toggle = {this.toggleModalAndSubscribe} className = 'modalku'>
-                  <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscription Detail</span></ModalHeader>
-                  <ModalBody>
-                        <Form>
-                            <Form.Group>
-                                {
-                                   
-                                    this.props.AlarmActions.length>0?
-                                    <div>
-                                        <Form.Label>Already Subscribed Topics: </Form.Label>
-                                        {this.state.alert.AlarmActions.map((item,i) =>{
-                                            return (<div>{i+1}.{item.split(':')[item.split(':').length-1]}</div>)
-                                        })}
-                                    </div> :null
-                                }
-                            </Form.Group>
-                               
-                            <Form.Group>
-                                <Form.Label>Topic Name</Form.Label>
-                                <Form.Control as="select"  
-                                    onChange={(e) => this.getTopicARN(e)}>
-                                    <option disabled selected>Make Selection</option>
-                                    {dropdown}                              
-                             </Form.Control>
-                            </Form.Group>
-                            <fieldset disabled = {this.state.subscribedTopicArn == null}>
+              <Modal isOpen = {this.state.addProtocol} toggle = {(e)=>this.openProtocolModal(e,1)} className = 'modalku'>
+              <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Add Endpoints</span></ModalHeader>
+              <ModalBody>
                           {
                             this.state.listSubscriptions != null&& this.state.listSubscriptions.length > 0?  
                               <div className = 'scrolling'>
-                                    <Form.Label>Subscribed Endpoints of the topic: {this.state.subscribedTopicArn.split(':')[this.state.subscribedTopicArn.split(':').length-1]}</Form.Label>
+                                    <Form.Label>Subscribed Endpoints of the topic: {this.state.topicArnToAttachEndpoints.split(':')[this.state.topicArnToAttachEndpoints.split(':').length-1]}</Form.Label>
                                     <Table striped bordered hover size="sm">
                                          <thead>
                                             <tr>
@@ -501,7 +607,8 @@ class MetricAlarmDisplay extends Component {
                                                     <label>Protocol</label>
                                                 </div>
                                                 <div>
-                                                    <select className = 'selection' value = {name} onChange={(e) => this.protocolOption(e,index)}>
+                                                    <select className = 'selection' onChange={(e) => this.protocolOption(e,index)}>
+                                                        <option disabled selected>Select</option>
                                                         <option value="http">http</option>
                                                         <option value="https">https</option>
                                                         <option value="email">email</option>
@@ -537,13 +644,38 @@ class MetricAlarmDisplay extends Component {
                             this.state.subscriptionProtocol.length > 0?
                                 <input type="submit" value="Add Endpoint/s" className = 'submitButton1'/>:null
                         }
-                        {
-                            this.state.attachedEndpoints === true?
-                                <div><span className = 'addEndpoint'>Add Endpoints successfully</span></div>: null
-                        }
                             
                           </form>
-                          </fieldset>
+                         
+                        </ModalBody>
+                        <ModalFooter>
+                      <Button style ={{height : 40}} color="secondary" onClick = {(e)=>this.openProtocolModal(e,1)}> Close </Button>
+                  </ModalFooter>
+              </Modal>
+              <Modal isOpen = {this.state.toggleModalAndSubscribe} toggle = {this.toggleModalAndSubscribe} className = 'modalku'>
+                  <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscription Detail</span></ModalHeader>
+                  <ModalBody>
+                        <Form>
+                            <Form.Group>
+                                {     
+                                    this.props.AlarmActions.length>0?
+                                    <div>
+                                        <Form.Label>Already Subscribed Topics: </Form.Label>
+                                        {this.state.alert.AlarmActions.map((item,i) =>{
+                                            return (<div>{i+1}.{item.split(':')[item.split(':').length-1]}</div>)
+                                        })}
+                                    </div> :null
+                                }
+                            </Form.Group>
+                               
+                            <Form.Group>
+                                <Form.Label>Topic Name</Form.Label>
+                                <Form.Control as="select"  
+                                    onChange={(e) => this.getTopicARN(e)}>
+                                    <option disabled selected>Make Selection</option>
+                                    {dropdown}                              
+                             </Form.Control>
+                            </Form.Group>
                           </Form>
                   </ModalBody>
                   <ModalFooter>
@@ -551,7 +683,8 @@ class MetricAlarmDisplay extends Component {
                       <Button style ={{height : 40}} color="secondary" onClick = {(e) => this.toggleModalAndSubscribe(e,0)}> Cancel </Button>
                   </ModalFooter>
               </Modal> 
-              <Modal isOpen = {this.state.showSubscribedTopicsOfAlarms} toggle = {this.showSubscribedTopicsOfAlarms}>
+              <ToastContainer autoClose={2000}/>
+              {/* <Modal isOpen = {this.state.showSubscribedTopicsOfAlarms} toggle = {this.showSubscribedTopicsOfAlarms}>
                     <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscribed Topic/s of {this.state.alert.AlarmName}</span></ModalHeader>
                     <ModalBody>
                         <Table striped bordered hover size="sm">
@@ -578,7 +711,7 @@ class MetricAlarmDisplay extends Component {
                   <ModalFooter>
                       <Button style ={{height : 40}} color="secondary" onClick = {this.showSubscribedTopicsOfAlarms}> Close </Button>
                   </ModalFooter>
-              </Modal>
+              </Modal> */}
              
            </div>
    

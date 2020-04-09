@@ -59,6 +59,39 @@
     }
 }
 
+.delete_modal{
+    text-align: center;
+    >div{
+        padding: 10%;
+        font-size: 150%;
+        color: red;
+        >img{
+            margin: auto;
+            width: 50%
+        }
+        >button{
+            margin: 5%
+        }
+    }
+    
+}
+
+.Loading_spinner{
+    text-align: center;
+    margin: 10%;
+}
+
+.Loading_message{
+    text-align: center;
+    margin: 10%;
+    >img{
+        width: 50%
+    }
+    >div{
+        margin: 5%
+    }
+}
+
 .collapse_cal{
     display: none;
 }

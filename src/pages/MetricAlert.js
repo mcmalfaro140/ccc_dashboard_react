@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
-import { Row, Card, Col,CardDeck } from 'reactstrap';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import MetricAlarmDisplay from '../components/metricAlarmComp/MetricAlarmDisplay';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import ExistingMetricAlarms from '../components/metricAlarmComp/ExistingMetricAlarms';
-import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms'
+import MyMetricAlarms from '../components/metricAlarmComp/MyMetricAlarms';
+import mykey from '../keys.json';
+import { getLoggedInUser } from '../helpers/authUtils';
+import Loading from '../components/logAlertComp/Loading'
+const axios = require('axios').default;
 
 
 
@@ -15,38 +17,123 @@ class MetricAlert extends Component {
     constructor(props) {
         super(props);
         this.state = {
+           user: getLoggedInUser(),
            alerts:[],
+           usersAlerts:[],
+           allAlerts:[],
            subscribedAlerts:[],
+           isLoading: true,
+           isComplete: true,
+           isSuccessful: true
           }
         this.returnMetricAlarms = this.returnMetricAlarms.bind(this);
         this.updateState = this.updateState.bind(this);
+        this.close = this.close.bind(this);
        
     }
+    
     componentDidMount(){
+        //called deleteMetricAlarm endpoint in returnMetricAlarms function.
         this.returnMetricAlarms();
+        
     }
-    updateState(newState){
+    getAlerts(){
       let subscribedArr = [];
-      let stateAlerts = this.state.alerts;
-      stateAlerts.map(alert=>{
-         if(alert.AlarmArn === newState.AlarmArn){
-           alert = newState;
-         }
-         return stateAlerts;
-      })
-      this.setState({alerts:stateAlerts});
-      console.log(stateAlerts);
-      this.state.alerts.forEach(elem=>{
-        if(elem.AlarmActions.length > 0){
-          subscribedArr.push(elem);
-        }
+      if(this.state.user.token !== null){
+        axios({
+            method: 'get',
+            url: `${mykey.backend}/getMetricAlarms`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+           this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+           console.log(this.state.usersAlerts);
+           this.state.alerts.forEach(alert =>{
+            response.data.Data.user.forEach(userAlert=>{
+               if(alert.AlarmArn === userAlert.alarmArn){
+                 alert['isSubscribed'] = true;
+                 subscribedArr.push(alert);
+               }
+             })
+           })
+           this.setState({subscribedAlerts:subscribedArr});
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+    }
+    deleteAlerts(){
+     //checks for the deleted aws metric alarm in all array
+     let awsAlertsArr = [];
+     this.state.alerts.forEach(alert =>{
+        awsAlertsArr.push(alert.AlarmArn);
      })
-     this.setState({subscribedAlerts:subscribedArr});
-
+     this.state.allAlerts.forEach(allAlert=>{
+       if(!awsAlertsArr.includes(allAlert.alarmArn)){
+        axios({
+            method: 'post',
+            url: `${mykey.backend}/deleteMetricAlarms`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            },
+            data:{
+                'ids': allAlert.metricAlarmId,
+            }
+        }).then((response) =>{
+            console.log(response);
+        })
+       }
+     })
+    }
+    close(){
+      this.setState({isComplete:true});
+    }
+    updateState(isLoading, isSuccessful){
+      this.setState({isComplete : false});
+       if(this.state.user.token !== null){
+        axios({
+            method: 'get',
+            url: `${mykey.backend}/getMetricAlarms`,
+            headers: {
+                'Authorization': this.state.user.token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response)=>{
+          let subscribedArr = [];
+          let userArnArr = [];
+          let stateAlert = this.state.alerts;
+           this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
+           response.data.Data.user.forEach(userAlert=>{
+              userArnArr.push(userAlert.alarmArn);
+           })
+           stateAlert.forEach(elem =>{
+            if(!userArnArr.includes(elem.AlarmArn)){
+              elem['isSubscribed'] = false;
+            }
+            response.data.Data.user.forEach(userAlert=>{
+              if(elem.AlarmArn === userAlert.alarmArn){
+                elem['isSubscribed'] = true;
+                subscribedArr.push(elem);
+              }
+              
+            })
+           
+          })
+          this.setState({alerts:stateAlert,subscribedAlerts:subscribedArr, isLoading:isLoading, isSuccessful: isSuccessful});
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
   }
     returnMetricAlarms(){
         let alertsArr = this.state.alerts;
-        let subscribedArr = [];
         let params = {
             // ActionPrefix: 'STRING_VALUE',
             // AlarmNamePrefix: 'STRING_VALUE',
@@ -83,14 +170,10 @@ class MetricAlert extends Component {
                    alert['AlarmActions'] = data.MetricAlarms[i].AlarmActions;
                    alertsArr.push(alert);
                 }
-                this.setState({alerts: alertsArr}); 
-                this.state.alerts.forEach(elem=>{
-                   if(elem.AlarmActions.length > 0){
-                     subscribedArr.push(elem);
-                   }
-                })
-                this.setState({subscribedAlerts:subscribedArr});
-
+                this.getAlerts();
+                this.deleteAlerts();
+                
+          
             }
           }.bind(this))
     }
@@ -121,8 +204,9 @@ class MetricAlert extends Component {
                     </Card> */}                     
                   </TabPanel>  
               </Tabs>
-
             </div>
+            <Loading isLoading={this.state.isLoading} isComplete={this.state.isComplete} isSuccessful={this.state.isSuccessful} close={this.close} />
+
         </div>
               
           

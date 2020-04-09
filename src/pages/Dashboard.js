@@ -58,10 +58,10 @@ class DefaultDashboard extends Component {
         if(this.state.user.token !== null){
             axios({
                 method: 'get',
-                url: `${mykey.backend}/get_dashboard`,
+                url: `${mykey.backend}/getDashboard`,
                 headers: {
                     'Authorization': this.state.user.token,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json; charset=UTF-8'
                 }
             })
             .then((response)=>{
