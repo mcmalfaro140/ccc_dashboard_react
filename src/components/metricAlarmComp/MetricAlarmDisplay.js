@@ -35,7 +35,6 @@ class MetricAlarmDisplay extends Component {
             Dimensions: null,
            },
            id:null,
-           showAlertDetails:false,
            isOpen:false,
            subscription: false,
            color:null,
@@ -50,7 +49,6 @@ class MetricAlarmDisplay extends Component {
            listSubscriptions:null,
            showSubscribedTopicsOfAlarms:false,
           }
-        this.showAlertDetails = this.showAlertDetails.bind(this);
         this.toggle = this.toggle.bind(this);
         this.openSubscriptionDetails = this.openSubscriptionDetails.bind(this);
         this.getTopicARN = this.getTopicARN.bind(this);
@@ -113,6 +111,7 @@ class MetricAlarmDisplay extends Component {
           this.setState({id : 'Pop' + this.props.id});
     }
     componentWillReceiveProps(nextProps){
+        this.setState({isOpen:false});
         if(nextProps.StateValue === 'OK')
         this.setState({color:'green'});
         else if(nextProps.StateValue === 'ALARM')
