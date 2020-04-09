@@ -396,7 +396,7 @@ class AlarmForm extends Component {
                                 </Form.Control>   
                         </Col>
                         <Col xs = {8}>
-                            <Form.Control type="text" placeholder="Enter keywords here" onChange = {(e) => this.update(e,1)} />
+                            <Form.Control type="text" placeholder="Keywords will be separated by space." onChange = {(e) => this.update(e,1)} />
                         </Col>
                     </Row>
                     

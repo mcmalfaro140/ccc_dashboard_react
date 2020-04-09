@@ -169,19 +169,15 @@ class Items extends Component {
         snsArr.map((elem,i) => {
             console.log(elem);
             sns.push(
-<<<<<<< HEAD
                 <Row>
                     <Col xs = '3'>
-                        <li>{elem}</li>
+                        <li key={i}>{elem}</li>
                     </Col>
                     <Col>
                         <span className = {element.isSubscribe===true?"myClickableThingy":"addTopic_non"} onClick = {(e)=>this.openProtocolModal(e,elem)}>Add Endpoint</span>
                     </Col>
                 </Row>
                 
-=======
-                <li key={i}>{e}</li>
->>>>>>> log form
             )
         })
         return sns
