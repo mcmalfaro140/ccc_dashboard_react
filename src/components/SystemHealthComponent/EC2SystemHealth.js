@@ -44,40 +44,29 @@ const EC2SystemHealth = () => {
                 <TableBody className = "tablesaw tablesaw-stack" key ={i}>
                 <TableRow id={strid} hover onClick={() => handleClick(i)} className = "table_logs_cell">
     
-                <TableCell className="time_col" 
-                style = {{ color :'black', paddingRight:'-5%', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}><i id={iconid} className="mdi mdi-menu-right"></i>
-                {Object.keys(item)}</TableCell>
+                <TableCell style = {{ color :'black', paddingRight:'-5%', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}>
                 
+                    {Object.keys(item)}
+                
+                </TableCell>
+
+                { Object.keys(expandableData).map((itemkey, index) => {
+                                       
+                        return (
+   
+                            <TableCell className="hid_cell" key = {index} style = {{ color :'black', fontSize : '120%', fontWeight : '500', fontFamily : 'sans-Serif'}}> 
+                                
+                                { expandableData[itemkey]}
+                            
+                             </TableCell>
+                                                
+                        );
+                })}  
+                
+
             
                 </TableRow>
-                <TableRow id={i} style={{visibility:'collapse'}}>
-                   
-                        <TableBody >
-                        <TableRow key = {i}>
-                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
-                                            Instance state
-                                        </TableCell>
-                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue'}}>
-                                           Availability zone
-                                        </TableCell>
-                                        <TableCell className="hid_cell" style = {{ backgroundColor :'lightblue' }}>
-                                           Instance status
-                                        </TableCell>
-                            </TableRow>
-
-                             { Object.keys(expandableData).map((itemkey, index) => {
-                                       
-                                    return (
-
-                                             
-                                                <TableCell className="hid_cell" key = {index}> { expandableData[itemkey]} </TableCell>
-                                             
-                                    );
-                            })}   
-
-                         </TableBody> 
-                      
-                </TableRow>
+               
             </TableBody>
             )
         })
@@ -99,6 +88,19 @@ useEffect(() => {
                                     <TableRow>
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
                                             EC2 Instance</TableCell>
+
+                                            <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
+                                            Instance state
+                                        </TableCell>
+
+                                        <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
+                                           Availability zone
+                                        </TableCell>
+
+                                        <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
+                                           Instance status
+                                        </TableCell>
+
                                     </TableRow>
                                 </TableHead>
                                 {cell}

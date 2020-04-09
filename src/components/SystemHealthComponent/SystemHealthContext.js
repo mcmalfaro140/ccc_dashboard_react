@@ -148,6 +148,7 @@ const searchByLogGroupName =  (logName , filterPattern) => {
 
   useEffect (() => {
 
+  
     getLogGroupName()
     getEC2InstanceStatus()
 
