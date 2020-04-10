@@ -84,7 +84,7 @@ class AlarmForm extends Component {
     onSubmitForm(){
         this.props.complete();
         let info = this.state.logAlarmInput;
-        let key_str = null
+        let key_str = ""
         let group_str = ""
         if(info.Keywords.length > 0){
             info.Keywords.forEach((element,i) => {
@@ -99,6 +99,8 @@ class AlarmForm extends Component {
                 }
                 
             });
+        }else{
+            key_str = null
         }
         if(this.checkObj(info)){
             info.LogGroupNameSelection.forEach((element,i) => {
@@ -109,36 +111,37 @@ class AlarmForm extends Component {
                 }
                 
             });
-            axios({
-                method: 'post',
-                url: `${mykey.backend}/createLogAlarm`,
-                headers: {
-                    'Authorization': this.props.user.token,
-                    'Content-Type': 'application/json; charset=UTF-8'
-                },
-                data: {
-                    'AlarmName' : info.AlarmName,
-                    'KeywordRelationship': info.KeywordRelationship,
-                    'LogLevel' : info.LogLevel ,
-                    'Comparison' : info.LogLevelSign,
-                    'LogGroups' : group_str,
-                    'Keywords' : key_str,
-                    'SNSTopicNames' : info.SNS_Selection
-                }
-            })
-            .then((response)=>{
-                console.log(response)
-                if(response.data.Result.includes("created")){
-                    this.props.success()
-                    this.props.getAlerts();
-                }else{
-                    this.props.fail()
-                }
-            })
-            .catch((err)=>{
-                this.props.fail()
-                console.log(err)
-            })
+            console.log(key_str)
+            // axios({
+            //     method: 'post',
+            //     url: `${mykey.backend}/createLogAlarm`,
+            //     headers: {
+            //         'Authorization': this.props.user.token,
+            //         'Content-Type': 'application/json; charset=UTF-8'
+            //     },
+            //     data: {
+            //         'AlarmName' : info.AlarmName,
+            //         'KeywordRelationship': info.KeywordRelationship,
+            //         'LogLevel' : info.LogLevel ,
+            //         'Comparison' : info.LogLevelSign,
+            //         'LogGroups' : group_str,
+            //         'Keywords' : key_str,
+            //         'SNSTopicNames' : info.SNS_Selection
+            //     }
+            // })
+            // .then((response)=>{
+            //     console.log(response)
+            //     if(response.data.Result.includes("created")){
+            //         this.props.success()
+            //         this.props.getAlerts();
+            //     }else{
+            //         this.props.fail()
+            //     }
+            // })
+            // .catch((err)=>{
+            //     this.props.fail()
+            //     console.log(err)
+            // })
         }else{
             this.props.fail()
         }
