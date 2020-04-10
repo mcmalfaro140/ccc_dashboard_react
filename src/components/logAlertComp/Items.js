@@ -242,8 +242,9 @@ class Items extends Component {
                             {element.isSubscribe ? 
                                 <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
                                 :
-                                <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
-                                {/* this.props.handleSubscribe(element.LogAlarmId) */}
+                                // <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
+                                <Button color="primary" block onClick={()=>this.props.handleSubscribe(element.logAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
+                                
                             
                         </Col>
                         <Col xs='1'>

@@ -67,7 +67,8 @@ class LogAlerts extends Component {
                 'Content-Type': 'application/json; charset=UTF-8'
             },
             data: {
-                'LogAlarmId' : id
+                'LogAlarmId' : id,
+                // 'SNSTopicName' : "Misael_SNS"
             }
         })
         .then((response)=>{
@@ -111,7 +112,7 @@ class LogAlerts extends Component {
                 },
                 data: {
                     'LogAlarmId' : id,
-                    'SNSTopicName' : "Misael_SNS"
+                    // 'SNSTopicName' : "Misael_SNS"
                 }
             })
             .then((response)=>{
