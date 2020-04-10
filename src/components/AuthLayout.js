@@ -88,7 +88,11 @@ class AuthLayout extends Component {
         axios.post(
             `${mykey.backend}/update`,
             {token:this.state.user.token, dashboard: JSON.stringify(dash_to_save)},
-            {header: {'Content-Type':'application/json'}}
+            {header: {
+                'Authorization': this.state.user.token,
+                'Content-Type':'application/json'
+            }}
+
         )
         .catch((error) => {
             console.log(error)
