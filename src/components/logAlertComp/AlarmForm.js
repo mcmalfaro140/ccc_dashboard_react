@@ -111,37 +111,36 @@ class AlarmForm extends Component {
                 }
                 
             });
-            console.log(key_str)
-            // axios({
-            //     method: 'post',
-            //     url: `${mykey.backend}/createLogAlarm`,
-            //     headers: {
-            //         'Authorization': this.props.user.token,
-            //         'Content-Type': 'application/json; charset=UTF-8'
-            //     },
-            //     data: {
-            //         'AlarmName' : info.AlarmName,
-            //         'KeywordRelationship': info.KeywordRelationship,
-            //         'LogLevel' : info.LogLevel ,
-            //         'Comparison' : info.LogLevelSign,
-            //         'LogGroups' : group_str,
-            //         'Keywords' : key_str,
-            //         'SNSTopicNames' : info.SNS_Selection
-            //     }
-            // })
-            // .then((response)=>{
-            //     console.log(response)
-            //     if(response.data.Result.includes("created")){
-            //         this.props.success()
-            //         this.props.getAlerts();
-            //     }else{
-            //         this.props.fail()
-            //     }
-            // })
-            // .catch((err)=>{
-            //     this.props.fail()
-            //     console.log(err)
-            // })
+            axios({
+                method: 'post',
+                url: `${mykey.backend}/createLogAlarm`,
+                headers: {
+                    'Authorization': this.props.user.token,
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                data: {
+                    'AlarmName' : info.AlarmName,
+                    'KeywordRelationship': info.KeywordRelationship,
+                    'LogLevel' : info.LogLevel ,
+                    'Comparison' : info.LogLevelSign,
+                    'LogGroups' : group_str,
+                    'Keywords' : key_str,
+                    'SNSTopicNames' : info.SNS_Selection
+                }
+            })
+            .then((response)=>{
+                console.log(response)
+                if(response.data.Result.includes("created")){
+                    this.props.success()
+                    this.props.getAlerts();
+                }else{
+                    this.props.fail()
+                }
+            })
+            .catch((err)=>{
+                this.props.fail()
+                console.log(err)
+            })
         }else{
             this.props.fail()
         }
