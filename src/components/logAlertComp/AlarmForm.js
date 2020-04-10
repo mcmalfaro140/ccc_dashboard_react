@@ -84,12 +84,16 @@ class AlarmForm extends Component {
     onSubmitForm(){
         this.props.complete();
         let info = this.state.logAlarmInput;
-        let key_str = null;
+        let key_str = null
         let group_str = ""
         if(info.Keywords.length > 0){
             info.Keywords.forEach((element,i) => {
                 if(info.Keywords.length == i+1){
-                    key_str += element
+                    if(key_str == null){
+                        key_str = element
+                    }else{
+                        key_str += element
+                    }
                 }else{
                     key_str += element+','
                 }
