@@ -152,7 +152,7 @@ class Items extends Component {
         this.setState({toggleModal:!this.state.toggleModal})
         //if i = 1 then we put subscribe the topic to alarms functions inside
         if(this.state.subscribingTopicArn!=null && i === 1){
-            this.props.handleSubscribe(this.state.logAlarmId)
+            this.props.handleSubscribe(this.state.logAlarmId, this.state.subscribingTopicArn)
         }
         //if i = 0 then it is closing the modal only
         else if(i === 0){
@@ -240,10 +240,10 @@ class Items extends Component {
                         </Col>
                         <Col xs="2">
                             {element.isSubscribe ? 
-                                <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
+                                <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId, element.XRefUserSNSTopic)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
                                 :
-                                // <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
-                                <Button color="primary" block onClick={()=>this.props.handleSubscribe(element.logAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
+                                <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
+                                {/* <Button color="primary" block onClick={()=>this.props.handleSubscribe(element.logAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>} */}
                                 
                             
                         </Col>
