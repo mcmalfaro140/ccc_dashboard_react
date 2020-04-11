@@ -143,10 +143,10 @@ class SearchFilterBar extends React.Component {
         const names = [];
         for (let i = 0 ; i < this.state.filter.length; i++){
             if(i % 2 !== 0){
-                names.push(<Row xs="2"><Col xs="6"><CustomInput key={i-1} type="checkbox" id={i-1} label={this.state.filter[i-1].logGroupName} checked={this.state.filter[i-1].checked} onChange={() => this.handleCheck(i-1)}/></Col><Col xs="6"><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
+                names.push(<Row xs="2" key={i-1}><Col xs="6"><CustomInput key={i-1} type="checkbox" id={i-1} label={this.state.filter[i-1].logGroupName} checked={this.state.filter[i-1].checked} onChange={() => this.handleCheck(i-1)}/></Col><Col xs="6"><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
             }else{
                 if(i+1 === this.state.logGroupNames.length){
-                    names.push(<Row xs="2"><Col xs="6" ><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
+                    names.push(<Row xs="2" key={i}><Col xs="6" ><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
                 }
             }
         }

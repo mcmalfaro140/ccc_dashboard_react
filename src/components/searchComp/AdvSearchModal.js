@@ -70,7 +70,6 @@ class AdvSearchModal extends React.Component {
             ReactDOM.findDOMNode(element).style.display = "block"
             this.setState({isFilterbyName: true})
         }
-        
     }
 
     addName(str,id){
@@ -133,7 +132,7 @@ class AdvSearchModal extends React.Component {
         let endTime = end.toGMTString();
         const names = this.state.logGroupNames.map((item, index) => {
             return(
-                <CustomInput type="checkbox" id={index} label={item} onChange={()=>this.addName(item,index)} />
+                <CustomInput type="checkbox" id={index} label={item} onChange={()=>this.addName(item,index)} key={index} />
             )
         })
         return(

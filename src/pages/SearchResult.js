@@ -48,13 +48,25 @@ class SearchResult extends React.Component {
         }
         if(isFilter === true){
             let temp = this.props.location.state.filterNames;
-            temp.forEach((element) => {
-                this.searchByLogGroupName(element);
+            temp.forEach((element, i) => {
+                if(i%3 === 0){
+                    setTimeout(()=>{ //Added timeout to prevent AWS Rate Exceeded error
+                        this.searchByLogGroupName(element);
+                    },1000)
+                }else{
+                    this.searchByLogGroupName(element);
+                }
             })
         }else{
             let temp = this.props.location.state.logGroupNames;
-            temp.forEach((element) => {
-                this.searchByLogGroupName(element);
+            temp.forEach((element,i) => { //Added timeout to prevent AWS Rate Exceeded error
+                if(i%3 === 0){
+                    setTimeout(()=>{
+                        this.searchByLogGroupName(element);
+                    },1000)
+                }else{
+                    this.searchByLogGroupName(element);
+                }
             })
         }
     }
@@ -118,26 +130,30 @@ class SearchResult extends React.Component {
 
         //build filter pattern
         let search_pattern = ""
-        arrayKeyWords.forEach(element => {
-            search_pattern += element + " "
+        arrayKeyWords.forEach((element, i) => {
+            if(i < arrayKeyWords.length - 1){
+                search_pattern += element + " "
+            }else{
+                search_pattern += element 
+            }
+            
         });
 
         if(range !== "all"){
             var params = {
                 logGroupName: logName, /* required */
                 endTime: this.props.location.state.endTime,
-                filterPattern: search_pattern, /*keyword passed by the user */
+                filterPattern: key, /*keyword passed by the user */
                 startTime: this.props.location.state.startTime
                 // limit: 1000, 
             };
         }else{
             var params = {
                 logGroupName: logName, /* required */
-                filterPattern: search_pattern /*keyword passed by the user */
+                filterPattern: key /*keyword passed by the user */
                 // limit: 1000, 
             };
         }
-        
         
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
