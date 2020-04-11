@@ -48,19 +48,14 @@ getgraph = () =>{
             Dimensions: [
               {
                 Name: typeOfD, /* required */
-                // Value: 'i-031339fed44b9fac8' /* required */
                 Value: idVal
               },
-              /* more items */
             ],
             Statistics: [
               'Average',
-              /* more items */
             ], 
           }
         
-          AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
-          // AWS.config.logger = console; 
           AWS.config.update({secretAccessKey: myKeys.secretAccessKey, accessKeyId: myKeys.accessKeyId, region: myKeys.region});
           AWS.config.logger = console; 
           let cloudwatch3 = new AWS.CloudWatch();
@@ -73,7 +68,6 @@ getgraph = () =>{
               return dateA - dateB;
                 });
               this.setState({holder:sortedData})
-            //  let data1 = [];
               for (var i = 0; i < this.state.holder.length; i++) {
                 let newTimestamp = (this.state.holder[i].Timestamp.getMonth()+1) + "/"+ this.state.holder[i].Timestamp.getDate() + " - "+this.state.holder[i].Timestamp.getHours() +":"+ this.state.holder[i].Timestamp.getMinutes() ;        
                 if(!this.state.label.includes(newTimestamp)){
@@ -147,7 +141,6 @@ onRefresh(chart){
                 min: 0, 
             }
           }
-         // chart.update();
 };
 oldDataForRealTime(){
   let cloudwatch = new AWS.CloudWatch();
@@ -168,11 +161,9 @@ oldDataForRealTime(){
         // Value: 'i-031339fed44b9fac8' /* required */
         Value: idVal
       },
-      /* more items */
     ],
     Statistics: [
       'Average',
-      /* more items */
     ], 
   }
   cloudwatch.getMetricStatistics(params, function(err, data){
@@ -209,12 +200,10 @@ componentDidMount() {
          }
 };
 componentWillReceiveProps(nextProp){
-       // const isEqual = this.compareObj(this.state.oldGraphSetting, nextProp.graphSettings) 
         let newStartTime = nextProp.graphSettings.startTime;
         let oldStartTime = this.state.newUpcomingPropsStartTime; 
         let newEndTime = nextProp.graphSettings.endTime;
         let oldEndTime = this.state.newUpcomingPropsEndTime;
-       //  console.log(newName === preName);    
         if(nextProp.graphSettings.realTime === false){
           if(this.state.isModify === true && (newStartTime !== oldStartTime || newEndTime !== oldEndTime)){
               if(this.state.holder.length > 0){

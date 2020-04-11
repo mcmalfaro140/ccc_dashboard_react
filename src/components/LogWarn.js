@@ -40,7 +40,6 @@ class LogWarn extends React.Component {
 
  //Funtion to get all the log group names from AWS
  getLogGroupName(){
-    // console.log("init search")
     cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
         if (err){
             console.log(err, err.stack); // an error occurred
@@ -63,10 +62,7 @@ searchByLogGroupName(logName){
 
         var params = {
             logGroupName: logName, /* required */
-           // endTime: Math.round(new Date().getTime()/1000) - 86400,
             filterPattern: 'WARN', /*keyword passed by the user */
-            //startTime: Math.round(new Date().getTime()/1000)
-            // limit: 1000, 
         }
       
     cloudwatchlogs.filterLogEvents(params, function(err, data) {
@@ -117,16 +113,6 @@ handleClick(id){
     let iconid = "iconwarn" + id;
     let row = document.getElementById(rowid);
     let icon = document.getElementById(iconid);
-    // if(ReactDOM.findDOMNode(element).style.visibility === "collapse"){
-    //     ReactDOM.findDOMNode(row).classList.add("color")
-    //     ReactDOM.findDOMNode(element).classList.add("color")
-    //     ReactDOM.findDOMNode(element).style.visibility = "visible"
-    //     ReactDOM.findDOMNode(icon).classList.add("down")
-    // }else{
-    //     ReactDOM.findDOMNode(element).style.visibility = "collapse"
-    //     ReactDOM.findDOMNode(row).classList.remove("color")
-    //     ReactDOM.findDOMNode(icon).classList.remove("down")
-    // }
 }
 
 defaultIcon = () => {
@@ -143,7 +129,6 @@ defaultIcon = () => {
 }
 
     render() {
-        // console.log(this.state.results)
 
         const cell = this.state.results.map((item, i) => {
             let objKeys = Object.keys(item.events)
@@ -164,19 +149,6 @@ defaultIcon = () => {
                         </TableCell>
 
                     </TableRow>
-                    {/* <TableRow id={i} style={{visibility:'collapse'}}>
-                        <TableCell>
-                            <TableBody >
-                                
-                                        <TableRow>
-                                            <TableCell className="hid_cell" style={{color:'black', fontSize:'100%', fontWeight:'100' , fontFamily : 'sans-Serif'}}>
-                                                {this.state.results[i].events.length}
-                                            </TableCell>
-                                        </TableRow>
-                                  
-                            </TableBody>
-                        </TableCell>
-                    </TableRow> */}
                 </TableBody>
             )
         })
@@ -203,7 +175,6 @@ defaultIcon = () => {
                     </Col>
                     </div>
 
-                     {/* <Popover placement="right" isOpen={this.state.isOpen} target="popoverCardSecond" toggle={this.toggle}> */}
                     <div style={{ marginLeft:'-10%'}}>
                         <Card>
                         <Table className="table_logs_header" aria-label="spanning table" > 
@@ -218,7 +189,6 @@ defaultIcon = () => {
                         </Table>
                         </Card>
                     </div>
-                     {/* </Popover> */}
                </div>
                 )
             }

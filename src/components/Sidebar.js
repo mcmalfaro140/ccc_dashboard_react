@@ -60,8 +60,7 @@ class SideNavContent extends React.Component {
               </span>
             </Link>
         </div>
-        {/* Side menu User fragment
-        TODO: Update user email dynamically with back end and add logout link. */}
+    
         <div className="user-box text-center ">
             <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
             <h5>Hi, {this.props.user.username}.</h5>
@@ -75,7 +74,6 @@ class SideNavContent extends React.Component {
                 </li>
             </ul>
         </div>
-        {/* Options */}
           <ul className="metismenu" id="side-menu">
               <li className="menu-title">Navigation</li>
 
@@ -302,7 +300,6 @@ class Sidebar extends Component {
                     </PerfectScrollbar>
                 </div>
                 <div className={showMenu ? "sidebar-overlay" : ""} onClick={this.props.menuToggle}></div>
-                {/* <div className="sidebar-overlay"></div> */}
             </React.Fragment>
         );
     }

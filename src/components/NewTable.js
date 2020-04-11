@@ -2,7 +2,6 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import "react-table/react-table.css";
-//import { handleTableCellClick } from "./CellExpandHandler.js";
 
 
 
@@ -29,8 +28,7 @@ function newTableData () {
     new_data.loggroupnames = props.loggroupnames[i];
     new_data.recordsmatched = props.recordsmatched[i];
     new_data.scannedLogStreams = props.scannedLogStreams[i];
-    // new_data.logger = props.logger[i];
-    // new_data.message = props.message[i];
+
 
     //push the object to the array
     dataFromtable.push(new_data);

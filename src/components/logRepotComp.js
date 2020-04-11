@@ -66,10 +66,7 @@ searchByLogGroupName(logName){
 
         var params = {
             logGroupName: logName, /* required */
-           // endTime: Math.round(new Date().getTime()/1000) - 86400,
             filterPattern: 'ERROR', /*keyword passed by the user */
-            //startTime: Math.round(new Date().getTime()/1000)
-            // limit: 1000, 
         }
       
     cloudwatchlogs.filterLogEvents(params, function(err, data) {
@@ -120,16 +117,6 @@ handleClick(id){
     let iconid = "iconerror" + id;
     let row = document.getElementById(rowid);
     let icon = document.getElementById(iconid);
-    // if(ReactDOM.findDOMNode(element).style.visibility === "collapse"){
-    //     ReactDOM.findDOMNode(row).classList.add("color")
-    //     ReactDOM.findDOMNode(element).classList.add("color")
-    //     ReactDOM.findDOMNode(element).style.visibility = "visible"
-    //     ReactDOM.findDOMNode(icon).classList.add("down")
-    // }else{
-    //     ReactDOM.findDOMNode(element).style.visibility = "collapse"
-    //     ReactDOM.findDOMNode(row).classList.remove("color")
-    //     ReactDOM.findDOMNode(icon).classList.remove("down")
-    // }
 }
 
 defaultIcon = () => {
@@ -244,12 +231,6 @@ displayLogGroupCard = () => {
                     )
 
                 }
-               
-                {/* <Popover placement="right" isOpen={this.state.isOpen} target="popoverCard" id = "popoverCard"> */}
-
-                
-       
-                {/* </Popover> */}
 
 
             </div>

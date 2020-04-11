@@ -87,7 +87,6 @@ class DefaultDashboard extends Component {
     }
 
     fillBoxListener = (childData) =>{
-        console.log(childData);
         let id = childData[1];
         let isFill = childData[0];
         let newDashboard = this.state.userDashboard;

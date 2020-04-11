@@ -55,7 +55,7 @@ class AdvSearchModal extends React.Component {
         this.getLogGroupName();
         document.getElementById("log_search_form").onkeypress = function(e) {
             var key = e.charCode || e.keyCode || 0;     
-            if (key == 13) {
+            if (key === 13) {
               e.preventDefault();
             }
         }

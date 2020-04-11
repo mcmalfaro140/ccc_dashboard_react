@@ -123,7 +123,6 @@ class AlarmForm extends Component {
                 }
             })
             .then((response)=>{
-                console.log(response)
                 if(response.data.Result.includes("created")){
                     this.props.success()
                     this.props.getAlerts();

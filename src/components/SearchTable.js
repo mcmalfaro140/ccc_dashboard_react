@@ -19,9 +19,6 @@ class SearchTable extends React.Component {
                     style:{
                       textalign:"left"
                     },
-                    // width: 50,
-                    // maxwidth:50,
-                    // minwidth:50
                 }
             ]
 
@@ -32,21 +29,6 @@ class SearchTable extends React.Component {
     newTableData(){
         let tableData = []
         var new_data = Object.create(this.state.tabledata);
-      
-        // for (var i = 0; i < this.props.events.length; i++) {
-        //     var t = new Date(parseInt(this.props.events[i].timestamp));
-        //     let time = t.toGMTString();
-        //     // console.log(time)
-        //     new_data.logStreamName = this.props.events[i].logStreamName;
-        //     new_data.timeStamp= time;
-        //     new_data.message = this.props.events[i].message;
-        
-        //     //push the object to the array
-        //     tableData.push(new_data);
-        
-        //     //new object instantiation
-        //     new_data = Object.create(this.state.tabledata);
-        // }
 
         return tableData;
     }

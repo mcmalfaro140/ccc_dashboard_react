@@ -60,7 +60,6 @@ class graphForm extends Component {
         }
     }
     componentDidMount(){
-       // console.log(this.props.graphInfor);
         if(this.props.graphInfor != null){
             this.setState({isRealTime : this.props.graphInfor.realTime});
             if(this.props.graphInfor.realTime === false){
@@ -149,9 +148,7 @@ class graphForm extends Component {
 
  onDateRangeSelection = (startTime, endTime) => {
         this.setState({startTime , endTime})
-    
-         //   console.log(startTime + " - " + endTime)
-            let start, end;
+        let start, end;
             if(startTime != null){
                 start = new Date(startTime);
             }
@@ -179,10 +176,6 @@ class graphForm extends Component {
         }
         
     }
- 
-    
-    
-    
 
     render() {
         let timeSelection;
@@ -245,9 +238,7 @@ class graphForm extends Component {
                         <ModalHeader toggle={this.props.toggleForm}>{this.props.graphInfor == null ? 'New Chart Form':'Modify Chart Form'}</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
-                                <form>
-                                
-                                {/* {this.props.graphInfor == null && ( */}
+                                <form>                                
                                 {this.props.graphInfor == null ?
                                 <Form.Group>
                                 <label className="center">
@@ -269,7 +260,6 @@ class graphForm extends Component {
                                 />
                                 </label>
                             </Form.Group> : null}
-                            {/* )} */}
                             {this.props.graphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>

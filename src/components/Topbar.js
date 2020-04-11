@@ -107,29 +107,6 @@ class Topbar extends Component {
     return (
       <React.Fragment>
         <div className="navbar-custom">
-          {/* <ul className="list-unstyled topnav-menu float-right mb-0">
-
-            <li className="d-none d-sm-block">
-              <form className="app-search">
-                <div className="app-search-box">
-                  <div className="input-group">
-                    <input type="text" className="form-control" placeholder="Search..." value={this.state.keyword} onChange={this.handleChange} />
-                    <Link to={{pathname:'/search_results', state: { search_keyword: this.state.keyword, range: "all"}}} >
-                      <div className="input-group-append">
-                        <button className="btn" type="submit">
-                          <i className="fe-search"></i>
-                        </button>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              </form>
-            </li>
-
-            <li>
-              <NotificationDropdown notifications={Notifications} />
-            </li>
-          </ul> */}
           { this.props.title === "Dashboard" ?
             (<ul className="list-unstyled topnav-menu topnav-menu-left m-0">
               <li>
