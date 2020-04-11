@@ -4,11 +4,7 @@ import {LogContext} from './SystemHealthContext.js'
 
 const ServerStatusContext = () => {
     //Get the context from system Health context
-    
-    //const {EC2Status} = useContext(LogContext)
     const {EC2StatusAlert} = useContext(LogContext)
-
-    //const [EC2InstanceStatus , setEC2InstanceStatus] = EC2Status
     const [EC2InstanceStatusAlert , setEC2InstanceStatusAlert] = EC2StatusAlert
 
    

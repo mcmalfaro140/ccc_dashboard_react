@@ -73,14 +73,11 @@ getgraph = () =>{
            Dimensions: [
               {
                 Name: typeOfD, /* required */
-                // Value: 'i-031339fed44b9fac8' /* required */
                 Value: idVal
               },
-              /* more items */
             ],
             Statistics: [
               'Average',
-              /* more items */
             ],
           }
        
@@ -121,14 +118,11 @@ getgraph = () =>{
             Dimensions: [
                {
                  Name: typeOfD1, /* required */
-                 // Value: 'i-031339fed44b9fac8' /* required */
                  Value: idVal1
                },
-               /* more items */
              ],
              Statistics: [
                'Average',
-               /* more items */
              ],
            }
         
@@ -270,14 +264,11 @@ oldDataForRealTime(){
    Dimensions: [
       {
         Name: typeOfD, /* required */
-        // Value: 'i-031339fed44b9fac8' /* required */
         Value: idVal
       },
-      /* more items */
     ],
     Statistics: [
       'Average',
-      /* more items */
     ], 
   }
   let params1 = {
@@ -290,14 +281,11 @@ oldDataForRealTime(){
    Dimensions: [
       {
         Name: typeOfD1, /* required */
-        // Value: 'i-031339fed44b9fac8' /* required */
         Value: idVal1
       },
-      /* more items */
     ],
     Statistics: [
       'Average',
-      /* more items */
     ], 
   }
   

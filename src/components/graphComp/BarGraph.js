@@ -21,7 +21,7 @@ class BarGraph extends Component {
             graphSetting:{},
             RTHolder:[],
             RTData:[],
-            unit:""
+            unit:"",
 
           };
         this.showOptions = this.showOptions.bind(this);

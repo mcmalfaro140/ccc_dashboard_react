@@ -63,13 +63,7 @@ class ServerStatus extends Component {
        
     getEC2InstanceStatus () {
         var params = {
-            
            IncludeAllInstances: true,
-            // InstanceIds:[ 
-            //   'i-01e27ec0da2c4d296'
-            
-            // ]
-          
           };
           ec2.describeInstanceStatus(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
@@ -85,8 +79,6 @@ class ServerStatus extends Component {
 
     render() {
 
-
-        // console.log(this.state.results)
         const cell = this.state.results.map((item, i) => {
         
           let strid = "rowServer" + i;

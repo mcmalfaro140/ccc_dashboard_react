@@ -134,7 +134,6 @@ class SearchResult extends React.Component {
             var params = {
                 logGroupName: logName, /* required */
                 filterPattern: search_pattern /*keyword passed by the user */
-                // limit: 1000, 
             };
         }
         
