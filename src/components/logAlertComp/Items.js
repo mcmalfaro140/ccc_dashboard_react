@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { Component} from 'react';
 import ReactDOM from 'react-dom';
 import AWS from 'aws-sdk';
 import { Row, Card, Col, Button, Collapse,Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap';
@@ -176,8 +176,7 @@ class Items extends Component {
     }
     createSns = (snsArr,element) => {
         let sns = [] 
-        snsArr.map((elem,i) => {
-            console.log(elem);
+        snsArr.forEach((elem,i) => {
             sns.push(
                 <Row>
                     <Col xs = '2.5'>
@@ -195,7 +194,7 @@ class Items extends Component {
 
     createLogGroupName = (logNamesArr) => {
         let logName = [] 
-        logNamesArr.map((e,i) => {
+        logNamesArr.forEach((e,i) => {
             logName.push(
                 <li key={i}>{e}</li>
             )
@@ -205,7 +204,7 @@ class Items extends Component {
 
     createAlarms = () => {
         let alarm = []
-        this.props.alerts.map((element, i) => {
+        this.props.alerts.forEach((element, i) => {
             console.log(element)
             let key_str = "";
             element.Keywords.forEach(e => {
@@ -248,7 +247,7 @@ class Items extends Component {
                             
                         </Col>
                         <Col xs='1'>
-                            <i className="mdi mdi-delete-variant" onClick={() => this.props.handleDelete(i)}></i>
+                            <i class="far fa-trash-alt" onClick={() => this.props.handleDelete(i)}></i>
                         </Col>
                     </Row>
                     <Collapse id={alarm_id} isOpen={false}>

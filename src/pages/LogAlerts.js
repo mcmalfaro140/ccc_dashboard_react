@@ -93,7 +93,7 @@ class LogAlerts extends Component {
             }else{
                 this.setState({isErrorOpen: true})
             }
-        }else if(alarm.Users.length == 0){
+        }else if(alarm.Users.length === 0){
             this.deleteReq(alarm.LogAlarmId)
         }else{
             this.setState({isErrorOpen: true})
@@ -118,7 +118,7 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
-                if(response.data.Result == "Success"){
+                if(response.data.Result === "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
                 }else{
@@ -134,7 +134,7 @@ class LogAlerts extends Component {
     unsubscribe(id, sns){
         let my_sns = null
         sns.forEach(element => {
-            if(element.Username == this.state.user.username){
+            if(element.Username === this.state.user.username){
                 my_sns = element.SNSTopicName
             }
         });
@@ -155,7 +155,7 @@ class LogAlerts extends Component {
             })
             .then((response)=>{
                 console.log(response)
-                if(response.data.Result == "Success"){
+                if(response.data.Result === "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
                 }else{
@@ -235,7 +235,7 @@ class LogAlerts extends Component {
               </div>
               <Loading isLoading={this.state.isLoading} isComplete={this.state.isComplete} isSuccessful={this.state.isSuccessful} close={this.close} />
               <Modal isOpen={this.state.isErrorOpen} className="delete_modal">
-                    <img src={Incomplete}/>
+                    <img src={Incomplete} alt="incomplete_img"/>
                     <div>Can't delete alarm. There are more users subscribed to it.</div>
                     <Button onClick={() => this.close()}>Close</Button>
                 </Modal>

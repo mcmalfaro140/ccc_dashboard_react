@@ -1,6 +1,5 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import { Row, Col} from 'reactstrap';
-import {LogContext} from './SystemHealthContext.js'
 
 const NightlyScriptContext = () => {
     return(

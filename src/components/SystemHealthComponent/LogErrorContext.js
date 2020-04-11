@@ -7,13 +7,11 @@ import {LogContext} from './SystemHealthContext.js'
     //Get the context from system Health context
     const {ErrorCount} = useContext(LogContext)
     const [ErrorResultCount] = ErrorCount
+    // console.log("Er2 " + ErrorResultCount)
 
     return (
-     
         <div style={{ marginLeft:'10%'}}>
-         
                 <Col style={{ margin:'0%'}}>
-
                     <Row  style={{display: 'flex',  justifyContent:'center', color:'black', fontSize:'140%', fontWeight: '500', fontFamily : 'sans-Serif' }}>Log Errors</Row>
                     <Row style={{display: 'flex',  justifyContent:'center',color:'red', fontSize:'250%' }}> <span style={{padding:'-1%' }}>{ErrorResultCount}</span> <i style={{padding:'1%'}} className="fas fa-exclamation-triangle"></i></Row>
                     <Row style={{display: 'flex',  justifyContent:'center', color:'red', fontSize:'100%', marginTop : '-7%'}}>Errors Found</Row>

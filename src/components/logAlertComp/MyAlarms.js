@@ -15,7 +15,7 @@ class MyAlarms extends Component {
             <>
                 {this.props.alerts.length > 0  ? (<Items handleDelete={this.props.handleDelete} handleSubscribe={this.props.handleSubscribe} handleUnubscribe={this.props.handleUnubscribe} alerts={this.props.alerts}/>) : (
                     <div className="no_alarms">
-                        <img src={page}></img>
+                        <img src={page} alt="not_alarm_found"></img>
                         <div>No Alarms found under your name.</div>
                     </div>
                 )}

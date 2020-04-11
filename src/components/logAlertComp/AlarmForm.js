@@ -88,7 +88,7 @@ class AlarmForm extends Component {
         let group_str = ""
         if(info.Keywords.length > 0){
             info.Keywords.forEach((element,i) => {
-                if(info.Keywords.length == i+1){
+                if(info.Keywords.length === i+1){
                     if(key_str == null){
                         key_str = element
                     }else{
@@ -104,7 +104,7 @@ class AlarmForm extends Component {
         }
         if(this.checkObj(info)){
             info.LogGroupNameSelection.forEach((element,i) => {
-                if(info.LogGroupNameSelection.length == i+1){
+                if(info.LogGroupNameSelection.length === i+1){
                     group_str += element
                 }else{
                     group_str += element+','
