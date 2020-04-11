@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
 class RightSideBar extends Component {
@@ -57,10 +55,6 @@ class RightSideBar extends Component {
     }
 
     render() {
-
-        const title = this.props.title;
-        const component = this.props.children || null;
-
         return (
             <React.Fragment>
                 <div className="right-bar" ref={node => this.rightBarNodeRef = node}>
@@ -70,9 +64,6 @@ class RightSideBar extends Component {
                         </Link>
                         <h5 className="m-0 text-white">Settings </h5>
                     </div>
-                    <PerfectScrollbar>
-                        {component}
-                    </PerfectScrollbar>
                 </div>
                 <div className="rightbar-overlay"></div>
             </React.Fragment>

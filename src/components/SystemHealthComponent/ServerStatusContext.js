@@ -9,7 +9,7 @@ const ServerStatusContext = () => {
     const {EC2StatusAlert} = useContext(LogContext)
 
     //const [EC2InstanceStatus , setEC2InstanceStatus] = EC2Status
-    const [EC2InstanceStatusAlert , setEC2InstanceStatusAlert] = EC2StatusAlert
+    const [EC2InstanceStatusAlert] = EC2StatusAlert
 
    
     return (

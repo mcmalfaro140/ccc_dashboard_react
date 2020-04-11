@@ -8,18 +8,14 @@ import { getLoggedInUser } from '../helpers/authUtils';
 import Loader from '../components/Loader';
 import MixGraphForm from '../components/graphComp/MixGraphForm';
 import mykey from '../keys.json';
-
-import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
-
 import { Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-
 import GraphForm from '../components/graphComp/graphForm';
 
 //import css needed for reac-grid-layout
 import '../assets/react-grid/styles.css';
 import '../assets/react-grid/styles1.css';
 import SystemHealthContext from '../components/SystemHealthComponent/SystemHealthContext';
-import LogReportContext from '../components/SystemHealthComponent/LogErrorContext';
+import LogErrorContext from '../components/SystemHealthComponent/LogErrorContext';
 import LogWarningContext from '../components/SystemHealthComponent/LogWarningContext';
 import ServerStatusContext from '../components/SystemHealthComponent/ServerStatusContext';
 import NightlyScriptContext from '../components/SystemHealthComponent/NightlyScriptContext';
@@ -68,7 +64,7 @@ class DefaultDashboard extends Component {
                 let users_dash = JSON.parse(response.data.dashboard);
                 let new_dash = [];
                 if(users_dash.length > 0){
-                    users_dash.map((item, index) => {
+                    users_dash.forEach((item, index) => {
                         item.id = index;
                         new_dash.push(item)
                     })
@@ -225,7 +221,7 @@ class DefaultDashboard extends Component {
     setLayout(newLay){
         let temp = this.state.userDashboard
         let updatedDash = [];
-        newLay.map((chart) => {
+        newLay.forEach((chart) => {
             let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
             newGraph.coordinates.x = chart.y
             newGraph.coordinates.x = chart.x
@@ -312,7 +308,7 @@ class DefaultDashboard extends Component {
                 <div id="dashboard" style={{paddingTop:'1%'}}>
                     { /* preloader */}
                     {this.props.loading && <Loader />}
-                    <SystemHealthContext >
+                    <SystemHealthContext > 
                         <Card style={{boxShadow: '0 0 15px 0 rgba(30,144,255, 0.486)'}}>
                             <div style={{paddingBottom:'1%'}}className="card-body">
                             <h3 className="float-left" >System Health Bar</h3>
@@ -323,10 +319,7 @@ class DefaultDashboard extends Component {
                             
                                 <CardBody className="healthBar" style={{paddingTop:'0%', margin: '0%'}}>
                                     <Row onClick={() => this.setState({isSystemHealthdefault : !this.state.isSystemHealthdefault})} >
-                                                           
-                                               
-
-                                        <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogReportContext /></Col>
+                                        <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogErrorContext /></Col>
                                         <Col id="Column-1" onClick = {() => this.setState({systemHealthComponentid: "Column-1"})}> <LogWarningContext /></Col>
                                         <Col id="Column-2" onClick = {() => this.setState({systemHealthComponentid: "Column-2"})}><NightlyScriptContext /></Col>
                                         <Col id="Column-3" onClick = {() => this.setState({systemHealthComponentid: "Column-3"})}> <ServerStatusContext /></Col>

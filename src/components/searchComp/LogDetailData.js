@@ -71,9 +71,9 @@ class LogDetailData extends React.Component {
     handleClick(id) {
        if(id === 0){
         this.setState({showInfo : !this.state.showInfo})
-       }else if(id == 1){
+       }else if(id === 1){
         this.setState({showPrev: !this.state.showPrev})
-       }else if(id == 2){
+       }else if(id === 2){
         this.setState({showNext: !this.state.showNext})
        }
     }

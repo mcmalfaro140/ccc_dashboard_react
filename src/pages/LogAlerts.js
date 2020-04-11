@@ -93,14 +93,16 @@ class LogAlerts extends Component {
             }else{
                 this.setState({isErrorOpen: true})
             }
-        }else if(alarm.Users.length == 0){
+        }else if(alarm.Users.length === 0){
             this.deleteReq(alarm.LogAlarmId)
         }else{
             this.setState({isErrorOpen: true})
         }
     }
 
-    subscribe(id){
+    subscribe(id, sns){
+        let sns_arr = sns.split(':')
+        let my_sns = sns_arr.pop()
         this.setState({isComplete:false})
         if(this.state.user.token !== null){
             axios({
@@ -112,11 +114,11 @@ class LogAlerts extends Component {
                 },
                 data: {
                     'LogAlarmId' : id,
-                    // 'SNSTopicName' : "Misael_SNS"
+                    'SNSTopicName' : my_sns
                 }
             })
             .then((response)=>{
-                if(response.data.Result == "Success"){
+                if(response.data.Result === "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
                 }else{
@@ -129,7 +131,14 @@ class LogAlerts extends Component {
             })
         }
     }
-    unsubscribe(id){
+    unsubscribe(id, sns){
+        let my_sns = null
+        sns.forEach(element => {
+            if(element.Username === this.state.user.username){
+                my_sns = element.SNSTopicName
+            }
+        });
+        console.log(id + " " + my_sns)
         this.setState({isComplete:false})
         if(this.state.user.token !== null){
             axios({
@@ -140,12 +149,13 @@ class LogAlerts extends Component {
                     'Content-Type': 'application/json; charset=UTF-8'
                 },
                 data: {
-                    'LogAlarmId' : id
+                    'LogAlarmId' : id,
+                    'SNSTopicName' : my_sns
                 }
             })
             .then((response)=>{
                 console.log(response)
-                if(response.data.Result == "Success"){
+                if(response.data.Result === "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
                 }else{
@@ -170,8 +180,9 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
-                let alerts = response.data.Result.allLogAlarms
-                let my_alerts = response.data.Result.userLogAlarms
+                let alerts = response.data.Result.All
+                let my_alerts = response.data.Result.User
+                console.log(alerts)
                 alerts.forEach(element => {
                     if(element.Users.includes(this.state.user.username)){
                         element.isSubscribe = true
@@ -224,7 +235,7 @@ class LogAlerts extends Component {
               </div>
               <Loading isLoading={this.state.isLoading} isComplete={this.state.isComplete} isSuccessful={this.state.isSuccessful} close={this.close} />
               <Modal isOpen={this.state.isErrorOpen} className="delete_modal">
-                    <img src={Incomplete}/>
+                    <img src={Incomplete} alt="incomplete_img"/>
                     <div>Can't delete alarm. There are more users subscribed to it.</div>
                     <Button onClick={() => this.close()}>Close</Button>
                 </Modal>

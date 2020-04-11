@@ -10,7 +10,7 @@ import {Table , TableCell, TableBody, TableContainer, TableRow} from '@material-
 const LogErrorSystemHealth = () => {
     
     const {ErrorReport} = useContext (LogContext)
-    const [LogReportError , setLogReportError ] = ErrorReport
+    const [LogReportError] = ErrorReport
 
     const handleClick = (id) => {
         let element = document.getElementById(id);

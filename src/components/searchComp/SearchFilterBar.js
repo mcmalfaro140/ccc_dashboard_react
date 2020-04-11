@@ -46,7 +46,7 @@ class SearchFilterBar extends React.Component {
                 logGroupName: "",
                 checked: false,
             }
-            this.props.logGroupNames.map((ele, i)=> {
+            this.props.logGroupNames.forEach((ele, i)=> {
                 var new_data = Object.create(resultData);  
                     new_data.logGroupName = ele;
                     new_data.checked = this.props.filterNames.includes(ele)
@@ -65,7 +65,7 @@ class SearchFilterBar extends React.Component {
         let tempArr = this.state.filter;
         let tempFilter = []
         tempArr[checkIndex].checked = !tempArr[checkIndex].checked
-        tempArr.map((e,i)=> {
+        tempArr.forEach((e,i)=> {
             if(e.checked === true){
                 tempFilter.push(e.logGroupName)
             }
@@ -87,7 +87,7 @@ class SearchFilterBar extends React.Component {
         let eleSwitch = document.getElementById("logGroupSwitch");
         if(eleSwitch.checked === true){
             if(this.state.filter.length === 0){
-                this.state.logGroupNames.map((ele, i)=> {
+                this.state.logGroupNames.forEach((ele, i)=> {
                     let resultData = {
                         logGroupName: "",
                         checked: false,
@@ -178,7 +178,7 @@ class SearchFilterBar extends React.Component {
                                 <Col id="col-4" onClick={() => this.handleColorChange("col-4")}>
                                     1w
                                 </Col>
-                                <Col id="col-5" onClick={() => this.handleColorChange("col-5")}> Custome </Col>
+                                <Col id="col-5" onClick={() => this.handleColorChange("col-5")}> Custom </Col>
                                 <Col >
                                     <Link
                                         to={{
