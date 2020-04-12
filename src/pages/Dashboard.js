@@ -322,7 +322,7 @@ class DefaultDashboard extends Component {
                                 <div>
                                         <Row onClick={() => this.setState({isSystemHealthdefault : !this.state.isSystemHealthdefault})} >
                                                            
-                                        <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogReportContext /></Col>
+                                        <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogErrorContext /></Col>
                                         <Col id="Column-1" onClick = {() => this.setState({systemHealthComponentid: "Column-1"})}> <LogWarningContext /></Col>
                                         <Col id="Column-2" onClick = {() => this.setState({systemHealthComponentid: "Column-2"})}><NightlyScriptContext /></Col>
                                         <Col id="Column-3" onClick = {() => this.setState({systemHealthComponentid: "Column-3"})}> <ServerStatusContext /></Col>
