@@ -317,35 +317,40 @@ class DefaultDashboard extends Component {
                             </div>
                             </div>
                             
-                                <CardBody className="healthBar" style={{paddingTop:'0%', margin: '0%'}}>
-                                    <Row onClick={() => this.setState({isSystemHealthdefault : !this.state.isSystemHealthdefault})} >
+                        <CardBody className = "healthbar" style={{paddingTop:'0%', margin: '0%'}}>
+
+                                <div>
+                                        <Row onClick={() => this.setState({isSystemHealthdefault : !this.state.isSystemHealthdefault})} >
+                                                           
                                         <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogErrorContext /></Col>
                                         <Col id="Column-1" onClick = {() => this.setState({systemHealthComponentid: "Column-1"})}> <LogWarningContext /></Col>
                                         <Col id="Column-2" onClick = {() => this.setState({systemHealthComponentid: "Column-2"})}><NightlyScriptContext /></Col>
                                         <Col id="Column-3" onClick = {() => this.setState({systemHealthComponentid: "Column-3"})}> <ServerStatusContext /></Col>
                                         
-                                    </Row>
-
-                                    <Row>
-                                   { 
+                                        </Row>  
+                                    
+                                
+                                </div>
+                            
+                        { 
                     this.state.isSystemHealthdefault &&
                     
                     <div>
-
+                            <Row >
                         {
-                            this.state.systemHealthComponentid === "Column-0" ?  <Col id ={"Column-0"}>< LogErrorSystemHealth /></Col>
-                            : this.state.systemHealthComponentid === "Column-1" ? <Col id ={"Column-1"}>< LogWarningSystemHealth /></Col>
-                            : this.state.systemHealthComponentid === "Column-2" ? <p id ={"Column-2"}>This is inside Nightly scripts</p>
-                            : <Col id ={"Column-3"}><EC2SystemHealth /></Col>
+                            this.state.systemHealthComponentid === "Column-0" ?  <Col id ={"ExpandedColumn-0"}>< LogErrorSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "Column-1" ? <Col id ={"ExpandedColumn-1"}>< LogWarningSystemHealth /></Col>
+                            : this.state.systemHealthComponentid === "Column-2" ? <p id ={"ExpandedColumn-2"}>This is inside Nightly scripts</p>
+                            : <Col id ={"ExpandedColumn-3"} ><EC2SystemHealth /></Col>
                         }
-
+                           </Row>
                     </div>
                    
-                }   
+                        }   
 
-                                    </Row>
+                            
 
-                                </CardBody>
+                        </CardBody>
                            
 
                         </Card>

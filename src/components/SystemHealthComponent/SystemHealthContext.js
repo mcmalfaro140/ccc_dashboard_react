@@ -15,6 +15,7 @@ const SystemHealthContext = (props) => {
     const [ErrorResultCount , setErrorResultCount] = useState(0)
     const [WarnResultCount , setWarnResultCount] = useState(0)
     const [EC2InstanceStatus , setEC2InstanceStatus] = useState([])
+    const [EC2InstanceTags , setEC2InstanceTags] = useState([])
     const [EC2InstanceStatusAlert , setEC2InstanceStatusAlert] = useState(0)
 
 const getLogGroupName = () => {
@@ -32,10 +33,12 @@ const getLogGroupName = () => {
                 temp.map((LogGroupName) => (
                       LogGroupName.logGroupName
             )))
-                temp.map((LogGroupName ) => (
+
+       
+                temp.map((LogGroupName , index) => (
                     searchByLogGroupName(LogGroupName.logGroupName , 'ERROR'),
                     searchByLogGroupName(LogGroupName.logGroupName , 'WARN')
-                    ))
+                    ))        
         }
     })
 
@@ -89,22 +92,69 @@ const searchByLogGroupName =  (logName , filterPattern) => {
 
  const getEC2InstanceStatus =  ()  => {
     var params = {
+ 
         
-       IncludeAllInstances: true,
+       IncludeAllInstances: true
       
       };
+
+    
       ec2.describeInstanceStatus(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
             
-        //    console.log(data.InstanceStatuses)
+        console.log(data)
+        let id = []
+
+        data.InstanceStatuses.forEach(element => {
+            
+            id.push(element.InstanceId)
+            
+        });
+
+        console.log(id)
+
+
+        id.forEach(element => {
+
+            const tagParams = {
+          
+                Filters :[    {
+                   Name: "resource-id", 
+                   Values: [
+                      element
+                   ]
+               }
+             ]
+          
+             }
+   
+           ec2.describeTags(tagParams, function(err, dataForTag) {
+               if (err) console.log(err, err.stack); // an error occurred
+               else {
+                   console.log(dataForTag);  
+                
+                setEC2InstanceTags(prevState => [
+                    ...prevState , 
+                        {
+                            id : `${element}` ,
+                            tags : dataForTag.Tags
+                        }
+                        
+                ])
+
+               }
+               
+              });
+        });
+         
               data.InstanceStatuses.forEach((element) => {
+
                 setEC2InstanceStatus(prevState => 
                     [
                         ...prevState , 
                          {
                               [element.InstanceId] : {
-
                                 "InstanceState" : element.InstanceState.Name,
                                 "AvailabilityZone" : element.AvailabilityZone , 
                                 "InstanceStatus" : element.InstanceStatus.Status
@@ -112,6 +162,7 @@ const searchByLogGroupName =  (logName , filterPattern) => {
                          }
                     ]
                     )
+                
                 if(element.InstanceStatus.Status !== "ok") {
                     setEC2InstanceStatusAlert(prevState => prevState + 1)
                 }
@@ -121,7 +172,9 @@ const searchByLogGroupName =  (logName , filterPattern) => {
         }
       });
 
-    }
+    
+}
+
 
     const timerInterval = () =>{
         setInterval(() => {
@@ -150,7 +203,8 @@ const searchByLogGroupName =  (logName , filterPattern) => {
                                       ErrorReport : [LogReportError , setLogReportError], 
                                       LogGroups :  [LogGroupNames , setLogGroupNames],
                                      EC2Status : [EC2InstanceStatus , setEC2InstanceStatus],
-                                     EC2StatusAlert : [EC2InstanceStatusAlert , setEC2InstanceStatusAlert]
+                                     EC2StatusAlert : [EC2InstanceStatusAlert , setEC2InstanceStatusAlert],
+                                     EC2InstanceTag : [EC2InstanceTags , setEC2InstanceTags]
                                      }}>
             {props.children}
         </LogContext.Provider>
