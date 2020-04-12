@@ -317,18 +317,12 @@ class DefaultDashboard extends Component {
                             </div>
                             </div>
                             
-<<<<<<< HEAD
-                                <CardBody className="healthBar" style={{paddingTop:'0%', margin: '0%'}}>
-                                    <Row onClick={() => this.setState({isSystemHealthdefault : !this.state.isSystemHealthdefault})} >
-                                        <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogErrorContext /></Col>
-=======
                         <CardBody className = "healthbar" style={{paddingTop:'0%', margin: '0%'}}>
 
                                 <div>
                                         <Row onClick={() => this.setState({isSystemHealthdefault : !this.state.isSystemHealthdefault})} >
                                                            
                                         <Col id="Column-0" onClick = {() => this.setState({systemHealthComponentid: "Column-0"})}> <LogReportContext /></Col>
->>>>>>> tag field added
                                         <Col id="Column-1" onClick = {() => this.setState({systemHealthComponentid: "Column-1"})}> <LogWarningContext /></Col>
                                         <Col id="Column-2" onClick = {() => this.setState({systemHealthComponentid: "Column-2"})}><NightlyScriptContext /></Col>
                                         <Col id="Column-3" onClick = {() => this.setState({systemHealthComponentid: "Column-3"})}> <ServerStatusContext /></Col>
