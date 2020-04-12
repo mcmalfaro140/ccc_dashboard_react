@@ -102,8 +102,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
       ec2.describeInstanceStatus(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
-            
-        console.log(data)
         let id = []
 
         data.InstanceStatuses.forEach(element => {
@@ -111,10 +109,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
             id.push(element.InstanceId)
             
         });
-
-        console.log(id)
-
-
         id.forEach(element => {
 
             const tagParams = {
@@ -132,8 +126,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
            ec2.describeTags(tagParams, function(err, dataForTag) {
                if (err) console.log(err, err.stack); // an error occurred
                else {
-                   console.log(dataForTag);  
-                
                 setEC2InstanceTags(prevState => [
                     ...prevState , 
                         {
