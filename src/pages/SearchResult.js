@@ -49,10 +49,10 @@ class SearchResult extends React.Component {
         if(isFilter === true){
             let temp = this.props.location.state.filterNames;
             temp.forEach((element, i) => {
-                if(i%3 === 0){
+                if(i%2 === 0){
                     setTimeout(()=>{ //Added timeout to prevent AWS Rate Exceeded error
                         this.searchByLogGroupName(element);
-                    },1000)
+                    },500 * (i/2))
                 }else{
                     this.searchByLogGroupName(element);
                 }

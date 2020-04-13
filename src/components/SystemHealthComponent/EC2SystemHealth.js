@@ -34,13 +34,7 @@ const EC2SystemHealth = () => {
     const cell = EC2InstanceStatus.map((item, i) => {
        
              const expandableData = Object.entries(Object.values(item))[0][1]
-
-            console.log(item)
-            console.log(EC2InstanceTags)
-
             const tagItem  = EC2InstanceTags.filter((element) => element.id == Object.keys(item) )
-
-            console.log(Object.values(tagItem[0])[1])
              let strid = "row" + i;
              let iconid = "icon" + i;
              
