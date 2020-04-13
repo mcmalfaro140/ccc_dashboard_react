@@ -39,13 +39,12 @@ const EC2SystemHealth = () => {
              let iconid = "icon" + i;
              
             return(
-               
             <TableBody className = "tablesaw tablesaw-stack">
-    
-                <TableRow id={strid} className = "table_logs_cell">
-                    {/* Displays the instance id */}
 
-                    <TableCell className="time_col"  style = {{ color :'black' , fontSize : '100%', fontWeight : '120', fontFamily : 'sans-Serif'}}>
+                <TableRow id={strid} >
+
+                    {/* Displays the instance id */}
+                    <TableCell  style = {{ color :'black' , fontSize : '100%', fontWeight : '120', fontFamily : 'sans-Serif'}}>
                         <i id={iconid} className="mdi mdi-menu-right"></i> 
                         { Object.values(tagItem[0])[0] }
                         
@@ -56,7 +55,7 @@ const EC2SystemHealth = () => {
                             
                             return (
     
-                                    <TableCell className="time_col" key = {index} style = {{ color :'black', fontSize : '100%', fontWeight : '120', fontFamily : 'sans-Serif'}}> 
+                                    <TableCell  key = {index} style = {{ color :'black', fontSize : '100%', fontWeight : '120', fontFamily : 'sans-Serif'}}> 
                                         
                                         { expandableData[itemkey]}
                                     
@@ -67,7 +66,7 @@ const EC2SystemHealth = () => {
                     }  
                 
                     {/* Dipslays the button for tags */}
-                    <TableCell  className="time_col">
+                    <TableCell  >
                             
                         <Button color="primary" hover onClick={() => handleClick(i)}>Show Tags</Button>
                     
@@ -76,12 +75,12 @@ const EC2SystemHealth = () => {
 
                 </TableRow>
 
-                
-
-                
                 <TableRow id={i} style={{visibility:'collapse' }} >
-                    <TableContainer>
-                             <TableRow > 
+                
+                    <Table style={{ width: `1380px` }}> 
+
+                        {/* Sub table header */}
+                                 <TableRow>
                                         <TableCell className="hid_cell" style = {{  backgroundColor :'lightblue'}}>
                                             Key
                                         </TableCell>
@@ -89,7 +88,7 @@ const EC2SystemHealth = () => {
                                            Value
                                         </TableCell>
                                         
-                             </TableRow> 
+                                </TableRow>
 
                            {Object.values(tagItem[0])[1].map((tag, index) => {
                                        
@@ -106,8 +105,9 @@ const EC2SystemHealth = () => {
                                         </TableRow>
                                     );
                             })}  
-                       </TableContainer>
-                    </TableRow>
+                    </Table> 
+
+                </TableRow>   
         </TableBody>
             )
         })
@@ -117,9 +117,9 @@ const EC2SystemHealth = () => {
                 <Card  style = {{overflow: 'hidden', display: 'flex'}}> 
 
                     <CardBody>
-                        <TableContainer className="my_table" >
-                            <Table aria-label="spanning table"  className="table_logs_header" >
-                                <TableHead>
+                        <TableContainer  >
+                            <Table style={{ tableLayout: 'fixed' }}>
+                               
                                     <TableRow>
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
                                             EC2 Instance</TableCell>
@@ -140,7 +140,7 @@ const EC2SystemHealth = () => {
                                         </TableCell>
 
                                     </TableRow>
-                                </TableHead>
+                              
                                 {cell}
                             </Table>
                         </TableContainer>
