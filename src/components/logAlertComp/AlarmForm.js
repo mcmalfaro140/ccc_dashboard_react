@@ -125,7 +125,7 @@ class AlarmForm extends Component {
                     'Comparison' : info.LogLevelSign,
                     'LogGroups' : group_str,
                     'Keywords' : key_str,
-                    'SNSTopicNames' : info.SNS_Selection
+                    'SNSTopicName' : info.SNS_Selection
                 }
             })
             .then((response)=>{
