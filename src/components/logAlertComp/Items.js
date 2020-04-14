@@ -143,7 +143,6 @@ class Items extends Component {
           sns.listSubscriptionsByTopic(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
-                console.log(data);
                 this.setState({listSubscriptions:data.Subscriptions});
             }   
           }.bind(this));
@@ -178,7 +177,7 @@ class Items extends Component {
         let sns = [] 
         snsArr.forEach((elem,i) => {
             sns.push(
-                <Row>
+                <Row key={i}>
                     <Col xs = '2.5'>
                         <li key={i}>{elem}</li>
                     </Col>
@@ -205,7 +204,6 @@ class Items extends Component {
     createAlarms = () => {
         let alarm = []
         this.props.alerts.forEach((element, i) => {
-            console.log(element)
             let key_str = "";
             element.Keywords.forEach(e => {
                 key_str += e + ' ';
@@ -247,7 +245,7 @@ class Items extends Component {
                             
                         </Col>
                         <Col xs='1'>
-                            <i class="far fa-trash-alt" onClick={() => this.props.handleDelete(i)}></i>
+                            <i className="far fa-trash-alt" onClick={() => this.props.handleDelete(i)}></i>
                         </Col>
                     </Row>
                     <Collapse id={alarm_id} isOpen={false}>
@@ -269,7 +267,7 @@ class Items extends Component {
                                     <span>SNS Attached </span>
                                 </h3>
                                 <ul>
-                                    {this.createSns(element.SNSTopics,element)}
+                                    {this.createSns(element.SNSTopicNames,element)}
                                 </ul>
                             </Col>
                         </Row>
@@ -296,9 +294,9 @@ class Items extends Component {
                             <Form.Control as="select"  
                                 onChange={(e) => this.getTopicARN(e)}>
                                 <option disabled selected>Make Selection</option>
-                                {this.state.topicArns.map(item=>{
+                                {this.state.topicArns.map((item,i)=>{
                                     return(
-                                        <option value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
+                                        <option key={i} value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
                                     )
                                 })}                              
                              </Form.Control>
@@ -385,7 +383,7 @@ class Items extends Component {
                                                         <label>Remove</label>
                                                     </div>
                                                     <div className = 'remove_icon_div'>
-                                                    <i class = "mdi mdi-delete-variant" style = {{fontSize:'200%',color:'black'}} onClick = {() =>this.deleteProtocol(index)}></i>
+                                                    <i className = "mdi mdi-delete-variant" style = {{fontSize:'200%',color:'black'}} onClick = {() =>this.deleteProtocol(index)}></i>
                                                     </div> 
                                                 </div>  
                                             </Col>

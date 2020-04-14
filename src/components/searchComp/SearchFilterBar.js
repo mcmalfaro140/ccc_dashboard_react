@@ -126,6 +126,7 @@ class SearchFilterBar extends React.Component {
         }else if( id === "col-2"){
             this.setState({prevId: id, range: "6h", endDate: this.state.startDate - 21600})
         }else if( id === "col-3"){
+            console.log("selected")
             this.setState({prevId: id, range: "1d", endDate: this.state.startDate - 86400})
         }else if( id === "col-4"){
             this.setState({prevId: id, range: "1w", endDate: this.state.startDate - 604800})

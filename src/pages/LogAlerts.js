@@ -138,7 +138,6 @@ class LogAlerts extends Component {
                 my_sns = element.SNSTopicName
             }
         });
-        console.log(id + " " + my_sns)
         this.setState({isComplete:false})
         if(this.state.user.token !== null){
             axios({
@@ -154,7 +153,6 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
-                console.log(response)
                 if(response.data.Result === "Success"){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
@@ -182,7 +180,6 @@ class LogAlerts extends Component {
             .then((response)=>{
                 let alerts = response.data.Result.All
                 let my_alerts = response.data.Result.User
-                console.log(alerts)
                 alerts.forEach(element => {
                     if(element.Users.includes(this.state.user.username)){
                         element.isSubscribe = true

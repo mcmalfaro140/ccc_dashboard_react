@@ -36,13 +36,15 @@ const getLogGroupName = () => {
 
        
                 temp.map((LogGroupName , index) => (
-                    searchByLogGroupName(LogGroupName.logGroupName , 'ERROR'),
-                    searchByLogGroupName(LogGroupName.logGroupName , 'WARN')
-                    ))        
+                    setTimeout(() => {
+                        searchByLogGroupName(LogGroupName.logGroupName , 'ERROR')
+                        searchByLogGroupName(LogGroupName.logGroupName , 'WARN')
+                    },1000 * index)
+                ))        
         }
     })
 
-
+ 
 }
 
 //Funtion to search on a specific log group name base on the keyword input by the user

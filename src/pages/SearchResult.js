@@ -17,7 +17,11 @@ class SearchResult extends React.Component {
 
     constructor (props){
         super(props);
+        const date = new Date();
+        const startDate = date.getTime();
         this.state = {
+            startDate,
+            endDate: new Date(startDate),
             id: 0,
             loading: true,
             showLogTable: false,
@@ -140,11 +144,17 @@ class SearchResult extends React.Component {
         });
 
         if(range !== "all"){
+            let start = this.props.location.state.startTime
+            let end = this.props.location.state.endTime
+            if(Math.sign(end) === -1){
+                start = this.state.startDate
+                end = this.state.startDate - end
+            }
             var params = {
                 logGroupName: logName, /* required */
-                endTime: this.props.location.state.endTime,
-                filterPattern: key, /*keyword passed by the user */
-                startTime: this.props.location.state.startTime
+                endTime: end,
+                filterPattern: search_pattern, /*keyword passed by the user */
+                startTime: start
                 // limit: 1000, 
             };
         }else{
@@ -154,6 +164,8 @@ class SearchResult extends React.Component {
                 // limit: 1000, 
             };
         }
+        // this.setState({ loading: false})
+        console.log(params)
         
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
