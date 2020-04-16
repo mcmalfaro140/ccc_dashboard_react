@@ -80,10 +80,10 @@ class DefaultDashboard extends Component {
 
     componentWillUnmount(){
         this.props.saveDashboard(this.state.userDashboard);
+        this.props.updateDashboard(this.state.userDashboard)
     }
 
     fillBoxListener = (childData) =>{
-        console.log(childData);
         let id = childData[1];
         let isFill = childData[0];
         let newDashboard = this.state.userDashboard;
