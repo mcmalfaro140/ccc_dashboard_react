@@ -473,7 +473,7 @@ class MetricAlarmDisplay extends Component {
                   <Row>
                       <Col>
                             <h3>Alarm Description</h3>
-                            <div className = 'descriptionss'>{this.state.alert.AlarmDescription}</div>
+                            <div className = 'metricAlarmDetails'>{this.state.alert.AlarmDescription}</div>
                       </Col>
                       <Col>
                           <h3>Period</h3>  
@@ -483,7 +483,7 @@ class MetricAlarmDisplay extends Component {
                   <Row>
                     <Col>
                             <h3>Namespace</h3>
-                            <div className = 'descriptionss'>{this.state.alert.Namespace}</div>
+                            <div className = 'metricAlarmDetails'>{this.state.alert.Namespace}</div>
                         </Col>
                     <Col>
                          <h3>Statistic</h3>
@@ -531,13 +531,13 @@ class MetricAlarmDisplay extends Component {
                       </Col>
                     <Col>
                         <h3>AlarmArn</h3>
-                        <div className = 'descriptionss'>{this.state.alert.AlarmArn}</div>
+                        <div className = 'metricAlarmDetails'>{this.state.alert.AlarmArn}</div>
                     </Col>
                   </Row>
                   <Row>
                       <Col>
                             <h3>ComparisonOperator</h3>
-                            <div className = 'descriptionss'>{this.state.alert.ComparisonOperator}</div>
+                            <div className = 'metricAlarmDetails'>{this.state.alert.ComparisonOperator}</div>
                       </Col>
                       <Col>
                           <h3>TreatMissingData</h3>

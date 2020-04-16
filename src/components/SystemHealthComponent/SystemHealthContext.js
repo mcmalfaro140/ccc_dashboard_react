@@ -104,9 +104,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
       ec2.describeInstanceStatus(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
-<<<<<<< HEAD
-                data.InstanceStatuses.forEach((element) => {
-=======
         let id = []
 
         data.InstanceStatuses.forEach(element => {
@@ -147,7 +144,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
          
               data.InstanceStatuses.forEach((element) => {
 
->>>>>>> master
                 setEC2InstanceStatus(prevState => 
                     [
                         ...prevState , 
