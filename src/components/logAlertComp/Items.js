@@ -212,7 +212,7 @@ class Items extends Component {
             if(element.KeywordRelationship != null){
                 str_key = `, and if they contain ${element.KeywordRelationship} of the keywords.`
             }
-            let desc_srt = `The user will be notify when logs are " ${element.Comparison}  ${element.LogLevel} " ${str_key}`
+            let desc_srt = `The user will be notified when logs are " ${element.Comparison}  ${element.LogLevel} " ${str_key}`
             let alarm_id = "alarm-id-" + i;
             alarm.push(
                 <div key={i}>
