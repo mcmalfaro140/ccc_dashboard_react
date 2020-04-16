@@ -20,6 +20,7 @@ class SearchResult extends React.Component {
         const date = new Date();
         const startDate = date.getTime();
         this.state = {
+            resultLenght: 0,
             startDate,
             endDate: new Date(startDate),
             id: 0,
@@ -105,14 +106,15 @@ class SearchResult extends React.Component {
 
     //Funtion to get all the log group names from AWS
     getLogGroupName(){
+        this.setState({resultLenght: 0, logGroupNames: []})
         cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
             if (err){
                 console.log(err, err.stack); // an error occurred
-            }else  {
+            }else{
                 let temp = data.logGroups;
                 for (var i = 0; i < temp.length; i++) {
                     this.setState(prevState => ({
-                        logGroupNames : [...prevState.logGroupNames, temp[i].logGroupName]
+                        logGroupNames :  [ ...prevState.logGroupNames,temp[i].logGroupName]
                     }));
                 }
             }
@@ -148,25 +150,23 @@ class SearchResult extends React.Component {
             let end = this.props.location.state.endTime
             if(Math.sign(end) === -1){
                 start = this.state.startDate
-                end = this.state.startDate - end
+                end = this.state.endDate.getTime() - Math.abs(end)
+
             }
             var params = {
                 logGroupName: logName, /* required */
-                endTime: end,
+                endTime: start,
                 filterPattern: search_pattern, /*keyword passed by the user */
-                startTime: start
+                startTime: end
                 // limit: 1000, 
             };
         }else{
             var params = {
                 logGroupName: logName, /* required */
-                filterPattern: key /*keyword passed by the user */
+                filterPattern: search_pattern /*keyword passed by the user */
                 // limit: 1000, 
             };
         }
-        // this.setState({ loading: false})
-        console.log(params)
-        
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
                 console.log(err, err.stack); // an error occurred
@@ -183,15 +183,15 @@ class SearchResult extends React.Component {
                     this.setState(prevState => ({
                         results : [...prevState.results, new_data]
                     }));
-                    
-                }                
+                }
+                if(this.state.results.length > 0){
+                    this.setState({ loading: false})
+                }               
             }  
             setTimeout(() => 
-            {if(this.state.results.length === 0){
-                this.setState({ loading: false, noResults: true })
-            }else{
+            {
                 this.setState({ loading: false})
-            }}, 1000); 
+            }, 5000); 
         }.bind(this));
     }
 

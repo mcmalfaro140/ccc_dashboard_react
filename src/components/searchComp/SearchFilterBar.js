@@ -122,14 +122,13 @@ class SearchFilterBar extends React.Component {
         if( id === "col-0"){
             this.setState({prevId: id, range: "all", startDate:"" , endDate:"" })
         }else if( id === "col-1"){
-            this.setState({prevId: id, range: "1h", endDate: this.state.startDate - 3600}) //3600 sec in 1 hour
+            this.setState({prevId: id, range: "1h", endDate: this.state.startDate - 3600000}) //3600000 sec in 1 hour
         }else if( id === "col-2"){
-            this.setState({prevId: id, range: "6h", endDate: this.state.startDate - 21600})
+            this.setState({prevId: id, range: "6h", endDate: this.state.startDate - 21600000})
         }else if( id === "col-3"){
-            console.log("selected")
-            this.setState({prevId: id, range: "1d", endDate: this.state.startDate - 86400})
+            this.setState({prevId: id, range: "1d", endDate: this.state.startDate - 86400000})
         }else if( id === "col-4"){
-            this.setState({prevId: id, range: "1w", endDate: this.state.startDate - 604800})
+            this.setState({prevId: id, range: "1w", endDate: this.state.startDate - 604800000})
         }else if( id === "col-5"){
             this.setState({prevId: id, range: "custom"})
             this.openCalendar()
