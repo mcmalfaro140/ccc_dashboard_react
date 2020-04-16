@@ -29,7 +29,7 @@ class MyMetricAlarms extends Component {
                 </Card> 
             ):(
                 <div className = "no_alarms">
-                    <img src={page}></img>
+                    <img src={page} alt="no_metric_alarms"></img>
                     <div>No Alarms found.</div>
                 </div>
 

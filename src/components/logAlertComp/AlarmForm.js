@@ -84,21 +84,27 @@ class AlarmForm extends Component {
     onSubmitForm(){
         this.props.complete();
         let info = this.state.logAlarmInput;
-        let key_str = null;
+        let key_str = ""
         let group_str = ""
         if(info.Keywords.length > 0){
             info.Keywords.forEach((element,i) => {
-                if(info.Keywords.length == i+1){
-                    key_str += element
+                if(info.Keywords.length === i+1){
+                    if(key_str == null){
+                        key_str = element
+                    }else{
+                        key_str += element
+                    }
                 }else{
                     key_str += element+','
                 }
                 
             });
+        }else{
+            key_str = null
         }
         if(this.checkObj(info)){
             info.LogGroupNameSelection.forEach((element,i) => {
-                if(info.LogGroupNameSelection.length == i+1){
+                if(info.LogGroupNameSelection.length === i+1){
                     group_str += element
                 }else{
                     group_str += element+','
@@ -119,11 +125,15 @@ class AlarmForm extends Component {
                     'Comparison' : info.LogLevelSign,
                     'LogGroups' : group_str,
                     'Keywords' : key_str,
-                    'SNSTopicNames' : info.SNS_Selection
+                    'SNSTopicName' : info.SNS_Selection
                 }
             })
             .then((response)=>{
+<<<<<<< HEAD
                 if(response.data.Result.includes("created")){
+=======
+                if(response.data.Result.includes("Success")){
+>>>>>>> master
                     this.props.success()
                     this.props.getAlerts();
                 }else{

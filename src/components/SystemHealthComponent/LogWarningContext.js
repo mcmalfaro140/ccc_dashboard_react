@@ -6,7 +6,7 @@ const LogWarningContext = (props) => {
 
  //Get the context from system Health context
  const {WarningCount} = useContext(LogContext)
- const [ WarnResultCount , setWarnResultCount]  = WarningCount
+ const [ WarnResultCount]  = WarningCount
 
  return (
 

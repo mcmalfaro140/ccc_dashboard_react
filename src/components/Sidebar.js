@@ -85,7 +85,7 @@ class SideNavContent extends React.Component {
               </li>
               <li className={this.state.realTimeActive ? ("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showRealtimeOptions}>
-                        <i className="mdi mdi-elevation-rise"></i>
+                        <i className="fas fa-chart-line"></i>
                       <span> Charts </span>
                       <span className="menu-arrow"></span>
                   </a>
@@ -135,27 +135,33 @@ class SideNavContent extends React.Component {
                               <span> Log Search</span>
                           </Link>
                       </li>
+                      <li>
+                        <Link to="/logAlarms" >
+                             <i className="far fa-file-code">  </i>
+                             <span> Log Alarms </span>
+                            </Link>
+                        </li>
                   </ul>
                   ): null }
            </li>
               <li className = {this.state.notificationActive?("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showNotificationOptions}>
                       <i className="mdi mdi-bell-ring-outline"></i>
-                      <span> Notifications </span>
+                      <span> Alarms</span>
                       <span className="menu-arrow"></span>
                   </a>
                   { this.state.showNotificationOptions ? (
                          <ul className="nav-second-level nav" aria-expanded="false">
                              <li>
                                 <Link to = "/metricAlarms">
-                                <i class="mdi mdi-alert-box">  </i>
-                                    Metric Alarms
+                                <i className="fas fa-exclamation-triangle">  </i>
+                                <span> Metric Alarms </span>
                                 </Link>
                              </li>
                              <li>
                                  <Link to="/logAlarms" >
-                                 <i class="mdi mdi-alert-circle">  </i>
-                                    Log Alarms
+                                 <i className="far fa-file-code">  </i>
+                                 <span> Log Alarms </span>
                                  </Link>
                              </li>
                          </ul>

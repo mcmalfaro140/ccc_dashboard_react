@@ -69,8 +69,8 @@ function* login({ payload: { username, password } }) {
     };
     try {
         const response = yield call(fetchJSON, `${myKey.backend}/authenticate`, options);
-        if(response.error){
-            let message = response.error
+        if(response.Error){
+            let message = response.Error
             yield put(loginUserFailed(message));
             setSession(null);
         }else{

@@ -1,87 +1,6 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 
-
-const Notifications = [{
-  id: 1,
-  text: 'Caleb Flakelar commented on Admin',
-  subText: '1 min ago',
-  icon: 'mdi mdi-comment-account-outline',
-  bgColor: 'primary'
-},
-{
-  id: 2,
-  text: 'New user registered.',
-  subText: '5 min ago',
-  icon: 'mdi mdi-account-plus',
-  bgColor: 'info'
-},
-{
-  id: 3,
-  text: 'Cristina Pride',
-  subText: 'Hi, How are you? What about our next meeting',
-  icon: 'mdi mdi-comment-account-outline',
-  bgColor: 'success'
-},
-{
-  id: 4,
-  text: 'Caleb Flakelar commented on Admin',
-  subText: '2 days ago',
-  icon: 'mdi mdi-comment-account-outline',
-  bgColor: 'danger'
-},
-{
-  id: 5,
-  text: 'Caleb Flakelar commented on Admin',
-  subText: '1 min ago',
-  icon: 'mdi mdi-comment-account-outline',
-  bgColor: 'primary'
-},
-{
-  id: 6,
-  text: 'New user registered.',
-  subText: '5 min ago',
-  icon: 'mdi mdi-account-plus',
-  bgColor: 'info'
-},
-{
-  id: 7,
-  text: 'Cristina Pride',
-  subText: 'Hi, How are you? What about our next meeting',
-  icon: 'mdi mdi-comment-account-outline',
-  bgColor: 'success'
-},
-{
-  id: 8,
-  text: 'Caleb Flakelar commented on Admin',
-  subText: '2 days ago',
-  icon: 'mdi mdi-comment-account-outline',
-  bgColor: 'danger'
-}];
-
-const ProfileMenus = [{
-  label: 'My Account',
-  icon: 'fe-user',
-  redirectTo: "/",
-},
-{
-  label: 'Settings',
-  icon: 'fe-settings',
-  redirectTo: "/"
-},
-{
-  label: 'Lock Screen',
-  icon: 'fe-lock',
-  redirectTo: "/"
-},
-{
-  label: 'Logout',
-  icon: 'fe-log-out',
-  redirectTo: "/logout",
-  hasDivider: true
-}]
-
-
 class Topbar extends Component {
   constructor(props) {
     super(props);
@@ -103,7 +22,6 @@ class Topbar extends Component {
 
 
   render() {
-    const isCondensed = this.props.isCondensed || false;
     return (
       <React.Fragment>
         <div className="navbar-custom">

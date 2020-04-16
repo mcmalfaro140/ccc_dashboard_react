@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
+=======
+import React, { Component} from 'react';
+>>>>>>> master
 import ReactDOM from 'react-dom';
 import AWS from 'aws-sdk';
 import { Row, Card, Col, Button, Collapse,Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap';
@@ -150,7 +154,7 @@ class Items extends Component {
         this.setState({toggleModal:!this.state.toggleModal})
         //if i = 1 then we put subscribe the topic to alarms functions inside
         if(this.state.subscribingTopicArn!=null && i === 1){
-            this.props.handleSubscribe(this.state.logAlarmId)
+            this.props.handleSubscribe(this.state.logAlarmId, this.state.subscribingTopicArn)
         }
         //if i = 0 then it is closing the modal only
         else if(i === 0){
@@ -174,9 +178,13 @@ class Items extends Component {
     }
     createSns = (snsArr,element) => {
         let sns = [] 
+<<<<<<< HEAD
         snsArr.map((elem,i) => {
+=======
+        snsArr.forEach((elem,i) => {
+>>>>>>> master
             sns.push(
-                <Row>
+                <Row key={i}>
                     <Col xs = '2.5'>
                         <li key={i}>{elem}</li>
                     </Col>
@@ -192,7 +200,7 @@ class Items extends Component {
 
     createLogGroupName = (logNamesArr) => {
         let logName = [] 
-        logNamesArr.map((e,i) => {
+        logNamesArr.forEach((e,i) => {
             logName.push(
                 <li key={i}>{e}</li>
             )
@@ -202,7 +210,7 @@ class Items extends Component {
 
     createAlarms = () => {
         let alarm = []
-        this.props.alerts.map((element, i) => {
+        this.props.alerts.forEach((element, i) => {
             let key_str = "";
             element.Keywords.forEach(e => {
                 key_str += e + ' ';
@@ -211,7 +219,7 @@ class Items extends Component {
             if(element.KeywordRelationship != null){
                 str_key = `, and if they contain ${element.KeywordRelationship} of the keywords.`
             }
-            let desc_srt = `The user will be notify when logs are " ${element.Comparison}  ${element.LogLevel} " ${str_key}`
+            let desc_srt = `The user will be notified when logs are " ${element.Comparison}  ${element.LogLevel} " ${str_key}`
             let alarm_id = "alarm-id-" + i;
             alarm.push(
                 <div key={i}>
@@ -236,12 +244,19 @@ class Items extends Component {
                         </Col>
                         <Col xs="2">
                             {element.isSubscribe ? 
-                                <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
+                                <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId, element.XRefUserSNSTopic)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
                                 :
+<<<<<<< HEAD
                                 <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}                            
+=======
+                                <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
+                                {/* <Button color="primary" block onClick={()=>this.props.handleSubscribe(element.logAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>} */}
+                                
+                            
+>>>>>>> master
                         </Col>
                         <Col xs='1'>
-                            <i className="mdi mdi-delete-variant" onClick={() => this.props.handleDelete(i)}></i>
+                            <i className="far fa-trash-alt" onClick={() => this.props.handleDelete(i)}></i>
                         </Col>
                     </Row>
                     <Collapse id={alarm_id} isOpen={false}>
@@ -263,7 +278,7 @@ class Items extends Component {
                                     <span>SNS Attached </span>
                                 </h3>
                                 <ul>
-                                    {this.createSns(element.SNSTopics,element)}
+                                    {this.createSns(element.SNSTopicNames,element)}
                                 </ul>
                             </Col>
                         </Row>
@@ -290,9 +305,9 @@ class Items extends Component {
                             <Form.Control as="select"  
                                 onChange={(e) => this.getTopicARN(e)}>
                                 <option disabled selected>Make Selection</option>
-                                {this.state.topicArns.map(item=>{
+                                {this.state.topicArns.map((item,i)=>{
                                     return(
-                                        <option value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
+                                        <option key={i} value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>
                                     )
                                 })}                              
                              </Form.Control>
@@ -379,7 +394,7 @@ class Items extends Component {
                                                         <label>Remove</label>
                                                     </div>
                                                     <div className = 'remove_icon_div'>
-                                                    <i class = "mdi mdi-delete-variant" style = {{fontSize:'200%',color:'black'}} onClick = {() =>this.deleteProtocol(index)}></i>
+                                                    <i className = "mdi mdi-delete-variant" style = {{fontSize:'200%',color:'black'}} onClick = {() =>this.deleteProtocol(index)}></i>
                                                     </div> 
                                                 </div>  
                                             </Col>

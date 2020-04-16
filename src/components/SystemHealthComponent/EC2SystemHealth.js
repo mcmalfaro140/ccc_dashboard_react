@@ -1,16 +1,17 @@
 import React , {useState , useContext, useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import { Card, CardBody } from 'reactstrap'
+import { Card, CardBody , Button} from 'reactstrap'
 import {LogContext} from './SystemHealthContext.js'
 import {Table , TableCell, TableBody, TableContainer, TableHead, TableRow} from '@material-ui/core';
-
-
 
 
 const EC2SystemHealth = () => {
     
     const {EC2Status} = useContext (LogContext)
+    const {EC2InstanceTag} = useContext (LogContext)
     const [EC2InstanceStatus , setEC2InstanceStatus]= EC2Status
+    const [EC2InstanceTags , setEC2InstanceTags] = EC2InstanceTag
+
 
     const handleClick = (id) => {
         let element = document.getElementById(id);
@@ -30,79 +31,116 @@ const EC2SystemHealth = () => {
         }
     }
 
-    
-
     const cell = EC2InstanceStatus.map((item, i) => {
        
+             const expandableData = Object.entries(Object.values(item))[0][1]
+            const tagItem  = EC2InstanceTags.filter((element) => element.id == Object.keys(item) )
              let strid = "row" + i;
              let iconid = "icon" + i;
-             const expandableData = Object.entries(Object.values(item))[0][1]
-
              
             return(
-               
-                <TableBody className = "tablesaw tablesaw-stack" key ={i}>
-                <TableRow id={strid} hover onClick={() => handleClick(i)} className = "table_logs_cell">
-    
-                <TableCell style = {{ color :'black', paddingRight:'-5%', fontSize : '100%', fontWeight : '100', fontFamily : 'sans-Serif'}}>
-                
-                    {Object.keys(item)}
-                
-                </TableCell>
+            <TableBody className = "tablesaw tablesaw-stack">
 
-                { Object.keys(expandableData).map((itemkey, index) => {
-                                       
-                        return (
-   
-                            <TableCell className="hid_cell" key = {index} style = {{ color :'black', fontSize : '120%', fontWeight : '500', fontFamily : 'sans-Serif'}}> 
-                                
-                                { expandableData[itemkey]}
+                <TableRow id={strid} >
+
+                    {/* Displays the instance id */}
+                    <TableCell  style = {{ color :'black' , fontSize : '100%', fontWeight : '120', fontFamily : 'sans-Serif'}}>
+                        <i id={iconid} className="mdi mdi-menu-right"></i> 
+                        { Object.values(tagItem[0])[0] }
+                        
+                    </TableCell>
+
+                    {/* Displays the availability zone, instance state and instance status */}
+                    { Object.keys(expandableData).map((itemkey, index) => {
                             
-                             </TableCell>
-                                                
-                        );
-                })}  
+                            return (
+    
+                                    <TableCell  key = {index} style = {{ color :'black', fontSize : '100%', fontWeight : '120', fontFamily : 'sans-Serif'}}> 
+                                        
+                                        { expandableData[itemkey]}
+                                    
+                                    </TableCell>
+                                                    
+                                );           
+                        })
+                    }  
                 
+                    {/* Dipslays the button for tags */}
+                    <TableCell  >
+                            
+                        <Button color="primary" hover onClick={() => handleClick(i)}>Show Tags</Button>
+                    
+                    </TableCell>
+                  
 
-            
                 </TableRow>
-               
-            </TableBody>
+
+                <TableRow id={i} style={{visibility:'collapse' }} >
+                
+                    <Table style={{ width: `1380px` }}> 
+
+                        {/* Sub table header */}
+                                 <TableRow>
+                                        <TableCell className="hid_cell" style = {{  backgroundColor :'lightblue'}}>
+                                            Key
+                                        </TableCell>
+                                        <TableCell  className="hid_cell" style = {{  backgroundColor :'lightblue'}}>
+                                           Value
+                                        </TableCell>
+                                        
+                                </TableRow>
+
+                           {Object.values(tagItem[0])[1].map((tag, index) => {
+                                       
+                                    return (
+                                        <TableRow key = {index}>
+
+                                            <TableCell className="hid_cell">
+                                                {tag.Key}
+                                            </TableCell >
+                                            <TableCell  className="hid_cell">
+                                                {tag.Value}
+                                            </TableCell>
+                                            
+                                        </TableRow>
+                                    );
+                            })}  
+                    </Table> 
+
+                </TableRow>   
+        </TableBody>
             )
         })
     
-
-useEffect(() => {
-
-
-
-}, [])
         return(
-            <div>
-                <Card style = {{overflow: 'hidden', display: 'flex'}}> 
+            <div >
+                <Card  style = {{overflow: 'hidden', display: 'flex'}}> 
 
                     <CardBody>
-                        <TableContainer >
-                            <Table aria-label="spanning table"  className="table_logs_header" >
-                                <TableHead>
+                        <TableContainer  >
+                            <Table style={{ tableLayout: 'fixed' }}>
+                               
                                     <TableRow>
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
                                             EC2 Instance</TableCell>
 
-                                            <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
-                                            Instance state
+                                        <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
+                                            Instance state</TableCell>
+        
+                                        <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
+                                            Availability zone
                                         </TableCell>
 
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
-                                           Availability zone
+                                            Instance status
                                         </TableCell>
 
                                         <TableCell align="left" style = {{ color :'black', fontSize : '140%', fontWeight : '500', fontFamily : 'sans-Serif'}}>
-                                           Instance status
+                                            Tags
                                         </TableCell>
 
                                     </TableRow>
-                                </TableHead>
+                              
                                 {cell}
                             </Table>
                         </TableContainer>

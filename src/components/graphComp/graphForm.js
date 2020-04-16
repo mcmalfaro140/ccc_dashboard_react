@@ -145,10 +145,14 @@ class graphForm extends Component {
 
       
   }
+<<<<<<< HEAD
 <<<<<<< HEAD:src/components/graphComp/graphForm.js
 
  onDateRangeSelection = (startTime, endTime) => {
 =======
+=======
+<<<<<<< HEAD:src/components/graphForm.js
+>>>>>>> master
   
    
     submit(e){
@@ -181,7 +185,14 @@ class graphForm extends Component {
 
   
     onDateRangeSelection = (startTime, endTime) => {
+<<<<<<< HEAD
 >>>>>>> master:src/components/graphForm.js
+=======
+=======
+
+ onDateRangeSelection = (startTime, endTime) => {
+>>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
+>>>>>>> master
         this.setState({startTime , endTime})
         let start, end;
             if(startTime != null){
@@ -223,9 +234,19 @@ class graphForm extends Component {
     
 
     render() {
+<<<<<<< HEAD
         var timeSelection;
         if(this.state.isRealTime === true){
 >>>>>>> master:src/components/graphForm.js
+=======
+<<<<<<< HEAD:src/components/graphForm.js
+        var timeSelection;
+        if(this.state.isRealTime === true){
+=======
+        let timeSelection;
+        if(this.state.isRealTime === true ){
+>>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
+>>>>>>> master
             timeSelection = 
              <div>            
             <Form.Group controlId="exampleForm.ControlSelect2">
@@ -278,10 +299,14 @@ class graphForm extends Component {
            
             </div>
         }
+<<<<<<< HEAD
 <<<<<<< HEAD:src/components/graphComp/graphForm.js
   
         return (  
 =======
+=======
+<<<<<<< HEAD:src/components/graphForm.js
+>>>>>>> master
 
         let button;
         let switches;
@@ -299,7 +324,14 @@ class graphForm extends Component {
         return (
 
          
+<<<<<<< HEAD
 >>>>>>> master:src/components/graphForm.js
+=======
+=======
+  
+        return (  
+>>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
+>>>>>>> master
                         <div>
                         <ModalHeader toggle={this.props.toggleForm}>{this.props.graphInfor == null ? 'New Chart Form':'Modify Chart Form'}</ModalHeader>
                             <ModalBody>

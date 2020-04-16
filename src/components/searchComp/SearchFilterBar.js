@@ -46,7 +46,7 @@ class SearchFilterBar extends React.Component {
                 logGroupName: "",
                 checked: false,
             }
-            this.props.logGroupNames.map((ele, i)=> {
+            this.props.logGroupNames.forEach((ele, i)=> {
                 var new_data = Object.create(resultData);  
                     new_data.logGroupName = ele;
                     new_data.checked = this.props.filterNames.includes(ele)
@@ -62,7 +62,7 @@ class SearchFilterBar extends React.Component {
         let tempArr = this.state.filter;
         let tempFilter = []
         tempArr[checkIndex].checked = !tempArr[checkIndex].checked
-        tempArr.map((e,i)=> {
+        tempArr.forEach((e,i)=> {
             if(e.checked === true){
                 tempFilter.push(e.logGroupName)
             }
@@ -84,7 +84,7 @@ class SearchFilterBar extends React.Component {
         let eleSwitch = document.getElementById("logGroupSwitch");
         if(eleSwitch.checked === true){
             if(this.state.filter.length === 0){
-                this.state.logGroupNames.map((ele, i)=> {
+                this.state.logGroupNames.forEach((ele, i)=> {
                     let resultData = {
                         logGroupName: "",
                         checked: false,
@@ -119,13 +119,13 @@ class SearchFilterBar extends React.Component {
         if( id === "col-0"){
             this.setState({prevId: id, range: "all", startDate:"" , endDate:"" })
         }else if( id === "col-1"){
-            this.setState({prevId: id, range: "1h", endDate: this.state.startDate - 3600}) //3600 sec in 1 hour
+            this.setState({prevId: id, range: "1h", endDate: this.state.startDate - 3600000}) //3600000 sec in 1 hour
         }else if( id === "col-2"){
-            this.setState({prevId: id, range: "6h", endDate: this.state.startDate - 21600})
+            this.setState({prevId: id, range: "6h", endDate: this.state.startDate - 21600000})
         }else if( id === "col-3"){
-            this.setState({prevId: id, range: "1d", endDate: this.state.startDate - 86400})
+            this.setState({prevId: id, range: "1d", endDate: this.state.startDate - 86400000})
         }else if( id === "col-4"){
-            this.setState({prevId: id, range: "1w", endDate: this.state.startDate - 604800})
+            this.setState({prevId: id, range: "1w", endDate: this.state.startDate - 604800000})
         }else if( id === "col-5"){
             this.setState({prevId: id, range: "custom"})
             this.openCalendar()
@@ -140,10 +140,10 @@ class SearchFilterBar extends React.Component {
         const names = [];
         for (let i = 0 ; i < this.state.filter.length; i++){
             if(i % 2 !== 0){
-                names.push(<Row xs="2"><Col xs="6"><CustomInput key={i-1} type="checkbox" id={i-1} label={this.state.filter[i-1].logGroupName} checked={this.state.filter[i-1].checked} onChange={() => this.handleCheck(i-1)}/></Col><Col xs="6"><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
+                names.push(<Row xs="2" key={i-1}><Col xs="6"><CustomInput key={i-1} type="checkbox" id={i-1} label={this.state.filter[i-1].logGroupName} checked={this.state.filter[i-1].checked} onChange={() => this.handleCheck(i-1)}/></Col><Col xs="6"><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
             }else{
                 if(i+1 === this.state.logGroupNames.length){
-                    names.push(<Row xs="2"><Col xs="6" ><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
+                    names.push(<Row xs="2" key={i}><Col xs="6" ><CustomInput key={i} type="checkbox" id={i} label={this.state.filter[i].logGroupName} checked={this.state.filter[i].checked} onChange={() => this.handleCheck(i)}/></Col></Row>)
                 }
             }
         }
@@ -175,7 +175,7 @@ class SearchFilterBar extends React.Component {
                                 <Col id="col-4" onClick={() => this.handleColorChange("col-4")}>
                                     1w
                                 </Col>
-                                <Col id="col-5" onClick={() => this.handleColorChange("col-5")}> Custome </Col>
+                                <Col id="col-5" onClick={() => this.handleColorChange("col-5")}> Custom </Col>
                                 <Col >
                                     <Link
                                         to={{

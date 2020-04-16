@@ -421,7 +421,7 @@ class MetricAlarmDisplay extends Component {
     render() { 
        
         let dropdown = [];
-        this.state.topicArns.map(item =>{
+        this.state.topicArns.forEach(item =>{
             if(this.state.alert.AlarmActions.includes(item.TopicArn)){
                 dropdown.push(<option disabled value = {item.TopicArn}>{item.TopicArn.split(':')[item.TopicArn.split(':').length-1]}</option>)
             }else{

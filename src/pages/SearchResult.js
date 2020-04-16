@@ -17,7 +17,12 @@ class SearchResult extends React.Component {
 
     constructor (props){
         super(props);
+        const date = new Date();
+        const startDate = date.getTime();
         this.state = {
+            resultLenght: 0,
+            startDate,
+            endDate: new Date(startDate),
             id: 0,
             loading: true,
             showLogTable: false,
@@ -48,13 +53,25 @@ class SearchResult extends React.Component {
         }
         if(isFilter === true){
             let temp = this.props.location.state.filterNames;
-            temp.forEach((element) => {
-                this.searchByLogGroupName(element);
+            temp.forEach((element, i) => {
+                if(i%2 === 0){
+                    setTimeout(()=>{ //Added timeout to prevent AWS Rate Exceeded error
+                        this.searchByLogGroupName(element);
+                    },500 * (i/2))
+                }else{
+                    this.searchByLogGroupName(element);
+                }
             })
         }else{
             let temp = this.props.location.state.logGroupNames;
-            temp.forEach((element) => {
-                this.searchByLogGroupName(element);
+            temp.forEach((element,i) => { //Added timeout to prevent AWS Rate Exceeded error
+                if(i%3 === 0){
+                    setTimeout(()=>{
+                        this.searchByLogGroupName(element);
+                    },1000)
+                }else{
+                    this.searchByLogGroupName(element);
+                }
             })
         }
     }
@@ -89,14 +106,15 @@ class SearchResult extends React.Component {
 
     //Funtion to get all the log group names from AWS
     getLogGroupName(){
+        this.setState({resultLenght: 0, logGroupNames: []})
         cloudwatchlogs.describeLogGroups(this.state.params, function(err, data) {
             if (err){
                 console.log(err, err.stack); // an error occurred
-            }else  {
+            }else{
                 let temp = data.logGroups;
                 for (var i = 0; i < temp.length; i++) {
                     this.setState(prevState => ({
-                        logGroupNames : [...prevState.logGroupNames, temp[i].logGroupName]
+                        logGroupNames :  [ ...prevState.logGroupNames,temp[i].logGroupName]
                     }));
                 }
             }
@@ -118,16 +136,28 @@ class SearchResult extends React.Component {
 
         //build filter pattern
         let search_pattern = ""
-        arrayKeyWords.forEach(element => {
-            search_pattern += element + " "
+        arrayKeyWords.forEach((element, i) => {
+            if(i < arrayKeyWords.length - 1){
+                search_pattern += element + " "
+            }else{
+                search_pattern += element 
+            }
+            
         });
 
         if(range !== "all"){
+            let start = this.props.location.state.startTime
+            let end = this.props.location.state.endTime
+            if(Math.sign(end) === -1){
+                start = this.state.startDate
+                end = this.state.endDate.getTime() - Math.abs(end)
+
+            }
             var params = {
                 logGroupName: logName, /* required */
-                endTime: this.props.location.state.endTime,
+                endTime: start,
                 filterPattern: search_pattern, /*keyword passed by the user */
-                startTime: this.props.location.state.startTime
+                startTime: end
                 // limit: 1000, 
             };
         }else{
@@ -136,8 +166,6 @@ class SearchResult extends React.Component {
                 filterPattern: search_pattern /*keyword passed by the user */
             };
         }
-        
-        
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
                 console.log(err, err.stack); // an error occurred
@@ -154,15 +182,15 @@ class SearchResult extends React.Component {
                     this.setState(prevState => ({
                         results : [...prevState.results, new_data]
                     }));
-                    
-                }                
+                }
+                if(this.state.results.length > 0){
+                    this.setState({ loading: false})
+                }               
             }  
             setTimeout(() => 
-            {if(this.state.results.length === 0){
-                this.setState({ loading: false, noResults: true })
-            }else{
+            {
                 this.setState({ loading: false})
-            }}, 1000); 
+            }, 5000); 
         }.bind(this));
     }
 
