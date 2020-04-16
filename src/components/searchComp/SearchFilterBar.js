@@ -55,10 +55,7 @@ class SearchFilterBar extends React.Component {
                     }));
             })
         }
-
-        this.handleColorChange(this.props.id)
-        // this.hideBox()
-
+        this.handleColorChange(this.props.id);
     }
 
     handleCheck(checkIndex){

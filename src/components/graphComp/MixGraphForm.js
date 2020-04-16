@@ -6,11 +6,8 @@ import { Button, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Row, Col } from 'reactstrap';
 import { SketchPicker } from 'react-color'
 import Switch from "react-switch";
-import '../../assets/react-grid/styles.css'
-import ReactLightCalendar from '@lls/react-light-calendar'
-
-
-// import DateTimePicker from 'react-datetime-picker';
+import '../../assets/react-grid/styles.css';
+import ReactLightCalendar from '@lls/react-light-calendar';
 
 
 /**
@@ -107,7 +104,6 @@ mixUpdate(e,i){
   
 }
 toggleSwitch (isRealTime){
-     //   console.log("is it real ? " + isRealTime)
         this.setState({isRealTime})
     }
 toggleForm = () => {
@@ -117,8 +113,6 @@ toggleForm = () => {
 
 onDateRangeSelection= (startTime, endTime) => {
     this.setState({startTime , endTime})
-
-     //   console.log(startTime + " - " + endTime)
         let start, end;
         if(startTime != null){
             start = new Date(startTime);

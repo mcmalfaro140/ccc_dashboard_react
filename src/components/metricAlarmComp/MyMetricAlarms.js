@@ -34,8 +34,7 @@ class MyMetricAlarms extends Component {
                 </div>
 
             )
-        }
-        
+        }   
     </>
           
         )

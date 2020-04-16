@@ -37,7 +37,6 @@ class LogDetailData extends React.Component {
             logGroupName: this.props.logGroupName, /* required */
             endTime: this.props.log.timestamp + 1 ,
             limit: 100
-            // startTime: this.props.log.timestamp - range
           };
         cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
@@ -53,7 +52,6 @@ class LogDetailData extends React.Component {
     getNextLogs() {
         var params = {
             logGroupName: this.props.logGroupName, /* required */
-            // endTime: this.props.log.timestamp + range,
             startTime: this.props.log.timestamp,
             limit: 100
           };

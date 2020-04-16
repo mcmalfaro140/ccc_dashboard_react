@@ -68,8 +68,6 @@ class Login extends Component {
                                 <Col md={8} lg={6} xl={5} >
                                     <div className="text-center">
                                         <span><img src={logo} alt="" height="60" style={{marginBottom : '10%'}} /></span>
-                                
-                                        {/* <p className="text-muted mt-2 mb-4">Responsive Admin Dashboard</p> */}
                                     </div>
                                     <Card>
                                         <CardBody className="p-4 position-relative">

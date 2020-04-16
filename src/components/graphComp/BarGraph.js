@@ -4,10 +4,6 @@ import myKeys from '../../keys.json';
 import {Bar,} from 'react-chartjs-2';
 import 'chartjs-plugin-zoom';
 import { Link } from 'react-router-dom';
-/**
- * Renders the preloader
- */
-
 
   
 class BarGraph extends Component {
@@ -25,7 +21,7 @@ class BarGraph extends Component {
             graphSetting:{},
             RTHolder:[],
             RTData:[],
-            unit:""
+            unit:"",
 
           };
         this.showOptions = this.showOptions.bind(this);
@@ -48,14 +44,11 @@ oldDataForRealTime(){
        Dimensions: [
           {
             Name: typeOfD, /* required */
-            // Value: 'i-031339fed44b9fac8' /* required */
             Value: idVal
           },
-          /* more items */
         ],
         Statistics: [
           'Average',
-          /* more items */
         ], 
       }
       cloudwatch.getMetricStatistics(params, function(err, data){
@@ -92,7 +85,6 @@ onRefresh(chart){
                     Name: typeOfD, /* required */
                     Value: idVal /* required */
                   },
-                  /* more items */
                 ],
                 MetricName: this.props.graphSettings.metricName,
                 Namespace: this.props.graphSettings.nameSpace
@@ -100,14 +92,10 @@ onRefresh(chart){
               Period: this.props.graphSettings.period, /* required */
               Stat: 'Average', /* required */
             },
-           // Period: this.props.graphSettings.period,
-           // ReturnData: true 
           },
-          /* more items */
         ],
         StartTime:  new Date(this.props.graphSettings.startTime), /* required */
         ScanBy: 'TimestampDescending'
-       // MaxDatapoints: 2,
       }
       
         chart.data.datasets.forEach(function(dataset) {
@@ -117,7 +105,7 @@ onRefresh(chart){
          let timeStamp;
          let newTimestamp;
          cloudwatch.getMetricData(RTParams, function(err, data) {
-           if (err) console.log(err, err.stack); // an error occurred
+           if (err) console.log(err, err.stack); 
            else  {   
              temp = data.MetricDataResults[0].Values[0];
              timeStamp = data.MetricDataResults[0].Timestamps[0]
@@ -127,7 +115,7 @@ onRefresh(chart){
              if(newTimestamp !== timeStamp){
                newTimestamp = timeStamp;
              }
-               }       // successful response
+               }      
                dataset.data.push({                               
                  x: new Date(),
                  y: newData
@@ -160,14 +148,11 @@ getgraph = () =>{
             Dimensions: [
               {
                 Name: typeOfD, /* required */
-                // Value: 'i-031339fed44b9fac8' /* required */
                 Value: idVal
               },
-              /* more items */
             ],
             Statistics: [
               'Average',
-              /* more items */
             ],
           }
        
@@ -175,7 +160,7 @@ getgraph = () =>{
         let cloudwatch3 = new AWS.CloudWatch();
         let labelTemp =[], dataTemp = [];
         cloudwatch3.getMetricStatistics(params, function(err, data) {
-          if (err) console.log(err, err.stack); // an error occurred
+          if (err) console.log(err, err.stack); 
           else {
             let sortedData =  data.Datapoints.sort(function(a, b) {
               var dateA = new Date(a.Timestamp), dateB = new Date(b.Timestamp);
@@ -256,25 +241,19 @@ render() {
             scales: {
               xAxes: [{  
                 ticks: {
-                  // maxRotation: 0,
-                  // minRotation: 0,
               fontSize: 7,
-              //autoSkip: true,
               maxTicksLimit: 10
             },
               gridLines: {
                 display: false ,
-               // color: "black  "
               },
               }] , 
               yAxes: [{
                 ticks: {
                     beginAtZero:true,
-                  //  fontColor: 'black   '
                 },
                 gridLines: {
                   display: true ,
-                 // color: "black  "
                 },
             }], 
         },
@@ -285,7 +264,6 @@ render() {
         },
         
         zoom: {
-          // Boolean to enable zooming
           enabled: true,
           mode: 'x',
         
@@ -302,19 +280,14 @@ render() {
         scales: {
           xAxes: [{
             ticks: {
-                // maxRotation: 0,
-                // minRotation: 0,
-            fontSize: 7,
-            //autoSkip: true,
-           maxTicksLimit: 10
+              fontSize: 7,
+              maxTicksLimit: 10
             },
             gridLines: {
               display: false ,
-            // color: "black  "
             },
           }], 
           yAxes: [{
-            //stacked: true,
             ticks: {
               stepSize: 0.2,
               fontSize: 10,
@@ -323,15 +296,9 @@ render() {
             callback: function (value) {
               return (value * 100).toFixed(1) + '%'; 
             },
-                //  fontColor: 'black   '
             },
-            // scaleLabel:{
-            //   display:true,
-            //   labelString:"Percentage"
-            // },
             gridLines: {
               display: true ,
-              // color: "black  "
             },
           }],
         },
@@ -353,7 +320,6 @@ render() {
             label: this.props.graphSettings.metricName,
             data: this.state.data,
             fill: true,         
-           // borderColor: 'lightblue', // Line color
             backgroundColor: this.props.graphSettings.colorSelected,
             maintainAspectRatio : false,
             responsive:true
@@ -362,7 +328,6 @@ render() {
       }
 
       let graph;
-     // let currentDate = new Date();
       if(this.props.graphSettings.realTime === true){
        graph = <Bar
        data={{
@@ -388,13 +353,7 @@ render() {
                        onRefresh: this.onRefresh,
                       
                    },
-               }],
-               yAxes:[{
-                //  ticks:{
-                //   min: 0,
-                // }
-              }
-               ],           
+               }],         
            },
      
            maintainAspectRatio: true,

@@ -60,7 +60,6 @@ class graphForm extends Component {
         }
     }
     componentDidMount(){
-       // console.log(this.props.graphInfor);
         if(this.props.graphInfor != null){
             this.setState({isRealTime : this.props.graphInfor.realTime});
             if(this.props.graphInfor.realTime === false){
@@ -146,12 +145,56 @@ class graphForm extends Component {
 
       
   }
+<<<<<<< HEAD
+<<<<<<< HEAD:src/components/graphComp/graphForm.js
 
  onDateRangeSelection = (startTime, endTime) => {
+=======
+=======
+<<<<<<< HEAD:src/components/graphForm.js
+>>>>>>> master
+  
+   
+    submit(e){
+
+
+        e.preventDefault();
+
+        this.props.history.push({
+           // pathname: str,
+            pathname: "/Dashboard",
+            state: {
+                newGraph : this.state.newGraph,
+                // metricName: this.state.metricName,
+                // nameSpace : this.state.nameSpace,
+                // chartName : this.state.chartName,
+                // // accessKeyId : this.state.accessKeyId,
+                // // secretAccessKey : this.state.secretAccessKey,
+                // instanceId : this.state.instanceId,
+                // //region : this.state.region,
+                // // startTime : this.state.startTime,
+                // // endTime : this.state.endTime
+
+
+
+            }
+        })
+
+
+    }
+
+  
+    onDateRangeSelection = (startTime, endTime) => {
+<<<<<<< HEAD
+>>>>>>> master:src/components/graphForm.js
+=======
+=======
+
+ onDateRangeSelection = (startTime, endTime) => {
+>>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
+>>>>>>> master
         this.setState({startTime , endTime})
-    
-         //   console.log(startTime + " - " + endTime)
-            let start, end;
+        let start, end;
             if(startTime != null){
                 start = new Date(startTime);
             }
@@ -179,14 +222,31 @@ class graphForm extends Component {
         }
         
     }
+<<<<<<< HEAD:src/components/graphComp/graphForm.js
+
+    render() {
+        let timeSelection;
+        if(this.state.isRealTime === true ){
+=======
  
     
     
     
 
     render() {
+<<<<<<< HEAD
+        var timeSelection;
+        if(this.state.isRealTime === true){
+>>>>>>> master:src/components/graphForm.js
+=======
+<<<<<<< HEAD:src/components/graphForm.js
+        var timeSelection;
+        if(this.state.isRealTime === true){
+=======
         let timeSelection;
         if(this.state.isRealTime === true ){
+>>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
+>>>>>>> master
             timeSelection = 
              <div>            
             <Form.Group controlId="exampleForm.ControlSelect2">
@@ -239,15 +299,44 @@ class graphForm extends Component {
            
             </div>
         }
+<<<<<<< HEAD
+<<<<<<< HEAD:src/components/graphComp/graphForm.js
   
         return (  
+=======
+=======
+<<<<<<< HEAD:src/components/graphForm.js
+>>>>>>> master
+
+        let button;
+        let switches;
+
+        
+        if(this.props.graphInfor == null){
+            button = <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
+        }
+        else{
+            button = <Button color="primary" onClick={this.props.toggleForm}>Modify graph</Button>
+            
+        }
+       
+      
+        return (
+
+         
+<<<<<<< HEAD
+>>>>>>> master:src/components/graphForm.js
+=======
+=======
+  
+        return (  
+>>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
+>>>>>>> master
                         <div>
                         <ModalHeader toggle={this.props.toggleForm}>{this.props.graphInfor == null ? 'New Chart Form':'Modify Chart Form'}</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
-                                <form>
-                                
-                                {/* {this.props.graphInfor == null && ( */}
+                                <form>                                
                                 {this.props.graphInfor == null ?
                                 <Form.Group>
                                 <label className="center">
@@ -269,7 +358,6 @@ class graphForm extends Component {
                                 />
                                 </label>
                             </Form.Group> : null}
-                            {/* )} */}
                             {this.props.graphInfor == null?
                                 <Form.Group controlId="exampleForm.ControlSelect1">
                                         <Form.Label>Name Space: </Form.Label>
