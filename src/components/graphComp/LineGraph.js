@@ -131,9 +131,10 @@ onRefresh(chart){
           if(this.state.unit === "Percent" || this.props.graphSettings.metricName==="CPUUtilization"){
             chart.options.scales.yAxes[0].ticks = {
                min: 0,
-               max: 1,
               callback: function (value) {
-                return (value / this.max * 100).toFixed(0) + '%'; 
+               
+                  return (value * 100).toFixed(0) + '%'; 
+                
               },
             }
           }else{
@@ -237,6 +238,15 @@ showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});
 };  
+convertHex(hex,opacity){
+        hex = hex.replace('#','');
+        let r = parseInt(hex.substring(0,2), 16);
+        let g = parseInt(hex.substring(2,4), 16);
+        let b = parseInt(hex.substring(4,6), 16);
+
+        let result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+        return result;
+}
 render() {
     let optionToSkip;
     if(this.state.unit !== "Percent" || this.props.graphSettings.metricName!=="CPUUtilization"){
@@ -299,9 +309,8 @@ render() {
             stepSize: 0.2,
             fontSize: 10,
             min: 0,
-            max: 1,
             callback: function (value) {
-              return (value / this.max * 100).toFixed(0) + '%'; 
+              return (value * 100).toFixed(0) + '%'; 
             },
           },
           gridLines: {
@@ -320,7 +329,6 @@ render() {
       
     }
   }
-      let Color = require('color');
        const lineGraphData = {
         labels: this.state.label,
         datasets: [
@@ -329,14 +337,14 @@ render() {
             data: this.state.data,
             fill: this.state.fillChecked,       
             borderColor: this.props.graphSettings.colorSelected,
-            backgroundColor:Color(this.props.graphSettings.colorSelected).alpha(0.5),
+            backgroundColor:this.convertHex(this.props.graphSettings.colorSelected,50),
             responsive: true,
             borderWidth:1,
           }
         ]
       }
     
- 
+      // random 
       let graph;
       if(this.props.graphSettings.realTime === true){
        graph = <Line
@@ -344,7 +352,7 @@ render() {
            datasets: [{
                label: this.props.graphSettings.metricName,
                borderColor: this.props.graphSettings.colorSelected,
-               backgroundColor: Color(this.props.graphSettings.colorSelected).alpha(0.5),
+               backgroundColor: this.convertHex(this.props.graphSettings.colorSelected,50),
                fill: this.state.fillChecked,
                data: this.state.RTData,
                }
