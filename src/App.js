@@ -2,7 +2,6 @@ import React, { Component, Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Loadable from 'react-loadable';
-
 import { routes } from './routes';
 
 // setup fake backend

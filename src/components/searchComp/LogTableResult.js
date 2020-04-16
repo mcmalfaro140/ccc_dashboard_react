@@ -41,18 +41,18 @@ class LogTableResult extends React.Component {
             var t = new Date(parseInt(item.timestamp));
             let time = t.toGMTString();
             return(
-                <TableBody class="tablesaw tablesaw-stack">
-                    <TableRow id={strid} hover onClick={() => this.handleClick(i)} className="table_logs_cell">
-                        <TableCell><i id={iconid} class="mdi mdi-menu-right"></i></TableCell>
+                <TableBody className="tablesaw tablesaw-stack" key={i}>
+                    <TableRow id={strid} hover className="table_logs_cell">
+                        <TableCell><i id={iconid} onClick={() => this.handleClick(i)} className="mdi mdi-menu-right"></i></TableCell>
                         <TableCell className="time_col">{time}</TableCell>
-                        <TableCell>{item.message}</TableCell>
+                        <TableCell onClick={() => this.props.showDetail(i)}>{item.message}</TableCell>
                     </TableRow>
                     <TableRow id={i} style={{visibility:'collapse'}}>
                         <TableCell colSpan={3}>
                             <TableBody >
                                 {objKeys.map((name, i) => {
                                     return (
-                                        <TableRow>
+                                        <TableRow key={i}>
                                             <TableCell className="hid_cell" >
                                                 {objKeys[i]+":"}
                                             </TableCell>
@@ -72,12 +72,12 @@ class LogTableResult extends React.Component {
             <div>
                 <Card className="card-box"> 
                     <div style={{display:"flex"}}>
-                        <i style={{color:'red', marginRight:'2%', fontSize:'250%'}} onClick={this.props.showToggle} class="mdi mdi-arrow-left-bold-circle"></i>
+                        <i style={{color:'red', marginRight:'2%', fontSize:'250%'}} onClick={this.props.showToggle} className="mdi mdi-arrow-left-bold-circle"></i>
                         <h2> {this.props.results.logGroupName}</h2>
                     </div>
                     <CardBody>
                         <TableContainer >
-                            <Table aria-label="spanning table"  className="table_logs_header">
+                            <Table aria-label="spanning table"  className="table_logs_header" >
                                 <TableHead>
                                     <TableRow>
                                         <TableCell></TableCell>
@@ -90,7 +90,7 @@ class LogTableResult extends React.Component {
                         </TableContainer>
                     </CardBody>
                 </Card>
-            </div>
+            </div> 
             
         )
     }

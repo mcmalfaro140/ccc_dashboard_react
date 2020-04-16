@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle} from 'reactstrap';
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import MetisMenu from 'metismenujs/dist/metismenujs';
 
 import profilePic from '../assets/images/users/defaultUser.png';
-import Logout from '../pages/auth/Logout';
 import logo from '../assets/images/logo_ccc.png';
-
-var currentDate = new Date();
 
 
 //Side menu navigation
@@ -23,12 +19,19 @@ class SideNavContent extends React.Component {
             showGrapOptions: false,
             showRealtimeOptions: false,
             showLogTableOptions: false,
+            showNotificationOptions: false,
             realTimeActive: false,
-            logTableActive: false
+            logTableActive: false,
+            notificationActive: false,
           }
         this.showGrapOptions = this.showGrapOptions.bind(this);
         this.showRealtimeOptions = this.showRealtimeOptions.bind(this);
         this.showLogTableOptions = this.showLogTableOptions.bind(this);
+        this.showNotificationOptions = this.showNotificationOptions.bind(this);
+    }
+    showNotificationOptions(e){
+        e.preventDefault();
+        this.setState({showNotificationOptions : !this.state.showNotificationOptions, notificationActive : !this.state.notificationActive});
     }
     showRealtimeOptions(e){
         e.preventDefault();
@@ -61,14 +64,14 @@ class SideNavContent extends React.Component {
         TODO: Update user email dynamically with back end and add logout link. */}
         <div className="user-box text-center ">
             <img src={profilePic} alt="user-img" title="mcmalfaro@hotmail.com" className="rounded-circle img-thumbnail avatar-lg" />
-            <h5>mcmalfaro@hotmail.com</h5>
+            <h5>Hi, {this.props.user.username}.</h5>
 
             <ul className="list-inline">
                 <li className="list-inline-item">
-                    <Link to="/Logout" className="text-custom">
+                    <a onClick={this.props.logOut} className="text-custom log_out">
                         <i className="mdi mdi-power"></i>
                         <span> Logout </span>
-                    </Link>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -84,7 +87,7 @@ class SideNavContent extends React.Component {
               </li>
               <li className={this.state.realTimeActive ? ("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showRealtimeOptions}>
-                        <i class="mdi mdi-elevation-rise"></i>
+                        <i className="fas fa-chart-line"></i>
                       <span> Charts </span>
                       <span className="menu-arrow"></span>
                   </a>
@@ -104,7 +107,7 @@ class SideNavContent extends React.Component {
                                 typeOfGraph : 'line' }}
                                 onClick = {this.props.toggleForm}
                                 className="waves-effect side-nav-link-ref">
-                                <i class="mdi mdi-chart-line"></i>
+                                <i className="mdi mdi-chart-line"></i>
                                 <span> Line Chart </span>
                             </Link>
                       </li>
@@ -122,47 +125,59 @@ class SideNavContent extends React.Component {
               </li>
               <li className={this.state.logTableActive? ("active"):null}>
                   <a className="waves-effect side-nav-link-ref" onClick={this.showLogTableOptions}>
-                      <i class="mdi mdi-folder-multiple-outline"></i>
+                      <i className="mdi mdi-folder-multiple-outline"></i>
                       <span> Logs </span>
                       <span className="menu-arrow"></span>
                   </a>
                   { this.state.showLogTableOptions? (
                    <ul className="nav-second-level nav" aria-expanded="false">
-                       {/* <li onClick = {this.props.toggleTableForm}>
-                        <Link 
-                                className="waves-effect side-nav-link-ref">
-                                <i class="mdi mdi-table-large"></i>
-                                <span> New Log Table </span>
-                            </Link>
-                      </li> */}
                       <li onClick = {this.props.toggleSearchModal}>
                           <Link className="waves-effect side-nav-link-ref">
-                              <i class="fe-search"></i>
+                              <i className="fe-search"></i>
                               <span> Log Search</span>
                           </Link>
                       </li>
+                      <li>
+                        <Link to="/logAlarms" >
+                             <i className="far fa-file-code">  </i>
+                             <span> Log Alarms </span>
+                            </Link>
+                        </li>
                   </ul>
                   ): null }
            </li>
-           
-
-            
-
-              <li>
-                  <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
-                      <i class="mdi mdi-bell-ring-outline"></i>
-                      <span> Alerts </span>
+              <li className = {this.state.notificationActive?("active"):null}>
+                  <a className="waves-effect side-nav-link-ref" onClick={this.showNotificationOptions}>
+                      <i className="mdi mdi-bell-ring-outline"></i>
+                      <span> Alarms</span>
+                      <span className="menu-arrow"></span>
                   </a>
+                  { this.state.showNotificationOptions ? (
+                         <ul className="nav-second-level nav" aria-expanded="false">
+                             <li>
+                                <Link to = "/metricAlarms">
+                                <i className="fas fa-exclamation-triangle">  </i>
+                                <span> Metric Alarms </span>
+                                </Link>
+                             </li>
+                             <li>
+                                 <Link to="/logAlarms" >
+                                 <i className="far fa-file-code">  </i>
+                                 <span> Log Alarms </span>
+                                 </Link>
+                             </li>
+                         </ul>
+                  ) :null }
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.goFullScreen}>
-                      <i class="mdi mdi-fullscreen"></i>
+                      <i className="mdi mdi-fullscreen"></i>
                       <span> FullScreen Mode </span>
                   </a>
               </li>
               <li>
                   <a className="waves-effect side-nav-link-ref" onClick={this.props.rightSidebarToggle}>
-                      <i class="mdi mdi-settings"></i>
+                      <i className="mdi mdi-settings"></i>
                       <span> Settings </span>
                   </a>
               </li>
@@ -185,7 +200,7 @@ class Sidebar extends Component {
     /**
      * Bind event
      */
-    componentWillMount = () => {
+    UNSAFE_componentWillMount = () => {
         document.addEventListener('mousedown', this.handleOtherClick, false);
     }
 
@@ -292,6 +307,8 @@ class Sidebar extends Component {
                         <SideNavContent {...this.props}/>
                     </PerfectScrollbar>
                 </div>
+                <div className={showMenu ? "sidebar-overlay" : ""} onClick={this.props.menuToggle}></div>
+                {/* <div className="sidebar-overlay"></div> */}
             </React.Fragment>
         );
     }

@@ -1,0 +1,141 @@
+.log_alerts{
+    background-color: white;
+    margin: 2%;
+    >div{
+        box-shadow: 0 0 15px 0 rgba(111, 113, 116, 0.486);
+        padding-bottom: 2%;
+        >ul{
+            margin-left: 0%;
+            background-color: #ebeff2;
+            color:black;
+            border:none;
+            >li{
+                border: none;
+                font-size: 130%;
+                font-weight: 500;
+                padding-left: 3%;
+                padding-right: 3%;
+                padding-top: 1%;
+            }
+        }
+        >div{
+            margin: 3%;
+        }
+    }
+   
+}
+
+.my_alarms{
+    >div{
+        border: 1px solid rgb(184, 181, 181);
+        border-radius: 20px;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        padding: 3%;
+        >div:nth-child(1){
+            >div:nth-child(1){
+                color: blue;
+                font-size: 320%;
+            }
+            >div{
+                >div:nth-child(1){
+                    padding-top: 3%;
+                    font-size: 150%;
+                    font-weight: 650%;
+                    color: black;
+                }
+                >div:nth-child(2){
+                    font-size: 120%
+                }
+            }
+            >div:nth-child(5){
+                >button{
+                    margin-top: 8%;
+                    float: right;
+                }
+            }
+            >div:nth-child(6){
+                text-align: center;
+                font-size:300%;
+                margin-left: 0%;
+                :hover{
+                    color: red;
+                    cursor: pointer;
+                }
+            }
+        }
+        >div:nth-child(2){
+            margin-top: 2%;
+            margin-left: 7.5%;
+            margin-bottom: 2%;
+        }
+    }
+}
+
+.no_alarms{
+    text-align: center;
+    margin: 20%;
+    >img{
+        width: 30%;
+    }
+}
+
+.alarm_off{
+    color: grey;
+}
+.pointer{
+    cursor: pointer;
+}
+.pointer:hover{
+    color: red;
+    text-decoration: underline;
+}
+.add_end{
+    float: right;
+}
+
+
+.log_tab_width{
+   
+    display: inline;
+ 
+}
+.form_header{
+    color: red;
+    font-size: large;
+}
+.log_level{
+    padding-left: 20px;
+}
+.checkss{
+    font-weight: lighter !important;
+    font-size: small;
+    padding-left: 5px;
+}
+.remove_div{
+    float:right;
+}
+.remove_label{
+    margin-bottom: -10px;
+}
+.remove_icon_div{
+    margin-left: 10px;
+}
+.subscribe_but{
+    background-color: rgb(215, 100, 139);
+    border-radius: 20px;
+    width: 30%;
+}
+.subscribe_div{
+    // justify-content: center;
+    // display: flex;
+    text-align: center;
+    >div{
+        color: red;
+        // display: inline-block;
+        font-size: 200%
+    }
+}
+.rows{
+    padding-bottom: 20px;
+}

@@ -1,0 +1,154 @@
+.metricAlerts_page{
+    //background-color: blue;
+    // >div:nth-child(2){
+    //     background-color: red;
+    // }
+    // >div:nth-child(3){
+    //     >div{
+    //         >div{
+                
+    //         }
+    //     }
+    // }
+}
+.button_a {
+    background:none;
+    border:none; 
+    padding:0;
+   
+   /*optional*/
+    font-family:arial,sans-serif; /*input has OS specific font-family*/
+    color:#069;
+    cursor:pointer;
+}
+.button_b {
+   background:'white';
+   border:none; 
+   padding:0;
+}
+.button_a:hover{
+   text-decoration:underline;
+   background: #069;
+}
+.margin{
+    margin:0px 0px -6px 0px;
+}
+.fontSize{
+    font-size : 1vw;
+}
+.moreInfor:hover{
+    color:red;
+}
+.h1Size{
+    font-size : 2.5vw;
+}
+.description{
+    margin-top:0px;
+    line-height:1.5em;
+    height:3em;
+    overflow:scroll;
+}
+.button_align{
+    text-align: center;
+    margin-bottom:0px;
+}
+.modalHeader{
+    background-color:#5388FF;
+}
+.modalInfor{
+    color : white;
+}
+.hr{
+   border-color:#d1d1d1;
+}
+.button_size{
+    height : 40px;
+}
+.scrolling{
+    overflow:scroll;
+}
+.submitButton{
+    float:right;
+    background-color:#5388FF;
+    color:white;
+    border:0;
+    border-radius: 2em;
+    width: 20%;
+    height:35px;
+}
+.submitButton1{
+    float:right;
+    background-color:#5388FF;
+    color:white;
+    border:0;
+    width: 20%;
+    height:35px;
+}
+.addEndpoint{
+   color: green;
+}
+.subscribe{
+    background-color:#5388FF;
+    color:white;
+    border:0;
+    height:40px;
+}
+.modalku{
+    width: 80%;
+    max-width: none!important;
+}
+.selection{
+    width: 60%;
+    height: 30px;
+}
+.inputs{
+    width: 60%;
+    height: 30px;
+  
+}
+.removes{
+    width: 40%;
+    // height: 40px;
+    cursor: pointer;
+    
+  
+}
+.div_margin{
+    margin-bottom:8%;
+}
+.div_center{
+    margin-top: 10%;
+}
+.btn-group{
+    margin-top: 10%;
+}
+.addTopic{
+    font-weight: normal;
+    font-size: medium;
+    padding-left: 10px;
+    color:rgb(47, 47, 222);
+    text-decoration: underline;
+}
+.addTopic_non{
+    display: none;
+}
+.addTopic:hover{
+    color:red;
+}
+.myClickableThingy{
+    cursor: pointer;
+    font-weight: lighter;
+    font-size: smaller;
+    color:rgb(47, 47, 222);
+    text-decoration: underline;
+}
+.myClickableThingy:hover{
+    color:red;
+}
+.subscribeIcon{
+    padding-left: 7px;
+}
+.ErrorEndpoint{
+    color:red;
+}
+

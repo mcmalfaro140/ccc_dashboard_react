@@ -1,69 +1,30 @@
 import React, { Component, Suspense } from "react";
-import { Container, Row, Col, Card, CardBody } from 'reactstrap';
+import { Container} from 'reactstrap';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import {Form} from 'react-bootstrap';
-import profilePic from '../assets/images/users/user-1.jpg';
-import { SketchPicker } from 'react-color'
-import DateTimePicker from 'react-datetime-picker';
-import GraphForm from '../components/graphForm';
+import { Modal} from 'reactstrap';
+import GraphForm from '../components/graphComp/graphForm';
+import { getLoggedInUser } from '../helpers/authUtils';
+import MixGraphForm from '../components/graphComp/MixGraphForm';
+import mykey from '../keys.json';
 
-import MixGraphForm from '../components/MixGraphForm';
-import LineGraph from '../components/LineGraph'
-
-import TableFormPop from '../components/TableFormPop'
 import AdvSearchModal from '../components/searchComp/AdvSearchModal'
-
-//TODO: Make sure to change instanceis for other valuse like ES Takes different parameters
 
 var currentDate = new Date();
 var value = [];
+const axios = require('axios').default;
 // code splitting and lazy loading
 const Topbar = React.lazy(() => import("./Topbar"));
 const Sidebar = React.lazy(() => import("./Sidebar"));
 const RightSidebar = React.lazy(() => import("./RightSidebar"));
 const loading = () => <div className="text-center"></div>;
 
-const RightSidebarContent = (props) => {
-    return <div className="user-box">
-        <div className="user-img">
-            <img src={profilePic} alt="user-img" title="Nik Patel"
-                className="rounded-circle img-fluid" />
-            <a href="/" className="user-edit"><i className="mdi mdi-pencil"></i></a>
-        </div>
-
-        <h5>{props.user && <a href="/">{props.user.username}</a>}</h5>
-        <p className="text-muted mb-0"><small>Founder</small></p>
-    </div>
-}
-
 
 class AuthLayout extends Component {
     constructor(props) {
         super(props);
-
-        this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
-        this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
-        this.toggleMenu = this.toggleMenu.bind(this);
-        this.readSelection = this.readSelection.bind(this);
-        this.goFullScreen = this.goFullScreen.bind(this);
-        this.handleChangeComplete = this.handleChangeComplete.bind(this);
-        this.changeScreenSize = this.changeScreenSize.bind(this);
-        this.handleExitFull = this.handleExitFull.bind(this);
-        this.toggleMixForm = this.toggleMixForm.bind(this);
-        // this.mixUpdate = this.mixUpdate.bind(this);
-        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
-        this.changeStartDate = this.changeStartDate.bind(this);
-        this.changeEndDate = this.changeEndDate.bind(this);
-        this.toggleSearchModal = this.toggleSearchModal.bind(this);
-
         this.state = {
+            user: getLoggedInUser(),
+            my_dashboard:[],
             mixGraph:{
                 typeOfGraph:"",
                 metricName:"", 
@@ -96,20 +57,18 @@ class AuthLayout extends Component {
             modalSearch: false,
             modalTableOpen: false,
             mixModalOpen: false,
+            count: 0,
             metricName:"", 
             nameSpace:"",
             chartName:"",
             typeOfDimension : "InstanceId",
             idValue:"",
-          //  startTime:new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes()), //if needed
-          startTime:new Date(), 
-          period:120,
+            startTime:new Date(), 
+            period:120,
             endTime:new Date() //if needed
-           // new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()-1,currentDate.getHours(),currentDate.getMinutes())
-        }
+                }
         this.toggleRightSidebar = this.toggleRightSidebar.bind(this);
         this.toggleForm = this.toggleForm.bind(this);
-        this.toggleTableForm = this.toggleTableForm.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
         this.readSelection = this.readSelection.bind(this);
         this.goFullScreen = this.goFullScreen.bind(this);
@@ -117,15 +76,32 @@ class AuthLayout extends Component {
         this.changeScreenSize = this.changeScreenSize.bind(this);
         this.handleExitFull = this.handleExitFull.bind(this);
         this.toggleMixForm = this.toggleMixForm.bind(this);
-        // this.mixUpdate = this.mixUpdate.bind(this);
-        // this.readMixedSelection1 = this.readMixedSelection1.bind(this);
-        // this.readMixedSelection2 = this.readMixedSelection2.bind(this);
-        // this.readMixTimeSelection1 = this.readMixTimeSelection1.bind(this);
-        // this.handleMixChangeComplete1 = this.handleMixChangeComplete1.bind(this);
-        // this.handleMixChangeComplete2 = this.handleMixChangeComplete2.bind(this);
         this.changeStartDate = this.changeStartDate.bind(this);
         this.changeEndDate = this.changeEndDate.bind(this);
         this.toggleSearchModal = this.toggleSearchModal.bind(this);
+        this.saveDashboard = this.saveDashboard.bind(this);
+        this.updateDashboard  = this.updateDashboard.bind(this);
+        this.logOut = this.logOut.bind(this) 
+    }
+
+    saveDashboard(dash_to_save){
+        axios({
+            method: 'post',
+            url: `${mykey.backend}/update`,
+            headers: {
+                'Authorization': this.props.user.token,
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            data: {
+                'dashboard': JSON.stringify(dash_to_save)
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+    updateDashboard(dash_to_update){
+        this.setState({my_dashboard: dash_to_update})
     }
 
     changeStartDate = startTime =>{
@@ -137,27 +113,21 @@ class AuthLayout extends Component {
 
     //toggle form
     toggleForm = () => {
-        this.setState({modalOpen : !this.state.modalOpen})
-        
-        //makes the table full width instead of a condensed table
-        this.setState({isCondesed : !this.state.isCondensed})
-
-};
-    toggleMixForm = () =>{
-    this.setState({mixModalOpen : !this.state.mixModalOpen})
-}
-
-    toggleTableForm = () =>{
-        this.setState({modalTableOpen : !this.state.modalTableOpen})
+        this.setState({modalOpen : !this.state.modalOpen, isCondensed: false, showMenu: false})
     }
+
+    toggleMixForm = () =>{
+        this.setState({mixModalOpen : !this.state.mixModalOpen, isCondensed: false, showMenu: false})
+    }
+
 
     toggleSearchModal = () =>{
-        this.setState({modalSearch : !this.state.modalSearch})
+        this.setState({modalSearch : !this.state.modalSearch, isCondensed: false, showMenu: false})
     }
 
-    signOut(e) {
-        e.preventDefault();
-        this.props.history.push("/login");
+    logOut() {
+        this.saveDashboard(this.state.my_dashboard);
+        this.props.history.push("/logout");
     }
 
     //toggleMenu
@@ -165,7 +135,6 @@ class AuthLayout extends Component {
         e.preventDefault();
         this.setState({ showMenu: !this.state.showMenu});
         this.setState({ isCondensed: !this.state.isCondensed});
-        // this.changeScreenSize(this.state.isCondensed)
     }
 
     //toggle right side bar
@@ -181,17 +150,12 @@ class AuthLayout extends Component {
         if(value.length > 5){
             value = [];
         }
-      
-        // this.setState({metricName : value[0]})
-        // this.setState({nameSpace : value[1]});
         this.setState({nameSpace : value[0]});
         this.setState({chartName : value[1]});
         this.setState({metricName : value[2]});
         this.setState({typeOfDimension : value[3]});
         this.setState({idValue : value[4]});
     }
-
-    
 
     handleChangeComplete = (color) =>{
         this.setState({colorSelected : color.hex})
@@ -227,7 +191,12 @@ class AuthLayout extends Component {
     }
 
     handleExitFull(){
-        this.setState({isFullScreen: false})
+        if(this.state.count === 1){
+            this.setState({ isFullScreen: false, count: 0})
+            this.changeScreenSize()
+        }else{
+            this.setState({count: 1})
+        }
     }
     //updates react-grid size when resize
     changeScreenSize(){
@@ -240,8 +209,8 @@ class AuthLayout extends Component {
 
     //toggle fullscreen
     goFullScreen(){
-        let div = document.getElementById("dashboard")
-        this.setState({isCondensed : true, isFullScreen: !this.state.isFullScreen})
+        let div = document.getElementById("graphs_layout")
+        this.setState({isCondensed : true, isFullScreen: true})
         div.requestFullscreen()
     }
   
@@ -250,7 +219,9 @@ class AuthLayout extends Component {
         const children = React.Children.map(this.props.children, child => {
             return React.cloneElement(child, {
               screenSize: this.state.screenWidth,
-              isCondensed: this.state.isCondensed
+              isCondensed: this.state.isCondensed,
+              saveDashboard: this.saveDashboard,
+              updateDashboard: this.updateDashboard
             });
           }) || null;
   
@@ -258,10 +229,8 @@ class AuthLayout extends Component {
             <div className="app">
                 <div id="wrapper">
                     <Suspense fallback={loading()}>
-                        <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu}  isCondensed={this.state.isCondensed} toggleForm={this.toggleForm}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
                         <Topbar rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} {...this.props} isCondensed={this.state.isCondensed}/>
-                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleTableForm={this.toggleTableForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu} />
+                        <Sidebar goFullScreen={this.goFullScreen} rightSidebarToggle={this.toggleRightSidebar} menuToggle={this.toggleMenu} toggleForm={this.toggleForm} toggleMixForm = {this.toggleMixForm} toggleSearchModal = {this.toggleSearchModal} isCondensed={this.state.isCondensed} {...this.props} showMenu={this.state.showMenu}  logOut={this.logOut}/>
 
                     </Suspense>
                     <div className="content-page">
@@ -275,9 +244,6 @@ class AuthLayout extends Component {
                                 </div>
                             </div>
 
-                        <Modal isOpen={this.state.modalTableOpen} >
-                            <TableFormPop toggle={this.toggleTableForm}/>
-                        </Modal>
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
                             <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
                         </Modal>
@@ -292,7 +258,6 @@ class AuthLayout extends Component {
                     </div>
                 </div>
                 <RightSidebar title={"Settings"}>
-                    <RightSidebarContent user={this.props.user} />
                 </RightSidebar>
             </div>
         );

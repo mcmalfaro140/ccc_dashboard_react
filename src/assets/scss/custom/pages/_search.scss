@@ -61,9 +61,16 @@
 }
 
 //no yet optimize for phone
+.table{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 .table_header{
-    border-top: black solid 3px;
-    border-bottom: black solid 3px;
+    background-color: #0f7aec;
+    >th{
+        >h3{
+            color: white;
+        }
+    }
 }
 
 .row_results{
@@ -75,9 +82,11 @@
 
 .col_results{
     width: 110px;
+    text-align: center;
 }
 .hid_cell{
-    background-color: white
+    background-color: white;
+
 }
 
 .table_logs_header{
@@ -121,32 +130,11 @@
     background-color: rgba(230, 230, 230, 0.596);
 }
 
-//log Group List
-.logGroupHeader{
-    >div {
-        float: right;
-        width: 35%;
-        text-align: center;
-        cursor: pointer;
-        >div:nth-child(1){
-            margin-top: -2%;
-            >h5{
-                color: black;
-            }
-        }
-        > div:nth-child(2){
-            color:red;
-            border-block-end: red solid 1px;
-        }
-    }
-   
-}
-
 //Search Filter Bar
 
 .search_filter_bar{
     margin-top: 1%;
-    height: 120px;
+    // height: 120px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     >div{
         >div{
@@ -165,8 +153,66 @@
                     }
                 }
                 
+            }            
+        }
+        >div:nth-child(2){
+            margin: 0.5%;
+        }
+        >div:nth-child(3){
+            margin: 0.5%;
+            >div {
+                width: 100%
             }
-            
+        }
+    }
+}
+
+.log_details_box{
+    padding: 1.7%;
+    >div:nth-child(1){
+        >i{
+            color: red;
+            font-size: 250%;
+            margin-right: 2%
+        }
+    }
+    >div:nth-child(2){
+        >div{
+            border-top: rgb(179, 178, 178) 1px solid;
+            >h3{
+                color: #0f7aec;
+                cursor: pointer;
+                >i{
+                    display: inline-block;
+                    transition: all 0.3s linear;
+                }
+            }
+            >div{
+                margin: 2%;
+            }
+        }
+        >div:nth-child(2){
+            >div{
+                >div{
+                    text-align: center;
+                    cursor: pointer;
+                }
+                >div:hover{
+                    color: #007bff;
+                }
+            }
+        }
+        >div:nth-child(3){
+            border-bottom: rgb(179, 178, 178) 1px solid;
+            >div{
+                >div{
+                    text-align: center;
+                    cursor: pointer;
+                }
+                >div:hover{
+                    color: #007bff;
+                }
+            }
         }
     }
 }
