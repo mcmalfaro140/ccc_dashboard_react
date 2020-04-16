@@ -283,7 +283,6 @@ class MetricAlarmDisplay extends Component {
         })
     }
     unsubscribeEndpoints(e,subscribedTopicArn,topicArn){
-      //  this.setState({subscription: false});
         e.preventDefault();
         let sns = new AWS.SNS();
         var params = {
@@ -312,7 +311,6 @@ class MetricAlarmDisplay extends Component {
           sns.listSubscriptionsByTopic(params, function(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else {
-                console.log(data);
                 this.setState({listSubscriptions:data.Subscriptions});
             }   
           }.bind(this));
@@ -444,12 +442,6 @@ class MetricAlarmDisplay extends Component {
                     <Row><span style ={{backgroundColor:this.state.color, color: 'white',fontSize : window.innerWidth/100,paddingLeft:5, paddingRight:5}}>Status: {this.state.alert.StateValue}</span></Row>
                     <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.Namespace}</span></p></Row>
                     <Row><p className = 'margin'><span className = 'fontSize'>{this.state.alert.MetricName}</span></p></Row>
-                        {/* <Row><p className = 'margin'>
-                            <a className= "waves-effect side-nav-link-ref" onClick={this.showSubscribedTopicsOfAlarms} >
-                            <p className = 'margin'><span className = 'fontSize'>Subscribed Topics {this.state.showSubscribedTopicsOfAlarms === false? <i class = 'mdi mdi-menu-left'/>:<i class="mdi mdi-menu-right"></i>}</span></p>
-                            </a>
-                            </p>
-                        </Row>     */}
                     <Row> <a className= "waves-effect side-nav-link-ref" onClick={this.toggle} >
                             <p className = 'margin'><span className = 'fontSize' id = {this.state.id}><span className = "moreInfor">More Infor {this.state.isOpen === false? <i className = 'mdi mdi-menu-right'/>:<i className="mdi mdi-menu-down"></i>}</span></span></p>
                             </a></Row>    
@@ -472,8 +464,6 @@ class MetricAlarmDisplay extends Component {
                                 <Button color = "primary" onClick = {this.follow} block><i className="far fa-bell"></i><span className = "subscribeIcon">Follow</span></Button>
                         </div>
                     }
-                    {/* openSubscriptionDetails */}
-                    {/* showSubscribedTopicsOfAlarms */}
          
              </Col>
          
@@ -683,35 +673,6 @@ class MetricAlarmDisplay extends Component {
                   </ModalFooter>
               </Modal> 
               <ToastContainer autoClose={2000}/>
-              {/* <Modal isOpen = {this.state.showSubscribedTopicsOfAlarms} toggle = {this.showSubscribedTopicsOfAlarms}>
-                    <ModalHeader className = 'modalHeader'><span className = 'modalInfor'>Subscribed Topic/s of {this.state.alert.AlarmName}</span></ModalHeader>
-                    <ModalBody>
-                        <Table striped bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                    <th>Subscribed Topics</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.alert.AlarmActions.map((item,i) =>{
-                                        return(
-                                            <tr>
-                                                <td>{item.split(':')[item.split(':').length-1]}</td>
-                                                <td><Button className = 'button_a' onClick = {() => this.unsubscribeTopics(i)}>Unsubscribe</Button></td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </Table>
-                  </ModalBody>
-                  <ModalFooter>
-                      <Button style ={{height : 40}} color="secondary" onClick = {this.showSubscribedTopicsOfAlarms}> Close </Button>
-                  </ModalFooter>
-              </Modal> */}
-             
            </div>
    
         )

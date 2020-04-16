@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import React, { Component } from 'react';
+=======
 import React, { Component} from 'react';
+>>>>>>> master
 import ReactDOM from 'react-dom';
 import AWS from 'aws-sdk';
 import { Row, Card, Col, Button, Collapse,Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap';
@@ -102,7 +106,6 @@ class Items extends Component {
         })
     }
     unsubscribeEndpoints(e,subscribedTopicArn,topicArn){
-        //  this.setState({subscription: false});
           e.preventDefault();
           let sns = new AWS.SNS();
           var params = {
@@ -175,7 +178,11 @@ class Items extends Component {
     }
     createSns = (snsArr,element) => {
         let sns = [] 
+<<<<<<< HEAD
+        snsArr.map((elem,i) => {
+=======
         snsArr.forEach((elem,i) => {
+>>>>>>> master
             sns.push(
                 <Row key={i}>
                     <Col xs = '2.5'>
@@ -239,10 +246,14 @@ class Items extends Component {
                             {element.isSubscribe ? 
                                 <Button color="danger" block onClick={() => this.props.handleUnubscribe(element.LogAlarmId, element.XRefUserSNSTopic)}><i className="far fa-bell-slash"></i> Unsubscribe</Button>
                                 :
+<<<<<<< HEAD
+                                <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}                            
+=======
                                 <Button color="primary" block onClick={(e)=>this.openSubscriptionModal(e,element.LogAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>}
                                 {/* <Button color="primary" block onClick={()=>this.props.handleSubscribe(element.logAlarmId)}><i className="far fa-bell"></i> Subscribe</Button>} */}
                                 
                             
+>>>>>>> master
                         </Col>
                         <Col xs='1'>
                             <i className="far fa-trash-alt" onClick={() => this.props.handleDelete(i)}></i>
