@@ -55,7 +55,6 @@ class AlarmForm extends Component {
         this.getLogGroupName();
         this.getSNSTopics();
     }
-
     checkObj(obj){
         if(obj.AlarmName != null || ""){
             if(obj.LogLevelSign != null && obj.LogLevel != null){

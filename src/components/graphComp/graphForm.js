@@ -36,23 +36,30 @@ class graphForm extends Component {
             isRealTime: false,
             refreshRate:null,
             screenWidth: 0,
-            whichNamespace: "",
-            colorSelected:"",
+            colorSelected:' ',
             isCondensed: false,
             isFullScreen: false,
-            modalOpen: false,
-            mixModalOpen: false,
+            isAllFieldFilled:false,
             metricName:null, 
             nameSpace:null,
             chartName:null,
             typeOfDimension : null,
             idValue:null,
-            startTime:"", 
-            period:120,
-            endTime:"", //if needed ,
+            startTime:null, 
+            period:null,
+            endTime:null, //if needed ,
             xAxisRange:null,
             xAxisSelection:"",
-            refreshRateSelection:""
+            refreshRateSelection:"",
+            nameSpaceEmpty:null,
+            chartNameEmpty:null,
+            metricNameEmpty:null,
+            dimensionEmpty:null,
+            valueEmpty:null,
+            timeEmpty:null,
+            colorEmpty:null,
+            refreshRateEmpty:null,
+            xAxisRangeEmpty:null
     }}
     componentWillReceiveProps(nextProps){
         if(nextProps.graphInfor != null){
@@ -90,9 +97,52 @@ class graphForm extends Component {
     toggleSwitch (isRealTime){
         this.setState({isRealTime})
     }
-    toggleForm = () => {
-        this.setState({modalOpen : !this.state.modalOpen})
-        this.setState({namespaceNotSelected : true})
+    toggleForm(e,i){
+        e.preventDefault();
+        if(i === 0){
+            this.props.toggleForm();
+        }
+        else if(i === 1){
+            if(this.state.isRealTime === true){
+                console.log("I am inside real time")
+                if(this.state.nameSpace == null || this.state.metricName == null || this.state.chartName == null ||
+                    this.state.typeOfDimension == null || this.state.idValue == null || this.xAxisRange == null ||
+                        this.state.refreshRate == null || this.state.colorSelected == null){
+                    this.setState({isAllFieldFilled:false});
+                }
+                else if(this.state.nameSpace != null && this.state.metricName != null && this.state.chartName != null &&
+                        this.state.typeOfDimension != null && this.state.idValue != null && this.xAxisRange != null &&
+                        this.state.refreshRate != null && this.state.colorSelected != null){
+                            console.log("im inside real time and im not null")
+
+                    this.props.toggleForm();
+                    this.setState({isAllFieldFilled:true});
+                   
+                }
+            }
+            else if(this.state.isRealTime === false){
+                console.log("I am inside historic time")
+
+                if(this.state.nameSpace == null || this.state.metricName == null || this.state.chartName == null ||
+                    this.state.typeOfDimension == null || this.state.idValue == null || this.state.startTime == null ||
+                        this.state.endTime == null || this.state.colorSelected == null){
+                    this.setState({isAllFieldFilled:false});
+                }
+                else if(this.state.nameSpace != null && this.state.metricName != null && this.state.chartName != null &&
+                        this.state.typeOfDimension != null && this.state.idValue != null && this.state.startTime != null &&
+                        this.state.endTime != null && this.state.colorSelected != null){
+                            console.log("I am inside historic true")
+
+                    this.props.toggleForm();
+                    this.setState({isAllFieldFilled:true});
+                   
+                }
+            }
+          
+        }
+        else{
+            this.props.toggleForm();
+        }
 
 };
     //Dropdown helper
@@ -145,54 +195,8 @@ class graphForm extends Component {
 
       
   }
-<<<<<<< HEAD
-<<<<<<< HEAD:src/components/graphComp/graphForm.js
 
  onDateRangeSelection = (startTime, endTime) => {
-=======
-=======
-<<<<<<< HEAD:src/components/graphForm.js
->>>>>>> master
-  
-   
-    submit(e){
-
-
-        e.preventDefault();
-
-        this.props.history.push({
-           // pathname: str,
-            pathname: "/Dashboard",
-            state: {
-                newGraph : this.state.newGraph,
-                // metricName: this.state.metricName,
-                // nameSpace : this.state.nameSpace,
-                // chartName : this.state.chartName,
-                // // accessKeyId : this.state.accessKeyId,
-                // // secretAccessKey : this.state.secretAccessKey,
-                // instanceId : this.state.instanceId,
-                // //region : this.state.region,
-                // // startTime : this.state.startTime,
-                // // endTime : this.state.endTime
-
-
-
-            }
-        })
-
-
-    }
-
-  
-    onDateRangeSelection = (startTime, endTime) => {
-<<<<<<< HEAD
->>>>>>> master:src/components/graphForm.js
-=======
-=======
-
- onDateRangeSelection = (startTime, endTime) => {
->>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
->>>>>>> master
         this.setState({startTime , endTime})
         let start, end;
             if(startTime != null){
@@ -222,31 +226,10 @@ class graphForm extends Component {
         }
         
     }
-<<<<<<< HEAD:src/components/graphComp/graphForm.js
 
     render() {
         let timeSelection;
         if(this.state.isRealTime === true ){
-=======
- 
-    
-    
-    
-
-    render() {
-<<<<<<< HEAD
-        var timeSelection;
-        if(this.state.isRealTime === true){
->>>>>>> master:src/components/graphForm.js
-=======
-<<<<<<< HEAD:src/components/graphForm.js
-        var timeSelection;
-        if(this.state.isRealTime === true){
-=======
-        let timeSelection;
-        if(this.state.isRealTime === true ){
->>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
->>>>>>> master
             timeSelection = 
              <div>            
             <Form.Group controlId="exampleForm.ControlSelect2">
@@ -264,9 +247,17 @@ class graphForm extends Component {
             <option value = "Last Two Hours">Last Two Hours</option>
             <option value = "Last Day">Last Day</option>
             </Form.Control>
-            <Form.Text className="text-muted">
+            {
+                this.state.xAxisRangeEmpty == null?
+                <Form.Text className="text-muted">
                 Select the time
-            </Form.Text>
+                </Form.Text>
+                :
+                <Form.Text className="error-text">
+                {this.state.xAxisRangeEmpty}
+                </Form.Text>
+            }
+           
             </Form.Group>
 
             <Form.Group controlId="exampleForm.ControlSelect10">
@@ -299,41 +290,10 @@ class graphForm extends Component {
            
             </div>
         }
-<<<<<<< HEAD
-<<<<<<< HEAD:src/components/graphComp/graphForm.js
   
         return (  
-=======
-=======
-<<<<<<< HEAD:src/components/graphForm.js
->>>>>>> master
-
-        let button;
-        let switches;
-
-        
-        if(this.props.graphInfor == null){
-            button = <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
-        }
-        else{
-            button = <Button color="primary" onClick={this.props.toggleForm}>Modify graph</Button>
-            
-        }
-       
-      
-        return (
-
-         
-<<<<<<< HEAD
->>>>>>> master:src/components/graphForm.js
-=======
-=======
-  
-        return (  
->>>>>>> e14761855035cbbcbcbc5e12ee10a5bcb844b5c3:src/components/graphComp/graphForm.js
->>>>>>> master
                         <div>
-                        <ModalHeader toggle={this.props.toggleForm}>{this.props.graphInfor == null ? 'New Chart Form':'Modify Chart Form'}</ModalHeader>
+                        <ModalHeader toggle={this.toggleForm}>{this.props.graphInfor == null ? 'New Chart Form':'Modify Chart Form'}</ModalHeader>
                             <ModalBody>
                                 Please provide all the inputs to create a chart.
                                 <form>                                
@@ -389,18 +349,18 @@ class graphForm extends Component {
                                     <Form>
                                         <Row>
                                             <Col>
-                                            <Form.Label>Dimension: </Form.Label>
+                                            <Form.Label>Dimension Name: </Form.Label>
                                             <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.update(e,3)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.typeOfDimension:""}/>
                                             <Form.Text className="text-muted">
-                                            Enter the dimension 
+                                            Enter the dimension name
                                             Ex.InstanceId
                                             </Form.Text>
                                             </Col>
                                             <Col>
-                                            <Form.Label>Value: </Form.Label>
+                                            <Form.Label>Dimension Value: </Form.Label>
                                             <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.update(e,4)} defaultValue={this.props.graphInfor!=null?this.props.graphInfor.idValue:""}/>
                                             <Form.Text className="text-muted">
-                                            Enter the value
+                                            Enter the dimension value
                                             </Form.Text>
                                             </Col>
                                         </Row>
@@ -418,51 +378,52 @@ class graphForm extends Component {
                               
                                 </form>
                             </ModalBody>
-                            <ModalFooter>                             
-                                <Link to={{pathname:'/dashboard', 
-                                    state:{ 
-                                        newGraph:{
-                                            id:this.props.selectedGraphId!=null?this.props.selectedGraphId:"",
-                                            objectType:"graph", // options: graph or table
-                                            graphSettings: {
-                                                type:this.props.graphInfor!=null? this.props.graphInfor.type: this.props.whatever, //options: line, pie, or bar
-                                                realTime:this.state.isRealTime, //options: true or false
-                                                metricName : this.state.metricName!=null ? this.state.metricName: (this.props.graphInfor!=null?this.props.graphInfor.metricName:""),
-                                                nameSpace:this.state.nameSpace!=null ? this.state.nameSpace: (this.props.graphInfor!=null?this.props.graphInfor.nameSpace:""),
-                                                chartName:this.state.chartName!=null? this.state.chartName: (this.props.graphInfor!=null?this.props.graphInfor.chartName:""),
-                                                typeOfDimension:this.state.typeOfDimension!=null? this.state.typeOfDimension: (this.props.graphInfor!=null?this.props.graphInfor.typeOfDimension:""),
-                                                idValue:this.state.idValue!=null? this.state.idValue: (this.props.graphInfor!=null?this.props.graphInfor.idValue:""),
-                                                refreshRate: this.state.refreshRate!=null?this.state.refreshRate:(this.props.graphInfor!=null?this.props.graphInfor.refreshRate:""),
-                                                colorSelected:this.state.colorSelected,
-                                                period:this.state.period,
-                                                startTime:this.state.startTime, //if needed
-                                                endTime:this.state.endTime, //if needed
-                                                xAxisRange : this.state.xAxisRange!=null? this.state.xAxisRange:(this.props.graphInfor!=null?this.props.graphInfor.xAxisRange:""),
-                                                xAxisSelection: this.state.xAxisSelection,
-                                                refreshRateSelection : this.state.refreshRateSelection                                        
+                                        {console.log(this.state.isAllFieldFilled)}
+                            <ModalFooter>   
+                                <Link to={
+                                        {pathname:'/dashboard',  
+                                         state:{ 
+                                            newGraph:{
+                                                id:this.props.selectedGraphId!=null?this.props.selectedGraphId:"",
+                                                objectType:"graph", // options: graph or table
+                                                graphSettings: {
+                                                    type:this.props.graphInfor!=null? this.props.graphInfor.type: this.props.whatever, //options: line, pie, or bar
+                                                    realTime:this.state.isRealTime, //options: true or false
+                                                    metricName : this.state.metricName!=null ? this.state.metricName: (this.props.graphInfor!=null?this.props.graphInfor.metricName:""),
+                                                    nameSpace:this.state.nameSpace!=null ? this.state.nameSpace: (this.props.graphInfor!=null?this.props.graphInfor.nameSpace:""),
+                                                    chartName:this.state.chartName!=null? this.state.chartName: (this.props.graphInfor!=null?this.props.graphInfor.chartName:""),
+                                                    typeOfDimension:this.state.typeOfDimension!=null? this.state.typeOfDimension: (this.props.graphInfor!=null?this.props.graphInfor.typeOfDimension:""),
+                                                    idValue:this.state.idValue!=null? this.state.idValue: (this.props.graphInfor!=null?this.props.graphInfor.idValue:""),
+                                                    refreshRate: this.state.refreshRate!=null?this.state.refreshRate:(this.props.graphInfor!=null?this.props.graphInfor.refreshRate:""),
+                                                    colorSelected:this.state.colorSelected,
+                                                    period:this.state.period,
+                                                    startTime:this.state.startTime, //if needed
+                                                    endTime:this.state.endTime, //if needed
+                                                    xAxisRange : this.state.xAxisRange!=null? this.state.xAxisRange:(this.props.graphInfor!=null?this.props.graphInfor.xAxisRange:""),
+                                                    xAxisSelection: this.state.xAxisSelection,
+                                                    refreshRateSelection : this.state.refreshRateSelection                                        
+                                                },
+                                                coordinates: {
+                                                    x: 0,
+                                                    y: 0,
+                                                    w: 8,
+                                                    h: 2,
+                                                    minW: 8,
+                                                    minH: 2
+                                                },
                                             },
-                                            coordinates: {
-                                                x: 0,
-                                                y: 0,
-                                                w: 8,
-                                                h: 2,
-                                                minW: 8,
-                                                minH: 2
-                                            },
-                                          
-                                        },
-                                    }
-                                   
+                                        }
+                                
                                 }
                                 }
-                               
-                              
-                                >
-                                    
-                                   <Button color="primary" onClick={this.props.toggleForm}>{this.props.graphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
-                                  
-                                </Link>
-                                <Button color="secondary" onClick={this.props.toggleForm}>Cancel</Button>
+
+                          
+                           
+                          
+                            > 
+                               <Button color="primary" onClick={(e) => this.toggleForm(e,1)}>{this.props.graphInfor == null ? "Create Graph" : "Modify Graph"}</Button> 
+                            </Link>                       
+                                <Button color="secondary" onClick={(e)=>this.toggleForm(e,0)}>Cancel</Button>
                             </ModalFooter>
                            
                             </div>
