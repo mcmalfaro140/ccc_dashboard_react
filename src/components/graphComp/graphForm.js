@@ -145,8 +145,43 @@ class graphForm extends Component {
 
       
   }
+<<<<<<< HEAD:src/components/graphComp/graphForm.js
 
  onDateRangeSelection = (startTime, endTime) => {
+=======
+  
+   
+    submit(e){
+
+
+        e.preventDefault();
+
+        this.props.history.push({
+           // pathname: str,
+            pathname: "/Dashboard",
+            state: {
+                newGraph : this.state.newGraph,
+                // metricName: this.state.metricName,
+                // nameSpace : this.state.nameSpace,
+                // chartName : this.state.chartName,
+                // // accessKeyId : this.state.accessKeyId,
+                // // secretAccessKey : this.state.secretAccessKey,
+                // instanceId : this.state.instanceId,
+                // //region : this.state.region,
+                // // startTime : this.state.startTime,
+                // // endTime : this.state.endTime
+
+
+
+            }
+        })
+
+
+    }
+
+  
+    onDateRangeSelection = (startTime, endTime) => {
+>>>>>>> master:src/components/graphForm.js
         this.setState({startTime , endTime})
         let start, end;
             if(startTime != null){
@@ -176,10 +211,21 @@ class graphForm extends Component {
         }
         
     }
+<<<<<<< HEAD:src/components/graphComp/graphForm.js
 
     render() {
         let timeSelection;
         if(this.state.isRealTime === true ){
+=======
+ 
+    
+    
+    
+
+    render() {
+        var timeSelection;
+        if(this.state.isRealTime === true){
+>>>>>>> master:src/components/graphForm.js
             timeSelection = 
              <div>            
             <Form.Group controlId="exampleForm.ControlSelect2">
@@ -232,8 +278,28 @@ class graphForm extends Component {
            
             </div>
         }
+<<<<<<< HEAD:src/components/graphComp/graphForm.js
   
         return (  
+=======
+
+        let button;
+        let switches;
+
+        
+        if(this.props.graphInfor == null){
+            button = <Button color="primary" onClick={this.props.toggleForm}>Create graph</Button>
+        }
+        else{
+            button = <Button color="primary" onClick={this.props.toggleForm}>Modify graph</Button>
+            
+        }
+       
+      
+        return (
+
+         
+>>>>>>> master:src/components/graphForm.js
                         <div>
                         <ModalHeader toggle={this.props.toggleForm}>{this.props.graphInfor == null ? 'New Chart Form':'Modify Chart Form'}</ModalHeader>
                             <ModalBody>
