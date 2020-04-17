@@ -344,7 +344,7 @@ render() {
         ]
       }
     
- 
+      // random 
       let graph;
       if(this.props.graphSettings.realTime === true){
        graph = <Line

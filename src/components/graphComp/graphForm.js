@@ -380,7 +380,9 @@ class graphForm extends Component {
                             </ModalBody>
                                         {console.log(this.state.isAllFieldFilled)}
                             <ModalFooter>   
-                                <Link to={this.state.isAllFieldFilled===true?
+
+                                <Link to={
+
                                         {pathname:'/dashboard',  
                                          state:{ 
                                             newGraph:{
@@ -414,7 +416,8 @@ class graphForm extends Component {
                                             },
                                         }
                                 
-                                }:null
+
+                                }
                                 }
 
                           
