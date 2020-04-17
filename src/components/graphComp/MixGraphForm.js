@@ -29,7 +29,7 @@ class MixGraphForm extends Component {
         this.changeColorFirstGraph = this.changeColorFirstGraph.bind(this);
         this.changeColorSecondGraph = this.changeColorSecondGraph.bind(this);
         this.onDateRangeSelection = this.onDateRangeSelection.bind(this);
-   
+        this.checkAllFilled = this.checkAllFilled.bind(this);
       
         this.state = { 
             isRealTime: false,
@@ -41,18 +41,18 @@ class MixGraphForm extends Component {
                 typeOfDimension : null,
                 idValue:null,
                 chartName:null,
-                colorSelected:"",
+                colorSelected:'',
                 typeOfGraph1:null,
                 metricName1:null, 
                 nameSpace1:null,
                 typeOfDimension1 : null,
                 idValue1:null,
-                colorSelected1:"" 
+                colorSelected1:'' 
             },
-               
-                startTime:"", //if needed
-                period:120,
-                endTime:"",
+                isAllFieldFilled:false,
+                startTime:null, //if needed
+                period:null,
+                endTime:null,
                 xAxisRange:null,
                 xAxisSelection:"",
                 refreshRateSelection:"",
@@ -104,13 +104,43 @@ mixUpdate(e,i){
   
 }
 toggleSwitch (isRealTime){
-        this.setState({isRealTime})
+        this.setState({isRealTime});
+        this.checkAllFilled();
     }
 toggleForm = () => {
         this.setState({modalOpen : !this.state.modalOpen})
         this.setState({namespaceNotSelected : true})
 };
+checkAllFilled(color){
+    if(this.state.isRealTime === true){
+         if(this.state.mixGraph.typeOfGraph != null &&  this.state.mixGraph.typeOfGraph1 != null
+                && this.state.mixGraph.nameSpace != null && this.state.mixGraph.nameSpace !== '' && this.state.mixGraph.nameSpace1 != null && this.state.mixGraph.nameSpace1 !== ''
+                && this.state.mixGraph.chartName != null && this.state.mixGraph.chartName !== '' && this.state.mixGraph.metricName != null && this.state.mixGraph.metricName !== ''
+                && this.state.mixGraph.metricName1 != null && this.state.mixGraph.metricName1 !== '' && this.state.mixGraph.typeOfDimension != null && this.state.mixGraph.typeOfDimension !== ''
+                && this.state.mixGraph.typeOfDimension1 != null && this.state.mixGraph.typeOfDimension1 !== '' && this.state.mixGraph.idValue != null && this.state.mixGraph.idValue !== ''
+                && this.state.mixGraph.idValue1 != null && this.state.mixGraph.idValue1 !== '' && this.state.startTime != null && this.state.endTime != null
+                && this.state.mixGraph.colorSelected !== '' && (color != null || this.state.mixGraph.colorSelected1 !== '') && this.state.refreshRate != null 
+                && this.state.xAxisRange != null){
+                    this.setState({isAllFieldFilled: true});
+                }else{
+                    this.setState({isAllFieldFilled: false});
+                }
+    }
+    else if(this.state.isRealTime === false){
+               if(this.state.mixGraph.typeOfGraph != null && this.state.mixGraph.typeOfGraph1 != null
+                && this.state.mixGraph.nameSpace != null && this.state.mixGraph.nameSpace !== '' && this.state.mixGraph.nameSpace1 != null && this.state.mixGraph.nameSpace1 !== ''
+                && this.state.mixGraph.chartName != null && this.state.mixGraph.chartName !== '' && this.state.mixGraph.metricName != null && this.state.mixGraph.metricName !== ''
+                && this.state.mixGraph.metricName1 != null && this.state.mixGraph.metricName1 !== '' && this.state.mixGraph.typeOfDimension != null && this.state.mixGraph.typeOfDimension !== ''
+                && this.state.mixGraph.typeOfDimension1 != null && this.state.mixGraph.typeOfDimension1 !== '' && this.state.mixGraph.idValue != null && this.state.mixGraph.idValue !== ''
+                && this.state.mixGraph.idValue1 != null && this.state.mixGraph.idValue1 !== '' && this.state.startTime != null && this.state.endTime != null
+                && this.state.mixGraph.colorSelected !== '' && (color != null || this.state.mixGraph.colorSelected1 !== '')){
+                    this.setState({isAllFieldFilled: true});
+                }else{
+                    this.setState({isAllFieldFilled: false});
+                }
 
+    }
+}
 onDateRangeSelection= (startTime, endTime) => {
     this.setState({startTime , endTime})
         let start, end;
@@ -139,6 +169,7 @@ onDateRangeSelection= (startTime, endTime) => {
             this.setState({period: 3600})
         }
     }
+    this.checkAllFilled();
 }
   
 readMixTimeSelection1(e){
@@ -166,6 +197,7 @@ readMixTimeSelection1(e){
                          xAxisRange: 86400000})
 
     }
+    this.checkAllFilled();
 }
 refreshGraph(e){
     if(e.target.value === "Three Seconds"){
@@ -180,6 +212,7 @@ refreshGraph(e){
     if(e.target.value === "Ten minutes"){
         this.setState({refreshRate : 600000,refreshRateSelection:'Ten minutes'})
     }
+    this.checkAllFilled();
  }
 readMixedSelection1(e){
     var type = e.target.value;
@@ -189,6 +222,7 @@ readMixedSelection1(e){
             typeOfGraph:type    // update the value of specific key
         }
     }))
+    this.checkAllFilled();
 }
 readMixedSelection2(e){
     var type = e.target.value;
@@ -197,22 +231,30 @@ readMixedSelection2(e){
         mixGraph.typeOfGraph1 = type;                                     
         return { mixGraph };                               
       })
+      this.checkAllFilled();
 }
 changeColorFirstGraph = (color) =>{
     this.setState(prevState => {
         let mixGraph = Object.assign({}, prevState.mixGraph);  
         mixGraph.colorSelected = color.hex
         return { mixGraph };                                
-      })
+      });
+    this.checkAllFilled();
 }
 changeColorSecondGraph = (color) =>{
     this.setState(prevState => {
         let mixGraph = Object.assign({}, prevState.mixGraph);  
         mixGraph.colorSelected1 = color.hex
         return { mixGraph };                                
-      })
+      });
+
+      this.checkAllFilled(color);
 }
 render() {
+        let start = new Date(parseInt(this.state.startTime));
+        let end = new Date(parseInt(this.state.endTime));
+        let startTime = start.toGMTString();
+        let endTime = end.toGMTString();
         let timeSelection;
         if(this.state.isRealTime === true){
             timeSelection = 
@@ -263,12 +305,42 @@ render() {
         else{
             timeSelection = 
             <div>
-            
+            <br/>
+            <div>
+                <Row>
+                    <Col>
+                        <Form.Label style = {{marginBottom:'-30px'}}>
+                        Start Time :
+                        </Form.Label>
+                        <Form.Text className="text-muted">
+                        (select the start time ...)
+                        </Form.Text>
+                    </Col>
+                    <Col>
+                        <Form.Label style = {{marginBottom:'-30px'}}>
+                        End Time : 
+                        </Form.Label>
+                        <Form.Text className="text-muted">
+                        (select the end time ...)
+                        </Form.Text>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <span style = {{fontSize : 'small'}}>{this.state.startTime==null?null:startTime}</span>
+                    </Col>
+                    <Col>
+                    <span style = {{fontSize : 'small'}}>{this.state.endTime==null?null:endTime}</span>
+                    </Col>
+
+                </Row>
+                <br/>
+            </div>
+            <div className = 'center'>
             <Form.Group>
-                <ReactLightCalendar startDate={this.state.startTime} endDate={this.state.endTime} onChange={this.onDateRangeSelection} range displayTime />
+                <ReactLightCalendar startDate={this.state.startTime==null?null:new Date(this.state.startTime).getTime()} endDate={this.state.endTime==null?null:new Date(this.state.endTime).getTime()} onChange={this.onDateRangeSelection} range displayTime />
             </Form.Group>
-           
-           
+            </div>
             </div>
         }
       
@@ -349,16 +421,16 @@ render() {
                                         <Row>
                                             <Col>
                                             <Form.Label>Name Space: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,0)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace:"" } />
+                                            <Form.Control type="text" placeholder="Ex. AWS/EC2" onChange = {(e) => this.mixUpdate(e,0)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace:"" } />
                                             <Form.Text className="text-muted">
-                                            specify the name space ...
+                                            name space such as AWS/EC2 ...
                                             </Form.Text>
                                             </Col>
                                             <Col>
                                             <Form.Label>Name Space: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the name space" onChange = {(e) => this.mixUpdate(e,1)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace1:"" }/>
+                                            <Form.Control type="text" placeholder="Ex. AWS/EC2" onChange = {(e) => this.mixUpdate(e,1)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.nameSpace1:"" }/>
                                             <Form.Text className="text-muted">
-                                            specify the name space ...
+                                            name space such as AWS/EC2 ...
                                             </Form.Text>
                                             </Col>
                                         </Row>
@@ -377,16 +449,16 @@ render() {
                                         <Row>
                                             <Col>
                                             <Form.Label>Metric name: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,3)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName:""}/>
+                                            <Form.Control type="text" placeholder="Ex. CPUCreditUsage" onChange = {(e) => this.mixUpdate(e,3)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName:""}/>
                                             <Form.Text className="text-muted">
-                                            specify the metric name that you want...                                        
+                                            metric name such as CPUCreditUsage...                                        
                                             </Form.Text>
                                             </Col>
                                             <Col>
                                             <Form.Label>Metric name: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the metric name" onChange = {(e) => this.mixUpdate(e,4)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName1:""}/>
+                                            <Form.Control type="text" placeholder="Ex. CPUUtilization" onChange = {(e) => this.mixUpdate(e,4)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.metricName1:""}/>
                                             <Form.Text className="text-muted">
-                                            specify the metric name that you want...                                        
+                                            metric name such as CPUUtilization...                                        
                                             </Form.Text>
                                             </Col>
                                         </Row>
@@ -397,19 +469,17 @@ render() {
                                     <Form>
                                         <Row>
                                             <Col>
-                                            <Form.Label>Dimension: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,5)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension:""}/>
+                                            <Form.Label>Dimension name: </Form.Label>
+                                            <Form.Control type="text" placeholder="Ex. InstanceId" onChange = {(e) => this.mixUpdate(e,5)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension:""}/>
                                             <Form.Text className="text-muted">
-                                            Enter the dimension 
-                                            Ex.InstanceId
+                                            Dimension name Ex.InstanceId
                                             </Form.Text>
                                             </Col>
                                             <Col>
-                                            <Form.Label>Dimension: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the dimension name" onChange = {(e) => this.mixUpdate(e,6)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension1:""}/>
+                                            <Form.Label>Dimension name: </Form.Label>
+                                            <Form.Control type="text" placeholder="Ex. InstanceId" onChange = {(e) => this.mixUpdate(e,6)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.typeOfDimension1:""}/>
                                             <Form.Text className="text-muted">
-                                            Enter the dimension 
-                                            Ex.InstanceId
+                                            Enter the dimension Ex.InstanceId
                                             </Form.Text>
                                             </Col>
                                         </Row>
@@ -419,17 +489,17 @@ render() {
                                     <Form>
                                         <Row>
                                             <Col>
-                                            <Form.Label>Value: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,7)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue:""} />
+                                            <Form.Label>Dimension Value: </Form.Label>
+                                            <Form.Control type="text" placeholder="Ex. i-123456hf78kp9lxc0 " onChange = {(e) => this.mixUpdate(e,7)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue:""} />
                                             <Form.Text className="text-muted">
-                                            Enter the value
+                                            Dimension value Ex.i-123456hf78kp9lxc0 
                                             </Form.Text>
                                             </Col>
                                             <Col>
-                                            <Form.Label>Value: </Form.Label>
-                                            <Form.Control type="text" placeholder="Enter the value" onChange = {(e) => this.mixUpdate(e,8)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue1:""}/>
+                                            <Form.Label>Dimension Value: </Form.Label>
+                                            <Form.Control type="text" placeholder="Ex. i-123456hf78kp9lxc0" onChange = {(e) => this.mixUpdate(e,8)} defaultValue={this.props.mixGraphInfor!=null?this.props.mixGraphInfor.idValue1:""}/>
                                             <Form.Text className="text-muted">
-                                            Enter the value
+                                            Dimension value Ex.i-123456hf78kp9lxc0 
                                             </Form.Text>
                                             </Col>
                                         </Row>
@@ -438,18 +508,25 @@ render() {
                 
                                      {timeSelection}
 
-                            
+                                    <br/>
                                     <Form>
+                                        <Form.Label className = 'center'>Graph Color</Form.Label>
                                         <Row>
                                             <Col>
-                                            <Form.Label>Graph Color</Form.Label>
+                                            <span className = 'center' style = {{fontSize:'small'}}>Color Selected Graph 1: {this.state.mixGraph.colorSelected}</span>
+                                            </Col>
+                                            <Col>
+                                            <span className = 'center' style = {{fontSize:'small'}}>Color Selected Graph 2: {this.state.mixGraph.colorSelected1}</span>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
                                                 <SketchPicker
                                                 color = {this.state.mixGraph.colorSelected}
                                                 onChange = {this.changeColorFirstGraph}
                                                 />
                                             </Col>
                                             <Col>
-                                            <Form.Label>Graph Color</Form.Label>
                                                 <SketchPicker
                                                 color = {this.state.mixGraph.colorSelected1}
                                                 onChange = {this.changeColorSecondGraph}
@@ -484,7 +561,7 @@ render() {
                                                 refreshRate: this.state.refreshRate!=null?this.state.refreshRate:(this.props.mixGraphInfor!=null?this.props.mixGraphInfor.refreshRate:""),
                                                 colorSelected:this.state.mixGraph.colorSelected,
                                                 colorSelected1:this.state.mixGraph.colorSelected1,
-                                                period:this.state.period,
+                                                period:this.state.period!=null?this.state.period:(this.props.mixGraphInfor!=null?this.props.mixGraphInfor.period:""),
                                                 startTime:this.state.startTime, //if needed
                                                 endTime:this.state.endTime, //if needed
                                                 xAxisRange : this.state.xAxisRange!=null? this.state.xAxisRange:(this.props.mixGraphInfor!=null?this.props.mixGraphInfor.xAxisRange:""),
@@ -502,7 +579,7 @@ render() {
                                         }
                                     }
                                 }}>
-                                     <Button color="primary" onClick={this.props.toggleMixForm}>{this.props.mixGraphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
+                                     <Button color="primary" disabled = {this.state.isAllFieldFilled === false && this.props.mixGraphInfor == null} onClick={this.props.toggleMixForm}>{this.props.mixGraphInfor == null ? "Create Graph" : "Modify Graph"}</Button>
                                 </Link>
                                 <Button color="secondary" onClick={this.props.toggleMixForm}>Cancel</Button>
                             </ModalFooter>

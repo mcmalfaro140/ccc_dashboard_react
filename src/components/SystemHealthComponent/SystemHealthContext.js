@@ -53,7 +53,7 @@ const searchByLogGroupName =  (logName , filterPattern) => {
     my_time.setDate(my_time.getDate() - 1)
     var params = {
         logGroupName: logName, /* required */
-        endTime: new Date().getDate() ,
+        endTime: new Date().getTime() ,
         filterPattern: filterPattern, 
         startTime: my_time.getTime()
     }  
