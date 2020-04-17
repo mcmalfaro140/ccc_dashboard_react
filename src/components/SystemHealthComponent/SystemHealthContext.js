@@ -175,6 +175,7 @@ const searchByLogGroupName =  (logName , filterPattern) => {
 
     const timerInterval = () =>{
         setInterval(() => {
+            console.log("update")
             //reseting state before runinning update
             setErrorResultCount ( prevCount => 0)                
             setLogReportError(prevState => [])
