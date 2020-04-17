@@ -154,7 +154,7 @@ class DefaultDashboard extends Component {
                             this.props.updateDashboard(this.state.userDashboard)
                         }
                     }else if(this.state.isModify === true || this.state.isMixModify === true){
-                        let newName = nextProps.location.state.newGraph.graphSettings.chartName;
+                            let newName = nextProps.location.state.newGraph.graphSettings.chartName;
                             const id = this.state.selectedGraphId;
                             const newDashboard = this.state.userDashboard;   
                             for(let i = newDashboard.length-1; i>=0; i--){     
