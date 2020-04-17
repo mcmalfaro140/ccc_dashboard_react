@@ -131,6 +131,7 @@ onRefresh(chart){
           if(this.state.unit === "Percent" || this.props.graphSettings.metricName==="CPUUtilization"){
             chart.options.scales.yAxes[0].ticks = {
                min: 0,
+               maxTicksLimit:10,
               callback: function (value) {
                
                   return (value * 100).toFixed(0) + '%'; 
@@ -309,6 +310,7 @@ render() {
             stepSize: 0.2,
             fontSize: 10,
             min: 0,
+            maxTicksLimit:10,
             callback: function (value) {
               return (value * 100).toFixed(0) + '%'; 
             },
