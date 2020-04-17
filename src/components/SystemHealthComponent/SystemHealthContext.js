@@ -175,17 +175,16 @@ const searchByLogGroupName =  (logName , filterPattern) => {
 
     const timerInterval = () =>{
         setInterval(() => {
-            console.log("update")
             //reseting state before runinning update
             setErrorResultCount ( prevCount => 0)                
             setLogReportError(prevState => [])
             setWarnResultCount(prevCount => 0)
             setLogReportWarn(prevState => [])
             setEC2InstanceStatus(prevState => [])
-            //Run update every 2 mins
+            //Run update every 5 mins
             getLogGroupName()
             getEC2InstanceStatus()
-        },120000)
+        },300000)
     }
 
   useEffect (() => {
