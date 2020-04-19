@@ -1,0 +1,11 @@
+//This is just a sample key.
+//Policy Require for the key:
+//Cloudwatch full access
+//SNS Read and write
+//EC2 Read only
+
+{"accessKeyId": "AKMISASMASIDBWRAFK6",
+  "secretAccessKey": "CJBMISAb5dxOcUiCsadaAHSAsjddHDCAD4uFRVj/",
+  "region": "us-west-1" ,
+  "backend": "http://localhost:5050"
+}
