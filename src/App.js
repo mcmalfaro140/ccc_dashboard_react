@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import Loadable from 'react-loadable';
 import { routes } from './routes';
 
-// setup fake backend
-import { configureFakeBackend } from './helpers';
 import { isUserAuthenticated } from './helpers/authUtils';
 
 // Themes
@@ -35,8 +33,6 @@ const AuthLayout = Loadable({
   loading
 });
 
-// configure fake backend
-configureFakeBackend();
 
 /**
  * Exports the component with layout wrapped to it

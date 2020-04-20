@@ -10,6 +10,7 @@ import { getLoggedInUser } from '../helpers/authUtils';
 import Loading from '../components/logAlertComp/Loading'
 import { Button, Modal } from 'reactstrap';
 import Incomplete from '../assets/images/incomplete.png'
+import { ModalFooter } from 'react-bootstrap';
 
 
 
@@ -118,7 +119,7 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
-                if(response.data.Result.equals("Success")){
+                if(response.data.Result.includes("Success")){
                     this.setState({isLoading: false, isSuccessful:true})
                     this.getAlerts();
                 }else{
@@ -178,6 +179,7 @@ class LogAlerts extends Component {
                 }
             })
             .then((response)=>{
+                console.log(response)
                 let alerts = response.data.Result.All
                 let my_alerts = response.data.Result.User
                 alerts.forEach(element => {

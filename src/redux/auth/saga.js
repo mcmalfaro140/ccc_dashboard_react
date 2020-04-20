@@ -85,32 +85,6 @@ function* login({ payload: { username, password } }) {
     }
 }
 
-
-// function* login({ payload: { username, password } }) {
-//     const options = {
-//         body: JSON.stringify({ username, password }),
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' }
-//     };
-
-//     try {
-//         const response = yield call(fetchJSON, '/users/authenticate', options);
-//         setSession(response);
-//         yield put(loginUserSuccess(response));
-//     } catch (error) {
-//         let message;
-//         switch (error.status) {
-//             case 500: message = 'Internal Server Error'; break;
-//             case 401: message = 'Invalid credentials'; break;
-//             default: message = error;
-//         }
-//         yield put(loginUserFailed(message));
-//         setSession(null);
-//     }
-// }
-
-
-
 /**
  * Logout the user
  * @param {*} param0 
