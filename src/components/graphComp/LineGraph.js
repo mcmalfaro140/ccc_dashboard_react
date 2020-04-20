@@ -191,8 +191,8 @@ componentDidMount() {
         if(this.props.graphSettings.realTime === false){
           this.getgraph();
           this.setState({
-                         newUpcomingPropsStartTime: this.props.graphSettings.startTime,
-                         newUpcomingPropsEndTime : this.props.graphSettings.endTime});
+            newUpcomingPropsStartTime: this.props.graphSettings.startTime,
+            newUpcomingPropsEndTime : this.props.graphSettings.endTime});
         }else{
           this.oldDataForRealTime();
         }
@@ -363,9 +363,7 @@ render() {
                   borderColor: this.props.graphSettings.colorSelected,
                   backgroundColor: this.convertHex(this.props.graphSettings.colorSelected,50),
                   fill: this.state.fillChecked,
-                  data: this.state.RTData.map(item=>{
-                    return item
-                  }),
+                  data: this.state.RTData
                   }
               ]
           }}
