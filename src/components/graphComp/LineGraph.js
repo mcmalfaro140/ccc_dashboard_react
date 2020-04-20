@@ -351,11 +351,7 @@ render() {
       }
       // random 
       let graph;
-      if(this.props.graphSettings.realTime === true){
-        if(this.state.RTData.length ===0){
-          graph = <h1>Loading</h1>
-        }else{
-          
+      if(this.props.graphSettings.realTime === true){ 
           graph = <Line
           data={{
               datasets: [{
@@ -392,8 +388,6 @@ render() {
               },
             
           }}/>
-        
-        }
       }
       else{
        graph = <Line data={lineGraphData} options = {optionToSkip} ></Line>
