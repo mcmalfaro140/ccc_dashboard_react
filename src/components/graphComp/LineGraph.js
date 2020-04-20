@@ -27,7 +27,7 @@ class LineGraph extends Component {
         isModify: false,
         fillChecked:false,
         RTData:[],
-        RTHolder:[],
+        RTHolder:[]
     };
     this.showOptions = this.showOptions.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
