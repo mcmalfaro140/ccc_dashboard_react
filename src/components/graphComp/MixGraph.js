@@ -30,7 +30,7 @@ zoom: {
 
 },
   }
-
+let currentDate = new Date();
 
 
 class MixGraph extends Component {
@@ -255,11 +255,11 @@ oldDataForRealTime(){
   if(typeOfD1 == null){typeOfD1 = "InstanceId"}
   if(idVal1 == null){idVal1 = "i-01e27ec0da2c4d296"}
   let params = {
-    EndTime: new Date(this.props.graphSettings.endTime), /* required */
+    EndTime: new Date(), /* required */
     MetricName: this.props.graphSettings.metricName, /* required */
     Namespace: this.props.graphSettings.nameSpace, /* required */
     Period: this.props.graphSettings.period, /* required */
-    StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+    StartTime: new Date(currentDate.getTime() - this.props.graphSettings.xAxisRange), /* required **********************************Always change it to a new start time */ 
  
    Dimensions: [
       {
@@ -272,11 +272,11 @@ oldDataForRealTime(){
     ], 
   }
   let params1 = {
-    EndTime: new Date(this.props.graphSettings.endTime), /* required */
+    EndTime: new Date(), /* required */
     MetricName: this.props.graphSettings.metricName1, /* required */
     Namespace: this.props.graphSettings.nameSpace1, /* required */
     Period: this.props.graphSettings.period, /* required */
-    StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+    StartTime: new Date(currentDate.getTime() - this.props.graphSettings.xAxisRange), /* required **********************************Always change it to a new start time */ 
  
    Dimensions: [
       {

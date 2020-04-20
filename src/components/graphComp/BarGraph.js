@@ -5,7 +5,7 @@ import {Bar,} from 'react-chartjs-2';
 import 'chartjs-plugin-zoom';
 import { Link } from 'react-router-dom';
 
-  
+let currentDate = new Date();
 class BarGraph extends Component {
   constructor(){
         super();
@@ -35,11 +35,11 @@ oldDataForRealTime(){
       if(typeOfD == null){typeOfD = "InstanceId"}
       if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
       let params = {
-        EndTime: new Date(this.props.graphSettings.endTime), /* required */
+        EndTime: new Date(), /* required */
         MetricName: this.props.graphSettings.metricName, /* required */
         Namespace: this.props.graphSettings.nameSpace, /* required */
         Period: this.props.graphSettings.period, /* required */
-        StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+        StartTime: new Date(currentDate.getTime() - this.props.graphSettings.xAxisRange), /* required **********************************Always change it to a new start time */ 
      
        Dimensions: [
           {

@@ -8,7 +8,7 @@ import 'chartjs-plugin-streaming';
 import { Link } from 'react-router-dom';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+let currentDate = new Date();
 class LineGraph extends Component {
   constructor(){
     super();
@@ -151,16 +151,15 @@ oldDataForRealTime(){
   if(typeOfD == null){typeOfD = "InstanceId"}
   if(idVal == null){idVal = "i-01e27ec0da2c4d296"}
   let params = {
-    EndTime: new Date(this.props.graphSettings.endTime), /* required */
+    EndTime: new Date(), /* required */
     MetricName: this.props.graphSettings.metricName, /* required */
     Namespace: this.props.graphSettings.nameSpace, /* required */
     Period: this.props.graphSettings.period, /* required */
-    StartTime: new Date(this.props.graphSettings.startTime), /* required **********************************Always change it to a new start time */ 
+    StartTime: new Date(currentDate.getTime() - this.props.graphSettings.xAxisRange), /* required **********************************Always change it to a new start time */ 
  
    Dimensions: [
       {
         Name: typeOfD, /* required */
-        // Value: 'i-031339fed44b9fac8' /* required */
         Value: idVal
       },
     ],
@@ -168,6 +167,7 @@ oldDataForRealTime(){
       'Average',
     ], 
   }
+  
   cloudwatch.getMetricStatistics(params, function(err, data){
     let temp = [];
     if (err) console.log(err, err.stack); // an error occurred
@@ -180,17 +180,19 @@ oldDataForRealTime(){
       for(let i = 0; i < this.state.RTHolder.length; i++){
           temp.push({x: new Date(this.state.RTHolder[i].Timestamp), y:this.state.RTHolder[i].Average})
       }
-      this.setState({RTData: temp});
+       this.setState({RTData: temp});
       
       }
   }.bind(this))
-};   
+}; 
+
+
 componentDidMount() {
         if(this.props.graphSettings.realTime === false){
           this.getgraph();
           this.setState({
-                         newUpcomingPropsStartTime: this.props.graphSettings.startTime,
-                         newUpcomingPropsEndTime : this.props.graphSettings.endTime});
+            newUpcomingPropsStartTime: this.props.graphSettings.startTime,
+            newUpcomingPropsEndTime : this.props.graphSettings.endTime});
         }else{
           this.oldDataForRealTime();
         }
@@ -200,6 +202,7 @@ componentDidMount() {
         if(this.props.graphSettings.isFill != null){
           this.setState({fillChecked:this.props.graphSettings.isFill});
          }
+       
 };
 componentWillReceiveProps(nextProp){
         let newStartTime = nextProp.graphSettings.startTime;
@@ -220,8 +223,9 @@ componentWillReceiveProps(nextProp){
 
             }
   }else{
-       this.oldDataForRealTime();
-  } 
+    this.oldDataForRealTime();
+
+  }
 };
 sendDeletionData = () => {
         this.props.parentCallback(this.props.id);
@@ -345,46 +349,45 @@ render() {
           }
         ]
       }
-    
       // random 
       let graph;
-      if(this.props.graphSettings.realTime === true){
-       graph = <Line
-       data={{
-           datasets: [{
-               label: this.props.graphSettings.metricName,
-               borderColor: this.props.graphSettings.colorSelected,
-               backgroundColor: this.convertHex(this.props.graphSettings.colorSelected,50),
-               fill: this.state.fillChecked,
-               data: this.state.RTData,
-               }
-           ]
-       }}
-       options={{
-        elements: {
-          point:{
-              radius: 0,  
-          },
-        }, 
-           scales: {
-               xAxes: [{
-                   type: 'realtime',
-                   realtime: {
-                       duration: this.props.graphSettings.xAxisRange!=null?this.props.graphSettings.xAxisRange:900000,    // this would be the length of the graph in this case it display 15 mins
-                       refresh: this.props.graphSettings.refreshRate,      // onRefresh callback will be called every 1000 ms *** 
-                       delay: 1000,        // delay of 1000 ms, so upcoming values are known before plotting a line
-                       pause: false,       // chart is not paused
-                       ttl: undefined,     // data will be automatically deleted as it disappears off the chart
-                       onRefresh: this.onRefresh,    
-                   }
-               }],
-               yAxes:[{
-                
-              }
-               ],           
-           },
-         
-       }}/>
+      if(this.props.graphSettings.realTime === true){ 
+          graph = <Line
+          data={{
+              datasets: [{
+                  label: this.props.graphSettings.metricName,
+                  borderColor: this.props.graphSettings.colorSelected,
+                  backgroundColor: this.convertHex(this.props.graphSettings.colorSelected,50),
+                  fill: this.state.fillChecked,
+                  data: this.state.RTData
+                  }
+              ]
+          }}
+          options={{
+           elements: {
+             point:{
+                 radius: 0,  
+             },
+           }, 
+              scales: {
+                  xAxes: [{
+                      type: 'realtime',
+                      realtime: {
+                          duration: this.props.graphSettings.xAxisRange!=null?this.props.graphSettings.xAxisRange:900000,    // this would be the length of the graph in this case it display 15 mins
+                          refresh: this.props.graphSettings.refreshRate,      // onRefresh callback will be called every 1000 ms *** 
+                          delay: 1000,        // delay of 1000 ms, so upcoming values are known before plotting a line
+                          pause: false,       // chart is not paused
+                          ttl: undefined,     // data will be automatically deleted as it disappears off the chart
+                          onRefresh: this.onRefresh,    
+                      }
+                  }],
+                  yAxes:[{
+                   
+                 }
+                  ],           
+              },
+            
+          }}/>
       }
       else{
        graph = <Line data={lineGraphData} options = {optionToSkip} ></Line>
