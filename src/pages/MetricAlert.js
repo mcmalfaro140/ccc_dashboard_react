@@ -50,7 +50,6 @@ class MetricAlert extends Component {
         })
         .then((response)=>{
            this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
-           console.log(this.state.usersAlerts);
            this.state.alerts.forEach(alert =>{
             response.data.Data.user.forEach(userAlert=>{
                if(alert.AlarmArn === userAlert.alarmArn){
@@ -135,15 +134,6 @@ class MetricAlert extends Component {
     returnMetricAlarms(){
         let alertsArr = this.state.alerts;
         let params = {
-            // ActionPrefix: 'STRING_VALUE',
-            // AlarmNamePrefix: 'STRING_VALUE',
-            // AlarmNames: [
-            //   'STRING_VALUE',
-            //   /* more items */
-            // ],
-            // MaxRecords: 'NUMBER_VALUE',
-            // NextToken: 'STRING_VALUE',
-            // // StateValue: OK | ALARM | INSUFFICIENT_DATA
           };
           let cloudwatch = new AWS.CloudWatch();
           cloudwatch.describeAlarms(params, function(err, data) {
@@ -198,10 +188,7 @@ class MetricAlert extends Component {
                   <TabPanel>
                       <div>
                         <ExistingMetricAlarms updateState = {this.updateState} alarms = {this.state.alerts}/>
-                      </div>
-                      {/* <Card className = 'my_alarms'>
-                        {item}
-                    </Card> */}                     
+                      </div>                  
                   </TabPanel>  
               </Tabs>
             </div>
