@@ -58,7 +58,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
         startTime: my_time.getTime() 
     }  
 
-
      cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
                 console.log(err, err.stack); // an error occurred
@@ -173,7 +172,6 @@ const searchByLogGroupName =  (logName , filterPattern) => {
 
     const timerInterval = () =>{
         setInterval(() => {
-            console.log("update")
             //reseting state before runinning update
             setErrorResultCount ( prevCount => 0)                
             setLogReportError(prevState => [])

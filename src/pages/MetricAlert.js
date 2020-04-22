@@ -50,7 +50,6 @@ class MetricAlert extends Component {
         })
         .then((response)=>{
            this.setState({usersAlerts:response.data.Data.user, allAlerts: response.data.Data.all});
-           console.log(this.state.usersAlerts);
            this.state.alerts.forEach(alert =>{
             response.data.Data.user.forEach(userAlert=>{
                if(alert.AlarmArn === userAlert.alarmArn){
@@ -189,10 +188,7 @@ class MetricAlert extends Component {
                   <TabPanel>
                       <div>
                         <ExistingMetricAlarms updateState = {this.updateState} alarms = {this.state.alerts}/>
-                      </div>
-                      {/* <Card className = 'my_alarms'>
-                        {item}
-                    </Card> */}                     
+                      </div>                  
                   </TabPanel>  
               </Tabs>
             </div>
