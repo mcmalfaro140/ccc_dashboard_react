@@ -69,6 +69,7 @@ class DefaultDashboard extends Component {
                         new_dash.push(item)
                     })
                 }
+                console.log(new_dash)
                 this.setState({userDashboard: new_dash})
                 this.props.updateDashboard(this.state.userDashboard)
             })
@@ -223,7 +224,7 @@ class DefaultDashboard extends Component {
         let updatedDash = [];
         newLay.forEach((chart) => {
             let newGraph = temp.find(temp => temp.id === parseInt(chart.i))
-            newGraph.coordinates.x = chart.y
+            newGraph.coordinates.y = chart.y
             newGraph.coordinates.x = chart.x
             newGraph.coordinates.w = chart.w
             newGraph.coordinates.h = chart.h
