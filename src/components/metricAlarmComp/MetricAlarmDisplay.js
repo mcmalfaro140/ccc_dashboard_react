@@ -322,6 +322,7 @@ class MetricAlarmDisplay extends Component {
         let alert = this.state.alert;
         alert['isSubscribed'] = true;
         this.setState({alert: alert});
+
                     axios({
                         method: 'post',
                         url: `${mykey.backend}/subscribeToMetricAlarm`,
@@ -343,6 +344,7 @@ class MetricAlarmDisplay extends Component {
                         this.props.updateState(false,false);
                         console.log(err);
                     })
+
     }
     unfollow(){
         axios({

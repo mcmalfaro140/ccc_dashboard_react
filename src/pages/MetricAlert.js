@@ -113,7 +113,7 @@ class MetricAlert extends Component {
            })
            stateAlert.forEach(elem =>{
             if(!userArnArr.includes(elem.AlarmArn)){
-              elem['isSubscribed'] = false;
+               elem['isSubscribed'] = false;
             }
             response.data.Data.user.forEach(userAlert=>{
               if(elem.AlarmArn === userAlert.alarmArn){

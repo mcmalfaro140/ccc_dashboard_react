@@ -356,7 +356,15 @@ componentWillReceiveProps(nextProp){
       this.oldDataForRealTime();
 } 
 }
+convertHex(hex,opacity){
+  hex = hex.replace('#','');
+  let r = parseInt(hex.substring(0,2), 16);
+  let g = parseInt(hex.substring(2,4), 16);
+  let b = parseInt(hex.substring(4,6), 16);
 
+  let result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+  return result;
+}
 showOptions(e){
         e.preventDefault();
         this.setState({ showOptions: !this.state.showOptions});
@@ -400,7 +408,7 @@ render() {
                 type: this.props.graphSettings.typeOfGraph,
                 label: this.props.graphSettings.metricName,
                 borderColor: this.props.graphSettings.colorSelected,
-                backgroundColor: Color(this.props.graphSettings.colorSelected).alpha(0.5),
+                backgroundColor: this.convertHex(this.props.graphSettings.colorSelected,50),
                 fill:false,
                 data: this.state.RTData,
                 },
@@ -408,7 +416,7 @@ render() {
                 type: this.props.graphSettings.typeOfGraph1,
                 label: this.props.graphSettings.metricName1,
                 borderColor: this.props.graphSettings.colorSelected1,
-                backgroundColor: Color(this.props.graphSettings.colorSelected1).alpha(0.5),
+                backgroundColor: this.convertHex(this.props.graphSettings.colorSelected1,50),
                 fill:false,
                 data: this.state.RTData1,
                 }
