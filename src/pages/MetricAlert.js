@@ -114,7 +114,7 @@ class MetricAlert extends Component {
            })
            stateAlert.forEach(elem =>{
             if(!userArnArr.includes(elem.AlarmArn)){
-              elem['isSubscribed'] = false;
+               elem['isSubscribed'] = false;
             }
             response.data.Data.user.forEach(userAlert=>{
               if(elem.AlarmArn === userAlert.alarmArn){
@@ -135,15 +135,6 @@ class MetricAlert extends Component {
     returnMetricAlarms(){
         let alertsArr = this.state.alerts;
         let params = {
-            // ActionPrefix: 'STRING_VALUE',
-            // AlarmNamePrefix: 'STRING_VALUE',
-            // AlarmNames: [
-            //   'STRING_VALUE',
-            //   /* more items */
-            // ],
-            // MaxRecords: 'NUMBER_VALUE',
-            // NextToken: 'STRING_VALUE',
-            // // StateValue: OK | ALARM | INSUFFICIENT_DATA
           };
           let cloudwatch = new AWS.CloudWatch();
           cloudwatch.describeAlarms(params, function(err, data) {

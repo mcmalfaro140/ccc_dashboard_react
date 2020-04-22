@@ -322,19 +322,7 @@ class MetricAlarmDisplay extends Component {
         let alert = this.state.alert;
         alert['isSubscribed'] = true;
         this.setState({alert: alert});
-            axios({
-                method: 'get',
-                url: `${mykey.backend}/getMetricAlarms`,
-                headers: {
-                    'Authorization': this.state.user.token,
-                    'Content-Type': 'application/json'
-                    }
-                }).then((response)=>{
-                        let userArr = [];
-                        response.data.Data.user.forEach(elem=>{
-                            userArr.push(elem.alarmArn);
-                        })
-                        if(!userArr.includes(this.state.alert.AlarmArn)){
+            
                             axios({
                                 method: 'post',
                                 url: `${mykey.backend}/subscribeToMetricAlarm`,
@@ -356,8 +344,8 @@ class MetricAlarmDisplay extends Component {
                                 this.props.updateState(false,false);
                                 console.log(err);
                             })
-                        }
-                    })
+                        
+                    
     }
     unfollow(){
         axios({

@@ -58,13 +58,11 @@ const searchByLogGroupName =  (logName , filterPattern) => {
         startTime: my_time.getTime() 
     }  
 
-    console.log(params)
 
      cloudwatchlogs.filterLogEvents(params, function(err, data) {
             if(err){
                 console.log(err, err.stack); // an error occurred
             }else{ 
-                console.log(data)
                 //Checks for error logs in the log group name
                 if(data.events.length > 0 && filterPattern === 'ERROR'){
 
