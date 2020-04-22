@@ -245,7 +245,7 @@ class AuthLayout extends Component {
                             </div>
 
                         <Modal isOpen={this.state.modalOpen} toggle={this.toggleForm} >
-                            <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
+                            <GraphForm dashboard={this.state.my_dashboard} whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm}/>                            
                         </Modal>
 
                         <Modal isOpen={this.state.modalSearch} toggle={this.toggleSearchModal} >
@@ -253,7 +253,7 @@ class AuthLayout extends Component {
                         </Modal>
 
                         <Modal isOpen={this.state.mixModalOpen} toggle={this.toggleMixForm} >
-                            <MixGraphForm whatever = {this.props.location.typeOfGraph} toggleMixForm = {this.toggleMixForm}/>                            
+                            <MixGraphForm dashboard={this.state.my_dashboard} whatever = {this.props.location.typeOfGraph} toggleMixForm = {this.toggleMixForm}/>                            
                         </Modal>
                     </div>
                 </div>

@@ -29,7 +29,7 @@ class graphForm extends Component {
         this.refreshGraph = this.refreshGraph.bind(this);
         this.onDateRangeSelection = this.onDateRangeSelection.bind(this);
         this.checkAllFilled = this.checkAllFilled.bind(this);
-   
+        this.calculateY = this.calculateY.bind(this);
       
         this.state = { 
             checkbox:false,
@@ -48,7 +48,22 @@ class graphForm extends Component {
             xAxisRange:null,
             xAxisSelection:"",
             refreshRateSelection:"",
+            y : 0
     }}
+
+    calculateY(){
+        let dashboard = this.props.dashboard
+        let holder = []
+        let new_y = 0
+        dashboard.forEach(element => {
+            if(!holder.includes(element.coordinates.y)){
+                holder.push(element.coordinates.y)
+                new_y += element.coordinates.h
+            }
+        });
+        return new_y
+    }
+
     componentWillReceiveProps(nextProps){
         if(nextProps.graphInfor != null){
             this.setState({isRealTime : nextProps.graphInfor.realTime})
@@ -66,6 +81,7 @@ class graphForm extends Component {
             }      
             this.setState({colorSelected : this.props.graphInfor.colorSelected});
         }
+        this.setState({y : this.calculateY()})
     }
     refreshGraph(e){
        if(e.target.value === "Three Seconds"){
@@ -433,7 +449,7 @@ class graphForm extends Component {
                                                 },
                                                 coordinates: {
                                                     x: 0,
-                                                    y: 0,
+                                                    y: this.state.y,
                                                     w: 8,
                                                     h: 2,
                                                     minW: 8,

@@ -30,6 +30,7 @@ class MixGraphForm extends Component {
         this.changeColorSecondGraph = this.changeColorSecondGraph.bind(this);
         this.onDateRangeSelection = this.onDateRangeSelection.bind(this);
         this.checkAllFilled = this.checkAllFilled.bind(this);
+        this.calculateY = this.calculateY.bind(this);
       
         this.state = { 
             isRealTime: false,
@@ -56,6 +57,7 @@ class MixGraphForm extends Component {
                 xAxisRange:null,
                 xAxisSelection:"",
                 refreshRateSelection:"",
+                y : 0
     }}
 componentWillReceiveProps(nextProps){
     if(nextProps.mixGraphInfor != null){
@@ -80,7 +82,22 @@ componentDidMount(){
         });   
         
     }
+    this.setState({y : this.calculateY()})
 }
+
+calculateY(){
+    let dashboard = this.props.dashboard
+    let holder = []
+    let new_y = 0
+    dashboard.forEach(element => {
+        if(!holder.includes(element.coordinates.y)){
+            holder.push(element.coordinates.y)
+            new_y += element.coordinates.h
+        }
+    });
+    return new_y
+  }
+
 //Mix form update
 mixUpdate(e,i){
     e.preventDefault();
@@ -570,7 +587,7 @@ render() {
                                             },
                                             coordinates: {
                                                 x: 0,
-                                                y: 0,
+                                                y: this.state.y,
                                                 w: 8,
                                                 h: 2,
                                                 minW: 8,

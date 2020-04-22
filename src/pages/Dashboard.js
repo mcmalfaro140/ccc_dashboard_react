@@ -47,7 +47,6 @@ class DefaultDashboard extends Component {
         this.systemHealth = this.systemHealth.bind(this);
         this.recordCoordinateChange = this.recordCoordinateChange.bind(this);
         this.setLayout = this.setLayout.bind(this)
-        this.test = this.test.bind(this);
     }
 
     componentDidMount(){
@@ -69,7 +68,6 @@ class DefaultDashboard extends Component {
                         new_dash.push(item)
                     })
                 }
-                console.log(new_dash)
                 this.setState({userDashboard: new_dash})
                 this.props.updateDashboard(this.state.userDashboard)
             })
@@ -237,20 +235,6 @@ class DefaultDashboard extends Component {
         this.props.updateDashboard(updatedDash)
     }
 
-   
-    test(id){
-        if(id === 'errorComponent'){
-            console.log('Error component is being clicked')
-
-        }
-        else if(id === 'warningComponent')
-        {
-            console.log("warning component is being clicked")
-        }
-
-    }
-
-    
     render() {
 
     
@@ -298,9 +282,8 @@ class DefaultDashboard extends Component {
         return (
             
             <React.Fragment>
-                {/* <Button onClick={this.saveDashboard}>test</Button> */}
                  <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
-                     <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData} 
+                     <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData}
                     />
                 </Modal>
                 <Modal isOpen={this.state.isMixModify} toggle = {this.toggleMixForm}>

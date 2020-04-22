@@ -51,7 +51,7 @@ constructor(){
             RTData:[],
             RTData1:[],
             RTHolder:[],
-            RTHolder1:[]
+            RTHolder1:[],
           };
 
         this.showOptions = this.showOptions.bind(this);
@@ -322,6 +322,7 @@ oldDataForRealTime(){
       }
   }.bind(this))
 };  
+
 componentDidMount() {
         if(this.props.graphSettings.realTime === false){
           this.getgraph();

@@ -114,7 +114,7 @@ class SideNavContent extends React.Component {
                                 typeOfGraph : 'mix' }}
                                 onClick = {this.props.toggleMixForm}
                                 className="waves-effect side-nav-link-ref">
-                                <i class="mdi mdi-chart-histogram"></i>
+                                <i className="mdi mdi-chart-histogram"></i>
                                 <span> Mix Chart </span>
                             </Link>
                       </li>
