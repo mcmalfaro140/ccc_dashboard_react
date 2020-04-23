@@ -81,8 +81,9 @@ componentDidMount(){
             return { mixGraph };            
         });   
         
+    }else{
+        this.setState({y : this.calculateY()})
     }
-    this.setState({y : this.calculateY()})
 }
 
 calculateY(){

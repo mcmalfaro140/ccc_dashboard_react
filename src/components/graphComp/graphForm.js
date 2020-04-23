@@ -80,8 +80,10 @@ class graphForm extends Component {
                 this.setState({endTime : new Date(this.props.graphInfor.endTime)})
             }      
             this.setState({colorSelected : this.props.graphInfor.colorSelected});
+        }else{
+            this.setState({y : this.calculateY()})
         }
-        this.setState({y : this.calculateY()})
+        
     }
     refreshGraph(e){
        if(e.target.value === "Three Seconds"){

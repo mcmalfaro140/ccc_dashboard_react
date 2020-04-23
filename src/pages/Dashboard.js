@@ -283,11 +283,11 @@ class DefaultDashboard extends Component {
             
             <React.Fragment>
                  <Modal isOpen={this.state.isModify} toggle = {this.toggleForm} > 
-                     <GraphForm whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData}
+                     <GraphForm dashboard={this.state.userDashboard} whatever={this.props.location.typeOfGraph} toggleForm = {this.toggleForm} graphInfor = {this.state.stickyFormData}
                     />
                 </Modal>
                 <Modal isOpen={this.state.isMixModify} toggle = {this.toggleMixForm}>
-                    <MixGraphForm whatever={this.props.location.typeOfGraph} toggleMixForm = {this.toggleMixForm} mixGraphInfor = {this.state.stickyMixFormData} />
+                    <MixGraphForm dashboard={this.state.userDashboard} whatever={this.props.location.typeOfGraph} toggleMixForm = {this.toggleMixForm} mixGraphInfor = {this.state.stickyMixFormData} />
                 </Modal>
                 <div id="dashboard" style={{paddingTop:'1%'}}>
                     { /* preloader */}
